@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Intro](README.md)
+  * [About me](https://jihunparkme.github.io/about-me-page/)
 
 ## Study
 
