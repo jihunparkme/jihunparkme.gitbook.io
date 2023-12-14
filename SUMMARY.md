@@ -5,6 +5,9 @@
 
 ## Lecture
 
+* [Spring MVC Part 1](lecture/spring-mvc-part-1/README.md)
+  * [Servlet](lecture/spring-mvc-part-1/01.md)
+  * [MVC](lecture/spring-mvc-part-1/02.md)
 * [Http](lecture/http/README.md)
   * [HTTP Basic](lecture/http/01.md)
   * [HTTP Method](lecture/http/02.md)
