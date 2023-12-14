@@ -23,6 +23,10 @@
 ## Book
 
 * [Modern Java In Action](book/modern-java-in-action/README.md)
+  * [01.기초](book/modern-java-in-action/01.md)
+  * [02.함수형 데이터 처리](book/modern-java-in-action/02.md)
+  * [03.스트림과 람다를 이용한 효과적 프로그래밍](book/modern-java-in-action/03.md)
+  * [04.매일 자바와 함께](book/modern-java-in-action/04.md)
 * [Refactoring](book/refactoring/README.md)
   * [01.리펙터링 첫 번째 예시](book/refactoring/01.md)
   * [02.리펙터링 원칙](book/refactoring/02.md)
