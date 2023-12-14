@@ -20,8 +20,9 @@
   * [03.HTTP Header](lecture/http/03.md)
 * [Spring Core](lecture/spring-core.md)
 
-## Study
+## Book
 
+* [Modern Java In Action](study/modern-java-in-action/README.md)
 * [Refactoring](study/refactoring/README.md)
   * [01.리펙터링 첫 번째 예시](study/refactoring/01.md)
   * [02.리펙터링 원칙](study/refactoring/02.md)
