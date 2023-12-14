@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Page](README.md)
+* [Intro](README.md)
 
 ## Study
 
