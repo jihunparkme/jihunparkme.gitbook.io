@@ -3,6 +3,10 @@
 * [Intro](README.md)
   * [About me](https://jihunparkme.github.io/about-me-page/)
 
+## Lecture
+
+* [Spring Core](lecture/spring-core.md)
+
 ## Study
 
 * [도메인 주도 개발 시작하기](study/ddd-start/README.md)
