@@ -10,4 +10,5 @@
 * [자바 ORM 표준 JPA 프로그래밍](study/orm-jpa.md)
 * [Clean Code](study/clean-code.md)
 * [객체지향의 사실과 오해](study/the-eoo/README.md)
+  * [02. 이상한 나라의 객체](study/the-eoo/02..md)
   * [01. 협력하는 객체들의 공동체](study/the-eoo/01..md)
