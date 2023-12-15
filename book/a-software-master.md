@@ -1,5 +1,11 @@
 # 소프트웨어 장인
 
+[소프트웨어 장인](https://product.kyobobook.co.kr/detail/S000001889885) 책을 요약한 내용입니다.
+
+<figure><img src="../.gitbook/assets/a-software-master.jpg" alt=""><figcaption></figcaption></figure>
+
+## Intro
+
 겸손해져야 한다. 일을 끝내는 것 자체로는 부족하다. 그 일을 어떻게 하느냐가 더 중요하다. 자신이 하는 일 자체에 주의를 기울이자.
 
 일을 어떻게 했느냐는 일을 해낸것만큼이나 중요하다.

@@ -1,6 +1,6 @@
 # GoF Design Patterns
 
-[Refactoring.Guru](https://refactoring.guru/design-patterns) 의 [Design Patterns](https://refactoring.guru/design-patterns) 주제를 정리하며 실습한 내용들을 다루는 글입니다. (진행 중🏃🏻‍♂️)
+[Refactoring.Guru](https://refactoring.guru/design-patterns) 의 [Design Patterns](https://refactoring.guru/design-patterns) 주제를 정리하며 실습한 내용들을 다루는 글입니다.
 
 .
 

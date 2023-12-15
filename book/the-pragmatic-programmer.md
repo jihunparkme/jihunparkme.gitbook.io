@@ -1,6 +1,6 @@
 # The Pragmatic Programmer
 
-[실용주의 프로그래머](https://product.kyobobook.co.kr/detail/S000001032986) 책을 요약한 내용입니다. (진행 중🏃🏻‍♂️)
+[실용주의 프로그래머](https://product.kyobobook.co.kr/detail/S000001032986) 책을 요약한 내용입니다.
 
 <figure><img src="../.gitbook/assets/the-pragmatic-programmer.jpg" alt=""><figcaption></figcaption></figure>
 
