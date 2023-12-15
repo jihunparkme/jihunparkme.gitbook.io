@@ -1,6 +1,8 @@
 # 함께 자라기
 
-[김창준님의 함께 자라기](http://www.yes24.com/Product/Goods/67350256) 책을 요약한 내용입니다.
+[김창준님의 함께 자라기](https://product.kyobobook.co.kr/detail/S000001033071) 책을 요약한 내용입니다.
+
+<figure><img src="../.gitbook/assets/growing-up-together.jpg" alt=""><figcaption></figcaption></figure>
 
 ## Preface
 
