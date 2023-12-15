@@ -30,6 +30,9 @@
 
 ## Book
 
+* [Effective Java 3/E](book/effective-java/README.md)
+  * [객체, 공통 메서드](book/effective-java/01.md)
+  * [클래스, 인터페이스, 제네릭](book/effective-java/02.md)
 * [소프트웨어 장인](book/a-software-master.md)
 * [함께 자라기](book/growing-up-together.md)
 * [Modern Java In Action](book/modern-java-in-action/README.md)
