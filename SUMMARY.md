@@ -29,6 +29,7 @@
 
 ## Book
 
+* [소프트웨어 장인](book/a-software-master.md)
 * [함께 자라기](book/growing-up-together.md)
 * [Modern Java In Action](book/modern-java-in-action/README.md)
   * [01.기초](book/modern-java-in-action/01.md)
