@@ -32,6 +32,7 @@
 
 ## Book
 
+* [GoF Design Patterns](book/gof-design-pattern.md)
 * [Effective Java 3/E](book/effective-java/README.md)
   * [객체, 공통 메서드](book/effective-java/01.md)
   * [클래스, 인터페이스, 제네릭](book/effective-java/02.md)
