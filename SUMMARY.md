@@ -5,6 +5,7 @@
 
 ## Lecture
 
+* [Spring Boot](lecture/spring-boot.md)
 * [Spring Batch](lecture/spring-boot-base-spring-batch.md)
 * [Spring Core Advanced](lecture/spring-core-principles-advanced.md)
 * [Spring DB Part II](lecture/spring-db-part-2.md)
