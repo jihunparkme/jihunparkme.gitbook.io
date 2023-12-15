@@ -5,6 +5,7 @@
 
 ## Lecture
 
+* [The Java](lecture/the-java.md)
 * [Toby Spring Boot](lecture/toby-spring-boot.md)
 * [Spring Boot](lecture/spring-boot.md)
 * [Spring Batch](lecture/spring-boot-base-spring-batch.md)

@@ -1,0 +1,1972 @@
+# The Java
+
+백기선님의 [더 자바, Java 8](https://www.inflearn.com/course/the-java-java8/dashboard), [더 자바, 코드를 조작하는 다양한 방법](https://www.inflearn.com/course/the-java-code-manipulation/dashboard) 강의를 요약한 내용입니다.
+
+## Java 8
+
+**Java 8**
+- LTS(Long-Term-Support) 버전
+- 출시일: 2014년 3월
+- 주요 기능
+  - 람다 표현식, 메소드 레퍼런스, 스트림 API, Optional<T> ...
+- [Oracle JDK](https://www.oracle.com/java/technologies/downloads/#java21)
+- Open JDK: Oracle, AdoptOpenJDK, Amazon Corretto, Azul Zulu
+- 참고.
+  - [Java Development Kit 8 Update Release Notes](https://www.oracle.com/java/technologies/javase/8u-relnotes.html)
+  - [Which versions of Java do you regularly use?](https://www.jetbrains.com/lp/devecosystem-2022/java/)
+  - [Oracle Java SE Support Roadmap](https://www.oracle.com/java/technologies/java-se-support-roadmap.html)
+  - [Java version history](https://en.wikipedia.org/wiki/Java_version_history)
+  - [What Does Long-Term Support Mean for OpenJDK?](https://www.javacodegeeks.com/2019/07/long-term-support-mean-openjdk.html)
+
+.
+
+**LTS(Long-Term-Support)**
+- 비-LTS
+  - 배포 주기: `6개월`
+  - 지원 기간: 배포 이후 `6개월`(다음 버전이 나오면 지원 종료)
+- LTS
+  - 배포 주기: `3년`(매 6번째 배포판이 LTS)
+  - 지원 기간: `5년이상`(JDK 제공 밴더와 이용하는 서비스에 따라 차이)
+  - 실제 서비스 운영 환경에서는 LTS 버전 권장
+- 매년 3월과 9월에 새 버전 배포
+
+## Functional Interface & Lambda
+
+함수형 인터페이스(Functional Interface)
+
+```java
+@FunctionalInterface
+public interface RunSomething {
+    void doIt();
+}
+```
+- 추상 메소드를 딱 하나만 가지고 있는 인터페이스
+- SAM(Single Abstract Method) 인터페이스
+- @FuncationInterface 애노테이션을 가지고 있는 인터페이스
+
+.
+
+람다 표현식(Lambda Expressions)
+
+```java
+RunSomething runSomething = () -> System.out.println("Hello");
+RunSomething2 runSomething2 = number -> number + 10;
+
+runSomething.doIt();
+runSomething2.doIt();
+```
+- 간결한 코드
+- 함수형 인터페이스의 인스턴스를 만드는 방법으로 사용 가능
+- 메소드 매개변수, 리턴 타입, 변수로 만들어 사용 가능
+
+.
+
+**자바에서 함수형 프로그래밍**
+- 함수를 First class object로 사용 가능
+- 순수 함수(Pure function)
+  - 사이드 이팩트 없음(함수 밖에 있는 값을 변경하지 않음)
+  - 상태가 없음(함수 밖에 있는 값을 사용하지 않음)
+- 고차 함수(Higher-Order Function)
+  - 함수가 함수를 매개변수로 받을 수 있고, 함수 리턴 가능
+- 불변성
+
+### Functional Interface
+
+**Java 기본 제공 함수형 인터페이스**
+- [java.lang.funcation package](https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html)
+
+`Function<T, R>`
+- T 타입을 받아서 R 타입을 리턴하는 함수 인터페이스
+
+```java
+private final Function<Integer, Integer> plus10 = (num) -> num + 10;
+  private final Function<Integer, Integer> multiply2 = (num) -> num * 2;
+
+  @Test
+  void apply() throws Exception {
+      /**
+       * R apply(T t)
+       */
+      Assertions.assertEquals(11, plus10.apply(1));
+  }
+
+  @Test
+  void compose() throws Exception {
+      /**
+       * Function<V, R> compose(Function<? super V, ? extends T> before)
+       * multiply2 실행 이후 plus10 실행
+       */
+      Function<Integer, Integer> multiply2AndPlus10 = plus10.compose(multiply2);
+      Assertions.assertEquals(14, multiply2AndPlus10.apply(2)); // (num * 2) + 10
+  }
+
+  @Test
+  void andThen() throws Exception {
+      /**
+       * Function<T, V> andThen(Function<? super R, ? extends V> after)
+       * plus10 실행 이후 multiply2 실행
+       */
+      Function<Integer, Integer> plus10AndMultiply2 = plus10.andThen(multiply2);
+      Assertions.assertEquals(24, plus10AndMultiply2.apply(2)); // (num + 10) * 2
+  }
+```
+
+`BiFunction<T, U, R>`
+- 두 개의 값(T, U)를 받아서 R 타입을 리턴하는 함수 인터페이스
+- R apply(T t, U u)
+
+```java
+@Test
+void apply() throws Exception {
+    /**
+     * R apply(T t, U u);
+     */
+    BiFunction<Integer, Integer, Integer> add = (num1, num2) ->  num1 + num2;
+    BiFunction<Integer, Integer, Integer> minus = (num1, num2) -> num1 - num2;
+    BiFunction<Integer, Integer, Integer> multiple = (num1, num2) -> num1 * num2;
+
+    Assertions.assertEquals(15, add.apply(10, 5));
+    Assertions.assertEquals(5, minus.apply(10, 5));
+    Assertions.assertEquals(50, multiple.apply(10, 5));
+}
+```
+
+`Consumer<T>`
+- T 타입을 받아서 아무값도 리턴하지 않는 함수 인터페이스
+
+```java
+@Test
+void accept() throws Exception {
+    /**
+     * void accept(T t);
+     */
+    Consumer<Integer> printT = System.out::println;
+    printT.accept(10); // 10
+}
+
+@Test
+void andThen() throws Exception {
+    /**
+     * Consumer<T> andThen(Consumer<? super T> after)
+     */
+    Consumer<String> printJava = s -> System.out.println(s + "Java ");
+    Consumer<String> printWorld = s -> System.out.println(s + "World ");;
+    printJava.andThen(printWorld).accept("Hello"); // HelloJava -> HelloWorld
+}
+```
+
+`Supplier<T>`
+- T 타입의 값을 제공하는 함수 인터페이스
+
+```java
+@Test
+void get() throws Exception {
+    /**
+     * T get()
+     */
+    Supplier<Integer> get10 = () -> 10;
+    Assertions.assertEquals(10, get10.get());
+}
+```
+
+`Predicate<T>`
+- T 타입을 받아서 boolean을 리턴하는 함수 인터페이스
+- 함수 조합용 메소드
+
+```java
+private final Predicate<Integer> isEven = i -> i % 2 == 0;
+private final Predicate<Integer> under10 = i -> i < 10;
+
+@Test
+void test() throws Exception {
+    /**
+     * boolean test(T t);
+     */
+    Predicate<String> startsWithHello = s -> s.startsWith("hello");
+
+    Assertions.assertTrue(startsWithHello.test("hello Aaron"));
+    Assertions.assertTrue(isEven.test(8));
+}
+
+@Test
+void and() throws Exception {
+    /**
+     * Predicate<T> and(Predicate<? super T> other)
+     */
+    Assertions.assertTrue(isEven.and(under10).test(4));
+    Assertions.assertFalse(isEven.and(under10).test(12));
+}
+
+@Test
+void or() throws Exception {
+    /**
+     * Predicate<T> or(Predicate<? super T> other)
+     */
+    Assertions.assertTrue(isEven.or(under10).test(4));
+    Assertions.assertTrue(isEven.or(under10).test(12));
+    Assertions.assertTrue(isEven.or(under10).test(7));
+}
+
+@Test
+void negate() throws Exception {
+    /**
+     * Predicate<T> negate()
+     */
+    Assertions.assertTrue(isEven.negate().test(5));
+    Assertions.assertTrue(under10.negate().test(17));
+    Assertions.assertFalse(isEven.negate().test(4));
+    Assertions.assertFalse(under10.negate().test(5));
+}
+```
+
+`UnaryOperator<T>`
+- Function<T, R>의 특수한 형태(Function 상속)
+- 입력값 하나를 받아서 동일한 타입을 리턴하는 함수 인터페이스
+
+```java
+private final UnaryOperator<Integer> plus10 = (num) -> num + 10;
+private final UnaryOperator<Integer> multiply2 = (num) -> num * 2;
+
+@Test
+void test() throws Exception {
+    Assertions.assertEquals(11, plus10.apply(1));
+    Assertions.assertEquals(14, plus10.compose(multiply2).apply(2)); // (num * 2) + 10
+    Assertions.assertEquals(24, plus10.andThen(multiply2).apply(2)); // (num + 10) * 2
+}
+```
+
+`BinaryOperator<T>`
+- BiFunction<T, U, R>의 특수한 형태
+- 동일한 타입의 입렵값 두 개를 받아 리턴하는 함수 인터페이스
+
+```java
+@Test
+void apply() throws Exception {
+    /**
+     * R apply(T t, U u);
+     */
+    BinaryOperator<Integer> add = (num1, num2) ->  num1 + num2;
+    BinaryOperator<Integer> minus = (num1, num2) -> num1 - num2;
+    BinaryOperator<Integer> multiple = (num1, num2) -> num1 * num2;
+
+    Assertions.assertEquals(15, add.apply(10, 5));
+    Assertions.assertEquals(5, minus.apply(10, 5));
+    Assertions.assertEquals(50, multiple.apply(10, 5));
+}
+```
+
+### Lambda
+
+[Lambda Expressions](https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)
+
+`(인자 리스트) -> {바디}`
+
+.
+
+인자 리스트
+- 인자 없음: ()
+- 인자가 한 개: (one) 또는 one
+- 인자가 여러 개: (one, two)
+- 인자의 타입은 생략 가능(컴파일러가 추론하지만 명시도 가능)
+
+.
+
+바디
+- 화살표 오른쪽에 함수 본문 정의
+- 여러 줄인 경우 {} 사용
+- 한 줄인 경우 바디, return 생략 가능
+
+.
+
+변수 캡처(Variable Capture)
+- 로컬 변수 캡처
+  - final, effective final 인 경우에만 참조 가능
+  - 그렇지 않을 경우, concurrency 문제가 발생할 수 있어서 컴파일러가 방지
+- effective final
+  - 자바 8부터 지원하는 기능
+  - final 키워드를 사용하지 않지만, 변경이 없는 변수를 익명 클래스 구현체, 람다에서 참조 가능
+- 람다는 익명 클래스 구현체와 달리 [Shadowing](https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html#shadowing)하지 않음
+  - 익명 클래스는 새로운 스콥을 만들지만, 람다는 람다를 감싸고 있는 스콥과 같음
+  - 람다를 감싼 스콥에 있는 동일한 이름의 변수 정의 불가
+
+### Method Reference
+
+[Method References](https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html) 를 사용해서 메소드, 생성자 호출를 매우 간결하게 표현 가능
+
+```java
+@Test
+void static_method_reference() throws Exception {
+    // static method reference(Type::static-method)
+    UnaryOperator<String> hi = Greeting::hi;
+    assertEquals("hi aaron", hi.apply("aaron"));
+}
+
+@Test
+void random_object_instance_method_reference() throws Exception {
+    String[] names = {"ccc", "aaa", "bbb"};
+    // random object instance method reference(Type::instance-method)
+    Arrays.sort(names, String::compareToIgnoreCase);
+    assertEquals("[aaa, bbb, ccc]", Arrays.toString(names));
+}
+
+@Test
+void no_arg_constructor_reference() throws Exception {
+    // no arg constructor reference(Type::new)
+    Supplier<Greeting> greetingSupplier = Greeting::new;
+    Greeting greeting = greetingSupplier.get();
+    // specific object instance method reference(Object-reference::instance-method)
+    UnaryOperator<String> hello = greeting::hello;
+
+    assertEquals("Hello Aaron", hello.apply("Aaron"));
+}
+
+@Test
+void AllArgsConstructor() throws Exception {
+    // arg constructor reference(Type::new)
+    Function<String, Greeting> greetingFunction = Greeting::new;
+    Greeting greeting = greetingFunction.apply("aaron");
+    assertEquals("aaron", greeting.getName());
+}
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+private class Greeting {
+    private String name;
+
+    public String hello(String name) {
+        return "Hello " + name;
+    }
+
+    public static String hi(String name) {
+        return "hi " + name;
+    }
+}
+```
+
+## Interface
+
+[**Default Methods**](https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html)
+
+Collection interface
+
+```java
+/**
+ * Removes all of the elements of this collection that satisfy the given
+ * predicate...
+ *
+ * @implSpec
+ * The default implementation traverses all elements of the collection using
+ * its {@link #iterator}.  Each matching element is removed using
+ * {@link Iterator#remove()}.  If the collection's iterator does not
+ * support removal then an {@code UnsupportedOperationException} will be
+ * thrown on the first matching element.
+ *
+ * ...
+ */
+default boolean removeIf(Predicate<? super E> filter) {
+    Objects.requireNonNull(filter);
+    boolean removed = false;
+    final Iterator<E> each = iterator();
+    while (each.hasNext()) {
+        if (filter.test(each.next())) {
+            each.remove();
+            removed = true;
+        }
+    }
+    return removed;
+}
+```
+
+- 인터페이스에 메소드 선언이 아니라 구현체를 제공하는 방법
+- 구현 클래스를 깨뜨리지 않고 새 기능 추가 가능
+- Default Methods 는 구현체 모르게 추가된 기능으로 리스크 존재
+  - 컴파일 에러는 아니지만 구현체에 따라 런타임 에러(ex. NPE) 발생 가능
+  - 반드시 문서화 필요(@implSpec 사용)
+  - 필요 시 구현체가 재정의
+- Object 가 제공하는 기능(equals, hasCode)은 기본 메소드로 제공 불가
+  - 구현체가 재정의
+- 본인이 수정할 수 있는 인터페이스에만 기본 메소드 제공 가능
+- 인터페이스를 상속받는 인터페이스에서 기본 메소드를 다시 추상 메소드로 변경 가능
+- 기본 메소드가 충동하는 경우 직접 오버라이딩 필요
+- [Evolving Interfaces](https://docs.oracle.com/javase/tutorial/java/IandI/nogrow.html)
+
+.
+
+**Static Method**
+
+- 해당 타입 관련 헬퍼, 유틸리티 메소드 제공 시 유용
+
+.
+
+**Java 8 Default Methods**
+
+[Iterable](https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html) 기본 메소드
+
+```java
+private static final List<String> name = List.of("park", "aaron", "keesun", "whiteship");
+
+@Test
+void forEach() throws Exception {
+    /**
+     * default void forEach(Consumer<? super T> action)
+     * - 모든 요소가 처리되거나 예외가 발생할 때까지 Iterable 각 요소에 대해 지정된 작업 수행
+     */
+    name.forEach(System.out::println);
+}
+
+@Test
+void spliterator() throws Exception {
+    /**
+     * default Spliterator<E> spliterator()
+     * - Creates a Spliterator over the elements described by this Iterable.
+     */
+    Spliterator<String> spliterator1 = name.spliterator();
+    Spliterator<String> spliterator2 = spliterator1.trySplit();
+    while(spliterator1.tryAdvance(System.out::println)); // keesun, whiteship
+    while(spliterator2.tryAdvance(System.out::println)); // park, aaron
+}
+```
+
+[Collection](https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html) 기본 메소드
+- parallelStream(), spliterator()
+
+```java
+private List<String> name = new ArrayList<>();
+
+@BeforeEach
+void beforeEach() {
+    name.add("park");
+    name.add("aaron");
+    name.add("keesun");
+    name.add("whiteship");
+}
+
+@Test
+void stream() throws Exception {
+    /**
+     * default Stream<E> stream()
+     */
+    long count = name.stream()
+            .map(String::toUpperCase)
+            .filter(s -> s.startsWith("A"))
+            .count();
+
+    Assertions.assertEquals(1, count);
+}
+
+@Test
+void removeIf() throws Exception {
+    /**
+     * default Stream<E> stream()
+     */
+    name.removeIf(s -> s.startsWith("w"));
+    Assertions.assertEquals(3, name.size());
+}
+```
+
+[Comparator](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html) 기본 메소드 및 스태틱 메소드
+- thenComparing()
+- static reverseOrder() / naturalOrder()
+- static nullsFirst() / nullsLast()
+- static comparing()
+
+```java
+private List<String> name = new ArrayList<>();
+
+@BeforeEach
+void beforeEach() {
+    name.add("park");
+    name.add("aaron");
+    name.add("keesun");
+    name.add("whiteship");
+}
+
+@Test
+void sort() throws Exception {
+    /**
+     * default void sort(Comparator<? super E> c)
+     */
+    // 순차정렬
+    name.sort(String::compareToIgnoreCase);
+
+    // 역순정렬
+    Comparator<String> compareToIgnoreCase = String::compareToIgnoreCase;
+    name.sort(compareToIgnoreCase.reversed());
+}
+```
+
+[Spliterator](https://docs.oracle.com/javase/8/docs/api/java/util/Spliterator.html) 기본 메소드
+- forEachRemaining(Consumer)
+- getExactSizeIfKnown()
+- hasCharacteristics()
+- getComparator()
+
+## Stream
+
+[Package java.util.stream](https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html)
+
+[**Stream**](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)
+- 데이터를 담고 있는 저장소(컬렉션)가 아니라, 어떠한 연속된 데이터를 처리하는 `오퍼레이션들의 모음`
+- 스트림 처리 시 데이터 원본은 변경하지 않음
+- 스트림으로 처리하는 데이터는 오직 한 번만 처리
+- 실시간으로 스트림 데이터가 들어올 경우 무한 처리(Short Circuit 메소드를 사용해서 제한 가능)
+- 중개 오퍼레이션은 근본적으로 lazy 특성을 가짐
+- 데이터가 방대한 경우 parallelStream() 으로 손쉽게 병렬 처리 가능
+  - 스레드 생성, 병렬처리 후 수집, 스레드 간 컨텍스트 스위칭 등의 비용으로 무조건 빨라지는 건 아님
+
+**스트림 파이프라인**
+- 0 또는 다수의 중개 오퍼레이션과 한 개의 종료 오퍼레이션으로 구성
+- 스트림의 데이터 소스는 오직 터미널 오퍼네이션을 실행할 때에만 처리
+
+**중개 오퍼레이션**(intermediate operation)
+- Stream 리턴
+- Stateless / Stateful 오퍼레이션으로 더 상세하게 구분 가능
+  - 대부분 Stateless operation
+  - 이전 소스 데이터를 참조해야 하는 오퍼레이션(ex. distinct, sorted)은 Stateful 오퍼레이션
+- filter, map, limit, skip, sorted ...
+
+**종료 오퍼레이션**(terminal operation)
+- Stream 리턴 X
+- collect, allMatch, count, forEach, min, max ...
+
+.
+
+**Stream API**
+
+[StreamTest](https://github.com/jihunparkme/java-example/blob/main/src/test/java/com/example/java8to11/stream/StreamTest.java)
+
+필터링
+
+```java
+@Test
+@DisplayName("spring 으로 시작하는 수업")
+void test01() {
+    /**
+     * Stream<T> filter(Predicate<? super T> predicate);
+     */
+    List<OnlineClass> springClass = springClasses.stream()
+            .filter(oc -> oc.getTitle().startsWith("spring"))
+            .collect(Collectors.toList());
+    Assertions.assertEquals(5, springClass.size());
+}
+```
+
+스트림 변경
+
+```java
+@Test
+@DisplayName("수업 이름만 모아서 스트림 만들기")
+void test03() {
+    /**
+     * <R> Stream<R> map(Function<? super T, ? extends R> mapper);
+     */
+    springClasses.stream()
+            .map(OnlineClass::getTitle)
+            .forEach(System.out::println);
+}
+
+...
+
+@Test
+@DisplayName("두 수업 목록에 들어 있는 모든 수업 아이디")
+void test04() {
+    /**
+     * <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper);
+     */
+    List<OnlineClass> allClasses = aaronEvents.stream()
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+
+    Assertions.assertEquals(8, allClasses.size());
+}
+```
+
+스트림 생성과 제한
+
+```java
+@Test
+@DisplayName("10부터 1씩 증가하는 무제한 스트림 중에서 앞에 10개 빼고 최대 10개 까지만")
+void test05() {
+    /**
+     * public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f)
+     * Stream<T> skip(long n);
+     * Stream<T> limit(long maxSize);
+     * long count();
+     */
+    long count = Stream.iterate(10, i -> i + 1)
+            .skip(10)
+            .limit(10)
+            .count();
+    Assertions.assertEquals(10, count);
+}
+```
+
+스트림에 있는 데이터가 특정 조건을 만족하는지 확인
+
+```java
+@Test
+@DisplayName("자바 수업 중 Test가 들어 있는 수업이 있는지 확인")
+void test06() {
+    /**
+     * boolean anyMatch(Predicate<? super T> predicate);
+     * boolean allMatch(Predicate<? super T> predicate);
+     * boolean noneMatch(Predicate<? super T> predicate);
+     */
+    boolean result = javaClasses.stream()
+            .anyMatch(oc -> oc.getTitle().contains("Test"));
+    Assertions.assertTrue(result);
+}
+```
+
+스트림을 데이터 하나로 뭉치기
+- reduce(identity, BiFunction), collect(), sum(), max()
+
+## Optional
+
+[**Class Optional<T>**](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html)
+
+```java
+OptionalInt.of(10);
+Optional.empty();
+Optional.ofNullable(progress);
+```
+
+NullPointerException 을 만나는 이유
+- null 을 리턴하고, null 체크를 놓치기 떄문
+
+메소드에서 작업 중 특별한 상황에서 값을 제대로 리턴할 수 없는 경우 선택할 수 있는 방법
+- 예외 던진기 (스택트레이스를 찍어다보니 비싼 비용 발생)
+- null 리턴 (클라이언트쪽에서 null 처리 필요)
+- Optional 리턴 (클라이언트에게 명시적으로 빈 값일 수도 있다는 것을 전달하고, 빈 값인 경우에 대한 처리를 강제)
+
+Optional
+- 한 개의 값이 들어있을 수도 없을 수도 있는 컨네이너
+
+주의점
+- 리턴값으로만 사용 권장
+  - 메소드 매개변수 타입으로 사용 시, 번거롭게 null + optional 체크 필요
+  - 맵의 키 타입으로 사용 시, 맵의 키가 없을 수도 있다는 위험 제공
+  - 인스턴스 필드 타입으로 사용 시, 필드가 없을 수도 있다는 위험 제공
+- null 대신 Optional.empty() 리턴 권장
+- Primitive Type Optional 제공
+  - 박싱, 언박싱 발생을 방지하고, 성능 향상을 위해 사용 권장
+  - OptionalInt, OptionalLong ...
+- Collection, Map, Stream Array, Optional은 Opiontal 로 두 번 감싸지 않기
+
+[Tired of Null Pointer Exceptions? Consider Using Java SE 8's "Optional"!](https://www.oracle.com/technical-resources/articles/java/java8-optional.html)
+
+.
+
+**Optional API**
+
+[OptionalTest](https://github.com/jihunparkme/java-example/blob/ccc45546d2a0b1c9df7192a84dbd25b3e046bb7e/src/test/java/com/example/java8to11/optional/OptionalTest.java)
+
+Optional 생성
+
+```java
+Optional.of()
+Optional.ofNullable()
+Optional.empty()
+```
+
+Optional 값 포함 여부 확인
+
+```java
+optional.isPresent()
+optional.isEmpty() // Java 11 이후
+```
+
+Optional 값 가져오기
+
+```java
+optional.get(); // 비어있을 경우 NoSuchElementException 예외 발생
+```
+
+Optional 에 값이 존재할 경우 동작 수행
+
+```java
+optional.ifPresent(oc -> System.out.println(oc.getTitle()));
+```
+
+Optional 에 값이 있을 경우 꺼내고, 무조건 새로운 클래스 생성
+
+```java
+optional.orElseGet(OptionalTest::createNewClass);
+```
+
+Optional 에 값이 있을 경우 꺼내고, 없으면 새로운 클래스 제공
+
+```java
+result.orElseGet(OptionalTest::createNewClass);
+```
+
+Optional 에 값이 있을 경우 꺼내고, 없으면 예외
+
+```java
+assertThrows(NoSuchElementException.class, () -> {
+    result.orElseThrow();
+});
+
+assertThrows(IllegalStateException.class, () -> {
+    result.orElseThrow(IllegalStateException::new);
+});
+```
+
+Optional 값을 필터링
+
+```java
+Optional<OnlineClass> jpaClass = result.filter(Predicate.not(OnlineClass::isClosed));
+```
+
+Optional 값을 매핑(변환)
+
+```java
+Optional<Integer> jpaClassId = result.map(OnlineClass::getId);
+```
+- flatMap(Function): Optional 안에 들어있는 인스턴스가 Optional 인 경우 편리
+
+## Date & Time API
+
+java 8 에 새로운 날짜/시간 API 가 생긴 이유
+- 그 전까지 사용하던 java.util.Date 클래스는 mutable 하기 때문에 thead safe 하지 않음
+- 클래스 이름이 명확하지 않음(Date 인데 시간까지 다루는 등..)
+- 버그가 발생할 여지가 많음(타입 안정성이 없고, 월이 0부터 시작하는 등..)
+- 날짜, 시간 처리가 복잡한 애플리케이션에서는 보통 [Joda Time](https://www.joda.org/joda-time/) 사용
+
+java 8 에서 제공하는 Date-Time API
+- [JSR-310 스팩](https://jcp.org/en/jsr/detail?id=310) 구현체 제공
+- [Design Principles](https://docs.oracle.com/javase/tutorial/datetime/overview/design.html)
+  - `Clear`: 동작이 명확하고 예상 가능
+  - `Fluent`: 유연한 인터페이스 제공. 메소드 호출을 연결하여 간결함 제공
+  - `Immutable`: 불변 객체 생성, thead safe
+  - `Extensible`: 확장 가능
+
+주요 API
+- 기계용 시간(`machine time`)과 인류용 시간(`human time`)으로 구분
+- 기계용 시간
+  - EPOCK(1970년 1월 1일 0시 0분 0초)부터 현재까지의 타임스탬프를 표현
+  - 타임스탬프는 Instant 사용
+- 인류용 시간
+  - 우리가 흔히 사용하는 연,월,일,시,분,초 등을 표현
+  - 특정 날짜(LocalDate), 시간(LocalTime), 일시(LocalDateTime) 사용 가능
+  - 기간을 표현할 때는 Duration(시간 기반)과 Period(날짜 기반) 사용 가능
+  - DateTimeFormatter 를 사용해서 일시를 특정한 문자열로 포매팅 가능
+
+참고
+- [ALL ABOUT JAVA.UTIL.DATE](https://codeblog.jonskeet.uk/2017/04/23/all-about-java-util-date/)
+- [Date-Time](https://docs.oracle.com/javase/tutorial/datetime/overview/index.html)
+- [Standard Calendar](https://docs.oracle.com/javase/tutorial/datetime/iso/overview.html)
+
+.
+
+[DateTest.java](https://github.com/jihunparkme/java-example/blob/main/src/test/java/com/example/java8to11/date/DateTest.java)
+
+`기계용 시간`(machine time) 표현
+- UTC(Universal Time Coordinated) == GMT(Greenwich Mean Time)
+- 보통 시간을 재는 경우 사용
+
+```java
+Instant instant = Instant.now();
+System.out.println(instant); // 2023-09-30T12:44:46.452980Z
+System.out.println(instant.atZone(ZoneId.of("UTC"))); // 2023-09-30T12:44:46.452980Z[UTC]
+System.out.println(instant.atZone(ZoneId.of("GMT"))); // 2023-09-30T12:45:17.336132Z[GMT]
+
+ZoneId zone = ZoneId.systemDefault();
+ZonedDateTime zonedDateTime = instant.atZone(zone);
+System.out.println(zone); // Asia/Seoul
+System.out.println(zonedDateTime); // 2023-09-30T21:44:46.452980+09:00[Asia/Seoul]
+```
+
+`인류용 시간`(human time) 표현
+- LocalDateTime.of(int, Month, int, int, int, int): 로컬 특정 일시
+- ZonedDateTime.of(int, Month, int, int, int, int, ZoneId): 특정 Zone 의 특정 일시
+
+```java
+LocalDateTime now = LocalDateTime.now(); // 현재 시스템 Zone 일시
+System.out.println(now); // 2023-09-30T21:57:26.029797
+
+LocalDateTime today = LocalDateTime.of(20023, Month.SEPTEMBER, 30, 0, 0, 0, 0);
+System.out.println(today); // +20023-09-30T00:00
+
+ZonedDateTime nowInLosAngeles = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"));
+System.out.println(nowInLosAngeles); // 2023-09-30T05:57:26.033318-07:00[America/Los_Angeles]
+
+Instant instant = Instant.now();
+ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("America/Los_Angeles"));
+System.out.println(zonedDateTime); // 2023-09-30T05:57:26.034100-07:00[America/Los_Angeles]
+```
+
+날짜 연산
+
+```java
+LocalDateTime now = LocalDateTime.now();
+LocalDateTime plusDay = now.plus(10, ChronoUnit.DAYS);
+LocalDateTime plusMonth = now.plus(2, ChronoUnit.MONTHS);
+```
+
+기간 표현
+
+```java
+// Machine Time Duration
+Instant now = Instant.now();
+Instant plus = now.plus(10, ChronoUnit.SECONDS);
+Duration between = Duration.between(now, plus);
+System.out.println(between.getSeconds()); // 10
+
+// Human Time Period
+LocalDate today = LocalDate.now();
+LocalDate christmas = LocalDate.of(2023, Month.DECEMBER, 25);
+
+Period period = Period.between(today, christmas);
+System.out.println(period.getMonths()); // 2
+
+Period until = today.until(christmas);
+System.out.println(until.getDays()); // 25
+```
+
+Pasing/Formatting
+- [DateTimeFormatter](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#pre)
+
+```java
+// formatting
+LocalDateTime now = LocalDateTime.now();
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+System.out.println(now.format(formatter)); // 2023/09/30
+
+DateTimeFormatter isoLocalDate = DateTimeFormatter.ISO_LOCAL_DATE;
+System.out.println(now.format(isoLocalDate)); // 2023-09-30
+
+// parsing
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+LocalDate parse = LocalDate.parse("2023/09/30", formatter);
+System.out.println(parse); // 2023-09-30
+```
+
+레거시 API 지원
+- GregorianCalendar, Date 타입의 인스턴스를 Instant/ZonedDateTime 으로 변환 가능
+- java.util.TimeZone 에서 java.time.ZoneId 로 상호 변환 가능
+
+```java
+Date date = new Date(); // Sat Sep 30 22:24:04 KST 2023
+Instant instant = date.toInstant(); // 2023-09-30T13:24:04.618Z
+Date dateFromInstant = Date.from(instant);
+
+GregorianCalendar gregorianCalendar = new GregorianCalendar(); // java.util.GregorianCalendar[time=1696080458867,areFieldsSet=true,areAl...
+ZonedDateTime zonedDateTime = gregorianCalendar.toInstant().atZone(ZoneId.systemDefault()); // 2023-09-30T22:27:38.867+09:00[Asia/Seoul]
+GregorianCalendar gregorianCalendarFromZonedDateTime = GregorianCalendar.from(zonedDateTime);
+
+ZoneId zoneId = TimeZone.getTimeZone("PST").toZoneId(); // America/Los_Angeles
+TimeZone timeZone = TimeZone.getTimeZone(zoneId); // sun.util.calendar.ZoneInfo[id="America/Los_Angeles",of
+ZoneId timeZoneFromZonId = timeZone.toZoneId();
+```
+
+## CompletableFuture
+
+### Java Concurrency 
+
+[Java Concurrency](https://docs.oracle.com/javase/tutorial/essential/concurrency/)
+
+Concurrent Software
+- 동시에 여러 작업을 할 수 있는 소프트웨어
+
+Java Concurrency Programming
+- 멀티프로세싱(ProcessBuilder)
+- 멀티쓰레드
+
+Java multi-thread Programming
+- Thread / Runnable
+
+쓰레드 주요 기능([example](https://github.com/jihunparkme/java-example/tree/main/src/main/java/com/example/java8to11/thread))
+- [sleep](https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#sleep-long-): 현재 쓰레드 멈추기
+  - 다른 쓰레드가 처리할 수 있도록 기회 제공(락을 놓진 않음, 데드락 발생 가능)
+- [interrupt](https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#interrupt--): 다른 쓰레드 깨우기
+  - 다른 쓰레드를 깨워서 interruptedExeption 발생
+- [join](https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#join--): 다른 쓰레드 대기
+  - 다른 쓰레드가 끝날 때까지 대기
+
+다수의 스레드를 코딩으로 관리하기 어려움. Execute 생성.
+
+### Executors
+
+High-Level Concurrency Programming
+- 쓰레드를 생성하고 관리하는 작업을 애플리케이션에서 분리하고 Executors 에게 위임
+
+[Executors](https://docs.oracle.com/javase/tutorial/essential/concurrency/executors.html) 의 하는 일
+- 쓰레드 생성: 애플리케이션이 사용할 쓰레드 풀을 만들어 관리
+- 쓰레드 관리: 쓰레드 생명 주기를 관리
+- 작업 처리 및 실행: 쓰레드로 실행할 작업을 제공할 수 있는 API 제공
+  
+주요 인터페이스
+- `Executor`: execute(Runnable)
+- `ExecutorService`: Executor 를 상속 받은 인터페이스
+  - Callable, Runnable 실행, Executor 종료
+  - 여러 Callable 동시 실행 등의 기능 제공
+- `ScheduledExecutorService`: ExecutorService 를 상속 받은 인터페이스
+  - 특정 시간 이후 또는 주기적으로 작업 실행
+
+[example](https://github.com/jihunparkme/java-example/tree/main/src/main/java/com/example/java8to11/execute)
+
+```java
+/**
+ * ExecutorService
+ * 
+ * void shutdown(): 이전에 제출된 작업이 실행되지만 새 작업은 허용되지 않는 순차적 종료(Graceful Shutdown)
+ * List<Runnable> shutdownNow(): 현재 실행 중인 모든 작업을 중지하려고 시도하고, 대기 중인 작업의 처리를 중지하고, 실행 대기 중인 작업 목록을 반환
+ */
+ExecutorService executorService = Executors.newSingleThreadExecutor();
+executorService.submit(() -> System.out.println("Thread " + Thread.currentThread().getName()));
+
+executorService.shutdown();
+
+/**
+ * ScheduledExecutorService.schedule
+ */
+ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+executorService.schedule(() ->
+                System.out.println("Thread " + Thread.currentThread().getName()),
+        5, TimeUnit.SECONDS);
+
+executorService.shutdown();
+
+...
+
+/**
+ * ScheduledExecutorService.scheduleAtFixedRate
+ */
+ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+executorService.scheduleAtFixedRate(() ->
+                System.out.println("Thread " + Thread.currentThread().getName()),
+        1, 2, TimeUnit.SECONDS);
+```
+
+Fork/Join 프레임워크
+- ExecutorService 구현체로 쉬운 멀티 프로세서 활용 지원
+
+### Callable & Future
+
+Callable
+- Runnable 과 유사하지만 작업의 결과를 리턴
+
+[Future](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html)
+- 비동기적인 작업의 현재 상태를 조회하거나 결과 리턴
+
+[CallableAndFuture.java](https://github.com/jihunparkme/java-example/blob/main/src/main/java/com/example/java8to11/execute/CallableAndFuture.java)
+
+```java
+/**
+ * V get(): 결과 가져오기
+ *
+ * - Blocking Call: 값을 가져올 때까지 대기
+ * - timeout(최대 대기 시간) 설정 가능
+ */
+future.get();
+
+/**
+ * boolean isDone(): 작업 상태 확인
+ */
+boolean isDone = future.isDone());
+
+/**
+ * boolean cancel(boolean mayInterruptIfRunning): 진행중인 작업을 interrupt 요청으로 종료
+ * - parameter
+ *   - true: 현재 진행중인 쓰레드를 interrupt
+ *   - false: 현재 진행중인 작업이 끝날때까지 대기
+ * - 취소 했으면 true 못 했으면 false 리턴
+ * - 취소 이후에 get() 요청 시 CancellationException 발생
+ */
+boolean cancel = future.cancel(true);
+
+/**
+ * <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+ * - 동시에 실행(가장 오래 걸리는 작업 만큼 시간 소요)
+ */
+List<Future<String>> futures = executorService.invokeAll(Arrays.asList(hello, the, java));
+
+/**
+ * <T> T invokeAny(Collection<? extends Callable<T>> tasks)
+ * - Blocking Call
+ * - 동시 실행 작업 중 가장 짧게 소요되는 작업 만큼 시간 소요
+ */
+String result = executorService.invokeAny(Arrays.asList(hello, the, java));
+```
+
+### CompletableFuture
+
+자바에서 비동기(Asynchronous) 프로그래밍이 가능하도록 지원하는 인터페이스
+- Future 로도 비동기 처리가 어느정도 가능하지만, 어려운 작업들이 다수 존재
+  - Future 를 외부에서 완료 처리 불가
+    - cancel(), get() 타임아웃 설정은 가능
+  - 블로킹 코드(ex. get())를 사용하지 않고서는 작업이 끝났을 때 콜백 실행 불가
+  - 여러 Future 조합 불가
+    - ex. 행사 정보 조회 후 행사 참석 회원 목록 조회하기
+  - 예외 처리용 API 제공 X
+
+[CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)
+- Implements Future, [CompletionStage](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html)
+
+.
+
+**`비동기로 작업 실행하기`**
+- [CompletableFutureTestApp.java](https://github.com/jihunparkme/java-example/blob/main/src/main/java/com/example/java8to11/completableFuture/CompletableFutureTestApp.java)
+
+```java
+/**
+ * CompletableFuture
+ * - 외부에서 Complete 울 명시적으로 시킬 수 있음
+ * - Executor 를 만들어서 사용할 필요가 없음
+ */
+CompletableFuture<String> future = new CompletableFuture<>();
+future.complete("aaron"); // 특정 시간 이내에 응답이 없으면 기본 값으로 리턴하도록 설정 가능
+
+/**
+ * public T get() throws InterruptedException, ExecutionException: 결과 반환
+ * public T join(): get() 과 동일하지만 Unchecked Exception
+ */
+System.out.println(future.get());
+
+...
+
+/**
+ * runAsync(): 리턴값이 없는 비동기 작업
+ */
+CompletableFuture<Void> future = CompletableFuture.runAsync(() -> System.out.println("Hello " + Thread.currentThread().getName()));
+
+future.get();
+
+...
+
+/**
+ * supplyAsync(): 리턴값이 있는 비동기 작업
+ */
+CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+    System.out.println("Hello " + Thread.currentThread().getName());
+    return "Hello";
+});
+
+System.out.println(future.get());
+```
+
+.
+
+**`콜백 제공하기`**
+
+- 콜백 자체를 또 다른 쓰레드에서 실행 가능
+- [ForkJoinPool](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html)
+- [CompletableFutureCallbackTestApp.java](https://github.com/jihunparkme/java-example/blob/main/src/main/java/com/example/java8to11/completableFuture/CompletableFutureCallbackTestApp.java)
+
+
+```java
+/**
+ * public <U> CompletableFuture<U> thenApply(Function<? super T,? extends U> fn)
+ * - 리턴값을 받아서 다른 값으로 바꾸고 리턴하는 콜백
+ */
+CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+    System.out.println("Hello " + Thread.currentThread().getName());
+    return "Hello";
+}).thenApply(s -> s.toUpperCase());
+
+System.out.println(future.get()); // HELLO
+
+...
+
+/**
+ * public CompletableFuture<Void> thenAccept(Consumer<? super T> action)
+ * - 리턴값으로 또 다른 작업을 처리하고 리턴이 없는 콜백
+ */
+CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+    System.out.println("Hello " + Thread.currentThread().getName());
+    return "Hello";
+}).thenAccept(s -> {
+    System.out.println(s.toUpperCase());
+});
+
+future.get(); // HELLO
+
+...
+
+/**
+ * public CompletableFuture<Void> thenRun(Runnable action)
+ * - 리턴값을 받지 않고 다른 작업을 처리하는 콜백
+ */
+CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+    System.out.println("Hello " + Thread.currentThread().getName());
+}).thenRun(() -> {
+    System.out.println(Thread.currentThread().getName());
+});
+
+future.get();
+
+...
+
+/**
+ * 원하는 Executor(thread-pool)를 사용해서 실행 가능
+ * - default: ForkJoinPool.commonPool()
+ */
+ExecutorService executorService = Executors.newFixedThreadPool(4);
+CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+    System.out.println("Hello " + Thread.currentThread().getName());
+}, executorService).thenRunAsync(() -> {
+    System.out.println(Thread.currentThread().getName());
+}, executorService);
+
+future.get(); // pool-1-thread-2
+
+executorService.shutdown();
+```
+
+.
+
+**`조합하기`**
+- [CombinationTestApp.java](https://github.com/jihunparkme/java-example/blob/main/src/main/java/com/example/java8to11/completableFuture/CombinationTestApp.java)
+
+```java
+/**
+ * public <U> CompletableFuture<U> thenCompose(Function<? super T, ? extends CompletionStage<U>> fn)
+ * - 연관이 있는 두 작업이 서로 이어서 실행하도록 조합
+ */
+CompletableFuture<String> hello = CompletableFuture.supplyAsync(() -> {
+    System.out.println("Hello " + Thread.currentThread().getName());
+    return "Hello";
+});
+
+CompletableFuture<String> future = hello.thenCompose(CombinationTestApp::getWorld);
+System.out.println(future.get());
+
+
+
+private static CompletableFuture<String> getWorld(String message) {
+    return CompletableFuture.supplyAsync(() -> {
+        System.out.println("World " + Thread.currentThread().getName());
+        return message + " World";
+    });
+}
+
+...
+
+/**
+ * public <U,V> CompletableFuture<V> thenCombine(CompletionStage<? extends U> other, BiFunction<? super T, ? super U, ? extends V> fn)
+ * - 연관이 없는 두 작업을 독립적으로 실행하고 두 작업이 모두 종료되었을 때 콜백 실행
+ */
+CompletableFuture<String> future = hello.thenCombine(world, (h, w) -> h + " " + w);
+
+...
+
+/**
+ * public static CompletableFuture<Void> allOf(CompletableFuture<?>... cfs)
+ * - 여러 작업을 모두 실행하고 모든 작업 결과에 콜백 실행
+ */
+CompletableFuture[] futures = {hello, world};
+CompletableFuture<List<Object>> results = CompletableFuture.allOf(futures)
+        .thenApply(v -> Arrays.stream(futures)
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList()));
+
+results.get().forEach(System.out::println);
+
+...
+
+/**
+ *  public static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs)
+ *  - 여러 작업 중에 가장 빨리 종료된 하나의 결과에 콜백 실행
+ */
+CompletableFuture<Void> future = CompletableFuture.anyOf(hello, world).thenAccept(System.out::println);
+future.get();
+}
+```
+
+.
+
+**`예외처리`**
+- [CompletableFutureExceptionTestApp.java](https://github.com/jihunparkme/java-example/blob/main/src/main/java/com/example/java8to11/completableFuture/CompletableFutureExceptionTestApp.java)
+
+```java
+/**
+ * public CompletableFuture<T> exceptionally(Function<Throwable, ? extends T> fn)
+ * - 예외 처리
+ */
+boolean throwError = true;
+CompletableFuture<String> hello = CompletableFuture.supplyAsync(() -> {
+    if (throwError) {
+        throw new IllegalArgumentException();
+    }
+
+    System.out.println("Hello " + Thread.currentThread().getName());
+    return "Hello";
+}).exceptionally(ex -> {
+    System.out.println(ex);
+    return "Error!";
+});
+
+System.out.println(hello.get());
+
+...
+
+/**
+ * public <U> CompletableFuture<U> handle(BiFunction<? super T, Throwable, ? extends U> fn)
+ * - 성공 케이스와 예외 케이스 모두 처리
+ */
+boolean throwError = true;
+CompletableFuture<String> hello = CompletableFuture.supplyAsync(() -> {
+    if (throwError) {
+        throw new IllegalArgumentException();
+    }
+
+    System.out.println("Hello " + Thread.currentThread().getName());
+    return "Hello";
+}).handle((result, ex) -> {
+    if (ex != null) {
+        System.out.println(ex);
+        return "Error!";
+    }
+    return result;
+});
+
+System.out.println(hello.get());
+```
+
+## Etc..
+
+**`애노테이션의 변화`**
+
+java 8 애노테이션 관련 두 가지 큰 변화
+- 애노테이션을 `타입 선언부`(제네릭 타입, 변수 타입, 매개변수 타입, 예외 타입...)에도 사용 가능
+  - `TYPE_PARAMETER`: 타입 변수에만 사용 가능
+  - `TYPE_USE`: TYPE_PARAMETER 포함 모든 타입 선언부에 사용 가능
+
+  ```java
+  static class XXX<@Chicken T> {
+    /**
+     * <C> : type parameter
+      * C : type
+      */
+    public static <@Chicken C> void print(C c){
+
+    }
+  }
+  ```
+
+- 애노테이션 중복 사용 가능
+
+  ```java
+  // 중복 사용할 애노테이션
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE_USE)
+  @Repeatable(ChickenContainer.class)
+  public @interface Chicken {
+      String value();
+  }
+
+  ...
+
+  // 중복 애노테이션 컨테이너
+  // 중복 애노테이션과 @Retention, @Target 이 같거나 더 넓어야 함
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE_USE)
+  public @interface ChickenContainer {
+      Chicken[] value();
+  }
+
+  ...
+
+  @Chicken("양념")
+  @Chicken("마늘간장")
+  public class App {
+      public static void main(String[] args) {
+          ChickenContainer chickenContainer = App.class.getAnnotation(ChickenContainer.class);
+          Arrays.stream(chickenContainer.value()).forEach(c -> {
+              System.out.println(c.value());
+          });
+      }
+  }
+  ```
+
+.
+
+**`Array Parallel Sorting`**
+
+Arrays.parallelSort()
+- Fork/Join 프레임워크를 사용해서 `배열을 병렬로 정렬`하는 기능 제공
+- 병렬 정렬 알고리듬
+  - 배열을 둘로 계속 쪼갠 후 합치면서 정렬
+
+```java
+int size = 1500;
+int[] numbers = new int[size];
+Random random = new Random();
+
+/**
+ * Dual-Pivot Quicksort.
+ * 알고리듬 효율성은 동일. 시간 O(n log(n)) 공간 O(n)
+ */
+IntStream.range(0, size).forEach(i -> numbers[i] = random.nextInt());
+long start = System.nanoTime();
+Arrays.sort(numbers);
+System.out.println("serial sorting took " + (System.nanoTime() - start)); // 629500
+
+IntStream.range(0, size).forEach(i -> numbers[i] = random.nextInt());
+start = System.nanoTime();
+Arrays.parallelSort(numbers);
+System.out.println("parallel sorting took " + (System.nanoTime() - start)); // 400375
+```
+
+.
+
+**`GC Metaspace`**
+
+JVM의 여러 메모리 영역 중에 PermGen 메모리 영역이 없어지고 Metaspace 영역이 등장
+
+**PermGen**(permanent generation)
+
+- 클래스 메타데이터를 담는 저장소(`Heap` 영역)
+- 기본값으로 `제한된 크기`를 가지고 있음
+- [PermGen Elimination project is promoting](https://mail.openjdk.org/pipermail/hotspot-dev/2012-September/006679.html)
+  ```bash
+  -XX:PermSize=N // PermGen 초기 사이즈 설정
+  -XX:MaxPermSize=N // PermGen 최대 사이즈 설정
+  ```
+
+**Metaspace**
+
+- 클래스 메타데이터를 담는 저장소(Heap 영역이 아니라, `Native Memory` 영역)
+- 기본값으로 제한된 크기를 가지고 있지 않음(`필요한 만큼 계속 증가`)
+- java 8 부터는 PermGen 관련 옵션은 무시
+  - [Java 8: From PermGen to Metaspace](https://dzone.com/articles/java-8-permgen-metaspace)
+  ```bash
+  -XX:MetaspaceSize=N // Metaspace 초기 사이즈 설정
+  -XX:MaxMetaspaceSize=N // Metaspace 최대 사이즈 설정
+  ```
+
+참고
+
+- [JVM 메모리 이해와 케이스](https://m.post.naver.com/viewer/postView.nhn?volumeNo=23726161&memberNo=36733075)
+- [메모리 모니터링과 원인분석](https://m.post.naver.com/viewer/postView.nhn?volumeNo=24042502&memberNo=36733075)
+
+## JVM
+
+**`JAVA, JVM, JDK, JRE`**
+
+![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/java/jvm.png?raw=true 'Result')
+
+`JVM`(Java Virtual Machine)
+- **자바 바이트 코드(.class)를 OS 특화된 코드로 변환**(인터프리터와 JIT 컴파일러)하여 실행
+  - 특정 플랫폼에 종속적
+- 바이트 코드를 실행하는 표준(JVM 자체는 표준)이자 구현체(특정 밴더가 구현한 JVM)
+  - JVM 밴더: Oracle, Amazon, Azul, ...
+- [JVM 스팩](https://docs.oracle.com/javase/specs/jvms/se11/html/)
+
+`JRE`(Java Runtime Environment): JVM + Library
+- **자바 애플리케이션을 실행할 수 있도록 구성**된 배포판
+- JVM 과 핵심 라이브러리 및 자바 런타임 환경에서 사용하는 프로퍼티 세팅이나 리소스 파일 보유
+- 개발 관련 도구는 미포함(JDK에서 제공)
+
+`JDK`(Java Development Kit): JRE + Development Tool
+- 소스 코드를 작성할 때 사용하는 자바 언어는 플랫폼에 독립적
+- 오라클은 자바 11부터는 JDK 만 제공하며 JRE 미제공
+- Write Once Run Anywhere(WORA, 한 번만 작성하면 어디에서든 실행 가능)
+
+`JAVA`
+- 프로그래밍 언어
+- JDK 에 들어있는 자바 컴파일러(javac)를 사용하여 바이트코드(.class)로 컴파일 가능
+- [자바 유료화](https://medium.com/@javachampions/java-is-still-free-c02aef8c9e04)? 오라클에서 만든 Oracle JDK 11 버전부터 상용으로 사용 시에만 유료
+
+`JVM 언어`
+- JVM 기반으로 동작하는 프로그래밍 언어
+- Clojure, Groovy, JRuby, Jython, Kotlin, Scala, ...
+
+참고
+- [Understanding JIT compiler](https://aboullaite.me/understanding-jit-compiler-just-in-time-compiler/)
+- [Difference between JDK, JRE and JVM in Java](https://howtodoinjava.com/java/basics/jdk-jre-jvm/)
+- [List of JVM languages](https://en.wikipedia.org/wiki/List_of_JVM_languages)
+
+.
+
+**`JVM 구조`**
+
+![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/java/jvm-structure.png?raw=true 'Result')
+
+`Class Loader System`
+- .class 에서 바이트코드를 읽고 메모리에 저장
+- loading: 클래스 읽어오는 과정
+- linking: 레퍼런스를 연결하는 과정
+- initialization: static 값들을 초기화 및 변수에 할당 
+  
+`Memory`
+
+[Java JVM Run-time Data Areas](https://javapapers.com/core-java/java-jvm-run-time-data-areas/#Program_Counter_PC_Register)
+
+- Stack Area
+  - 쓰레드마다 런타임 스택을 만들고, 그 안에 메소드 호출을 스택 프레임이라 부르는 블럭으로 쌓음
+  - 쓰레드를 종료하면 런타임 스택도 소멸(쓰레드에서만 공유)
+- PC(Program Counter) registers Area
+  - 쓰레드마다 쓰레드 내 현재 실행할 instruction 위치를 가리키는 포인터 생성(쓰레드에서만 공유)
+- native method stack Area
+  - 쓰레드마다 생성되고, native method 호출 시 사용하는 별도의 method stack(쓰레드에서만 공유)
+- heap Area
+  - 객체 저장(공유 자원)
+- method Area
+  - 클래스 수준의 정보(클래스 이름, 패키지 경로, 부모 클래스 이름, 메소드, 변수)저장(공유 자원)
+
+`Execution Engine`
+- 인터프리터
+  - 바이트 코드를 한줄씩 실행
+- JIT(Just-In-Time) 컴파일러
+  - 인터프리터 효율을 높이기 위해 인터프리터가 반복되는 코드를 발견하면 JIT 컴파일러로 반복되는 코드를 네이티브 코드로 변경
+  - 그 다음부터 인터프리터는 네이티브 코드로 컴파일된 코드를 바로 사용
+- GC(Garbage Collector)
+  - 더이상 참조되지 않는 객체를 모아서 정리
+
+`JNI`(Java Native Interface)
+- 자바 애플리케이션에서 C, C++, 어셈블리로 작성된 함수를 사용할 수 있는 방법 제공
+- Native 키워드를 사용한 메소드 호출
+- [A Simple Java Native Interface(JNI) example in Java and Scala](https://medium.com/@bschlining/a-simple-java-native-interface-jni-example-in-java-andscala-68fdafe76f5f)
+
+`Native Method Library`
+- C, C++로 작성된 라이브러리
+- JNI 를 통해 사용
+
+참고
+- [How JVM Works – JVM Architecture?](https://www.geeksforgeeks.org/jvm-works-jvm-architecture/)
+- [The JVM Architecture Explained](https://dzone.com/articles/jvm-architecture-explained)
+- [JVM Internals](http://blog.jamesdbloom.com/JVMInternals.html)
+
+.
+
+**`Class Loader System`**
+
+로딩, 링크, 초기화 순으로 진행
+
+![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/java/class-loader.png?raw=true 'Result')
+
+`Loading`
+- 클래스 로더가 .class 파일을 읽고 그 내용에 따라 적절한 **바이너리 데이터**를 만들고 **Method Memory 영역에 저장**
+- Method Memory 영역에 저장하는 데이터
+  - FQCN(Full Qualified Class Name)
+  - 클래스/인터페이스/이늄
+  - 메소드와 변수
+- 로딩이 끝나면 해당 클래스 타입의 **Class 객체를 생성하여 Heap 영역에 저장**
+  
+클래스 로더는 계층 구조로 이뤄져 있으면 기본적으로 세가지 클래스 로더가 제공
+- **BootstrapClassLoader**
+  - 최상위 우선순위를 가진 클래스 로더
+  - JAVA_HOME\lib 에 있는 코어 자바 API 제공
+- **PlatformClassLoader**
+  - JAVA_HOME\lib\ext 폴더 또는 java.ext.dirs 시스템 변수에 해당하는 클래스를 읽음
+- **AppClassLoader**
+  - 애플리케이션 클래스 패스에서 클래스를 읽음
+  - 클래스 패스: 애플리케이션 실행 시 -classpath 옵션 또는 java.class.path 환경 변수 값에 해당하는 위치
+
+최상위 클래스 로더부터 클래스를 참색하는데 모든 클래스 로더가 클래스를 찾지 못 한다면 ClassNotFoundException 발생
+
+`Linking`
+- Verify: .class 파일 형식이 유효한지 체크
+- Preparation: 클래스 변수(static 변수)와 기본값에 필요한 메모리 준비
+- Resolve(optional): 심볼릭 메모리 레퍼런스를 메소드 영역에 있는 실제 레퍼런스로 교체
+
+`Initialization`
+- Static 변수의 값을 할당(static 블럭이 있다면 이때 실행)
+
+## Bytecode Operation
+
+**코드 커버리지 측정**
+
+- 테스트 코드가 확인한 소스 코드 비율
+- [JaCoCo documentation](https://www.eclemma.org/jacoco/trunk/doc/index.html)
+- [Branch Coverage for Arbitrary Languages Made Easy](http://www.semdesigns.com/Company/Publications/TestCoverage.pdf)
+
+.
+
+**클래스 로딩 전 바이트코드 조작**
+
+프로그램 분석
+- 코드에서 버그를 찾는 툴
+- 코드 복잡도 계산
+
+클래스 파일 생성
+- 프록시
+- 특정 API 호출 접근 제한
+- 스칼라 같은 언어의 컴파일러
+  
+그밖에도 자바 소스코드를 건드리지 않고 코드 변경이 필요한 여러 경우에 사용 가능
+- 프로파일러: CPU 사용률 및 메모리 사용량, Thread 정보 ..
+- 최적화
+- 로깅
+- ...
+
+스프링의 바이트코드 조작 툴 사용: 스프링 컴포넌트 스캔
+- 빈으로 등록할 후보 클래스 정보를 찾는데 ASM 사용
+- ClassPathScanningCandidateComponentProvider -> SimpleMetadataReader
+- ClassReader, Visitor 를 사용해서 클래스에 있는 메타 정보 조회
+
+참고
+- [Living in the Matrix with Bytecode Manipulation(New Relic)](https://www.youtube.com/watch?v=39kdr1mNZ_s)
+
+.
+
+**바이트코드 조작 라이브러리**
+
+- [ByteBuddy](https://bytebuddy.net/#/)
+  - .class 파일 자체를 변경시키는 방법
+  - 권장하는 라이브러리
+  
+  ```java
+  new ByteBuddy().redefine(Moja.class)
+          .method(named("pullOut")).intercept(FixedValue.value("Rabbit!"))
+          .make().saveIn(new File("../target/classes/"))
+  ```
+- [Javassist](https://www.javassist.org/)
+  - 클래스 로더가 클래스를 읽어올 때 javaagent 를 거쳐서 변경된 바이트코드를 읽어옴
+    - premain: 시작 시 붙이는 방식
+    - agentmain: 런타임 중 동적으로 붙이는 방식
+    - [java.lang.instrument](https://docs.oracle.com/javase/8/docs/api/java/lang/instrument/package-summary.html) 사용
+  
+  ```java
+  public static void premain(String agentArgs, Instrumentation inst) {
+      new AgentBuilder.Default()
+            .type(ElementMatchers.any())
+            .transform((builder, typeDescription, classLoader, javaModule) ->
+            builder.method(named("pullOut")).intercept(FixedValue.value("Rabbit!"))).installOn(inst);
+            }
+  ```
+- [ASM](https://asm.ow2.io/)
+- CGlib
+
+## Reflection
+
+리플렉션의 시작은 [Class\<T\>](https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html)
+
+Class\<T\> 접근 방법
+- 모든 클래스를 로딩 한 다음 Class\<T\> 인스턴스 생성
+  - `타입.class` 로 접근 가능
+- 모든 인스턴스는 getClass() 메소드 보유
+  - `인스턴스.getClass()` 로 접근 가능
+- 클래스를 문자열로 읽어오는 방법
+  - `Class.forName("FQCN")`
+  - 클래스패스에 해당 클래스가 없다면 ClassNotFoundException 발생
+
+```java
+Class<Book> bookClass = Book.class;
+
+Book book = new Book();
+Class<? extends Book> aClass = book.getClass();
+
+Class<?> aClass1 = Class.forName("com.example.java. reflection.Book");
+```
+
+Class\<T\> 를 통해 할 수 있는 것
+- 필드(목록) 가져오기
+- 메소드(목록) 가져오기
+- 상위 클래스 가져오기
+- 인터페이스(목록) 가져오기
+- 애노테이션 가져오기
+- 생성자 가져오기 ...
+- [ReflectionTest](https://github.com/jihunparkme/java-example/commit/0b6d5badd0a3f3b8cc92f19b7851e8a019dd66f8)
+
+.
+
+**`Annotation & Reflection`**
+
+Annotaion
+- @Retention: 해당 애노테이션을 언제까지 유지할 것인가. (SOURCE, CLASS, RUNTIME)
+- @Target: 어디에 사용할 수 있는가. (TYPE, FIELD, METHOD, PARAMETER ..)
+- @Inherit: 해당 애노테이션을 하위 클래스까지 전달할 것인가.
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
+@Inherited
+public @interface MyAnnotation {
+    String name() default "aaron";
+    int number();
+}
+
+```
+
+Reflection
+- getAnnotations(): 상속받은(@Inherit) 애노테이션까지 조회
+- getDeclaredAnnotations(): 자기 자신에만 붙어있는 애노테이션 조회
+- [ReflectionAnnotationTest](https://github.com/jihunparkme/java-example/commit/9550fa516d00ab85e0cda728e3d4312b9b295ff9)
+
+```java
+// 상속받은(@Inherit) 애노테이션까지 조회
+Arrays.stream(Book.class.getAnnotations()).forEach(System.out::println);
+
+// 자기 자신에만 붙어있는 애노테이션 조회
+Arrays.stream(MyBook.class.getDeclaredAnnotations()).forEach(System.out::println);
+
+// 애노테이션 정보 조회
+@Test
+void getAnnotatedFieldValue() throws Exception {
+    Arrays.stream(Book.class.getDeclaredFields()).forEach(f -> {
+        Arrays.stream(f.getAnnotations()).forEach(a -> {
+            MyAnotherAnnotation myAnotherAnnotation = (MyAnotherAnnotation) a;
+            System.out.println(f);
+            System.out.println(myAnotherAnnotation.value());
+        });
+    });
+}
+```
+
+.
+
+**`Edit class information or Run`**
+
+[BallTest](https://github.com/jihunparkme/java-example/commit/9646517127787771fdc07e28adaa7ed9bd142c7e)
+
+```java
+/**
+ * Class 인스턴스 생성하기
+ */
+Class<Ball> ballClass = Ball.class;
+// ballClass.newInstance(); -> deprecated
+Constructor<Ball> constructor = ballClass.getConstructor(String.class);
+// 생성자로 인스턴스 생성
+Ball ball = constructor.newInstance("myBall");
+System.out.println(ball);
+
+/**
+ * Class Field 수정하기
+ */
+Field field = Ball.class.getDeclaredField("A");
+// public static 은 특정 인스턴스에 해당하는 값이 아니라서 클래스 값에 해당하므로 인스턴스를 전달할 필요가 없음
+System.out.println(field.get(null));
+field.set(null, "newA");
+System.out.println(field.get(null));
+
+/**
+ * Instance Field 수정하기
+ */
+Field field = Ball.class.getDeclaredField("b");
+field.setAccessible(true); // private 필드 접근을 위한 설정
+// 특정 인스턴스가 가지고 있는 값을 가져와야 하므로 인스턴스 필요
+System.out.println(field.get(ball));
+field.set(ball, "newB");
+System.out.println(field.get(ball));
+
+/**
+ * Private Method 실행
+ */
+Method method = Ball.class.getDeclaredMethod("c");
+method.setAccessible(true);
+method.invoke(ball);
+
+/**
+ * Public Method 실행
+ */
+Method method = Ball.class.getDeclaredMethod("sum", int.class, int.class);
+int invoke = (int) method.invoke(ball, 1, 2);
+System.out.println(invoke);
+```
+
+.
+
+**`Reflection 을 활용하여 간단한 DI 프레임워크 만들어보기`**
+
+[@Inject 선언으로 필드 주입을 해주는 컨테이너 서비스](https://github.com/jihunparkme/java-example/commit/a48117eae73ee24dcacca8c1d6640bb2137a7d6a)
+
+ContainerService.getObject
+- classType 에 해당하는 타입의 객체 생성
+- 해당 객체의 필드 중에 @Inject 가 있다면 해당 필드도 같이 만들어 제공
+
+```java
+public static <T> T getObject(Class<T> classType) {
+    T instance = createInstance(classType);
+    Arrays.stream(classType.getDeclaredFields()).forEach(f -> {
+        // @Inject 선언 필드 탐색
+        if (f.getAnnotation(Inject.class) != null) {
+            Object fieldInstance = createInstance(f.getType());
+            f.setAccessible(true);
+            try {
+                //  @Inject 선언 필드에 인스턴스 주입
+                f.set(instance, fieldInstance);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException();
+            }
+        }
+    });
+
+    return instance;
+}
+```
+
+.
+
+**`Reflection 정리`**
+
+리플렉션 사용 시 주의
+- 지나친 사용(무분별한 인스턴스 생성으로)은 성능 이슈를 야기할 수 있으므로 반드시 필요한 경우에만 사용 권장
+- 컴파일 타임에 확인되지 않고 런타임 시에만 발생하는 문제를 만들 가능성 존재
+- 접근 지시자 무시
+
+리플렉션 사용 사례
+- Spring.
+  - 의존성 주입
+  - MVC View 에서 넘어온 데이터를 객체에 바인딩 할 때
+- Hibernate.
+  - @Entity 클래스에 Setter 가 없다면 리플렉션 사용
+
+Reference. 
+- [JUnit ReflectionUtils](https://junit.org/junit5/docs/5.0.3/api/org/junit/platform/commons/util/ReflectionUtils.html)
+- [The Reflection API](https://docs.oracle.com/javase/tutorial/reflect/index.html)
+
+## Dynamic Proxy
+
+런타임에 인터페이스/클래스의 프록시 인스턴스/클래스를 만들어 사용하는 프로그래밍 기법
+- [Java Reflection - Dynamic Proxies](https://jenkov.com/tutorials/java-reflection/dynamic-proxies.html)
+- java.lang.`reflect.proxy`
+
+Spring Data JPA 는 어떻게 동작할까?
+- 인터페이스 타입의 인스턴스는 누가 만들어 줄까?
+  - JpaRepository 인터페이스를 상속받으면 객체도 생성되고, 빈으르도 등록
+- Spring AOP 기반으로 동작하며 RepositoryFactorySupport 에서 프록시 객체 생성
+  - 생성된 프록시 객체가 빈으로 등록되고 주입
+
+Dynamic Proxy 사용 예
+- Spring Data JPA
+- Spring AOP
+- Mockito
+- Hibernate lazy initialzation ...
+
+.
+
+**`Proxy Pattern`**
+
+![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/java/proxy-pattern.png?raw=true 'Result')
+
+- 프록시와 리얼 서브젝트가 공유하는 인터페이스가 있고, 클라이언트는 **해당 인터페이스 타입으로 프록시 사용**
+- 클라이언트는 프록시를 거쳐서 **리얼 서브젝트를 사용**
+  - 프록시는 리얼 서브젝트에 대한 접근 관리, 부가 기능 제공, 리턴값 변경 가능
+- 리얼 서브젠트는 자신이 해야 할 일만 하면서([SRP](https://en.wikipedia.org/wiki/Single-responsibility_principle)) 프록시 사용
+  - 부가적인 기능(접근 제한, 로깅, 트랜잭션 등) 제공 시 [프록시 패턴](https://www.oodesign.com/proxy-pattern)을 주로 사용
+
+단점
+- 프록시 패턴으로 구현하는 것은 번거로운 일
+- 부가적인 기능을 추가할 때마다 별도 프록시 생성 필요
+- 프록시로 프록시를 감싸야 하는 일도 발생
+- 모든 구현체에서 원래 타겟으로 위임하면서 중복 코드 발생
+
+[Proxy Pattern example](https://github.com/jihunparkme/java-example/commit/cd96165706d4f2b913e1f9c7f826c1c4dce6f69d)
+  
+프록시 패턴의 문제를 해결하기 위해 동적으로 런타임에 프록시를 생성해내는 `다이나믹 프록시` 등장
+
+.
+
+**`Dynamic Proxy`**
+
+런타임에 특정 인터페이스들을 구현하는 클래스 또는 인스턴스를 만드는 기술
+- [Dynamic Proxy Classes](https://docs.oracle.com/javase/8/docs/technotes/guides/reflection/proxy.html)
+- [프록시 인스턴스 생성](https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Proxy.html#newProxyInstance-java.lang.ClassLoader-java.lang.Class:A-java.lang.reflect.InvocationHandler-)
+
+```java
+BookService defaultBookService = (BookService) Proxy.newProxyInstance(
+        BookService.class.getClassLoader(),
+        new Class[]{BookService.class}, // 어떤 인텉페이스 타입의 구현체인지
+        new InvocationHandler() { // 프록시에 어떤 메소드가 호출이 될 때 그 메소드 호출을 어떻게 처리할지에 대한 설명
+            BookService bookService = new DefaultBookService();
+
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                if (method.getName().equals("rent")) {
+                    System.out.println("qqqqq");
+                    Object invoke = method.invoke(bookService, args);
+                    System.out.println("zzzzz");
+                    return invoke;
+                }
+                return method.invoke(bookService, args);
+            }
+        }
+);
+```
+
+단점.
+
+- 클래스 기반의 프록시 생성 불가 -> 인터페이스가 없을 경우 다이나믹 프록시 적용 불가
+- 부가기능이 많아질수록 코드가 커지는 유연하지 않은 구조
+
+프록시 기반 AOP 인 스프링 AOP 등장
+
+.
+
+**`Class Proxy`**
+
+인터페이스 없이 프록시 만들기
+
+[**CGlib**](https://github.com/cglib/cglib/wiki)
+- Spring, Hibernate 에서도 사용하는 라이브러리
+- 버전 호환성이 좋지 않아서 서로 다른 라이브러리 내부에 내장된 형태로 제공되기도 함
+
+```java
+MethodInterceptor handler = new MethodInterceptor() {
+    BallService bookService = new BallService();
+    @Override
+    public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+        if (method.getName().equals("rent")) {
+            System.out.println("bbbbb");
+            Object invoke = method.invoke(bookService, args);
+            System.out.println("ccccc");
+            return invoke;
+        }
+        return method.invoke(bookService, args);
+    }
+};
+BallService ballService = (BallService) Enhancer.create(BallService.class, handler);
+
+Book book = new Book();
+book.setTitle("spring");
+ballService.rent(book);
+```
+
+[**ByteBuddy**](https://bytebuddy.net/#/)
+- 바이트 코드 조작 뿐 아니라 런타임(다이나믹) 프록시 생성 시에도 사용
+
+```java
+Class<? extends BallService> proxyClass = new ByteBuddy().subclass(BallService.class)
+        .method(named("rent")).intercept(InvocationHandlerAdapter.of(new InvocationHandler() {
+            BallService bookService = new BallService();
+
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                System.out.println("qqqq");
+                Object invoke = method.invoke(bookService, args);
+                System.out.println("eeee");
+                return invoke;
+            }
+        }))
+        .make().load(BallService.class.getClassLoader()).getLoaded();
+BallService ballService = proxyClass.getConstructor(null).newInstance();
+
+Book book = new Book();
+book.setTitle("spring");
+ballService.rent(book);
+```
+
+인터페이스 없이 프록시를 생성할 경우 단점
+- 상속을 사용하지 못하는 경우 프록시 생성 불가
+  - Final 클래스인 경우
+  - Private 생성자만 있는 경우
+
+가급적 프록시 적용 시 인터페이스를 만들어서 인터페이스 프록시를 사용하는 것을 권장
+
+## Annotation processor
+
+애노테이션 프로세서 사용 예
+
+- `Lombok`
+  - 표준으로 작성해야 하는 코드를 개발자 대신 생성해 주는 라이브러리
+- `AutoService`
+  - java.util.ServiceLoader 용 파일 생성 유틸리티
+- `@Override`
+  - [How do annotations like @Override work internally in Java?](https://stackoverflow.com/questions/18189980/how-do-annotations-like-overridework-internally-in-java/18202623)
+  - Reflection API 를 사용하여 슈퍼 클래스에 해당하는 메서드와 일치하는 항목이 없다면 컴파일 오류 발생
+- [Dagger](https://github.com/google/dagger)
+  - 컴파일 타임 DI 제공
+
+장점
+- 런타임 비용이 제로
+
+단점
+- 기존 클래스 코드를 변경할 때는 약간의 hack 필요
+
+.
+
+**`Lombok`**
+
+- [Project Lombok](https://projectlombok.org/)
+- [Lombok Execution Path](https://projectlombok.org/contributing/lombok-execution-path)
+- @Getter, @Setter 등의 애노테이션과 애노테이션 프로세서를 제공하여 표준 작성 코드를 개발자 대신 생성해주는 라이브러리
+
+롬복의 동작 원리
+- 컴파일 시점에 [애노테이션 프로세서](https://docs.oracle.com/javase/8/docs/api/javax/annotation/processing/Processor.html)를 사용하여 소스코드의 [AST](https://javaparser.org/inspecting-an-ast/)(abstract syntax tree) 조작
+
+롬복의 논란 거리
+- 공개된 API 가 아닌 컴파일러 내부 클래스를 사용하여 기존 소스 코드를 조작
+- 특히 이클립스의 경우엔 java agent 를 사용하여 컴파일러 클래스까지 조작하여 사용
+- 해당 클래스들 역시 공개된 API 가 아니다보니 버전 호환성에 문제가 생길 수 있음
+- 그럼에도 엄청난 편리함으로 널리 쓰이고, 대안이 몇가지 있지만 롬복의 모든 기능과 편의성을 대체 불가
+  - [AutoValue](https://github.com/google/auto/blob/master/value/userguide/index.md)
+  - [Immutables](https://immutables.github.io)
+
+.
+
+**`Annotation processor`**
+
+[Processor Interface](https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/annotation/processing/Processor.html)
+- 여러 라운드(rounds)에 거쳐 소스 및 컴파일 된 코드를 처리
+
+**AutoService**
+
+- [google/auto/service](https://github.com/google/auto/tree/main/service)
+- [ServiceProvider](https://itnext.io/java-service-provider-interface-understanding-it-via-code-30e1dd45a091) 레지스트리 생성기
+- 컴파일 시점에 애노테이션 프로세서를 사용하여 `META-INF/services/javax.annotation.processor.Processor` 파일 자동 생성
+
+**javapoet**
+
+- [square/javapoet](https://github.com/square/javapoet)
+- 소스 코드 생성 유틸리티
+
+**Interface Filer**
+
+- [Filer](https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/annotation/processing/Filer.html)
+- 소스 코드, 클래스 코드 및 리소스를 생성할 수 있는 인터페이스
+
+```java
+@AutoService(Processor.class)
+public class MagicMojaProcessor extends AbstractProcessor {
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        return Set.of(Magic.class.getName());
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
+
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Magic.class);
+        for (Element element : elements) {
+            Name elementName = element.getSimpleName();
+            // Magic annotation 이 Interface 가 아닌 다른 곳에 선언되어 있을 경우.
+            if (element.getKind() != ElementKind.INTERFACE) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Magic annotation can not be used on" + elementName);
+            } else {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Processing " + elementName);
+            }
+
+            TypeElement typeElement = (TypeElement) element;
+            ClassName className = ClassName.get(typeElement);
+
+            // 메소드 생성
+            MethodSpec pullOut = MethodSpec.methodBuilder("pullOut")
+                    .addModifiers(Modifier.PUBLIC)
+                    .returns(String.class)
+                    .addStatement("return $S", "Rabbit!")
+                    .build();
+
+            // 클래스 생성
+            TypeSpec magicMoja = TypeSpec.classBuilder("MagicMoja")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addSuperinterface(className)
+                    .addMethod(pullOut)
+                    .build();
+            Filer filer = processingEnv.getFiler();
+            try {
+                JavaFile.builder(className.packageName(), magicMoja)
+                        .build()
+                        .writeTo(filer);
+            } catch (IOException e) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "FATALERROR:" + e);
+            }
+        }
+        return true;
+    }
+}
+```
+
+참고.
+- [Annotation Processing 101](https://hannesdorfmann.com/annotation-processing/annotationprocessing101/)
+- [Project Lombok: Creating Custom Transformations](http://notatube.blogspot.com/2010/12/project-lombok-creating-custom.html)
+- [Annotation Processing in Java](https://medium.com/@jintin/annotation-processing-in-java-3621cb05343a)
+- [Annotation Processing : Don’t Repeat Yourself, Generate Your Code.](https://iammert.medium.com/annotation-processing-dont-repeat-yourself-generate-your-code-8425e60c6657)
+- [Java programming language compiler - ANNOTATION PROCESSING](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/javac.html#processing)
