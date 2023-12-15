@@ -5,6 +5,7 @@
 
 ## Lecture
 
+* [JPA Web Application](lecture/jpa-web-application.md)
 * [JPA Programming Basic](lecture/jpa-programming-basic.md)
 * [Spring MVC Part 2](lecture/spring-mvc-part-2/README.md)
   * [01.Thymeleaf](lecture/spring-mvc-part-2/01.md)
