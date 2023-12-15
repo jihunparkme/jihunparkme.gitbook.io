@@ -5,7 +5,8 @@
 
 ## Lecture
 
-* [Spring DB Part I](lecture/spring-db-part1.md)
+* [Spring DB Part II](lecture/spring-db-part-2.md)
+* [Spring DB Part I](lecture/spring-db-part-1.md)
 * [JPA API and Performance Optimization](lecture/jpa-api-and-performance-optimization.md)
 * [JPA Web Application](lecture/jpa-web-application.md)
 * [JPA Programming Basic](lecture/jpa-programming-basic.md)
