@@ -25,6 +25,7 @@
 
 ## Book
 
+* [함께 자라기](book/growing-up-together.md)
 * [Modern Java In Action](book/modern-java-in-action/README.md)
   * [01.기초](book/modern-java-in-action/01.md)
   * [02.함수형 데이터 처리](book/modern-java-in-action/02.md)
