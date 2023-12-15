@@ -32,7 +32,10 @@
 
 ## Book
 
-* [The Pragmatic Programmer](book/the-pragmatic-programmer.md)
+* [도메인 주도 개발 시작하기](book/ddd-start/README.md)
+  * [01.도메인 모델 시작하기](book/ddd-start/01.md)
+  * [02.아키텍처 개요](book/ddd-start/02.md)
+* [실용주의 프로그래머](book/the-pragmatic-programmer.md)
 * [GoF Design Patterns](book/gof-design-pattern.md)
 * [Effective Java 3/E](book/effective-java/README.md)
   * [객체, 공통 메서드](book/effective-java/01.md)
@@ -55,8 +58,6 @@
   * [10.조건부 로직 간소화](book/refactoring/10.md)
   * [11.API 리팩터링](book/refactoring/11.md)
   * [12.상속 다루기](book/refactoring/12.md)
-* [도메인 주도 개발 시작하기](book/ddd-start/README.md)
-  * [01.도메인 모델 시작하기](book/ddd-start/01.md)
 * [객체지향의 사실과 오해](book/oee/README.md)
   * [01. 협력하는 객체들의 공동체](book/oee/01.md)
   * [02. 이상한 나라의 객체](book/oee/02.md)
