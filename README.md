@@ -6,7 +6,11 @@ description: Non mollare 💪🏼
 
 <figure><img src=".gitbook/assets/space.jpg" alt=""><figcaption></figcaption></figure>
 
-### :sunglasses: Contact
+### :raised_hand: About me
+
+[https://jihunparkme.github.io/about-me-page/](https://jihunparkme.github.io/about-me-page/)
+
+### :telephone_receiver: Contact
 
 **Email**. [jihunpark.tech@gmail.com](mailto:jihunpark.tech@gmail.com)
 
