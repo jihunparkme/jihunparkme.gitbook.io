@@ -32,6 +32,7 @@
 
 ## Book
 
+* [The Pragmatic Programmer](book/the-pragmatic-programmer.md)
 * [GoF Design Patterns](book/gof-design-pattern.md)
 * [Effective Java 3/E](book/effective-java/README.md)
   * [객체, 공통 메서드](book/effective-java/01.md)
