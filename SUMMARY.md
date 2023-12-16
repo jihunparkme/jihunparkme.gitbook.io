@@ -38,6 +38,7 @@
   * [01.도메인 모델 시작하기](book/ddd-start/01.md)
   * [02.아키텍처 개요](book/ddd-start/02.md)
   * [03.애그리거트](book/ddd-start/03.md)
+  * [04.리포지터리와 모델 구현](book/ddd-start/04.md)
 * [Effective Java 3/E](book/effective-java/README.md)
   * [객체, 공통 메서드](book/effective-java/01.md)
   * [클래스, 인터페이스, 제네릭](book/effective-java/02.md)
