@@ -40,6 +40,7 @@
   * [03.애그리거트](book/ddd-start/03.md)
   * [04.리포지터리와 모델 구현](book/ddd-start/04.md)
   * [05.Spring Data JPA를 이용한 조회 기능](book/ddd-start/05.md)
+  * [06.응용 서비스와 표현 영역](book/ddd-start/06.md)
 * [Effective Java 3/E](book/effective-java/README.md)
   * [객체, 공통 메서드](book/effective-java/01.md)
   * [클래스, 인터페이스, 제네릭](book/effective-java/02.md)
