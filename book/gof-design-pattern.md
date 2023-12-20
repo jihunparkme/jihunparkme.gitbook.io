@@ -659,23 +659,62 @@ XML 형식의 데이터를 주는 API와 JSON 형식의 데이터로 동작하�
 
 ## Decorator
 
-![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/.png?raw=true'Result')
+[Decorator](https://refactoring.guru/ko/design-patterns/decorator)
+
+데코레이터는 **객체들을 새로운 행동들을 포함한 특수 래퍼 객체들 내에 넣어**서 위 행동들을 해당 객체들에 연결시키는 구조적 디자인 패턴
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/decorator-pattern.png" alt=""><figcaption></figcaption></figure>
 
 .
 
 **`Problem`**
 
+이메일로 알림을 보내는 기능을 가진 라이브러리를 만들었다. 해당 라이브러리를 사용하는 사용자들은 이메일뿐만 아니라 SMS 문자, 페이스북, 슬랙 등으로도 알림을 보내는 기능이 생기길 원한다. 그렇게 알림 클래스를 확장하게 되었는데 여러 유형의 알림을 동시에 보낼 수 있는 기능도 찾기 시작했다.
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/decorator-problem.png" alt=""><figcaption></figcaption></figure>
+
+여러 알림 메서드를 합성한 자식 클래스들도 생성하게 되었으나 이 접근 방식은 라이브러리뿐만 아니라 사용자 코드도 엄청나게 불어날 것만 같다. 알림 클래스들의 수가 많아지지 않도록 알림 클래스를 구성하는 다른 방법이 필요한데..
+
+어떻게 하는 게 좋을까? 😭
+
 .
 
 **`Solution`**
 
-![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/.png?raw=true 'Result')
+객체 동작 변경 시 가장 먼저 고려되는 방법은 클래스의 확장이다. 그러나 상속은 주의해야 할 사항들이 존재한다.
+- 상속은 정적이다
+  - 런타임 때 기존 객체의 행동을 변경할 수 없고, 다른 객체로만 바꿀 수 있다.
+- 자식 클래스는 하나의 부모 클래스만 가질 수 있다.
+
+상속 대신 `집합 관계` 또는 `합성`으로 이 문제를 해결할 수 있다.
+
+`집합 관계`에서는 한 객체가 다른 객체에 대한 참조를 가지고 일부 작업을 위임하는 반면, `상속`을 사용하면 객체 자체가 부모 클래스에서 행동을 상속한 후 해당 작업을 수행할 수 있다.
+
+연결된 데코레이터 객체를 다른 객체로 대체하여 런타임 때 컨테이너의 행동을 변경할 수 있다. 이렇게 객체는 여러 클래스의 행동들을 사용할 수 있고, 여러 객체에 대한 참조들이 있으며 이 객체들에 모든 종류의 작업을 위임하게 된다. 집합 관계/합성은 데코레이터를 포함한 많은 디자인 패턴의 핵심 원칙이다.
+
+`래퍼`는 데코레이터 패턴의 주요 아이디어를 표현하는 단어이다. 
+- 일부 대상 객체와 연결할 수 있는 객체
+- 대상 객체와 같은 메서드들의 집합이 포함
+- 자신이 받는 모든 요청을 대상 객체에 위임
+- 요청을 대상에 전달하기 전/후에 무언가를 수행하여 결과를 변경 가능
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/decorator-solution.png" alt=""><figcaption></figcaption></figure>
 
 .
 
 **`Practice`**
 
-![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/.png?raw=true'Result')
+<figure><img src="../.gitbook/assets/gof-design-pattern/decorator-structure.png" alt=""><figcaption></figcaption></figure>
+
+구조에 대한 내용 주석으로 정리
+
+
+
+
+
+
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
 [Decorator Pattern Practice]()
 
