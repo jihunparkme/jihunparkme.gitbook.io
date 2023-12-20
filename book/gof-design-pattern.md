@@ -739,24 +739,13 @@ Decorator Pattern Structure
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Facade
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Facade](https://refactoring.guru/ko/design-patterns/facade)
+
+퍼사드 패턴은 라이브러리, 프레임워크 또는 다른 클래스의 복잡한 집합에 대한 단순화된 인터페이스를 제공하는 구조적 디자인 패턴
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/facade-pattern.png" alt=""><figcaption></figcaption></figure>
 
 .
 
@@ -785,6 +774,35 @@ Decorator Pattern Structure
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Flyweight
 
