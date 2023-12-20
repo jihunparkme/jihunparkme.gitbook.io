@@ -700,23 +700,17 @@ XML 형식의 데이터를 주는 API와 JSON 형식의 데이터로 동작하�
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/decorator-solution.png" alt=""><figcaption></figcaption></figure>
 
+Decorator Pattern Structure
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/decorator-structure.png" alt=""><figcaption></figcaption></figure>
+
 .
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/decorator-structure.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/gof-design-pattern/decorator-practice.png" alt=""><figcaption></figcaption></figure>
 
-구조에 대한 내용 주석으로 정리
-
-
-
-
-
-
-
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
-
-[Decorator Pattern Practice]()
+[Decorator Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/structuralDesignPatterns/decorator)
 
 .
 
