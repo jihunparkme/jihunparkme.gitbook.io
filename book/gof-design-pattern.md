@@ -747,6 +747,8 @@ Decorator Pattern Structure
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/facade-pattern.png" alt=""><figcaption></figcaption></figure>
 
+> 응용(서비스) 영역을 생각해 보자.
+
 .
 
 **`Problem`**
@@ -771,9 +773,11 @@ Decorator Pattern Structure
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+퍼사드 패턴은 복잡한 비디오 변환 프레임워크와의 상호작용을 단순화
 
-[XXX Pattern Practice]()
+<figure><img src="../.gitbook/assets/gof-design-pattern/facade-practice-structure.png" alt=""><figcaption></figcaption></figure>
+
+[Facade Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/structuralDesignPatterns/facade)
 
 .
 
