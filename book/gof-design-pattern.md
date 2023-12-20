@@ -743,7 +743,7 @@ Decorator Pattern Structure
 
 [Facade](https://refactoring.guru/ko/design-patterns/facade)
 
-퍼사드 패턴은 라이브러리, 프레임워크 또는 다른 클래스의 복잡한 집합에 대한 단순화된 인터페이스를 제공하는 구조적 디자인 패턴
+퍼사드 패턴은 라이브러리, 프레임워크 또는 다른 클래스의 **복잡한 집합에 대한 단순화된 인터페이스를 제공**하는 구조적 디자인 패턴
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/facade-pattern.png" alt=""><figcaption></figcaption></figure>
 
@@ -761,7 +761,11 @@ Decorator Pattern Structure
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+퍼사드는 클라이언트가 **필요로 하는 기능들로 구성된 간단한 인터페이스를 제공하는 클래스**다. 
+
+보통 다양한 기능이 있는 라이브러리와 통합해야 하지만 그 기능의 극히 일부만을 필요로 할 때 편리하다.
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/facade-pattern-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
