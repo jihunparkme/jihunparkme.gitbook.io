@@ -810,11 +810,32 @@ Decorator Pattern Structure
 
 **`Problem`**
 
+많은 메모리를 차지하는 객체들이 대량으로 생성되어 충분하지 않은 RAM을 보유한 서버에서 부하를 불러오고 있다.
+
+해당 서버에서도 코드가 돌아갈 수 있도록 하려면..
+
+어떻게 하는 게 좋을까? 😭
+
 .
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+고유한 상태의 상수 데이터를 객체로 분리하여 재사용한다면 중복되는 상태로 인한 메모리 차지는 줄어들 것이다.
+
+이렇게 고유한 상태만 저장하는 객체를 플라이웨이트라고 한다.
+
+**공유한 상태 스토리지**
+- 공유한 상태는 패턴을 적용하기 전에 객체들을 집합시키는 컨테이너 객체로 이동
+
+**플라이웨이트와 불변성**
+- 플라이웨이트는 생성자 매개변수들을 통해 상태를 한 번만 초기화
+- setter, public 필드는 노출하지 않음
+
+**플라이웨이트 팩토리**
+- 다양한 플라이웨이트에 편리하게 접근하기 위해 기존 플라이웨이트 객체들의 풀을 관리하는 팩토리 메서드를 생성
+- 클라이언트에서 원하는 상태를 조회하고 일치하는 플라이웨이트 객체를 찾으면 반환, 존재하지 않다면 새 플라이웨이트를 생성하여 풀에 추가
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/flyweight-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
