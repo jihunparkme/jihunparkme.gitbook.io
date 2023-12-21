@@ -841,13 +841,22 @@ Decorator Pattern Structure
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+여러 객체 사이의 객체 상태를 공유
+- 다른 객체들이 공통으로 사용하는 데이터를 캐싱하여 RAM을 절약
 
-[XXX Pattern Practice]()
+<figure><img src="../.gitbook/assets/gof-design-pattern/flyweight-practice.png" alt=""><figcaption></figcaption></figure>
+
+[Flyweight Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/structuralDesignPatterns/flyweight)
 
 .
 
 **`Apply`**
+
+프로그램이 많은 수의 객체들을 필요로 해서 가용한 RAM이 부족할 경우 사용
+- 패턴의 효과는 사용 방법과 위치에 따라 크게 달라지며, 아래의 경우 가장 유용
+  - 앱이 수많은 유사 객체들을 생성해야 할 경우
+  - 객체들이 클라이언트가 사용할 수 있는 모든 RAM을 소모할 경우
+  - 객체들에 여러 중복 상태들이 포함되어 있으며, 이 상태들이 추출된 후 객체 간에 공유 가능할 경우
 
 .
 
