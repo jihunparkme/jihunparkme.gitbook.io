@@ -871,41 +871,6 @@ Decorator Pattern Structure
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Proxy
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
@@ -937,6 +902,32 @@ Decorator Pattern Structure
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Behavioral Design Patterns
 
