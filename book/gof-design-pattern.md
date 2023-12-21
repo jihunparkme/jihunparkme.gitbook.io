@@ -798,38 +798,13 @@ Decorator Pattern Structure
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Flyweight
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Flyweight](https://refactoring.guru/ko/design-patterns/flyweight)
+
+플라이웨이트는 각 객체에 모든 데이터를 유지하는 대신 **여러 객체들 간에 상태의 공통 부분들을 공유하여 사용**할 수 있는 RAM에 더 많은 객체들을 포함할 수 있도록 하는 구조 디자인 패턴
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/flyweight-pattern.png" alt=""><figcaption></figcaption></figure>
 
 .
 
@@ -858,6 +833,41 @@ Decorator Pattern Structure
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Proxy
 
