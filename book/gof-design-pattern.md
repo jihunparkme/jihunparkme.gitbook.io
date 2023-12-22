@@ -896,7 +896,10 @@ Decorator Pattern Structure
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+프록시 패턴은 실제 객체와 동일한 인터페이스로 새 프록시 클래스를 생성
+- 클라이언트로부터 요청을 받으면 이 프록시는 실제 객체를 생성하고 모든 작업을 이 객체에 위임
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/proxy-pattern-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
