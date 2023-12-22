@@ -875,7 +875,7 @@ Decorator Pattern Structure
 
 [Proxy](https://refactoring.guru/ko/design-patterns/proxy)
 
-프록시는 객체에 대한 대체를 제공할 수 있는 구조 디자인 패턴
+프록시는 **객체에 대한 대체를 제공**할 수 있는 구조 디자인 패턴
 - 프록시는 원래 객체에 대한 접근을 제어하므로, 당신의 요청이 원래 객체에 전달되기 전/후에 무언가를 수행할 수 있도록 지원
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/proxy-pattern.png" alt=""><figcaption></figcaption></figure>
@@ -962,37 +962,11 @@ Decorator Pattern Structure
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Behavioral Design Patterns
 
-## Cain of Responsibility
+행동 디자인 패턴은 알고리즘 및 객체 간의 책임 할당과 관련
 
-## Proxy
+## Cain of Responsibility
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
@@ -1024,24 +998,316 @@ Decorator Pattern Structure
 
 .
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Command
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
 
 ## Iterator
 
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
+
 ## Mediator
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
 
 ## Memento
 
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
+
 ## Observer
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
 
 ## State
 
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
+
 ## Strategy
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
 
 ## Template Method
 
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
+
 ## Visitor
 
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
 
 
 
