@@ -905,9 +905,14 @@ Decorator Pattern Structure
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+프록시는 클라이언트가 사용하는 실제 서비스 객체를 대신하는 객체를 제공하는 구조 디자인 패턴
+- 프록시는 클라이언트 요청을 수신하고, 일부 작업​(접근 제어, 캐싱 등)​을 수행한 다음 요청을 실제 서비스 객체에 전달
+- 프록시 패턴은 비효율적인 타사 라이브러리에 대한 게으른 초기화 및 캐싱 구현을 지원
+- 프록시는 코드를 변경할 수 없는 클래스에 몇 가지 추가 행동들을 추가해야 할 경우 유용
 
-[XXX Pattern Practice]()
+<figure><img src="../.gitbook/assets/gof-design-pattern/proxy-pattern-practice.png" alt=""><figcaption></figcaption></figure>
+
+[Proxy Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/structuralDesignPatterns/proxy)
 
 .
 
@@ -948,6 +953,38 @@ Decorator Pattern Structure
 # Behavioral Design Patterns
 
 ## Cain of Responsibility
+
+## Proxy
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Problem`**
+
+.
+
+**`Solution`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`Practice`**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+[XXX Pattern Practice]()
+
+.
+
+**`Apply`**
+
+.
+
+**`pros and cons`**
+
+.
 
 ## Command
 
