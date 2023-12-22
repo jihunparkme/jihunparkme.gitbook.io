@@ -979,7 +979,7 @@ Decorator Pattern Structure
 
 **`Problem`**
 
-[Design Pattern] Behavioral Design Patterns: init
+[Design Pattern] Cain of Responsibility Patterns: intro
 
 .
 
