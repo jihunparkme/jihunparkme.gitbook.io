@@ -873,7 +873,12 @@ Decorator Pattern Structure
 
 ## Proxy
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Proxy](https://refactoring.guru/ko/design-patterns/proxy)
+
+프록시는 객체에 대한 대체를 제공할 수 있는 구조 디자인 패턴
+- 프록시는 원래 객체에 대한 접근을 제어하므로, 당신의 요청이 원래 객체에 전달되기 전/후에 무언가를 수행할 수 있도록 지원
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/proxy-pattern.png" alt=""><figcaption></figcaption></figure>
 
 .
 
