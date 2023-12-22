@@ -968,11 +968,18 @@ Decorator Pattern Structure
 
 ## Cain of Responsibility
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Cain of Responsibility](https://refactoring.guru/ko/design-patterns/chain-of-responsibility)
+
+책임 연쇄 패턴은 핸들러의 체인​​을 따라 요청을 전달할 수 있게 해주는 행동 디자인 패턴
+- 각 핸들러는 요청을 받으면 요청을 처리할지 아니면 체인의 다음 핸들러로 전달할지 결정
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/chain-of-responsibility-pattern.png" alt=""><figcaption></figcaption></figure>
 
 .
 
 **`Problem`**
+
+[Design Pattern] Behavioral Design Patterns: init
 
 .
 
