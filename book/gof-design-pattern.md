@@ -973,6 +973,11 @@ Decorator Pattern Structure
 책임 연쇄 패턴은 핸들러의 체인​​을 따라 요청을 전달할 수 있게 해주는 행동 디자인 패턴
 - 각 핸들러는 요청을 받으면 요청을 처리할지 아니면 체인의 다음 핸들러로 전달할지 결정
 
+> 패턴의 모든 객체는 공통 인터페이스를 따르며, 다른 객체들의 같은 메서드들을 간접적으로 호출하는 한 객체 그룹의 행동 메서드들이 있다.
+
+- [javax.servlet.Filter#doFilter()](https://docs.oracle.com/javaee/7/api/javax/servlet/Filter.html#doFilter-javax.servlet.ServletRequest-javax.servlet.ServletResponse-javax.servlet.FilterChain-)
+- [java.util.logging.Logger#log()](https://docs.oracle.com/javase/8/docs/api/java/util/logging/Logger.html#log-java.util.logging.Level-java.lang.String-)
+
 <figure><img src="../.gitbook/assets/gof-design-pattern/chain-of-responsibility-pattern.png" alt=""><figcaption></figcaption></figure>
 
 .
