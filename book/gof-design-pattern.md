@@ -18,6 +18,17 @@
 
 ![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/factory-method-ko-2x.png?raw=true 'Result')
 
+> 구상 클래스들로부터 객체들을 생성하는 생성 메서드들로 인식될 수 있다. 구상 클래스들은 객체 생성 중에 사용되지만 팩토리 메서드들의 반환 유형은 일반적으로 추상 클래스 또는 인터페이스로 선언
+
+- [java.util.Calendar#getInstance()](https://docs.oracle.com/javase/8/docs/api/java/util/Calendar.html#getInstance--)
+- [java.util.ResourceBundle#getBundle()](https://docs.oracle.com/javase/8/docs/api/java/util/ResourceBundle.html#getBundle-java.lang.String-)
+- [java.text.NumberFormat#getInstance()](https://docs.oracle.com/javase/8/docs/api/java/text/NumberFormat.html#getInstance--)
+- [java.nio.charset.Charset#forName()](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html#forName-java.lang.String-)
+- [java.net.URLStreamHandlerFactory#createURLStreamHandler(String)](https://docs.oracle.com/javase/8/docs/api/java/net/URLStreamHandlerFactory.html)
+  - 프로토콜에 따라 다른 싱글턴 객체 반환
+- [java.util.EnumSet#of()](https://docs.oracle.com/javase/8/docs/api/java/util/EnumSet.html#of-E-)
+- [javax.xml.bind.JAXBContext#createMarshaller()](https://docs.oracle.com/javase/8/docs/api/javax/xml/bind/JAXBContext.html#createMarshaller--)
+
 .
 
 **`Problem`**
@@ -120,6 +131,12 @@ public class App {
 
 ![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/abstract-factory-ko-2x.png?raw=true'Result')
 
+> 팩토리 객체를 반환하는 메서드들의 존재 여부로 쉽게 인식. 그 후 팩토리는 특정 하위 컴포넌트들을 만드는 데 사용
+
+- [javax.xml.parsers.DocumentBuilderFactory#newInstance()](https://docs.oracle.com/javase/8/docs/api/javax/xml/parsers/DocumentBuilderFactory.html#newInstance--)
+- [javax.xml.transform.TransformerFactory#newInstance()](https://docs.oracle.com/javase/8/docs/api/javax/xml/transform/TransformerFactory.html#newInstance--)
+- [javax.xml.xpath.XPathFactory#newInstance()](https://docs.oracle.com/javase/8/docs/api/javax/xml/xpath/XPathFactory.html#newInstance--)
+
 **`Problem`**
 
 의자, 소파, 테이블을 판매하는 프로그램을 만들고 있다.
@@ -199,6 +216,16 @@ A 디자인 세트, B 디자인 세트, C 디자인 세트..
 
 ![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/builder-pattern.png?raw=true'Result')
 
+> 하나의 생성 메서드와 결과 객체를 설정하기 위한 여러 메서드가 있는 클래스. 빌더 메서드들은 사슬식 연결을 지월
+> 
+> ex. someBuilder.​setValueA(1).​setValueB(2).​create()
+
+- [java.lang.StringBuilder#append()](https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html#append-boolean-) (unsynchronized)
+- [java.lang.StringBuffer#append()](https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuffer.html#append-boolean-) (synchronized)
+- [java.nio.ByteBuffer#put()](https://docs.oracle.com/javase/8/docs/api/java/nio/ByteBuffer.html#put-byte-) ([Char­Buffer](https://docs.oracle.com/javase/8/docs/api/java/nio/CharBuffer.html#put-char-), [Short­Buffer](https://docs.oracle.com/javase/8/docs/api/java/nio/ShortBuffer.html#put-short-), [Int­Buffer](https://docs.oracle.com/javase/8/docs/api/java/nio/IntBuffer.html#put-int-), [Long­Buffer](https://docs.oracle.com/javase/8/docs/api/java/nio/LongBuffer.html#put-long-), [Float­Buffer](https://docs.oracle.com/javase/8/docs/api/java/nio/FloatBuffer.html#put-float-) and [Double­Buffer](https://docs.oracle.com/javase/8/docs/api/java/nio/DoubleBuffer.html#put-double-))
+- [javax.swing.GroupLayout.Group#addComponent()](https://docs.oracle.com/javase/8/docs/api/javax/swing/GroupLayout.Group.html#addComponent-java.awt.Component-)
+- [java.lang.Appendable](https://docs.oracle.com/javase/8/docs/api/java/lang/Appendable.html) 의 모든 구현
+
 .
 
 **`Problem`**
@@ -271,6 +298,11 @@ A 디자인 세트, B 디자인 세트, C 디자인 세트..
 코드를 각 클래스들에 의존시키지 않고 `기존 객체들을 복사`할 수 있도록 하는 생성 디자인 패턴
 
 ![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/prototype-pattern.png?raw=true'Result')
+
+> 프로토타입은 clone 또는 copy 등의 메서드 유무로 식별 가능
+
+- [java.lang.Object#clone()](https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone--)
+  - 클래스는 [java.lang.Cloneable](https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneable.html) 인터페이스 구현 필요
 
 .
 
@@ -347,6 +379,12 @@ A 디자인 세트, B 디자인 세트, C 디자인 세트..
 `클래스에 인스턴스가 하나만` 있도록 하면서 이 인스턴스에 대한 전역 접근 지점을 제공하는 생성 디자인 패턴
 
 ![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/singleton-pattern.png?raw=true'Result')
+
+> 싱글턴은 캐싱 된 같은 객체를 반환하는 정적 생성 메서드로 식별 가능
+
+- [java.lang.Runtime#getRuntime()](https://docs.oracle.com/javase/8/docs/api/java/lang/Runtime.html#getRuntime--)
+- [java.awt.Desktop#getDesktop()](https://docs.oracle.com/javase/8/docs/api/java/awt/Desktop.html#getDesktop--)
+- [java.lang.System#getSecurityManager()](https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#getSecurityManager--)
 
 .
 
@@ -440,6 +478,19 @@ A 디자인 세트, B 디자인 세트, C 디자인 세트..
 
 ![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/adapter-pattern.png?raw=true'Result')
 
+> 어댑터는 다른 추상/인터페이스 유형의 인스턴스를 받는 생성자의 존재여부로 인식 가능. 
+> 
+> 어댑터가 메서드 호출을 수신하면, 어댑터는 매개변수들을 적절한 형식으로 변환한 다음 해당 호출을 래핑 된 객체의 하나 또는 여러 메서드에 전달.
+
+- [java.util.Arrays#asList()](https://docs.oracle.com/javase/8/docs/api/java/util/Arrays.html#asList-T...-)
+- [java.util.Collections#list()](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#enumeration-java.util.Collection-)
+- [java.util.Collections#enumeration()](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#enumeration-java.util.Collection-)
+- [java.io.InputStreamReader(InputStream)](https://docs.oracle.com/javase/8/docs/api/java/io/InputStreamReader.html#InputStreamReader-java.io.InputStream-)
+  - Reader 객체 반환
+- [java.io.OutputStreamWriter(OutputStream)](https://docs.oracle.com/javase/8/docs/api/java/io/OutputStreamWriter.html#OutputStreamWriter-java.io.OutputStream-)
+  - Writer 객체 반환
+- [javax.xml.bind.annotation.adapters.XmlAdapter#marshal()](https://docs.oracle.com/javase/8/docs/api/javax/xml/bind/annotation/adapters/XmlAdapter.html#marshal-BoundType-), [#unmarshal()](https://docs.oracle.com/javase/8/docs/api/javax/xml/bind/annotation/adapters/XmlAdapter.html#unmarshal-ValueType-)
+
 .
 
 **`Problem`**
@@ -513,6 +564,8 @@ XML 형식의 데이터를 주는 API와 JSON 형식의 데이터로 동작하�
 브리지는 큰 클래스 또는 밀접하게 관련된 `클래스들의 집합을 두 개의 개별 계층구조​(추상화 및 구현)​로 나눈` 후 각각 독립적으로 개발할 수 있도록 하는 구조 디자인 패턴
 
 ![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/bridge-pattern.png?raw=true'Result')
+
+> 일부 제어 개체는 의존하는 여러 다른 플랫폼들과 명확하게 구분
 
 .
 
@@ -597,6 +650,15 @@ XML 형식의 데이터를 주는 API와 JSON 형식의 데이터로 동작하�
 
 ![Result](https://github.com/jihunparkme/jihunparkme.github.io/blob/master/post_img/gof-design-pattern/composite-pattern.png?raw=true'Result')
 
+> 코드에 객체 트리가 있고 트리의 각 객체가 같은 클래스 계층구조의 일부일 경우
+> 
+> 이러한 클래스의 메서드가 작업을 트리의 자식 객체에 위임하고, 이러한 위임을 계층구조의 기초 클래스/인터페이스를 통해 수행
+
+- [java.awt.Container#add(Component)](https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html#add-java.awt.Component-)
+  - 스윙 컴포넌트에서 자주 사용
+- [javax.faces.component.UIComponent#getChildren()](https://docs.oracle.com/javaee/7/api/javax/faces/component/UIComponent.html#getChildren--)
+  - JSF UI 컴포넌트에서 자주 사용
+
 .
 
 **`Problem`**
@@ -664,6 +726,15 @@ XML 형식의 데이터를 주는 API와 JSON 형식의 데이터로 동작하�
 데코레이터는 **객체들을 새로운 행동들을 포함한 특수 래퍼 객체들 내에 넣어**서 위 행동들을 해당 객체들에 연결시키는 구조적 디자인 패턴
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/decorator-pattern.png" alt=""><figcaption></figcaption></figure>
+
+> 현재 클래스와 동일한 클래스 또는 인터페이스의 객체를 받아들이는 생성 메서드 또는 생성자에 의해 인식 가능
+
+- [java.io.InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), [Output­Stream](https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html), [Reader](https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html) 와 [Writer](https://docs.oracle.com/javase/8/docs/api/java/io/Writer.html)의 모든 자식 클래스들은 같은 유형의 객체들을 받아들이는 생성자 존재
+- [java.util.Collections](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html) 메서드
+  - [checked­XXX()](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#checkedCollection-java.util.Collection-java.lang.Class-)
+  - [synchronized­XXX()](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#synchronizedCollection-java.util.Collection-)
+  - [unmodifiable­XXX()](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#unmodifiableCollection-java.util.Collection-)
+- [javax.servlet.http.HttpServletRequestWrapper](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServletRequestWrapper.html)와 [Http­Servlet­Response­Wrapper](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServletResponseWrapper.html)
 
 .
 
@@ -747,7 +818,10 @@ Decorator Pattern Structure
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/facade-pattern.png" alt=""><figcaption></figcaption></figure>
 
-> 응용(서비스) 영역을 생각해 보자.
+> 단순한 인터페이스를 가진 클래스에서 인식될 수 있지만 대부분의 작업을 다른 클래스에 위임하고 일반적으로 사용하는 객체들의 전체 수명 주기를 관리
+
+- [javax.faces.context.FacesContext](https://docs.oracle.com/javaee/7/api/javax/faces/context/FacesContext.html)는 내부적으로 [Life­Cycle](https://docs.oracle.com/javaee/7/api/javax/faces/lifecycle/Lifecycle.html), [View­Handler](https://docs.oracle.com/javaee/7/api/javax/faces/application/ViewHandler.html), [Navigation­Handler](https://docs.oracle.com/javaee/7/api/javax/faces/application/NavigationHandler.html) 클래스들을 사용하나, 대부분 클라이언트는 이러한 사실을 모른다.
+- [javax.faces.context.ExternalContext](https://docs.oracle.com/javaee/7/api/javax/faces/context/ExternalContext.html)는 [Servlet­Context](https://docs.oracle.com/javaee/7/api/javax/servlet/ServletContext.html), [Http­Session](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpSession.html), [Http­Servlet­Request](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServletRequest.html), [Http­Servlet­Response](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServletResponse.html) 등을 내부에서 사용
 
 .
 
@@ -805,6 +879,16 @@ Decorator Pattern Structure
 플라이웨이트는 각 객체에 모든 데이터를 유지하는 대신 **여러 객체들 간에 상태의 공통 부분들을 공유하여 사용**할 수 있는 RAM에 더 많은 객체들을 포함할 수 있도록 하는 구조 디자인 패턴
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/flyweight-pattern.png" alt=""><figcaption></figcaption></figure>
+
+> 새로운 객체들 대신 캐싱 된 객체들을 반환하는 생성 메서드의 유무로 식별
+
+- [java.lang.Integer#valueOf(int)](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-int-)
+  - [Boolean](https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html#valueOf-boolean-)
+  - [Byte](https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html#valueOf-byte-)
+  - [Character](https://docs.oracle.com/javase/8/docs/api/java/lang/Character.html#valueOf-char-)
+  - [Short](https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html#valueOf-short-)
+  - [Long](https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html#valueOf-long-)
+  - [Big­Decimal](https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html#valueOf-long-int-)
 
 .
 
@@ -879,6 +963,16 @@ Decorator Pattern Structure
 - 프록시는 원래 객체에 대한 접근을 제어하므로, 당신의 요청이 원래 객체에 전달되기 전/후에 무언가를 수행할 수 있도록 지원
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/proxy-pattern.png" alt=""><figcaption></figcaption></figure>
+
+> 프록시는 모든 실제 작업을 다른 객체에 위임. 
+> 
+> 각 프록시 메서드는 프록시가 서비스 객체의 자식 클래스가 아닌 이상 최종적으로 서비스 객체를 참조
+
+- [java.lang.reflect.Proxy](https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Proxy.html)
+- [java.rmi.*](https://docs.oracle.com/javase/8/docs/api/java/rmi/package-summary.html)
+- [javax.ejb.EJB](https://docs.oracle.com/javaee/7/api/javax/ejb/EJB.html)
+- [javax.inject.Inject](https://docs.oracle.com/javaee/7/api/javax/inject/Inject.html)
+- [javax.persistence.PersistenceContext](https://docs.oracle.com/javaee/7/api/javax/persistence/PersistenceContext.html)
 
 .
 
@@ -973,12 +1067,12 @@ Decorator Pattern Structure
 책임 연쇄 패턴은 핸들러의 체인​​을 따라 요청을 전달할 수 있게 해주는 행동 디자인 패턴
 - 각 핸들러는 요청을 받으면 요청을 처리할지 아니면 체인의 다음 핸들러로 전달할지 결정
 
+<figure><img src="../.gitbook/assets/gof-design-pattern/chain-of-responsibility-pattern.png" alt=""><figcaption></figcaption></figure>
+
 > 패턴의 모든 객체는 공통 인터페이스를 따르며, 다른 객체들의 같은 메서드들을 간접적으로 호출하는 한 객체 그룹의 행동 메서드들이 있다.
 
 - [javax.servlet.Filter#doFilter()](https://docs.oracle.com/javaee/7/api/javax/servlet/Filter.html#doFilter-javax.servlet.ServletRequest-javax.servlet.ServletResponse-javax.servlet.FilterChain-)
 - [java.util.logging.Logger#log()](https://docs.oracle.com/javase/8/docs/api/java/util/logging/Logger.html#log-java.util.logging.Level-java.lang.String-)
-
-<figure><img src="../.gitbook/assets/gof-design-pattern/chain-of-responsibility-pattern.png" alt=""><figcaption></figcaption></figure>
 
 .
 
@@ -1038,32 +1132,18 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Command
 
+[Design Pattern] Cain of Responsibility Pattern:  finish
+
+
+
+
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+>
+
+-
 
 .
 
@@ -1093,9 +1173,55 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 .
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Iterator
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+>
+
+-
 
 .
 
@@ -1129,6 +1255,10 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
+>
+
+-
+
 .
 
 **`Problem`**
@@ -1160,6 +1290,10 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 ## Memento
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+>
+
+-
 
 .
 
@@ -1193,6 +1327,10 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
+>
+
+-
+
 .
 
 **`Problem`**
@@ -1224,6 +1362,10 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 ## State
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+>
+
+-
 
 .
 
@@ -1257,6 +1399,10 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
+>
+
+-
+
 .
 
 **`Problem`**
@@ -1288,6 +1434,10 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 ## Template Method
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+
+>
+
+-
 
 .
 
@@ -1321,6 +1471,10 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
+>
+
+-
+
 .
 
 **`Problem`**
@@ -1349,6 +1503,3 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 .
 
-
-
-각 패턴 한 줄 설명 추가
