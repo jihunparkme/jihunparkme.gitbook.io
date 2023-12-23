@@ -1005,11 +1005,11 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 **`Practice`**
 
-사용자 데이터가 포함된 요청이 인증, 권한 부여 및 검정과 같은 다양한 작업을 수행하는 핸들러의 순차적 체인을 통과하는 방법을 보여줍니다.
+사용자 데이터가 포함된 요청이 인증, 권한 부여와 같은 다양한 작업을 수행하는 핸들러의 순차적 체인을 통과하는 과정
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/gof-design-pattern/cain-of-responsibility-practice.png" alt=""><figcaption></figcaption></figure>
 
-[Cain of Responsibility Pattern Practice]()
+[Cain of Responsibility Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/behavioralDesignPatterns/cain_of_responsibility)
 
 .
 
