@@ -1,6 +1,6 @@
 # GoF Design Patterns
 
-[Refactoring.Guru](https://refactoring.guru/design-patterns) 의 [Design Patterns](https://refactoring.guru/design-patterns) 주제를 정리하며 실습한 내용들을 다루는 글입니다.
+[Refactoring.Guru](https://refactoring.guru/) 의 [Design Patterns](https://refactoring.guru/design-patterns) 주제를 정리하며 실습한 내용들을 다루는 글입니다.
 
 .
 
@@ -979,21 +979,37 @@ Decorator Pattern Structure
 
 **`Problem`**
 
-[Design Pattern] Cain of Responsibility Patterns: intro
+인증된 사용자들만 주문을 생성할 수 있도록 시스템에 대한 접근을 제한하고 싶다. 또 관리 권한이 있는 사용자들에게는 모든 주문에 대한 전체 접근 권한을 부여하려고 한다.
+
+하지만, 이러한 검사들은 차례대로 수행해야 한다. 사용자들의 자격 증명이 포함된 요청을 받을 때마다 시스템에 대해 사용자 인증을 시도할 수 있으나, 이러한 자격 증명이 올바르지 않아서 인증에 실패하면 다른 검사들을 진행할 필요가 없다.
+
+검사 항목에 새로운 기능이 추가될 때마다 코드는 부풀고 복잡해지기 시작했다.
+
+각 검사들을 독립적이면서 연쇄적으로 동작하도록 할 수 있는 방법이 없을까? 😭
 
 .
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러라는 독립 실행형 객체들로 변환**한다. 
+- 각 검사는 검사를 수행하는 단일 메서드가 있는 자체 클래스로 추출되고, 요청은 데이터와 함께 이 메서드에 인수로 전달된다.
+
+이 패턴은 이러한 핸들러**를 체인으로 연결하도록 제안**한다. 
+- 연결된 각 **핸들러에는 체인의 다음 핸들러에 대한 참조를 저장하기 위한 필드**가 있다. 
+- 요청을 처리하는 것 외에도 핸들러들은 체인을 따라 요청을 전달하며, 이 요청은 모든 핸들러가 요청을 처리할 기회를 가질 때까지 체인을 따라 이동한다. 
+- 또한 핸들러가 요청을 전달하지 않고 중지할 수도 있다. 
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/cain-of-responsibility-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
 **`Practice`**
 
+사용자 데이터가 포함된 요청이 인증, 권한 부여 및 검정과 같은 다양한 작업을 수행하는 핸들러의 순차적 체인을 통과하는 방법을 보여줍니다.
+
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
-[XXX Pattern Practice]()
+[Cain of Responsibility Pattern Practice]()
 
 .
 
@@ -1318,3 +1334,4 @@ Decorator Pattern Structure
 
 
 
+각 패턴 한 줄 설명 추가
