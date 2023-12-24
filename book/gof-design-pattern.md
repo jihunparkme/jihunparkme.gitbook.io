@@ -1134,20 +1134,27 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 ## Command
 
-[Design Pattern] Cain of Responsibility Pattern:  finish
+[Command](https://refactoring.guru/ko/design-patterns/command)
 
+요청에 대한 모든 정보를 포함하는 독립형 개체로 변환하는 동작 설계 패턴
+- 이 변환을 통해 요청을 메서드 인수로 전달하고, 요청의 실행을 지연하거나 대기열에 놓이며, 실행 취소 가능한 작업을 지원
 
+<figure><img src="../.gitbook/assets/gof-design-pattern/command-pattern.png" alt=""><figcaption></figcaption></figure>
 
+> 특정 작업(복사, 잘라내기, 보내기, 인쇄 등)을 나타내는 관련 클래스 집합이 표시되는 경우 이는 Command 패턴일 수 있다.
+> 
+> - 이러한 클래스는 동일한 인터페이스/추상 클래스를 구현 필요.
+> - 명령어는 관련 작업을 자체적으로 구현하거나 작업을 개별 개체(수신기)에 위임 가능.
+> - 마지막 퍼즐 조각은 호출자를 식별하는 것으로, 메서드 또는 생성자의 매개 변수에서 명령 개체를 받아들이는 클래스를 검색
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
-
->
-
--
+- [java.lang.Runnable](https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html)
+- [javax.swing.Action](https://docs.oracle.com/javase/8/docs/api/javax/swing/Action.html)
 
 .
 
 **`Problem`**
+
+당신이 새로운 텍스트 편집기 앱에서 작업하고 있다고 상상해 보세요. 당신의 현재 작업은 편집기의 다양한 작업을 위한 수많은 버튼이 있는 도구 모음을 만드는 것입니다. 당신은 도구 모음의 버튼뿐만 아니라 다양한 대화상자의 일반 버튼에도 사용할 수 있는 매우 깔끔한 버튼 클래스를 만들었습니다.
 
 .
 
