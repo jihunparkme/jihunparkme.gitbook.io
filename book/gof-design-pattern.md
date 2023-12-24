@@ -1164,7 +1164,18 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+커맨드 패턴은 GUI 객체들이 요청을 직접 보내서는 안되고, 모든 요청 세부 정보들​(호출되는 객체, 메서드 이름 및 인수 리스트)​을 단일 메서드를 가진 별도의 커맨드 클래스로 추출하라고 제안
+- 커맨드 객체는 **다양한 GUI 객체들과 비즈니스 논리 객체들 간의 링크 역할**
+- GUI 객체는 어떤 비즈니스 논리 객체가 요청을 받을지와 이 요청이 어떻게 처리할지에 대하여 알 필요가 없음
+- GUI 객체는 커맨드를 작동시킬 뿐이며, 그렇게 작동된 커맨드는 모든 세부 사항을 처리
+
+Solution
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/command-pattern-solution.png" alt=""><figcaption></figcaption></figure>
+
+Structure
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/command-pattern-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
