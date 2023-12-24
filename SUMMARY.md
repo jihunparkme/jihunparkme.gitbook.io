@@ -43,6 +43,7 @@
   * [06.응용 서비스와 표현 영역](book/ddd-start/06.md)
   * [07.도메인 서비스](book/ddd-start/07.md)
   * [08.애그리거트 트랜잭션 관리](book/ddd-start/08.md)
+  * [09.도메인 모델과 바운디드 컨텍스트](book/ddd-start/09.md)
 * [Effective Java 3/E](book/effective-java/README.md)
   * [객체, 공통 메서드](book/effective-java/01.md)
   * [클래스, 인터페이스, 제네릭](book/effective-java/02.md)
