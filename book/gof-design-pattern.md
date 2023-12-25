@@ -1230,9 +1230,22 @@ Structure
 
 **`Problem`**
 
+컬렉션은 요소에 접근할 수 있는 방법을 클라이언트에 제공해야 한다.
+
+컬렉션마다 요소에 접근할 수 있는 방법이 다른데..
+
+단순하게 접근할 수 있는 방법이 없을까? 😭
+
 .
 
 **`Solution`**
+
+
+[Design Pattern] Iterator Pattern:  intro
+
+
+
+
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
