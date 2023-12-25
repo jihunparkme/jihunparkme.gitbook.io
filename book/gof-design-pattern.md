@@ -1215,14 +1215,16 @@ Structure
 
 [Iterator](https://refactoring.guru/design-patterns/iterator)
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+반복자는 컬렉션 요소들의 기본 표현​(리스트, 스택, 트리 등)​을 노출하지 않고 순회할 수 있도록 하는 행동 디자인 패턴
 
->
+<figure><img src="../.gitbook/assets/gof-design-pattern/iterator-pattern.png" alt=""><figcaption></figcaption></figure>
 
--
+> 탐색 메서드(next, previous..)​로 쉽게 인식 가능
+> 
+> 반복자를 사용하는 클라이언트 코드는 반복자가 순회하는 컬렉션에 직접 접근할 수 없음
 
-
-
+- All implementations of [java.util.Iterator](https://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html) (also [java.util.Scanner](https://docs.oracle.com/javase/8/docs/api/java/util/Scanner.html)).
+- All implementations of [java.util.Enumeration](https://docs.oracle.com/javase/8/docs/api/java/util/Enumeration.html).
 
 .
 
