@@ -374,7 +374,7 @@ A 디자인 세트, B 디자인 세트, C 디자인 세트..
 
 ## Singleton
 
-[singleton](https://refactoring.guru/ko/design-patterns/singleton)
+[singleton](https://refactoring.guru/design-patterns/singleton)
 
 `클래스에 인스턴스가 하나만` 있도록 하면서 이 인스턴스에 대한 전역 접근 지점을 제공하는 생성 디자인 패턴
 
@@ -472,7 +472,7 @@ A 디자인 세트, B 디자인 세트, C 디자인 세트..
 
 ## Adapter
 
-[Adapter, Wrapper](https://refactoring.guru/ko/design-patterns/adapter)
+[Adapter, Wrapper](https://refactoring.guru/design-patterns/adapter)
 
 `호환되지 않는 인터페이스`를 가진 객체들이 `협업`할 수 있도록 하는 구조적 디자인 패턴
 
@@ -559,7 +559,7 @@ XML 형식의 데이터를 주는 API와 JSON 형식의 데이터로 동작하�
 
 ## Bridge
 
-[Bridge](https://refactoring.guru/ko/design-patterns/bridge)
+[Bridge](https://refactoring.guru/design-patterns/bridge)
 
 브리지는 큰 클래스 또는 밀접하게 관련된 `클래스들의 집합을 두 개의 개별 계층구조​(추상화 및 구현)​로 나눈` 후 각각 독립적으로 개발할 수 있도록 하는 구조 디자인 패턴
 
@@ -644,7 +644,7 @@ XML 형식의 데이터를 주는 API와 JSON 형식의 데이터로 동작하�
 
 ## Composite
 
-[Composite](https://refactoring.guru/ko/design-patterns/composite)
+[Composite](https://refactoring.guru/design-patterns/composite)
 
 복합체 패턴은 객체들을 `트리 구조들로 구성`한 후, 이러한 구조들과 `개별 객체들처럼 작업`할 수 있도록 하는 구조 패턴
 
@@ -721,7 +721,7 @@ XML 형식의 데이터를 주는 API와 JSON 형식의 데이터로 동작하�
 
 ## Decorator
 
-[Decorator](https://refactoring.guru/ko/design-patterns/decorator)
+[Decorator](https://refactoring.guru/design-patterns/decorator)
 
 데코레이터는 **객체들을 새로운 행동들을 포함한 특수 래퍼 객체들 내에 넣어**서 위 행동들을 해당 객체들에 연결시키는 구조적 디자인 패턴
 
@@ -812,7 +812,7 @@ Decorator Pattern Structure
 
 ## Facade
 
-[Facade](https://refactoring.guru/ko/design-patterns/facade)
+[Facade](https://refactoring.guru/design-patterns/facade)
 
 퍼사드 패턴은 라이브러리, 프레임워크 또는 다른 클래스의 **복잡한 집합에 대한 단순화된 인터페이스를 제공**하는 구조적 디자인 패턴
 
@@ -874,7 +874,7 @@ Decorator Pattern Structure
 
 ## Flyweight
 
-[Flyweight](https://refactoring.guru/ko/design-patterns/flyweight)
+[Flyweight](https://refactoring.guru/design-patterns/flyweight)
 
 플라이웨이트는 각 객체에 모든 데이터를 유지하는 대신 **여러 객체들 간에 상태의 공통 부분들을 공유하여 사용**할 수 있는 RAM에 더 많은 객체들을 포함할 수 있도록 하는 구조 디자인 패턴
 
@@ -957,7 +957,7 @@ Decorator Pattern Structure
 
 ## Proxy
 
-[Proxy](https://refactoring.guru/ko/design-patterns/proxy)
+[Proxy](https://refactoring.guru/design-patterns/proxy)
 
 프록시는 **객체에 대한 대체를 제공**할 수 있는 구조 디자인 패턴
 - 프록시는 원래 객체에 대한 접근을 제어하므로, 당신의 요청이 원래 객체에 전달되기 전/후에 무언가를 수행할 수 있도록 지원
@@ -1062,7 +1062,7 @@ Decorator Pattern Structure
 
 ## Cain of Responsibility
 
-[Cain of Responsibility](https://refactoring.guru/ko/design-patterns/chain-of-responsibility)
+[Cain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility)
 
 책임 연쇄 패턴은 핸들러의 체인​​을 따라 요청을 전달할 수 있게 해주는 행동 디자인 패턴
 - 각 핸들러는 요청을 받으면 요청을 처리할지 아니면 체인의 다음 핸들러로 전달할지 결정
@@ -1134,7 +1134,7 @@ Cain of Responsibility(책임 연쇄) 패턴은 **특정 행동들을 핸들러�
 
 ## Command
 
-[Command](https://refactoring.guru/ko/design-patterns/command)
+[Command](https://refactoring.guru/design-patterns/command)
 
 요청에 대한 모든 정보를 포함하는 독립형 개체로 변환하는 동작 설계 패턴
 - 이 변환을 통해 요청을 메서드 인수로 전달하고, 요청의 실행을 지연하거나 대기열에 놓이며, 실행 취소 가능한 작업을 지원
@@ -1211,55 +1211,18 @@ Structure
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Iterator
+
+[Iterator](https://refactoring.guru/design-patterns/iterator)
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
 >
 
 -
+
+
+
 
 .
 
@@ -1288,6 +1251,41 @@ Structure
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Mediator
 
