@@ -1181,13 +1181,19 @@ Structure
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+요청 또는 간단한 작업을 객체로 변환하는 행동 디자인 패턴
 
-[XXX Pattern Practice]()
+<figure><img src="../.gitbook/assets/gof-design-pattern/command-pattern-practice.png" alt=""><figcaption></figcaption></figure>
+
+[Command Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/behavioralDesignPatterns/command)
 
 .
 
 **`Apply`**
+
+- 작업들로 객체를 매개 변수화할 경우
+- 작업들의 실행을 예약하거나, 대기열에 넣거나, 원격으로 실행하려는 경우
+- 되돌릴 수 있는 작업을 구현하고 싶을 경우
 
 .
 
