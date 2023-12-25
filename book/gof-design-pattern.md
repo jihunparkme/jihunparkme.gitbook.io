@@ -1234,20 +1234,17 @@ Structure
 
 컬렉션마다 요소에 접근할 수 있는 방법이 다른데..
 
-단순하게 접근할 수 있는 방법이 없을까? 😭
+단순하게 접근할 수 있도록 하는 방법이 없을까? 😭
 
 .
 
 **`Solution`**
 
+Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의 객체로 추출할 수 있다.
+- 반복자는 다양한 순회 알고리즘을 구현
+- 여러 반복자 객체들이 동시에 같은 컬렉션 순회 가능
 
-[Design Pattern] Iterator Pattern:  intro
-
-
-
-
-
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/gof-design-pattern/iterator-pattern-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
