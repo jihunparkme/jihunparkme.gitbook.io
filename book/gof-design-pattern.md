@@ -1278,48 +1278,24 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Mediator
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Mediator](https://refactoring.guru/ko/design-patterns/mediator)
 
->
+중재자는 **객체 간의 혼란스러운 의존 관계들을 줄일 수 있는 행동 디자인 패턴**
+- 객체 간의 직접 통신을 제한하고 중재자 객체를 통해서만 협력
 
--
+<figure><img src="../.gitbook/assets/gof-design-pattern/mediator-pattern.png" alt=""><figcaption></figcaption></figure>
+
+> 중재자 패턴의 가장 인기 있는 사용 용도는 GUI 컴포넌트 간의 통신을 쉽게 하는 것
+> 
+> - MVC 패턴의 컨트롤러 동의어는 중재자
+
+- [java.util.Timer](https://docs.oracle.com/javase/8/docs/api/java/util/Timer.html) (all scheduleXXX() methods)
+- [java.util.concurrent.Executor#execute()](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html#execute-java.lang.Runnable-)
+- [java.util.concurrent.ExecutorService](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html) (invokeXXX() and submit() methods)
+- [java.util.concurrent.ScheduledExecutorService](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ScheduledExecutorService.html) (all scheduleXXX() methods)
+- [java.lang.reflect.Method#invoke()](https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html#invoke-java.lang.Object-java.lang.Object...-)
 
 .
 
@@ -1348,6 +1324,46 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Memento
 
