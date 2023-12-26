@@ -1321,6 +1321,10 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 **`Apply`**
 
+[Design Pattern] Mediator Pattern: Practice
+
+코드 분석
+
 .
 
 **`pros and cons`**
