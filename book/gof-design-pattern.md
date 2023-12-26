@@ -1299,13 +1299,13 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 .
 
-**`Problem`**
-
-.
-
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+중재자 패턴은 서로 독립적으로 작동해야 하는 컴포넌트 간의 모든 직접 통신을 중단한 후, 컴포넌트의 호출을 적절한 컴포넌트로 리다이렉션하는 중재자 객체로 호출하여 간접적으로 협력하도록 제안
+- 컴포넌트들은 수십 개의 동료 컴포넌트와 결합되는 대신 단일 중재자 클래스에만 의존
+- 클래스의 의존관계가 적을수록 해당 클래스의 수정, 확장, 재사용이 쉬워짐
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/mediator-pattern-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
