@@ -1311,9 +1311,11 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+많은 GUI 요소들이 중재자의 도움으로 협력하지만, 서로에 의존하지 않도록 해당 요소들을 정리하는 방법을 표현
 
-[XXX Pattern Practice]()
+<figure><img src="../.gitbook/assets/gof-design-pattern/mediator-pattern-practice.png" alt=""><figcaption></figcaption></figure>
+
+[Mediator Pattern Practice]()
 
 .
 
