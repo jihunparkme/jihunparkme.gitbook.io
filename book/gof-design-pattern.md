@@ -1315,7 +1315,7 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/mediator-pattern-practice.png" alt=""><figcaption></figcaption></figure>
 
-[Mediator Pattern Practice]()
+[Mediator Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/behavioralDesignPatterns/mediator)
 
 .
 
