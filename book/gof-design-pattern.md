@@ -1340,53 +1340,20 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Memento
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Memento](https://refactoring.guru/ko/design-patterns/memento)
 
->
+`메멘토`는 객체의 세부 구현을 공개하지 않으면서 **해당 객체의 이전 상태를 저장하고 복원할 수 있게 해주는 행동 디자인 패턴**
 
--
+<figure><img src="../.gitbook/assets/gof-design-pattern/memento-pattern.png" alt=""><figcaption></figcaption></figure>
+
+> 직렬화를 사용하여 달성 가능. 
+> 
+> 직렬화는 객체 상태의 스냅숏을 만드는 유일한 또는 가장 효율적인 방법은 아니나, 다른 객체로부터 구조를 보호하면서 상태 백업을 저장
+
+- All [java.io.Serializable](https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html) implementations can simulate the Memento.
+- All [javax.faces.component.StateHolder](https://docs.oracle.com/javaee/7/api/javax/faces/component/StateHolder.html) implementations.
 
 .
 
@@ -1404,7 +1371,7 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
-[XXX Pattern Practice]()
+[Memento Pattern Practice]()
 
 .
 
@@ -1415,6 +1382,33 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Observer
 
