@@ -1410,6 +1410,15 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 **`pros and cons`**
 
+장점.
+- 캡슐화를 위반하지 않고, 객체 상태의 스냅샷을 생성
+- Caretacker가 Originator의 상태 기록을 유지하도록 하여 Originator의 코드 단순화
+
+단점.
+- 클라이언트가 메멘토를 너무 자주 생성하면 많은 RAM 소모
+- Caretacker들은 더 이상 쓸모없는 메멘토들을 파괴할 수 있도록 Originator의 수명주기 추적 필요
+- PHP, Python, JavaScript 같은 대부분의 동적 프로그래밍 언어에서는 메멘토 상태가 그대로 유지된다고 보장 불가
+
 .
 
 
