@@ -1378,7 +1378,15 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 - 다른 객체들은 메멘토와 제한된 인터페이스를 사용해 통신
 - 이러한 인터페이스는 스냅샷의 메타데이터​(생성 시간, 수행한 작업의 이름 등)​를 가져올 수 있도록 할 수 있지만, 스냅샷에 포함된 원래 객체의 상태는 가져오지 못한다.
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+중첩된 클래스에 기반한 구현
+- 중첩 클래스에 대한 지원에 의존
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/memento-pattern-structure.png" alt=""><figcaption></figcaption></figure>
+
+엄격한 캡슐화를 사용한 구현
+- 다른 클래스들이 오리지네이터의 상태를 메멘토를 통해 접근할 가능성을 완전히 제거하고자 할 때 유용
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/memento-pattern-structure-2.png" alt=""><figcaption></figcaption></figure>
 
 .
 
