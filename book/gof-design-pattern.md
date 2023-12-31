@@ -1392,9 +1392,9 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/gof-design-pattern/memento-pattern-practice.png" alt=""><figcaption></figcaption></figure>
 
-[Memento Pattern Practice]()
+[Memento Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/behavioralDesignPatterns/memento)
 
 .
 
