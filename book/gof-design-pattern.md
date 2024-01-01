@@ -1421,36 +1421,13 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Observer
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Observer](https://refactoring.guru/ko/design-patterns/observer)
+
+옵서버 패턴은 관찰 중인 객체에서 발생하는 모든 이벤트에 대하여 알리는 **구독 메커니즘을 정의할 수 있도록 하는 행동 디자인 패턴**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/observer-pattern.png" alt=""><figcaption></figcaption></figure>
 
 >
 
@@ -1483,6 +1460,33 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## State
 
