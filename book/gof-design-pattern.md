@@ -1425,13 +1425,19 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 [Observer](https://refactoring.guru/ko/design-patterns/observer)
 
-옵서버 패턴은 관찰 중인 객체에서 발생하는 모든 이벤트에 대하여 알리는 **구독 메커니즘을 정의할 수 있도록 하는 행동 디자인 패턴**
+옵서버 패턴은 관찰 중인 개체에 발생하는 이벤트에 대해 여러 개체에 통지하는 **구독 메커니즘을 정의할 수 있는 행동 디자인 패턴**
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/observer-pattern.png" alt=""><figcaption></figcaption></figure>
 
->
+> 수신 개체를 목록에 저장하는 구독 방법이 나타나면 패턴을 인식 가능
+> 
+> 해당 목록의 개체에 대해 반복되는 일종의 알림 방법을 보고 "업데이트" 방법을 호출하면 식별 확인 가능
 
--
+- [java.util.Observer](https://docs.oracle.com/javase/8/docs/api/java/util/Observer.html)/[java.util.Observable](https://docs.oracle.com/javase/8/docs/api/java/util/Observable.html) (rarely used in real world)
+- All implementations of [java.util.EventListener](https://docs.oracle.com/javase/8/docs/api/java/util/EventListener.html) (practically all over Swing components)
+- [javax.servlet.http.HttpSessionBindingListener](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpSessionBindingListener.html)
+- [javax.servlet.http.HttpSessionAttributeListener](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpSessionAttributeListener.html)
+- [javax.faces.event.PhaseListener](https://docs.oracle.com/javaee/7/api/javax/faces/event/PhaseListener.html)
 
 .
 
