@@ -1453,7 +1453,11 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+옵서버 패턴은 Publisher 클래스(자신의 상태에 대한 변경에 대해 다른 객체들에 알림을 보내는 역할)에 개별 객체들이 그 Publisher로부터 오는 이벤트들의 알림들을 구독 또는 구독 취소할 수 있도록 구독 메커니즘을 추가할 것을 제안
+
+Publisher에 중요한 이벤트가 발생할 때마다 구독자 리스트를 참조한 후 그들의 객체들에 있는 특정 알림 메서드를 호출
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/observer-pattern-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
@@ -1461,7 +1465,7 @@ Iterator 패턴을 통해 컬렉션의 순회 동작을 Iterator라는 별도의
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
-[XXX Pattern Practice]()
+[Observer Pattern Practice]()
 
 .
 
