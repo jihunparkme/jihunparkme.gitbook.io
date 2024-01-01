@@ -1463,9 +1463,9 @@ Publisher에 중요한 이벤트가 발생할 때마다 구독자 리스트를 �
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/gof-design-pattern/observer-pattern-practice.png" alt=""><figcaption></figcaption></figure>
 
-[Observer Pattern Practice]()
+[Observer Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/behavioralDesignPatterns/observer)
 
 .
 
