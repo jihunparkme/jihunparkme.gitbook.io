@@ -1489,40 +1489,20 @@ Publisher에 중요한 이벤트가 발생할 때마다 구독자 리스트를 �
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## State
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[State](https://refactoring.guru/ko/design-patterns/state)
 
->
+상태 패턴은 **객체의 내부 상태가 변경될 때 해당 객체가 그의 행동을 변경할 수 있도록 하는 행동 디자인 패턴**
+- 객체가 행동을 변경할 때 객체가 클래스를 변경한 것처럼 보일 수 있음
 
--
+<figure><img src="../.gitbook/assets/gof-design-pattern/state-pattern.png" alt=""><figcaption></figcaption></figure>
+
+> 개체의 상태에 따라 동작을 변경하는 방법으로 인식 가능
+> 
+> 상태 개체 자체를 포함한 다른 개체가 이 상태를 제어하거나 대체할 수 있는 경우 식별 가능
+
+- [javax.faces.lifecycle.LifeCycle#execute()](https://docs.oracle.com/javaee/7/api/javax/faces/lifecycle/Lifecycle.html#execute-javax.faces.context.FacesContext-) (controlled by the [FacesServlet](https://docs.oracle.com/javaee/7/api/javax/faces/webapp/FacesServlet.html): behavior is dependent on current phase (state) of JSF lifecycle)
 
 .
 
@@ -1551,6 +1531,29 @@ Publisher에 중요한 이벤트가 발생할 때마다 구독자 리스트를 �
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Strategy
 
