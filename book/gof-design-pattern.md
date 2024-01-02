@@ -1508,6 +1508,33 @@ Publisher에 중요한 이벤트가 발생할 때마다 구독자 리스트를 �
 
 **`Problem`**
 
+상태 머신들은 일반적으로 객체의 상태에 따라 적절한 행동들을 선택하는 많은 조건문​(if 또는 switch)​으로 구현된다. 일반적으로 이 `상태`는 객체의 필드들의 값들의 집합일 뿐이다.
+
+ex. 유한 상태 머신 구현 예
+
+```java
+class Document is
+    field state: string
+    // ...
+    method publish() is
+        switch (state)
+            "draft":
+                state = "moderation"
+                break
+            "moderation":
+                if (currentUser.role == "admin")
+                    state = "published"
+                break
+            "published":
+                // Do nothing.
+                break
+    // ...
+```
+
+이렇게 조건문에 기반한 상태 머신은 클래스의 상태와 상태에 의존하는 행동이 추가될 수록 조건문이 점점 거대해질 것이다.
+
+설계 단계에서는 가능한 모든 상태와 상태의 규칙을 예상하기 어려운데.. 좋은 방법이 없을까? 😭
+
 .
 
 **`Solution`**
