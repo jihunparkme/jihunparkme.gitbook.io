@@ -1549,15 +1549,18 @@ class Document is
 - 상태 패턴는 특정 상태들이 서로를 인식하고, 한 상태에서 다른 상태로 전환될 수 있지만
 - 전략 패턴은 상태들이 대부분 서로에 대해 알지 못한다.
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/gof-design-pattern/state-pattern-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
 **`Practice`**
 
+
+
+
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
-[XXX Pattern Practice]()
+[State Pattern Practice]()
 
 .
 
