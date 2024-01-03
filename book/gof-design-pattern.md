@@ -1585,32 +1585,13 @@ class Document is
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Strategy
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Strategy](https://refactoring.guru/ko/design-patterns/strategy)
+
+전략 패턴은 **알고리즘의 패밀리를 정의**하고, 각 패밀리를 별도의 클래스에 넣은 후 **그들의 객체를 상호교환할 수 있도록 하는 행동 디자인 패턴**
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/strategy-pattern.png" alt=""><figcaption></figcaption></figure>
 
 >
 
@@ -1643,6 +1624,28 @@ class Document is
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Template Method
 
