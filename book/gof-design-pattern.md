@@ -1555,12 +1555,13 @@ class Document is
 
 **`Practice`**
 
+상태 패턴은 같은 미디어 플레이어 컨트롤들이 현재 재생 상태에 따라 다르게 작동하도록 한다.
+- 플레이어의 기본 클래스에는 상태 객체에 대한 참조가 포함되며, 이 객체는 플레이어를 위해 대부분 작업을 수행
+- 일부 작업은 상태 객체를 다른 객체로 대처할 수 있으며, 이는 플레이어가 사용자 상호 작용에 반응하는 방식을 변경 
 
+<figure><img src="../.gitbook/assets/gof-design-pattern/state-pattern-practice.png" alt=""><figcaption></figcaption></figure>
 
-
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
-
-[State Pattern Practice]()
+[State Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/behavioralDesignPatterns/state)
 
 .
 
