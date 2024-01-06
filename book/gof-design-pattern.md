@@ -1593,9 +1593,11 @@ class Document is
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/strategy-pattern.png" alt=""><figcaption></figcaption></figure>
 
->
+> 전략 패턴은 중첩된 객체가 실제 작업을 수행할 수 있는 방법뿐만 아니라 해당 객체를 다른 객체로 대체할 수 있는 setter를 통해 인식 가능
 
--
+- [java.util.Comparator#compare()](https://docs.oracle.com/javase/8/docs/api/java/util/Comparator.html#compare-T-T-) called from Collections#sort().
+- [javax.servlet.http.HttpServlet](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServlet.html): service() method, plus all of the doXXX() methods that accept HttpServletRequest and HttpServletResponse objects as arguments.
+- [javax.servlet.Filter#doFilter()](https://docs.oracle.com/javaee/7/api/javax/servlet/Filter.html#doFilter-javax.servlet.ServletRequest-javax.servlet.ServletResponse-javax.servlet.FilterChain-)
 
 .
 
