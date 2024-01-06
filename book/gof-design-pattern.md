@@ -1633,9 +1633,9 @@ context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략
 - 구매할 제품을 선택한 후 고객은 페이팔 또는 신용 카드 지불 메서드를 선택
 - 구상 전략들은 실제 지불을 수행할 뿐만 아니라 체크아웃 양식의 행동을 변경하여 지불 세부 정보들을 기록하는 적절한 필드들을 제공
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/gof-design-pattern/strategy-pattern-practice.png" alt=""><figcaption></figcaption></figure>
 
-[XXX Pattern Practice]()
+[Strategy Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/behavioralDesignPatterns/strategy)
 
 .
 
