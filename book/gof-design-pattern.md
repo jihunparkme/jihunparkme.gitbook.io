@@ -1589,7 +1589,7 @@ class Document is
 
 [Strategy](https://refactoring.guru/ko/design-patterns/strategy)
 
-전략 패턴은 **알고리즘의 패밀리를 정의**하고, 각 패밀리를 별도의 클래스에 넣은 후 **그들의 객체를 상호교환할 수 있도록 하는 행동 디자인 패턴**
+전략 패턴은 **알고리즘의 전략을 정의**하고, 각 전략을 별도의 클래스에 넣은 후 **그들의 객체를 상호교환할 수 있도록 하는 행동 디자인 패턴**
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/strategy-pattern.png" alt=""><figcaption></figcaption></figure>
 
@@ -1613,7 +1613,17 @@ class Document is
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+전략 패턴은 특정 작업을 다양한 방식으로 수행하는 클래스를 선택한 후 모든 알고리즘을 strategies 클래스들로 추출할 것을 제안
+- context라는 원래 클래스에는 전략 중 하나에 대한 참조를 저장하기 위한 필드가 필요
+- context는 작업을 자체적으로 실행하는 대신 연결된 전략 객체에 위임
+
+context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략에 대해 알지 못함)
+- 대신 클라이언트가 원하는 전략을 context에 전달
+- context는 동일 인터페이스를 구현한 전략들과 함께 작동하며, 이 인터페이스는 선택된 전략 내에 캡슐화된 알고리즘을 작동시킬 단일 메서드만 노출
+
+전략 패턴을 통해 **context가 구상 전략들에 의존하지 않게 되므로** context 또는 다른 전략들의 **코드를 변경하지 않고도 새 알고리즘들을 추가하거나 기존 알고리즘들을 수정**할 수 있다.
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/strategy-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
