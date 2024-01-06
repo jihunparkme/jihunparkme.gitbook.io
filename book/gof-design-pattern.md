@@ -1603,6 +1603,8 @@ class Document is
 
 **`Problem`**
 
+
+
 .
 
 **`Solution`**
@@ -1612,6 +1614,10 @@ class Document is
 .
 
 **`Practice`**
+
+전자 상거래 앱의 다양한 지불 메서드들을 구현하는 예시.
+- 구매할 제품을 선택한 후 고객은 페이팔 또는 신용 카드 지불 메서드를 선택
+- 구상 전략들은 실제 지불을 수행할 뿐만 아니라 체크아웃 양식의 행동을 변경하여 지불 세부 정보들을 기록하는 적절한 필드들을 제공
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
