@@ -1689,7 +1689,10 @@ context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+템플릿 메소드 패턴은 알고리즘을 일련의 단계로 분해하고, 이 단계를 메소드로 변환하고, 이러한 메소드에 일련의 호출을 하나의 템플릿 메소드 안에 넣는 것을 제안합니다. 
+- 알고리즘을 사용하려면 클라이언트는 자신의 하위 클래스를 제공하고, 모든 추상적인 단계를 구현하며, 필요한 경우 선택적인 단계 중 일부를 재정의
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/template-method-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
