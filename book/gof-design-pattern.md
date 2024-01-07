@@ -1664,36 +1664,19 @@ context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Template Method
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Template Method](https://refactoring.guru/design-patterns/template-method)
 
->
+템플릿 메서드는 부모 클래스에서 알고리즘의 골격을 정의하지만, 해당 알고리즘의 구조를 변경하지 않고 **자식 클래스들이 알고리즘의 특정 단계들을 오버라이드**​할 수 있도록 하는 행동 디자인 패턴
 
--
+<figure><img src="../.gitbook/assets/gof-design-pattern/template-method-pattern.png" alt=""><figcaption></figcaption></figure>
 
+> 템플릿 메서드는 기본 클래스에서 추상적이거나 비어 있는 다른 메서드를 호출하는 메서드가 존재
+
+- [java.io.InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), [java.io.OutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html), [java.io.Reader](https://docs.oracle.com/javase/8/docs/api/java/io/Reader.html), [java.io.Writer](https://docs.oracle.com/javase/8/docs/api/java/io/Writer.html) 의 모든 non-abstract 메서드
+- [java.util.AbstractList](https://docs.oracle.com/javase/8/docs/api/java/util/AbstractList.html), [java.util.AbstractSet](https://docs.oracle.com/javase/8/docs/api/java/util/AbstractSet.html), [java.util.AbstractMap](https://docs.oracle.com/javase/8/docs/api/java/util/AbstractMap.html) 의 모든 non-abstract 메서드
+- [javax.servlet.http.HttpServlet](https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServlet.html) 클래스 에서는 모든 doXXX() 메서드가 기본적으로 HTTP 405 “Method Not Allowed” 오류를 전송. 그러나 이러한 메서드 중 하나를 재정의하여 다른 응답 전송 가능
 .
 
 **`Problem`**
@@ -1710,7 +1693,7 @@ context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략
 
 <figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
 
-[XXX Pattern Practice]()
+[Template Method Pattern Practice]()
 
 .
 
@@ -1721,6 +1704,31 @@ context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략
 **`pros and cons`**
 
 .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Visitor
 
