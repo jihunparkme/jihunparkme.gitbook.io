@@ -1725,34 +1725,13 @@ context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략
 
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Visitor
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+[Visitor](https://refactoring.guru/ko/design-patterns/visitor)
+
+비지터 패턴은 **알고리즘이 작동하는 객체에서 알고리즘을 분리**할 수 있는 행동 디자인 패턴
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/visitor-pattern.png" alt=""><figcaption></figcaption></figure>
 
 >
 
