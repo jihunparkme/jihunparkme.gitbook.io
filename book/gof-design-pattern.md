@@ -1762,9 +1762,12 @@ context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략
 
 **`Practice`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+계층구조의 클래스의 기존 코드를 변경하지 않고 해당 계층구조에 모든 행등을 추가할 수 있도록 구성
+- 객체를 인수로 전달하여 해당 객체의 데이터에 접근
 
-[XXX Pattern Practice]()
+<figure><img src="../.gitbook/assets/gof-design-pattern/visitor-pattern-practice.png" alt=""><figcaption></figcaption></figure>
+
+[Visitor Pattern Practice](https://github.com/jihunparkme/GoF-Design-Pattern/tree/main/src/main/java/com/pattern/design/behavioralDesignPatterns/visitor)
 
 .
 
