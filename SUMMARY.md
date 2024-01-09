@@ -32,10 +32,10 @@
 
 ## Book
 
-* [대규모 시스템 설계 기초](book/system-design-interview/README.md)
+* [대규모 시스템 설계 기초📖](book/system-design-interview/README.md)
   * [01.사용자 수에 따른 규모 확장](book/system-design-interview/01.md)
 * [실용주의 프로그래머📖](book/the-pragmatic-programmer.md)
-* [GoF Design Patterns📖](book/gof-design-pattern.md)
+* [GoF Design Patterns](book/gof-design-pattern.md)
 * [도메인 주도 개발 시작하기](book/ddd-start/README.md)
   * [01.도메인 모델 시작하기](book/ddd-start/01.md)
   * [02.아키텍처 개요](book/ddd-start/02.md)
