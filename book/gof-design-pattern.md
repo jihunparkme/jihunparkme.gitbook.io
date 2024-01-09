@@ -1753,7 +1753,10 @@ context는 작업에 적합한 알고리즘을 선택할 책임이 없음(전략
 
 **`Solution`**
 
-<figure><img src="../.gitbook/assets/gof-design-pattern/.png" alt=""><figcaption></figcaption></figure>
+비지터 패턴은 새로운 기능을 기존 클래스들에 통합하는 대신 visitor​라는 별도의 클래스에 배치할 것을 제안합니다. <br/>
+기능을 수행해야 했던 원래 객체는 visitor 메서드에 인수로 전달하게 됩니다. 그러면 메서드는 원래 객체 내에 포함된 모든 필요한 데이터에 접근할 수 있습니다.
+
+<figure><img src="../.gitbook/assets/gof-design-pattern/visitor-pattern-structure.png" alt=""><figcaption></figcaption></figure>
 
 .
 
