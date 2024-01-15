@@ -36,6 +36,7 @@
   * [01.사용자 수에 따른 규모 확장성](book/system-design-interview/01.md)
   * [02.개략적인 규모 추정](book/system-design-interview/02.md)
   * [03.시스템 설계 공략법](book/system-design-interview/03.md)
+  * [04.처리율 제한 장치 설계](book/system-design-interview/04.md)
 * [실용주의 프로그래머📖](book/the-pragmatic-programmer.md)
 * [GoF Design Patterns](book/gof-design-pattern.md)
 * [도메인 주도 개발 시작하기](book/ddd-start/README.md)
