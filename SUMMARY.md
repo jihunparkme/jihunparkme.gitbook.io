@@ -40,6 +40,7 @@
   * [05.안정 해시 설계](book/system-design-interview/05.md)
   * [06.키-값 저장소 설계](book/system-design-interview/06.md)
   * [07.유일 ID 생성기 설계](book/system-design-interview/07.md)
+  * [08.URL 단축기 설계](book/system-design-interview/08.md)
 * [실용주의 프로그래머📖](book/the-pragmatic-programmer.md)
 * [GoF Design Patterns](book/gof-design-pattern.md)
 * [도메인 주도 개발 시작하기](book/ddd-start/README.md)
