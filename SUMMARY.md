@@ -42,6 +42,7 @@
   * [07.유일 ID 생성기 설계](book/system-design-interview/07.md)
   * [08.URL 단축기 설계](book/system-design-interview/08.md)
   * [09.웹 크롤러 설계](book/system-design-interview/09.md)
+  * [10.알림 시스템 설계](book/system-design-interview/10.md)
 * [실용주의 프로그래머📖](book/the-pragmatic-programmer.md)
 * [GoF Design Patterns](book/gof-design-pattern.md)
 * [도메인 주도 개발 시작하기](book/ddd-start/README.md)
