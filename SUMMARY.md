@@ -48,6 +48,7 @@
   * [13.검색어 자동완성 시스템](book/system-design-interview/13.md)
   * [14.유튜브 설계](book/system-design-interview/14.md)
   * [15.구글 드라이브 설계](book/system-design-interview/15.md)
+  * [16.배움은 계속된다](book/system-design-interview/16.md)
 * [실용주의 프로그래머📖](book/the-pragmatic-programmer.md)
 * [GoF Design Patterns](book/gof-design-pattern.md)
 * [도메인 주도 개발 시작하기](book/ddd-start/README.md)
