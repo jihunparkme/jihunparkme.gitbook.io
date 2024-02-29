@@ -33,7 +33,7 @@
 
 ## Book
 
-* [대규모 시스템 설계 기초📖](book/system-design-interview/README.md)
+* [대규모 시스템 설계 기초](book/system-design-interview/README.md)
   * [01.사용자 수에 따른 규모 확장성](book/system-design-interview/01.md)
   * [02.개략적인 규모 추정](book/system-design-interview/02.md)
   * [03.시스템 설계 공략법](book/system-design-interview/03.md)
