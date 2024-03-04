@@ -32,6 +32,7 @@
 * [Study](lecture/study/README.md)
   * [TDD](lecture/study/tdd.md)
   * [IntelliJ](lecture/study/intelliJ.md)
+  * [Performance Test](lecture/study/performance-test.md)
 
 ## Book
 
