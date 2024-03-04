@@ -153,3 +153,22 @@ API 내에서 외부 서버(데이터 베이스, 외부 API) 호출 시 네트�
 (3) 어떤 부분이 병목이 되는건지 가설을 세워보고 **서버 자원 모니터링, 로그 등을 통해 병목 지점 탐색**
 
 (4) 병목을 해결할 수 있는 방법 적용
+
+## Artillery
+
+[Get Started > Get Artillery](https://www.artillery.io/docs/get-started/get-artillery)
+
+```shell
+# install node
+$ brew install node
+
+# check node version
+$ node -v
+
+# install artillery
+$ npm install -g artillery@1.7.6
+
+# check artillery version
+$ artillery --version
+```
+
