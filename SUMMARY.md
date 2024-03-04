@@ -29,7 +29,9 @@
   * [02.Method](lecture/http/02.md)
   * [03.Header](lecture/http/03.md)
 * [Spring Core](lecture/spring-core.md)
-* [Study](lecture/study.md)
+* [Study](lecture/study/README.md)
+  * [TDD](lecture/study/tdd.md)
+  * [IntelliJ](lecture/study/intelliJ.md)
 
 ## Book
 
