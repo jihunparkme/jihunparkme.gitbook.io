@@ -158,7 +158,7 @@ API 내에서 외부 서버(데이터 베이스, 외부 API) 호출 시 네트�
 
 [Get Started > Get Artillery](https://www.artillery.io/docs/get-started/get-artillery)
 
-```shell
+```bash
 # install node
 $ brew install node
 
@@ -172,3 +172,81 @@ $ npm install -g artillery@1.7.6
 $ artillery --version
 ```
 
+### test script
+
+[Create an Artillery test script](https://www.artillery.io/docs/get-started/first-test#create-an-artillery-test-script)
+
+**성능 테스트 스크립트 작성**
+
+```yml
+config:
+  target: 'http://localhost:8080'
+  phases:
+    # 60초동안 매 초마다 5개 요청(Throughput: 5)
+    - duration: 60
+      arrivalRate: 5
+scenarios:
+  - flow:
+    - get:
+        url: "/hello"
+```
+
+**성능 테스트 실행**
+
+```bash
+$ artillery run --output report.json test-config.yaml 
+```
+
+- `test-config.yaml` 파일을 사용해서 성능 테스트를 진행하고 결과로 `report.json` 파일 생성
+
+**성능 테스트 로그**
+
+```bash
+...
+
+Report @ 00:00:00(+0000) 2024-00-00
+Elapsed time: 1 minute, 0 seconds
+  Scenarios launched:  50
+  Scenarios completed: 50
+  Requests completed:  50
+  Mean response/sec: 5
+  Response time (msec):
+    min: 0
+    max: 4
+    median: 2
+    p95: 3
+    p99: 4
+  Codes:
+    200: 50
+
+...
+
+All virtual users finished
+Summary report @ 00:00:00(+0000) 2024-00-00
+  Scenarios launched:  300
+  Scenarios completed: 300
+  Requests completed:  300
+  Mean response/sec: 4.98
+  Response time (msec):
+    min: 0
+    max: 100
+    median: 2
+    p95: 3
+    p99: 5
+  Scenario counts:
+    0: 300 (100%)
+  Codes:
+    200: 300
+
+```
+
+- `min`, `max`, `median`은 latency를 의미
+- `p95`, `p99`는 각각 95%, 99% 사용자가 어느 정도르 latency를 느끼고 있는지
+- `200 Codes`는 1초마다 5개의 요청을 하므로 10초당 50개
+- 최공 결과에는 1초 * 5개 * 60초 = 300개의 결과
+
+**결과 파일(report.json) html 파일로 변환**
+
+```bash
+$ artillery report report.json --output report.html
+```
