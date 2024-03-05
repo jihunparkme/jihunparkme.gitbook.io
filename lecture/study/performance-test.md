@@ -172,11 +172,11 @@ $ npm install -g artillery@1.7.6
 $ artillery --version
 ```
 
-### test script
+### First Artillery Test
 
 [Create an Artillery test script](https://www.artillery.io/docs/get-started/first-test#create-an-artillery-test-script)
 
-**성능 테스트 스크립트 작성**
+**기본 테스트 스크립트 작성**
 
 ```yml
 config:
@@ -249,4 +249,75 @@ Summary report @ 00:00:00(+0000) 2024-00-00
 
 ```bash
 $ artillery report report.json --output report.html
+```
+
+### Scenario Test
+
+[Reference > Test Scripts](https://www.artillery.io/docs/reference/test-script)
+
+**시나리오 테스트 스크립트 작성**
+
+```yml
+config:
+  target: 'http://localhost:8080'
+  phases: # 성능 테스트의 요청 설정
+    # 30초 동안 초당 3개의 요청
+    - duration: 30
+      arrivalRate: 3 # 시나리오 개수만큼 요청
+      name: Warm up # 페이지 이름
+    - duration: 30
+      arrivalRate: 3
+      rampTo: 30 # 점점 요청 횟수를 늘려서 최종 초당 30개의 요청
+      name: Ramp up load
+    - duration: 60
+      arrivalRate: 30
+      name: Sustained load
+    - duration: 30
+      arrivalRate: 30
+      rampTo: 10 # 점점 요청 횟수를 줄여서 최종 초당 10개의 요청
+      name: End of load
+scenarios: # 한 명의 사용자가 어떤 순서로 요청을 할지 설정
+  - name: "login and use some functions" # 1번 시나리오 이름
+    flow:
+      - post:
+          url: "/login"
+      - get:
+          url: "/some-function-one"
+      - get:
+          url: "/some-function-two"
+  - name: "just login" # 2번 시나리오 이름
+    flow:
+      - post:
+          url: "/login"
+```
+
+**성능 테스트 로그**
+
+```bash
+# 성능 테스트 실행
+$ artillery run --output secario-report.json scenario-test-config.yaml
+
+...
+
+All virtual users finished
+Summary report @ 00:00:00(+0000) 2024-00-00
+  Scenarios launched:  3025
+  Scenarios completed: 3025
+  Requests completed:  6115
+  Mean response/sec: 40.47
+  Response time (msec):
+    min: 15
+    max: 64
+    median: 24
+    p95: 36
+    p99: 39
+  Scenario counts:
+    login and use some functions: 1545 (51.074%)
+    just login: 1480 (48.926%)
+  Codes:
+    200: 6115
+
+
+# 결과를 html 파일로 변환
+$ artillery report secario-report.json --output secario-report.html
 ```
