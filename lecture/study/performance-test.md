@@ -453,7 +453,12 @@ Summary report @ 00:00:00(+0900) 2024-00-00
 $ artillery report high-load-report.json --output high-load-report.html
 ```
 
+## 참고
 
-
-
-
+**다른 서능 테스트 툴**
+- [Apache JMeter](https://jmeter.apache.org/)
+- [Locust](https://locust.io/)
+- [Artillery](https://www.artillery.io/)
+- [Gragana K6](https://grafana.com/docs/k6/latest/testing-guides/running-large-tests/)
+- [Ngrinder](https://naver.github.io/ngrinder/)
+- ..
