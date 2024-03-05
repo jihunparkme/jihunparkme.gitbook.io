@@ -321,3 +321,66 @@ Summary report @ 00:00:00(+0000) 2024-00-00
 # 결과를 html 파일로 변환
 $ artillery report secario-report.json --output secario-report.html
 ```
+
+### Parameter Test
+
+[payload - loading data from CSV files](https://www.artillery.io/docs/reference/test-script#payload---loading-data-from-csv-files)
+
+**파라미터 테스트 스크립트 작성**
+
+```yml
+config:
+  target: 'http://localhost:8080'
+  phases:
+    - duration: 30
+      arrivalRate: 3
+      name: Warm up
+  payload:
+    path: "id-password.csv" # 파일 경로
+    fields: # 필드 구분
+      - "id"
+      - "password"
+scenarios:
+  - name: "just login"
+    flow:
+      - post: # json 파라미터
+          url: "/login-with-id-password"
+          json:
+            id: "{{ id }}"
+            password: "{{ password }}"
+  - name: "find user"
+    flow:
+      - get: # url 파라미터
+          url: "/search?query={{ id }}"
+```
+
+**성능 테스트 로그**
+
+```bash
+# 성능 테스트 실행
+$ artillery run --output parameter-report.json parameter-test-config.yaml
+
+...
+
+All virtual users finished
+Summary report @ 00:00:00(+0900) 2024-00-00
+  Scenarios launched:  90
+  Scenarios completed: 90
+  Requests completed:  90
+  Mean response/sec: 2.98
+  Response time (msec):
+    min: 1
+    max: 56
+    median: 3
+    p95: 4
+    p99: 36
+  Scenario counts:
+    just login: 46 (51.111%)
+    find user: 44 (48.889%)
+  Codes:
+    200: 90
+
+
+# 결과를 html 파일로 변환
+$ artillery report parameter-report.json --output parameter-report.html
+```
