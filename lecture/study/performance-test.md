@@ -462,3 +462,5 @@ $ artillery report high-load-report.json --output high-load-report.html
 - [Gragana K6](https://grafana.com/docs/k6/latest/testing-guides/running-large-tests/)
 - [Ngrinder](https://naver.github.io/ngrinder/)
 - ..
+
+> 정상적인 테스트를 위해 애플리케이션과 성능 테스트를 분리된 서버에서 실행 권장
