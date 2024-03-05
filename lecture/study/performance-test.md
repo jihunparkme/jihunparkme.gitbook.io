@@ -384,3 +384,76 @@ Summary report @ 00:00:00(+0900) 2024-00-00
 # 결과를 html 파일로 변환
 $ artillery report parameter-report.json --output parameter-report.html
 ```
+
+### High Load Test
+
+**파라미터 테스트 스크립트 작성**
+
+```yml
+config:
+  target: 'http://localhost:8080'
+  phases:
+    - duration: 30
+      arrivalRate: 20
+      name: Warm up
+    - duration: 10
+      arrivalRate: 20
+      rampTo: 200
+      name: Ramp up load
+    - duration: 10
+      arrivalRate: 200
+      name: Sustained load
+    - duration: 30
+      arrivalRate: 200
+      rampTo: 20
+      name: End of load
+scenarios:
+  - name: "high load cpu"
+    flow:
+      - get:
+          url: "/high-load-cpu"
+ - name: "high load memory"
+   flow:
+     - get:
+         url: "/high-load-memory"
+```
+
+**성능 테스트 로그**
+
+```bash
+# 성능 테스트 실행
+$ artillery run --output high-load-report.json high-load-test-config.yaml
+
+...
+
+All virtual users finished
+Summary report @ 00:00:00(+0900) 2024-00-00
+  Scenarios launched:  7214
+  Scenarios completed: 6767
+  Requests completed:  6767
+  Mean response/sec: 87.59
+  Response time (msec):
+    min: 2
+    max: 7781
+    median: 1823
+    p95: 4456
+    p99: 5369
+  Scenario counts:
+    high load cpu: 3669 (50.859%)
+    high load memory: 3545 (49.141%)
+  Codes:
+    200: 6767
+  Errors:
+    ECONNRESET: 14
+    ETIMEDOUT: 433
+
+
+
+# 결과를 html 파일로 변환
+$ artillery report high-load-report.json --output high-load-report.html
+```
+
+
+
+
+
