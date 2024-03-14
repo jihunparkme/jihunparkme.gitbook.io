@@ -155,3 +155,55 @@ Back End
 - 시스템 복잡성으로 `로컬 복잡성`과 `글로벌 복잡성`이 있는데, 너무 많지도 적지도 않는 적절한 수준으로 분리가 필요하다.
   - 로컬 복잡성: 각각의 개별 마이크로서비스의 복잡성
   - 글로벌 복잡성: 전체 시스템의 복잡성, 서비스 간의 상호작용과 의존성
+
+## 설계
+
+### REST API
+
+**REST 구성**
+- REST(Representational State Transfer): 자원의 정보를 주고 받는 구조
+  - HTTP 프로토콜과 JSON 포맷을 사용한 구조
+- `자원`(Resource) : URI로 표현 (http://service/apis)
+- `행위`(Verb): HTTP Method (POST, GET, PUT, DELETE)
+- `표현`(Representations): HTTP POST, http://service/apis
+  - {"apis":{"name":"sample"}}
+
+**자원**
+- 간결하고 직관적인 기준 URL 유지
+- 자원(Resource) 별로 두 가지 형식의 기준 URL 사용
+  - GET /dogs (목록 조회)
+  - GET /dogs/1 (1번 개체 조회)
+  - POST /dogs (개체 생성)
+  - PUT /dogs/1 (1번 개체 수정)
+  - DELETE /dogs/1 (1번 개체 삭제)
+- 동사 보다는 복수 명사 사용
+  - 권장 방법: GET /dogs, POST /dogs/{puppy}/owner/{terry}
+  - 비권장하는 방법: /getDogs, /setDogs
+
+**행위**
+- POST: 리소스 생성
+- GET: 리소스 조회
+- PUT: 리소스 수정
+- DELETE: 리소스 삭제
+
+**HTTP 상태 코드**
+- 200-level: 성공
+- 400-level: 잘못된 요청
+- 500-level: 서버 에러
+
+...
+
+**REST API 디자인 가이드**
+- REST	API	설계는 아키텍처 스타일이지 표준은 아니므로 유연하게 적용
+- API 목표는 개발자의 생산성과 성공을 극대화 (실용주의)
+- [Manage APIs with unmatched scale, security, and performance](http://www.apigee.com)
+- [Web API Design](https://pages.apigee.com/rs/apigee/images/api-design-ebook-2012-03.pdf)
+
+**멱등성(Idempotent)**
+- 반복적으로 호출하더라도 상태가 계속 유지되고, 상태의 변화가 없는 것
+- 생성 요청의 POST는 멱등성을 따르지 않음
+- GET, DELETE는 멱등성을 따르게 설계 가능
+-  Vesioning
+   - /v1/products
+   - /v2/products
+- [Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.html)
