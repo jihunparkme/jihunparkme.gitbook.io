@@ -4,6 +4,8 @@
 
 **마이크로서비스 설계에서 도메인 주도 설계 활용**
 
+<figure><img src="../../.gitbook/assets/micro-service/ddd-design.png" alt=""><figcaption></figcaption></figure>
+
 `전략적 설계`를 이용한 마이크로서비스 `식별`
 - 마이크로서비스을 어떤 기준으로 분리할 것인가?
   - Bounded	Context, Ubiquitous Language
