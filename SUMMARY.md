@@ -7,6 +7,7 @@
 
 * [MSA](lecture/msa/README.md)
   * [01.Micro Service](lecture/msa/micro-service.md)
+  * [02.DDD](lecture/msa/ddd.md)
 * [The Java](lecture/the-java.md)
 * [Toby Spring Boot](lecture/toby-spring-boot.md)
 * [Spring Boot](lecture/spring-boot.md)
