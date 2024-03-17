@@ -118,3 +118,6 @@ Sub Domain 과의 차이
     - 충돌방지계층(ACL, Anti-Corruption Layer) 패턴: 하류가 이에 순응하지 않은 경우
     - OHS(Open Host Service) 패턴: 힘이 사용자 측에 있을 경우 제공자는 사용자를 보호하고 가능한 최고의 서비스를 제공
   - 분리형 노선
+    - Separated Way
+    - 커뮤니케이션의 어려움
+    - 협력과 연동보다 특정 기능을 중복으로 두는 것이 더 저렴한 경우
