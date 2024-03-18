@@ -261,3 +261,7 @@ class Target {
     - 하나의 Transaction 내에서 여러 Aggregate 수정 방지
   - 하나의 Transaction에서 여러 개의 Aggregate이 갱신되어야 하는 경우, 다른 Aggregate 갱신은 비동기 통신을 활용해서 결과적 일관성을 맞춰야 함
 
+#### Domain Event
+
+- 비지니스 도메인에서 일어난 이벤트를 설명하는 메시지(`'과거형'`으로 명명)
+- Aggregate의 퍼블릭 인터페이스의 일부, Aggregate는 자신의 Domain Event를 발행
