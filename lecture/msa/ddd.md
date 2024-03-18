@@ -185,14 +185,14 @@ user.save();
 여러 개의 VO로 구성된 엔티티 예시
 
 ```java
-class	Person {
-  private	PersonId id;
-  private	Name name;
-  private	PhoneNumber landline;
-  private	PhoneNumber mobile;
-  private	EmailAddress email;
-  private	Height height;
-  private	CountryCode country;
+class Person {
+  private PersonId id;
+  private Name name;
+  private PhoneNumber landline;
+  private PhoneNumber mobile;
+  private EmailAddress email;
+  private Height height;
+  private CountryCode country;
 
   public Person(...) {}
 }
@@ -221,7 +221,7 @@ class PhoneNumber {
 #### Entity
 
 ```java
-class	Person {
+class Person {
   public PersonId id;
   private Name name;
   
@@ -236,3 +236,28 @@ class	Person {
 - 다른 객체와 구별할 수 있는 식별자(고유 식별자)를 갖는 객체
 - 주문에서 배송지 정보가 변경되어도 주문번호는 변경되지 않음
 - 자신의 생명주기를 가짐
+
+#### Aggregate
+
+```java
+class Target {
+  private UserId customer; // 다른 Aggregate는 식별자를 통해 참조
+  private List<ProductId> products;
+  private UserId assignAgent;
+  private List<Message> messages; // 같은 Aggregate는 엔티티로 참조
+}
+```
+
+- 관련 객체를 하나로 묶은 군집
+- 데이터의 일관성을 보호하고, 데이터 변경 시 Aggregate 단위로 처리
+- Aggregate Root(Entity)를 통해 Aggregate 내의 다른 Entity 및 VO 접근
+- 데이터 변경의 단위, 트랜잭션 단위가 되는 연관된 객체 묶음
+- 설계 시 고려사항
+  - 하나의 Transaction에서는 하나의 Aggregate만 수정
+    - Transaction 일관성과 성공 보장
+  - 하나의 일을 잘 수행할 수 있도록 작게 설계
+    - 성능 향상과 확장에 용이
+  - 한 Aggregate에서 다른 Aggregate의 참조는 식별자(id)를 통해서만 참조
+    - 하나의 Transaction 내에서 여러 Aggregate 수정 방지
+  - 하나의 Transaction에서 여러 개의 Aggregate이 갱신되어야 하는 경우, 다른 Aggregate 갱신은 비동기 통신을 활용해서 결과적 일관성을 맞춰야 함
+
