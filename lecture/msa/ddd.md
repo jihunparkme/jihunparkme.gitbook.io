@@ -278,3 +278,9 @@ class Target {
 - 어떤 계산이나 분석을 위해 다양한 시스템 구성요소의 호출을 조율
 - 상태가 없는 객체(stateless object)
   
+#### Repository
+
+- 도메인 모델의 영속성을 처리
+- 도메인 모델을 사용하기 위해 Repository를 통해 도메인 객체를 조회한 후 도메인 객체의 기능 실행
+- 도메인 객체(Aggregate)에 대한 생명주기, 즉 영속성 관리(등록, 조회, 수정, 삭제 시 Aggregate의 일관성 유지)
+- Spring Data JPA Repository Interface
