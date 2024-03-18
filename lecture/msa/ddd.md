@@ -142,6 +142,8 @@ VALUES(@p1,@p2)", userId,visitedOn);
 
 ### Active Record Pattern
 
+<figure><img src="../../.gitbook/assets/micro-service/active-record-pattern.png" alt=""><figcaption></figcaption></figure>
+
 - Anemic Domain Model(빈약한 도메인 모델)
 - 복잡한 자료 구조를 표현
   - 자료 구조 외에도 CRUD, ORM 연계 등 데이터 접근 로직 구현
@@ -161,9 +163,13 @@ user.save();
 
 > 전술적 도메인 주도 설계(Tactical Domain-Driven Design) 패턴 - 에반스
 
+<figure><img src="../../.gitbook/assets/micro-service/domain-model-pattern.png" alt=""><figcaption></figcaption></figure>
+
 - 행위(behavior) + 자료구조(data)를 통해 비지니스 로직 구현
 - POJO(Plain Old Java Object)로 구성
   - 복잡한 인프라, 기술적 관심사는 피하고 비즈니스 로직으로만 구성
 - 응용 서비스에서는 대부분 업무 흐름 제어만 하며, 주요 비지니스 로직은 도메인 모델에 위임하여 처리
 
 ### Aggregate Pattern
+
+<figure><img src="../../.gitbook/assets/micro-service/aggregate-pattern.png" alt=""><figcaption></figcaption></figure>
