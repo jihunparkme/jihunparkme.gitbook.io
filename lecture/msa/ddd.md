@@ -133,7 +133,29 @@ Sub Domain 과의 차이
   - 코어 하위 도메인에는 적용하지 않는 것을 권장
 - 대안으로 Active Record, Domain Model 패턴의 등장
 
+```java
+db.Excute(@"UPDATE Users SET last_visit=@p1
+WHERE user_id=@p2",vistedOn,userId);
+db.Excute(@"INSERT INTO VisiteLog(user_id,visit_date)
+VALUES(@p1,@p2)", userId,visitedOn);
+```
+
 ### Active Record Pattern
+
+- Anemic Domain Model(빈약한 도메인 모델)
+- 복잡한 자료 구조를 표현
+  - 자료 구조 외에도 CRUD, ORM 연계 등 데이터 접근 로직 구현
+    - 사용자 입력의 유효성을 검사하는 CRUD 작업 같은 간단한 비즈니즈 로직
+  - 본질적으로는 DB 접근을 최적화하는 Transaction	Script Pattern 유형
+- Entity 에 약간의 비즈니스 로직을 포함해도 되지만, 대부분의 비지니스 로직과 흐름은 응용 서비스의 행위에 의해 처리
+- 비즈니스 로직은 단순하지만 복잡한 자료 구조인 지원 하위 도메인, 일반 하위 도메인에 적합
+
+```java
+User user = new User();
+user.setName(userDetails.name);
+user.setEmail(userDetails.email);
+user.save();
+```
 
 ### Domain Model Pattern
 
