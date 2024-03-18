@@ -173,3 +173,7 @@ user.save();
 ### Aggregate Pattern
 
 <figure><img src="../../.gitbook/assets/micro-service/aggregate-pattern.png" alt=""><figcaption></figcaption></figure>
+
+- 도메인 모델 패턴 적용 시 도메인 모델이 점점 복잡하고 비대해짐(Big ball of mud)
+- 도메인 주도의 Aggregate 단위로 복잡성을 구분하여 관리하는 패턴
+- 대부분 한개의 Entity(Aggregate Root)와 여러 개의 VO로 구성
