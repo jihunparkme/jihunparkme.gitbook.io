@@ -265,3 +265,10 @@ class Target {
 
 - 비지니스 도메인에서 일어난 이벤트를 설명하는 메시지(`'과거형'`으로 명명)
 - Aggregate의 퍼블릭 인터페이스의 일부, Aggregate는 자신의 Domain Event를 발행
+
+#### Domain Service
+
+- 특정 엔티티/VO에 속하지 않는 도메인 로직 또는 복수의 Aggregate 관련 비지니스 로직 제공
+- 어떤 계산이나 분석을 위해 다양한 시스템 구성요소의 호출을 조율
+- 상태가 없는 객체(stateless object)
+  
