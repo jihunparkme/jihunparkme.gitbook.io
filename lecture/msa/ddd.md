@@ -177,3 +177,41 @@ user.save();
 - 도메인 모델 패턴 적용 시 도메인 모델이 점점 복잡하고 비대해짐(Big ball of mud)
 - 도메인 주도의 Aggregate 단위로 복잡성을 구분하여 관리하는 패턴
 - 대부분 한개의 Entity(Aggregate Root)와 여러 개의 VO로 구성
+
+#### VO(Value Object)
+
+여러 개의 VO로 구성된 엔티티 예시
+
+```java
+class	Person {
+  private	PersonId id;
+  private	Name name;
+  private	PhoneNumber landline;
+  private	PhoneNumber mobile;
+  private	EmailAddress email;
+  private	Height height;
+  private	CountryCode country;
+
+  public Person(...) {}
+}
+```
+
+VO 예시
+
+```java
+class PhoneNumber {
+  String number;
+
+  public PhoneNumber(...) {
+    // validate phone number
+  }
+}
+```
+
+- VO는 고유의 식별자를 가지지 않고, 개념적으로 완전한 하나를 표현
+- 상태를 변경할 수 없고, 단순히 값만을 갖는 읽기 전용 불변(immutable) 객체
+  - 객체 변경 시 객체 자체를 완전히 교체
+- 분산되기 쉬운 비즈니스 로직을 한 곳에 묶어주고 안전한 코드 작성
+- 대부분의 경우에 적용 가능
+  - 다른 객체(엔티티, VO)의 속성을 표현하는 요소로 사용
+- 명료성 향상, 명확한 의도 전달, 유효성 검사, 비즈니스 로직 표현, 유비쿼터스 언어를 사용한 비즈니스 도메인 개념 표현에 대한 이점
