@@ -165,6 +165,8 @@ user.save();
 
 <figure><img src="../../.gitbook/assets/micro-service/domain-model-pattern.png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../../.gitbook/assets/micro-service/domain-model-example.png" alt=""><figcaption></figcaption></figure>
+
 - 행위(behavior) + 자료구조(data)를 통해 비지니스 로직 구현
 - POJO(Plain Old Java Object)로 구성
   - 복잡한 인프라, 기술적 관심사는 피하고 비즈니스 로직으로만 구성
@@ -215,3 +217,22 @@ class PhoneNumber {
 - 대부분의 경우에 적용 가능
   - 다른 객체(엔티티, VO)의 속성을 표현하는 요소로 사용
 - 명료성 향상, 명확한 의도 전달, 유효성 검사, 비즈니스 로직 표현, 유비쿼터스 언어를 사용한 비즈니스 도메인 개념 표현에 대한 이점
+
+#### Entity
+
+```java
+class	Person {
+  public PersonId id;
+  private Name name;
+  
+  public Person(PersonId id, Name name) {
+    this.id = id;
+    this.name = name;	
+  }
+}
+```
+
+- 도메인의 고유 개념 표현
+- 다른 객체와 구별할 수 있는 식별자(고유 식별자)를 갖는 객체
+- 주문에서 배송지 정보가 변경되어도 주문번호는 변경되지 않음
+- 자신의 생명주기를 가짐
