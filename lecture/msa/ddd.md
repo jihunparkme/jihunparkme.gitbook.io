@@ -1,6 +1,6 @@
 # Domain Driven Design
 
-## DDD & Micro Service
+# DDD & Micro Service
 
 **마이크로서비스 설계에서 도메인 주도 설계 활용**
 
@@ -30,7 +30,7 @@
 >
 > [도메인 주도 설계 철저 입문](https://www.yes24.com/Product/Goods/93384475)
 
-## 도메인 주도 설계(전략적 설계)
+# 도메인 주도 설계(전략적 설계)
 
 구축해야 하는 소프트웨어와 시스템을 위해서는 문제를 이해
 - `Problem`: 그 조직의 비즈니스 전략과 소프트웨어를 통해서 얻고자 하는 가치
@@ -44,7 +44,7 @@
 
 .
 
-### Sub Domain
+## Sub Domain
 
 핵심(Core)
 - 회사만의 차별성. 복잡성이 높지만 경쟁력 제공
@@ -61,7 +61,7 @@
 - 간단한 기능으로 경쟁우위 제공하지 않음
 - ex) CRUD, ETL
 
-### Ubiquitous Language
+## Ubiquitous Language
 
 도메인 지식(멘탈 모델)을 코드로 구현하기 위해 여러 변환 과정을 거치는 대신 그대로 코드로 표현
 - 도메인을 코드로 설명하기 위한 단일화된 체계
@@ -69,7 +69,7 @@
 - 유비쿼터스 언어: 동의어와 같이 모호하지 않고, 정확하고 일관성있는 언어
   - ex. 정책 -> 규제 규칙 / 보험계약, 사용자 -> 방문자, 비회원, 회원
 
-### Domain Model
+## Domain Model
 
 - 특정 도메인을 개념적으로 표현한 것
 - 효과적인 모델은 그 목적을 달성하는 데 **필요한 세부사항만 포함**(목적에 필요한 정보만 제공)
@@ -77,7 +77,7 @@
 - 모델은 본질적으로 **추상화의 결과**. 모델로 실세계의 복잡성을 관리
 - 도메인 모델링: 유비쿼터스 언어로 비즈니스 도메인 모델 구축
 
-### Bounded Context (BC)
+## Bounded Context (BC)
 
 <figure><img src="../../.gitbook/assets/micro-service/bounded-context.png" alt=""><figcaption></figcaption></figure>
 
@@ -104,7 +104,7 @@ Sub Domain 과의 차이
 - 하위 도메인은 비지니스 전략에 의해 정의되는 반면 바운디드 컨텍스트는 소프트웨어 엔지니어에 의해 설계
 - 하위 도메인은 발견, 바운디드 컨텍스트는 설계
 
-### Context Mapping
+## Context Mapping
 
 - BC는 독립적으로 발전할 수 있지만 **서로 상호작용**을 해야 한다. 
   - **각 BC는 접점**이 있는데 이것이 **contract**
@@ -122,9 +122,9 @@ Sub Domain 과의 차이
     - 커뮤니케이션의 어려움
     - 협력과 연동보다 특정 기능을 중복으로 두는 것이 더 저렴한 경우
 
-## 도메인 주도 설계(전술적 설계)
+# 도메인 주도 설계(전술적 설계)
 
-### Transaction Script Pattern
+## Transaction Script Pattern
 
 - 간단한 비지니스 로직 구현(절차 지향 스크립트), 데이터베이스 직접 접근
   - 단순하고 이해하기 쉬운 장점
@@ -140,7 +140,7 @@ db.Excute(@"INSERT INTO VisiteLog(user_id,visit_date)
 VALUES(@p1,@p2)", userId,visitedOn);
 ```
 
-### Active Record Pattern
+## Active Record Pattern
 
 <figure><img src="../../.gitbook/assets/micro-service/active-record-pattern.png" alt=""><figcaption></figcaption></figure>
 
@@ -159,7 +159,7 @@ user.setEmail(userDetails.email);
 user.save();
 ```
 
-### Domain Model Pattern
+## Domain Model Pattern
 
 > 전술적 도메인 주도 설계(Tactical Domain-Driven Design) 패턴 - 에반스
 
@@ -172,7 +172,7 @@ user.save();
   - 복잡한 인프라, 기술적 관심사는 피하고 비즈니스 로직으로만 구성
 - 응용 서비스에서는 대부분 업무 흐름 제어만 하며, 주요 비지니스 로직은 도메인 모델에 위임하여 처리
 
-### Aggregate Pattern
+## Aggregate Pattern
 
 <figure><img src="../../.gitbook/assets/micro-service/aggregate-pattern.png" alt=""><figcaption></figcaption></figure>
 
@@ -180,7 +180,7 @@ user.save();
 - 도메인 주도의 Aggregate 단위로 복잡성을 구분하여 관리하는 패턴
 - 대부분 한개의 Entity(Aggregate Root)와 여러 개의 VO로 구성
 
-#### VO(Value Object)
+### VO(Value Object)
 
 여러 개의 VO로 구성된 엔티티 예시
 
@@ -218,7 +218,7 @@ class PhoneNumber {
   - 다른 객체(엔티티, VO)의 속성을 표현하는 요소로 사용
 - 명료성 향상, 명확한 의도 전달, 유효성 검사, 비즈니스 로직 표현, 유비쿼터스 언어를 사용한 비즈니스 도메인 개념 표현에 대한 이점
 
-#### Entity
+### Entity
 
 ```java
 class Person {
@@ -237,7 +237,7 @@ class Person {
 - 주문에서 배송지 정보가 변경되어도 주문번호는 변경되지 않음
 - 자신의 생명주기를 가짐
 
-#### Aggregate
+### Aggregate
 
 <figure><img src="../../.gitbook/assets/micro-service/aggregate.png" alt=""><figcaption></figcaption></figure>
 
@@ -263,14 +263,14 @@ class Target {
     - 하나의 Transaction 내에서 여러 Aggregate 수정 방지
   - 하나의 Transaction에서 여러 개의 Aggregate이 갱신되어야 하는 경우, 다른 Aggregate 갱신은 비동기 통신을 활용해서 결과적 일관성을 맞춰야 함
 
-#### Domain Event
+### Domain Event
 
 <figure><img src="../../.gitbook/assets/micro-service/domain-event.png" alt=""><figcaption></figcaption></figure>
 
 - 비지니스 도메인에서 일어난 이벤트를 설명하는 메시지(`'과거형'`으로 명명)
 - Aggregate의 퍼블릭 인터페이스의 일부, Aggregate는 자신의 Domain Event를 발행
 
-#### Domain Service
+### Domain Service
 
 <figure><img src="../../.gitbook/assets/micro-service/domain-service.png" alt=""><figcaption></figcaption></figure>
 
@@ -278,7 +278,7 @@ class Target {
 - 어떤 계산이나 분석을 위해 다양한 시스템 구성요소의 호출을 조율
 - 상태가 없는 객체(stateless object)
   
-#### Repository
+### Repository
 
 - 도메인 모델의 영속성을 처리
 - 도메인 모델을 사용하기 위해 Repository를 통해 도메인 객체를 조회한 후 도메인 객체의 기능 실행
