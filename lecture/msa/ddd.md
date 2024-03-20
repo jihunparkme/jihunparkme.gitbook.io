@@ -318,3 +318,10 @@ class Target {
 
 ## Hexagonal Architecture
 
+- port and adapter pattern
+  - 외부 영역: 프레젠테이션, 데이터 접근
+  - 내부 영역: 응용, 비즈니스 로직
+- 외부 영역의 어댑터가 다양하게 변경됨으로 **가변성을 수용**
+- 비즈니스 로직 구현을 도메인 모델 패턴으로 한 경우 적합
+
+<figure><img src="../../.gitbook/assets/micro-service/hexagonal-architecture.png" alt=""><figcaption></figcaption></figure>
