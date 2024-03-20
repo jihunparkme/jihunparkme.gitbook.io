@@ -318,10 +318,25 @@ class Target {
 
 ## Hexagonal Architecture
 
+<figure><img src="../../.gitbook/assets/micro-service/hexagonal-architecture.png" alt=""><figcaption></figcaption></figure>
+
 - port and adapter pattern
   - 외부 영역: 프레젠테이션, 데이터 접근
   - 내부 영역: 응용, 비즈니스 로직
 - 외부 영역의 어댑터가 다양하게 변경됨으로 **가변성을 수용**
 - 비즈니스 로직 구현을 도메인 모델 패턴으로 한 경우 적합
 
-<figure><img src="../../.gitbook/assets/micro-service/hexagonal-architecture.png" alt=""><figcaption></figcaption></figure>
+## Hexagonal Micro Service Architecture
+
+<figure><img src="../../.gitbook/assets/micro-service/msa-hexagonal-architecture.png.png" alt=""><figcaption></figcaption></figure>
+
+- 내부 영역과 외부 영역을 분리하여 구성
+- 내부 영역 구성
+  - **응용 서비스 클래스**(유스케이스 흐름 처리)
+  - POJO 중심의 **도메인 모델**(비즈니스 로직)
+  - 데이터 처리 I/F (**Repository**)
+- 외부 영역 구성
+  - 기술 가변성을 수용한 어댑터 클래스
+  - 데이터 처리 구현
+  - API 발행, 통신 구현
+  - 이벤트 전송 및 리스너
