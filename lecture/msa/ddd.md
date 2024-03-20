@@ -328,7 +328,7 @@ class Target {
 
 ## Hexagonal Micro Service Architecture
 
-<figure><img src="../../.gitbook/assets/micro-service/msa-hexagonal-architecture.png.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/micro-service/msa-hexagonal-architecture.png" alt=""><figcaption></figcaption></figure>
 
 - 내부 영역과 외부 영역을 분리하여 구성
 - 내부 영역 구성
@@ -340,3 +340,13 @@ class Target {
   - 데이터 처리 구현
   - API 발행, 통신 구현
   - 이벤트 전송 및 리스너
+
+## CQRS
+
+<figure><img src="../../.gitbook/assets/micro-service/cqrs.png" alt=""><figcaption></figcaption></figure>
+
+- Command Query Responsibility Segregation
+  - Command Model: 비즈니스 로직 구현, 강력한 일관성
+  - Query Model: 읽기 모델(인메모리 캐시, 일반 파일, materialized view, 읽기 전용)
+- 모델별 저장소 동기화 필요: 동기(동시 쓰기)/비동기식(MessageQueue)
+- 확장 가능, 읽기 성능 향상, 다양한 저장소 활용 가능한 장점
