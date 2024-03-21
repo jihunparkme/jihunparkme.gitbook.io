@@ -1,7 +1,5 @@
 # Micro Service
 
-## Micro Service
-
 **Monolith System**
 - 애플리케이션이 `한 덩어리`로 구성
 - `단일 프로세스` 실행
@@ -72,7 +70,7 @@
 - 각 서비스는 서로 다른 언어, 데이터, 저장 기술 사용
 - 참고. SOA(Service-Oriented Architecture)는 저장소를 공유하는 형태
 
-## 아키텍처 정의
+# 아키텍처 정의
 
 **Outer Architecture 정의**
 
@@ -156,9 +154,9 @@ Back End
   - 로컬 복잡성: 각각의 개별 마이크로서비스의 복잡성
   - 글로벌 복잡성: 전체 시스템의 복잡성, 서비스 간의 상호작용과 의존성
 
-## 설계
+# 설계
 
-### REST API
+## REST API
 
 **REST 구성**
 - REST(Representational State Transfer): 자원의 정보를 주고 받는 구조
@@ -207,3 +205,34 @@ Back End
    - /v1/products
    - /v2/products
 - [Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.html)
+
+# EventStorming
+
+이벤트 스토밍 진행 순서
+- 요구사항 분석
+- 도메인 이벤트, 핫스팟 도출
+- 커맨드 및 외부시스템 도출
+- 애그리거트 도출
+- 바운디드 컨텍스트 식별
+- 컨텍스트 매핑 정의
+
+**업무 흐름 예시**
+- 사내 도서 대여 시스템
+
+<figure><img src="../../.gitbook/assets/micro-service/event-storming-1.png" alt=""><figcaption></figcaption></figure>
+
+**이벤트 스토밍 결과 예시**
+
+<figure><img src="../../.gitbook/assets/micro-service/event-storming-2.png" alt=""><figcaption></figcaption></figure>
+
+**컨텍스트 매핑 결과 예시**
+
+<figure><img src="../../.gitbook/assets/micro-service/event-storming-3.png" alt=""><figcaption></figcaption></figure>
+
+**도메인 모델링을 위한 이벤트 스토밍 결과 예시**
+
+<figure><img src="../../.gitbook/assets/micro-service/event-storming-4.png" alt=""><figcaption></figcaption></figure>
+
+> https://lucid.co/
+>
+> 이벤트 스토밍 툴: https://miro.com/ 
