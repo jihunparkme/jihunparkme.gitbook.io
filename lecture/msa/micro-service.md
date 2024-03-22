@@ -208,9 +208,9 @@ Back End
 
 # EventStorming
 
-> https://lucid.co/
+> UML Tool: https://lucid.co/
 >
-> 이벤트 스토밍 툴: https://miro.com/ 
+> EventStorming Tool: https://miro.com/ 
 
 이벤트 스토밍 진행 순서
 - 요구사항 분석
@@ -261,3 +261,28 @@ Back End
 **BEST 도서 도메인 모델 예시**
 
 <figure><img src="../../.gitbook/assets/micro-service/domain-modeling-4.png" alt=""><figcaption></figcaption></figure>
+
+# Heuristics
+
+경험에 기반한 규칙
+
+바운디드 컨텍스트
+- 크기로 경계를 구분하지 않는다.
+- 바운디드 컨텍스트를 식별할 때는 넓은 경계로 시작
+- 나중에 도메인 지식이 쌓이게 되면 좀 더 작은 경계로 분리
+
+**비즈니스 로직 구현 패턴과 아키텍처 패턴 결정**
+
+- 간단한 비즈니스 로직(지원, 일반): `Transaction Script`, `Active Record`
+  - 단순한 자료 구조: `Transaction Script`
+  - 복잡한 자료구조: `Active Record`
+- 복잡한 비즈니스 로직(핵심): Domain Model
+  - 금전 또는 통화의 트랜잭션 추적, 일관된 감사 로그, 동작에 따른 심층적 분석 요구 -> Event Sourcing
+
+<figure><img src="../../.gitbook/assets/micro-service/heuristics-1.png" alt=""><figcaption></figcaption></figure>
+
+> [Book review: Learning Domain-Driven Design by Vlad Khononov](https://tonisoueid.medium.com/book-review-learning-domain-driven-design-by-vlad-khononov-c7473afa5ba)
+
+**테스트 전략 결정**
+
+<figure><img src="../../.gitbook/assets/micro-service/heuristics-2.png" alt=""><figcaption></figcaption></figure>
