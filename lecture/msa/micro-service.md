@@ -208,6 +208,10 @@ Back End
 
 # EventStorming
 
+> https://lucid.co/
+>
+> 이벤트 스토밍 툴: https://miro.com/ 
+
 이벤트 스토밍 진행 순서
 - 요구사항 분석
 - 도메인 이벤트, 핫스팟 도출
@@ -240,6 +244,20 @@ Back End
 
 <figure><img src="../../.gitbook/assets/micro-service/event-storming-4.png" alt=""><figcaption></figcaption></figure>
 
-> https://lucid.co/
->
-> 이벤트 스토밍 툴: https://miro.com/ 
+# Domain Modeling
+
+**대여 도메인 모델 예시**
+
+<figure><img src="../../.gitbook/assets/micro-service/domain-modeling-1.png" alt=""><figcaption></figcaption></figure>
+
+**회원 도메인 모델 예시**
+
+<figure><img src="../../.gitbook/assets/micro-service/domain-modeling-2.png" alt=""><figcaption></figcaption></figure>
+
+**도서 도메인 모델 예시**
+
+<figure><img src="../../.gitbook/assets/micro-service/domain-modeling-3.png" alt=""><figcaption></figcaption></figure>
+
+**BEST 도서 도메인 모델 예시**
+
+<figure><img src="../../.gitbook/assets/micro-service/domain-modeling-4.png" alt=""><figcaption></figcaption></figure>
