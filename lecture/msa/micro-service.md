@@ -212,7 +212,7 @@ Back End
 - 요구사항 분석
 - 도메인 이벤트, 핫스팟 도출
 - 커맨드 및 외부시스템 도출
-- 애그리거트 도출
+- 어그리거트 도출
 - 바운디드 컨텍스트 식별
 - 컨텍스트 매핑 정의
 
@@ -222,6 +222,9 @@ Back End
 <figure><img src="../../.gitbook/assets/micro-service/event-storming-1.png" alt=""><figcaption></figcaption></figure>
 
 **이벤트 스토밍 결과 예시**
+- 노란섹: 어그리거트
+- 파란색: 커맨드
+- 주황색: 도메인 이벤트
 
 <figure><img src="../../.gitbook/assets/micro-service/event-storming-2.png" alt=""><figcaption></figcaption></figure>
 
@@ -230,6 +233,10 @@ Back End
 <figure><img src="../../.gitbook/assets/micro-service/event-storming-3.png" alt=""><figcaption></figcaption></figure>
 
 **도메인 모델링을 위한 이벤트 스토밍 결과 예시**
+- 이벤트 스토밍을 통해 도출된 
+  - 어그리거트가 도메인 모델 요소
+  - 커맨드가 컨트롤러 역할
+  - 도메인 이벤트는 도메인 모델에 포함
 
 <figure><img src="../../.gitbook/assets/micro-service/event-storming-4.png" alt=""><figcaption></figcaption></figure>
 
