@@ -7,7 +7,8 @@
 
 * [MSA](lecture/msa/README.md)
   * [01.Micro Service](lecture/msa/micro-service.md)
-  * [02.DDD](lecture/msa/ddd.md)
+  * [02.DDD 설계](lecture/msa/ddd-1.md)
+  * [03.DDD 구현](lecture/msa/ddd-2.md)
 * [The Java](lecture/the-java.md)
 * [Toby Spring Boot](lecture/toby-spring-boot.md)
 * [Spring Boot](lecture/spring-boot.md)
