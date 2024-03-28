@@ -65,7 +65,7 @@
   - 고급 엔지니어링 기술 불필요
 
 MSA 내부 아키텍처 스타일
-- 헥사고널 아키텍처, 클린 아키텍처
+- 헥사고날 아키텍처, 클린 아키텍처
 - 레이어드 아키텍처
 - CQRS
 
@@ -77,10 +77,37 @@ MSA 내부 아키텍처 스타일
 <figure><img src="../../.gitbook/assets/micro-service/heuristics-1.png" alt=""><figcaption></figcaption></figure>
 
 > 핵심 도메인 (대여)
-> - Type1: 헥사고널 아키텍처, Domain Model 중심, Spring MVC, Spring DATA JPA, RDB
+> - Type1: 헥사고날 아키텍처, Domain Model 중심, Spring MVC, Spring DATA JPA, RDB
 > 
 > 일반 도메인(회원,도서)
-> - Type1: 헥사고널 아키텍처, Domain Model 중심, Spring MVC, Spring DATA JPA, RDB
+> - Type1: 헥사고날 아키텍처, Domain Model 중심, Spring MVC, Spring DATA JPA, RDB
 > 
 > 지원 도메인(Best도서)
 > - Type2: 레이어드 아키텍처 + CQRS, Domain Model, Spring MVC, Spring DATA, MogoDB, NoSQL
+
+.
+
+**Hexagonal MSA**
+
+<figure><img src="../../.gitbook/assets/micro-service/hexagonal-msa.png" alt=""><figcaption></figcaption></figure>
+
+헥사고날 아키텍처는 도메인, 어플리케이션, 프레임워크 헥사곤으로 구성
+
+<p align="center" width="100%">
+    <img src="../../.gitbook/assets/micro-service/domain-hexagonal.png" width="30%">
+    <img src="../../.gitbook/assets/micro-service/application-hexagonal.png" width="30%">
+    <img src="../../.gitbook/assets/micro-service/framework-hexagonal.png" width="30%">
+</p>
+
+**Domain Hexagon**
+- `aggregate`, `entity`, `VO`, `Enum`, `Domain Event` 로 구성
+- 비지니스 로직 구현 
+
+**Application Hexagon**
+- `유스케이스(I/F)`, `입력 포트`, `출력포트(I/F)` 로 구성
+- 트랜잭션 처리, 흐름 제어, 유스케이스 구현 
+
+**Framework Hexagon**
+- `입력/출력 어댑터` 로 구성
+- 데이터 입/출력, 메시지 생산(발행)/소비(가입)
+- API 제공
