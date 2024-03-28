@@ -113,3 +113,17 @@ MSA 내부 아키텍처 스타일
 - API 제공
 
 <figure><img src="../../.gitbook/assets/micro-service/package.png" alt=""><figcaption></figcaption></figure>
+
+## 대여
+
+[RentMS Repository](https://github.com/jihunparkme/msa-example/tree/main/RentMS)
+
+<figure><img src="../../.gitbook/assets/micro-service/rent-ms-domain-model.png" alt=""><figcaption></figcaption></figure>
+
+## 도서
+
+## 사용자
+
+## Best 서적
+
+## EDA
