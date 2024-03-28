@@ -31,14 +31,56 @@
 - 연체포인트를 0으로 만들면 대출 가능 상태가 된다.
 ```
 
+.
+
 **이벤트 스토밍 결과**
 
 <figure><img src="../../.gitbook/assets/micro-service/event-storming-result.png" alt=""><figcaption></figcaption></figure>
+
+.
 
 **서비스 매핑도**
 
 <figure><img src="../../.gitbook/assets/micro-service/service-mapping.png" alt=""><figcaption></figcaption></figure>
 
+.
+
 **아키텍처 구성도**
 
 <figure><img src="../../.gitbook/assets/micro-service/architecture.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**전술적 설계(구현 전략)**
+
+서브시스템 유형
+- `핵심(Core)`: 회사가 경쟁업체와 다르게 수행하고 있는 시스템
+  - 사내에서 직접 구현
+  - 핵심 숙련 인재 할당
+  - 가장 진보된 엔지니어링 기술 적용
+- `일반(Generic)`: 모든 회사가 같은 방식으로 수행하는 비지니스 활동
+  - 이미 만들어진 제품(오픈 소스 솔루션)
+- `지원(Supporting)`: 회사 비지니스 지원 활동
+  - 사내 구현 X
+  - 고급 엔지니어링 기술 불필요
+
+MSA 내부 아키텍처 스타일
+- 헥사고널 아키텍처, 클린 아키텍처
+- 레이어드 아키텍처
+- CQRS
+
+비지니스 로직 구현 스타일
+- `Transaction Script`: 간단한 비지니스 로직구현, 절차지향, 트랜젝션간 비즈니스 로직 중복, 핵심 도메인 X
+- `Active Record`: 자료 holding 전용 객체 사용(자료구조 외에도 CRUD 구현), Anemic Domain Model(빈약한 도메인 모델), 지원/일반 도메인
+- `Domain Model`: 비지니스 로직을 POJO로 구성(인프라/기술적 관심사 분리), 응용서비스 업무 흐름 제어, 대부분의 비즈니스 로직은 도메인 모델에 위임, 핵심 도메인
+
+<figure><img src="../../.gitbook/assets/micro-service/heuristics-1.png" alt=""><figcaption></figcaption></figure>
+
+> 핵심 도메인 (대여)
+> - Type1: 헥사고널 아키텍처, Domain Model 중심, Spring MVC, Spring DATA JPA, RDB
+> 
+> 일반 도메인(회원,도서)
+> - Type1: 헥사고널 아키텍처, Domain Model 중심, Spring MVC, Spring DATA JPA, RDB
+> 
+> 지원 도메인(Best도서)
+> - Type2: 레이어드 아키텍처 + CQRS, Domain Model, Spring MVC, Spring DATA, MogoDB, NoSQL
