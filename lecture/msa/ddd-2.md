@@ -38,3 +38,7 @@
 **서비스 매핑도**
 
 <figure><img src="../../.gitbook/assets/micro-service/service-mapping.png" alt=""><figcaption></figcaption></figure>
+
+**아키텍처 구성도**
+
+<figure><img src="../../.gitbook/assets/micro-service/architecture.png" alt=""><figcaption></figcaption></figure>
