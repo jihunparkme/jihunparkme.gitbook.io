@@ -111,3 +111,5 @@ MSA 내부 아키텍처 스타일
 - `입력/출력 어댑터` 로 구성
 - 데이터 입/출력, 메시지 생산(발행)/소비(가입)
 - API 제공
+
+<figure><img src="../../.gitbook/assets/micro-service/package.png" alt=""><figcaption></figcaption></figure>
