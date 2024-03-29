@@ -124,17 +124,86 @@ MSA 내부 아키텍처 스타일
 
 <figure><img src="../../.gitbook/assets/micro-service/rent-ms-domain-model.png" alt=""><figcaption></figcaption></figure>
 
+```bash
+com
+ └── msa
+    └── rental
+        ├── application
+        ├── inputport
+        │   │   ├── ClearOverdueItemInputPort.java
+        │   │   ├── CompensationInputPort.java
+        │   │   ├── CreateRentalCardInputPort.java
+        │   │   ├── InquiryInputPort.java
+        │   │   ├── OverDueItemInputPort.java
+        │   │   ├── RentItemInputPort.java
+        │   │   └── ReturnItemInputPort.java
+        │   ├── outputport
+        │   │   ├── EventOutputPort.java
+        │   │   └── RentalCardOutputPort.java
+        │   └── usecase
+        │       ├── ClearOverdueItemUseCase.java
+        │       ├── CompensationUseCase.java
+        │       ├── CreateRentalCardUseCase.java
+        │       ├── InquiryUsecase.java
+        │       ├── OverdueItemUserCase.java
+        │       ├── RentItemUseCase.java
+        │       └── ReturnItemUserCase.java
+        ├── config
+        │   ├── KafkaConfig.java
+        │   └── SwaggerConfig.java
+        ├── domain
+        │   └── model
+        │      ├── event
+        │      │   ├── EventResult.java
+        │      │   ├── EventType.java
+        │      │   ├── ItemRented.java
+        │      │   ├── ItemReturned.java
+        │      │   ├── OverdueCleared.java
+        │      │   └── PointUseCommand.java
+        │      ├── vo
+        │      │   ├── IDName.java
+        │      │   ├── Item.java
+        │      │   ├── LateFee.java
+        │      │   ├── RentalCardNo.java
+        │      │   ├── RentStatus.java
+        │      │   └── ReturnItem.java
+        │      ├── RentalCard.java
+        │      └── RentalItem.java
+        └── framework
+            ├── jpaadapter
+            │   ├── RentalCardJpaAdapter.java
+            │   └── RentalCardRepository.java
+            ├── kafkaadapter
+            │   ├── RentalEventConsumers.java
+            │   └── RentalKafkaProducer.java
+            └── web
+                ├── jpaadapter
+                │   ├── ClearOverdueInfoDTO.java
+                │   ├── RentalCardOutputDTO.java
+                │   ├── RentalResultOutputDTO.java
+                │   ├── RentItemOutputDTO.java
+                │   ├── ReturnItemOutputDTO.java
+                │   ├── UserInputDTO.java
+                │   └── UserItemInputDTO.java
+                └── RentalController.java
+
+```
+
 ## 도서
 
 [BookMS Repository](https://github.com/jihunparkme/msa-example/tree/main/BookMS)
 
 <figure><img src="../../.gitbook/assets/micro-service/book-ms-domain-model.png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../../.gitbook/assets/micro-service/book-mas-package.png" alt=""><figcaption></figcaption></figure>
+
 ## 사용자
 
 [MemberMS Repository](https://github.com/jihunparkme/msa-example/tree/main/MemberMS)
 
 <figure><img src="../../.gitbook/assets/micro-service/member-ms-domain-model.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../../.gitbook/assets/micro-service/member-msa-package.png" alt=""><figcaption></figcaption></figure>
 
 ## Best 서적
 
