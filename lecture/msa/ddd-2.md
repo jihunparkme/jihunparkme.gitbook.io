@@ -138,4 +138,32 @@ MSA 내부 아키텍처 스타일
 
 ## Best 서적
 
+[BestBookMS Repository](https://github.com/jihunparkme/msa-example/tree/main/BestBookMS)
+
+<figure><img src="../../.gitbook/assets/micro-service/best-book-ms-domain-model.png" alt=""><figcaption></figcaption></figure>
+
+```bash
+com
+ └── msa
+    └── BestBookMS
+        ├── BestBookMsApplication.java
+        ├── config
+        │   ├── KafkaConfig.java
+        │   └── SwaggerConfig.java
+        ├── domain
+        │   ├── BestBookService.java
+        │   └── model
+        │       ├── BestBook.java
+        │       ├── evnet
+        │       │   ├── IDName.java
+        │       │   └── ItemRented.java
+        │       └── vo
+        │           └── Item.java
+        ├── persistence
+        │   └── BestBookRepository.java
+        └── web
+            ├── BestBookController.java
+            └── BestBookEventConsumers.java 
+```
+
 ## EDA
