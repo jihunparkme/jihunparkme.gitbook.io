@@ -126,11 +126,15 @@ MSA 내부 아키텍처 스타일
 
 ## 도서
 
-[RentMS Repository](https://github.com/jihunparkme/msa-example/tree/main/BookMS)
+[BookMS Repository](https://github.com/jihunparkme/msa-example/tree/main/BookMS)
 
 <figure><img src="../../.gitbook/assets/micro-service/book-ms-domain-model.png" alt=""><figcaption></figcaption></figure>
 
 ## 사용자
+
+[MemberMS Repository](https://github.com/jihunparkme/msa-example/tree/main/MemberMS)
+
+<figure><img src="../../.gitbook/assets/micro-service/member-ms-domain-model.png" alt=""><figcaption></figcaption></figure>
 
 ## Best 서적
 
