@@ -119,3 +119,13 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-1:29092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper-1:32181
 ```
+
+## 비동기 문제
+
+Saga Pattern 적용
+
+> 마이크로서비스들끼리 이벤트를 주고 받아 특정 마이크로서비스에서의 작업이 실패하면
+> 이전까지의 작업이 완료된 마이크서비스들에게 보상(complemetary) 이벤트를
+> 소싱함으로써 분산 환경에서 원자성(atomicity)을 보장하는 패턴
+
+<figure><img src="../../.gitbook/assets/micro-service/kafka-saga-pattern.png" alt=""><figcaption></figcaption></figure>
