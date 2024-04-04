@@ -61,4 +61,61 @@
 - `컨슈머 그룹`: 
 - `주키퍼`: 노드 관리, 각 토픽마다 컨슈머가 몇번의 오프셋을 처리했는지 기억, 특정 노드가 죽으면 어디로 가야 하는지 안내
 
+## Integration Test
 
+[Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+[MongoDB Compass](https://www.mongodb.com/try/download/atlascli)
+
+**docker-compose-infra_only.yml**
+
+```yml
+version: '3'
+services:
+  # MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+  # Zookeeper
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - '32181:32181'
+
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  # kafka
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-msa
+    ports:
+      - '9092:9092'
+
+    depends_on:
+      - zookeeper-1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-1:32181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:29092,EXTERNAL://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      # KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_NUM_PARTITIONS: 4
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8989:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-1:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper-1:32181
+```
