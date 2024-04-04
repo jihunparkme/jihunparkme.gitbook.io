@@ -129,3 +129,5 @@ Saga Pattern 적용
 > 소싱함으로써 분산 환경에서 원자성(atomicity)을 보장하는 패턴
 
 <figure><img src="../../.gitbook/assets/micro-service/kafka-saga-pattern.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../../.gitbook/assets/micro-service/kafka-saga-pattern-2.png" alt=""><figcaption></figcaption></figure>
