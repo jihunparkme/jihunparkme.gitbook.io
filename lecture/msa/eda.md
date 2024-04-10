@@ -131,3 +131,58 @@ Saga Pattern 적용
 <figure><img src="../../.gitbook/assets/micro-service/kafka-saga-pattern.png" alt=""><figcaption></figcaption></figure>
 
 <figure><img src="../../.gitbook/assets/micro-service/kafka-saga-pattern-2.png" alt=""><figcaption></figcaption></figure>
+
+**kafka rent event producer**
+
+```java 
+@Value(value = "${producers.topic1.name}")
+private String TOPIC_RENT;
+
+private final KafkaTemplate<String, ItemRented> kafkaTemplate;
+
+// ...
+
+kafkaTemplate.send(TOPIC_RENT, itemRented)
+```
+
+```json
+{
+	"idName": {
+		"id": "jenny",
+		"name": "제니"
+	},
+	"item": {
+		"no": 1,
+		"title": "누구를 위하여 종을 울리나?"
+	},
+	"point": 10
+}
+```
+
+**kafka rent event consumer**
+
+```java
+private final ObjectMapper objectMapper = new ObjectMapper();
+
+@KafkaListener(topics = "${consumer.topic1.name}", groupId = "${consumer.groupid.name}")
+public void consumeRental(ConsumerRecord<String, String> record) throws Exception {
+    EventResult eventResult = objectMapper.readValue(record.value(), EventResult.class);
+
+// ...
+```
+
+```json
+{
+	"eventType": "RENT",
+	"idName": {
+		"id": "jenny",
+		"name": "제니"
+	},
+	"item": {
+		"no": 1,
+		"title": "누구를 위하여 종을 울리나?"
+	},
+	"point": 10,
+	"success": true
+}
+```
