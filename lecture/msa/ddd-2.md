@@ -234,5 +234,3 @@ com
             ├── BestBookController.java
             └── BestBookEventConsumers.java 
 ```
-
-## EDA
