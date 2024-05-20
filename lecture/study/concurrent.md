@@ -95,12 +95,40 @@ Java Synchronized 는 하나의 프로세스 안에서만 보장이 됩니다.
 
 대부분의 운영 서비스는 2대 이상의 서버로 운영되기 때문에 Java Synchronized 는 거의 사용되지 않는 방법입니다.
 
+## DataBase Lock
+
+Mysql
+
+`Pessimistic Lock`
+- 비관적 락
+- 실제로 **데이터에 Lock** 을 걸어서 정합성을 맞추는 방법
+- Row or Table 단위로 Locking
+- Exclusive Lock 을 걸게 되며, 다른 트랜잭션에서는 **Lock 해제 전에 데이터를 가져갈 수 없음**
+- **데드락**이 걸릴 수 있기 때문에 주의 필요
+
+
+`Optimistic Lock`
+- 낙관적 락
+- 실제로 Lock 을 이용하지 않고 **버전을 이용**함으로써 정합성을 맞추는 방법
+- 먼저 데이터를 읽은 후 update 수행 시, 현재 내가 읽은 버전이 맞는지 확인하며 업데이트 수행
+- 내가 읽은 버전에서 수정사항이 생겼을 경우 애플리케이션에서 다시 읽은 후에 작업을 수행
+
+`Named Lock`
+- 이름을 가진 [Metadata Locking](https://dev.mysql.com/doc/refman/8.0/en/metadata-locking.html)
+- 이름을 가진 Lock 획득 후, 해제할 때까지 다른 세션은 이 Lock 을 획득할 수 없도록 함
+- Transaction 종료 시 Lock 이 자동으로 해제되지 않는 점 주의
+- 별도의 명령어로 해제를 수행해 주거나 선점 시간이 끝나야 해제
+- 비관적 락과 유사하지만 로우나 테이블이 아닌 메타데이터의 락킹을 하는 방식
+
+Reference.
+
+- [Locking Functions](https://dev.mysql.com/doc/refman/8.0/en/locking-functions.html)
+
 ## Finish
 
-| Java Synchronized | aa | aa |
-|---|---|---|
-| @Transactional 적용 불가 | aa | aa |
-| 2대 이상의 서버로 운영될 경우 적용 불가 | aa | aa |
+**Java Synchronized**
+- @Transactional 적용 불가
+- 2대 이상의 서버로 운영될 경우 적용 불가
 
 ## Reference
 
