@@ -16,7 +16,7 @@ public void decreases(Long id, Long quantity) {
 }
 ```
 
-우리는 아래 테스트에서 0의 결과를 예상하지만, 동시에 들어오는 요청들이 갱신 전 값을 읽고 수정하면서 실제 갱신이 누락되는 현상이 발생하게 됩니다.
+우리는 아래 테스트에서 0의 결과를 예상하지만, `동시에 들어오는 요청들이 갱신 전 값을 읽고 수정`하면서 실제 갱신이 누락되는 현상이 발생하게 됩니다.
 
 ```java
 @Test
@@ -57,7 +57,9 @@ public synchronized void decreases(Long id, Long quantity) {
 }
 ```
 
-여기서 문제가 있습니다.
+.
+
+⚠️ **여기서 문제가 있습니다.**
 
 `Spring Transactional` 의 동작 방식은 아래와 같이 우리가 만든 클래스를 래핑한 클래스를 새로 만들어서 실행하게 됩니다.
 
@@ -79,9 +81,26 @@ public synchronized void decreases(Long id, Long quantity) {
  }
  ```
 
- 우리가 만든 클래스를 필드로 가지고 호출하게 되는데 트랜잭션 종료 전에 다른 스레드가 갱신된 전 값을 읽게 되면 결국 이전과 동일한 문제가 발생하게 됩니다.
+ 우리가 만든 클래스를 필드로 가지고 호출하게 되는데 `트랜잭션 종료 전에 다른 스레드가 갱신된 전 값을 읽게 되면` 결국 이전과 동일한 문제가 발생하게 됩니다.
 
  여기서 단순하게 Transactional Annotation 을 제거하여 문제를 해결할 수는 있습니다.
+
+.
+
+⚠️ **하지만, Java Synchronized 의 문제는 또 존재합니다.**
+
+Java Synchronized 는 하나의 프로세스 안에서만 보장이 됩니다.
+
+그러다보니 서버가 1대일 경우에는 괜찮겠지만, 서버가 2대 이상일 경우 결국 `여러 스레드에서 동시에 데이터에 접근`할 수 있게 되면서 레이스 컨디션이 발생하게 됩니다.
+
+대부분의 운영 서비스는 2대 이상의 서버로 운영되기 때문에 Java Synchronized 는 거의 사용되지 않는 방법입니다.
+
+## Finish
+
+| Java Synchronized | aa | aa |
+|---|---|---|
+| @Transactional 적용 불가 | aa | aa |
+| 2대 이상의 서버로 운영될 경우 적용 불가 | aa | aa |
 
 ## Reference
 
