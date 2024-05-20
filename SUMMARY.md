@@ -35,6 +35,7 @@
   * [03.Header](lecture/http/03.md)
 * [Spring Core](lecture/spring-core.md)
 * [Study](lecture/study/README.md)
+  * [Concurrent](lecture/study/concurrent.md)
   * [TDD](lecture/study/tdd.md)
   * [IntelliJ](lecture/study/intelliJ.md)
   * [Performance Test](lecture/study/performance-test.md)
