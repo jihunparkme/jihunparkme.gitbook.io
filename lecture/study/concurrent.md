@@ -103,6 +103,8 @@ Java Synchronized 는 하나의 프로세스 안에서만 보장이 됩니다.
 
 ## DataBase Lock
 
+> MySQL
+
 ### Pessimistic Lock
 
 **비관적 락.**
@@ -201,15 +203,63 @@ public class OptimisticLockStockFacade {
 ### Named Lock
 
 - 이름을 가진 [Metadata Locking](https://dev.mysql.com/doc/refman/8.0/en/metadata-locking.html)
-- 이름을 가진 Lock 획득 후, 해제할 때까지 다른 세션은 이 Lock 을 획득할 수 없도록 함
-- Transaction 종료 시 Lock 이 자동으로 해제되지 않는 점 주의
-- 별도의 명령어로 해제를 수행해 주거나 선점 시간이 끝나야 해제
-- 비관적 락과 유사하지만 로우나 테이블이 아닌 메타데이터의 락킹을 하는 방식
+- `이름을 가진 Lock` 획득 후, 해제할 때까지 다른 세션은 이 Lock 을 획득할 수 없도록 함
+- Transaction 종료 시 `Lock 이 자동으로 해제되지 않는 점` 주의
+  - 별도의 명령어로 해제를 수행해 주거나 선점 시간이 끝나야 해제
+- 비관적 락과 유사하지만 로우나 테이블이 아닌 `메타데이터의 락킹`을 하는 방식
+- 커넥션 풀 부족 현상을 막기 위해 데이터 소스를 분리해서 사용할 것을 권장
+- 주로 분산락 구현 시 사용
 
+**장점.**
+- Timeout을 쉽게 구현 가능
 
-Reference.
+**단점.**
+- 트랜잭션 종료 시 락 해제, 세션 관리 필요
+- 구현 방법이 복잡해질 수 있음
 
-- [Locking Functions](https://dev.mysql.com/doc/refman/8.0/en/locking-functions.html)
+```java
+/** Repository **/
+@Query(value = "select get_lock(:key, 3000)", nativeQuery = true)
+void getLock(@Param("key") String key);
+
+@Query(value = "select release_lock(:key)", nativeQuery = true)
+void releaseLock(@Param("key") String key);
+
+/** Service **/
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public void decrease(Long id, Long quantity) {
+    final Stock stock = stockRepository.findById(id).orElseThrow();
+    stock.decrease(quantity);
+
+    stockRepository.saveAndFlush(stock);
+}
+
+/** Facade **/
+@Component
+@RequiredArgsConstructor
+public class NamedLockStockFacade {
+
+    private final LockRepository lockRepository;
+
+    private final StockService stockService;
+
+    @Transactional
+    public void decrease(Long id, Long quantity) {
+        try {
+            lockRepository.getLock(id.toString());
+            stockService.decrease(id, quantity);
+        } finally {
+            lockRepository.releaseLock(id.toString());
+        }
+    }
+}
+```
+
+[commit](https://github.com/jihunparkme/Study-project-spring-java/commit/9ba0d029795cba455cf71e1c941b60d8a2df85cf)
+
+> Reference.
+>
+> - [Locking Functions](https://dev.mysql.com/doc/refman/8.0/en/locking-functions.html)
 
 ## Finish
 
@@ -225,6 +275,8 @@ Reference.
   - 버전을 이용
   - 충돌이 빈번하게 일어나지 않을 경우 추천
 - Named Lock
+  - 이름들 가진 데이터에 락킹
+  - 주로 분산락 구현 시 사용
 
 ## Reference
 
