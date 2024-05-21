@@ -7,12 +7,18 @@
 경쟁상태는 두 개 이상의 스레드가 공유 데이터에 액세스할 수 있고, 동시에 변경을 하려고 할 때 발생하는 문제입니다.
 
 ```java
-@Transactional
-public void decreases(Long id, Long quantity) {
-    final Stock stock = stockRepository.findById(id).orElseThrow();
-    stock.decrease(quantity);
+@Service
+@RequiredArgsConstructor
+public class StockService {
 
-    stockRepository.saveAndFlush(stock);
+    private final StockRepository stockRepository;
+
+    public synchronized void decrease(Long id, Long quantity) {
+        final Stock stock = stockRepository.findById(id).orElseThrow();
+        stock.decrease(quantity);
+
+        stockRepository.saveAndFlush(stock);
+    }
 }
 ```
 
@@ -97,57 +103,100 @@ Java Synchronized 는 하나의 프로세스 안에서만 보장이 됩니다.
 
 ## DataBase Lock
 
-Mysql
-
 ### Pessimistic Lock
 
-- 비관적 락
-- 실제로 **데이터에 Lock** 을 걸어서 정합성을 맞추는 방법
-- Row or Table 단위로 Locking
-- Exclusive Lock 을 걸게 되며, 다른 트랜잭션에서는 **Lock 해제 전에 데이터를 가져갈 수 없음**
-- **데드락**이 걸릴 수 있기 때문에 주의 필요
+**비관적 락.**
+- 실제로 `데이터에 Lock`을 걸어서 정합성을 맞추는 방법
+- `Row or Table 단위`로 Locking
+- `Exclusive Lock`을 걸게 되며, 다른 트랜잭션에서는 `Lock 해제 전에 데이터를 가져갈 수 없음`
+- `데드락`(두 개 이상의 작업이 서로 상대방의 작업이 끝나기 만을 기다는 상태) 주의 필요
+- 충돌이 빈번하게 일어나거나 예상된다면 추천하는 방식
 
+**장점.**
+- 충돌이 빈번하게 일어난다면 `Optimistic Lock` 보다 성능이 좋을 수 있다.
+- 락을 통해 업데이터를 제어하므로 **데이터 정합성이 보장**된다.
+
+**단점.**
+- 별도의 락을 잡기 때문에 **성능 감소**가 있을 수 있다.
 
 ```java
-public interface StockRepository extends JpaRepository<Stock, Long> {
+/** Repository **/
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+@Query("select s from Stock s where s.id = :id")
+Stock findByIdWithPessimisticLock(@Param("id") Long id);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select s from Stock s where s.id = :id")
-    Stock findByIdWithPessimisticLock(@Param("id") Long id);
+...
+
+/** Service **/
+@Transactional
+public void decrease(Long id, Long quantity) {
+    final Stock stock = stockRepository.findByIdWithPessimisticLock(id);
+    stock.decrease(quantity);
+    stockRepository.save(stock);
+}
+```
+
+[commit](https://github.com/jihunparkme/Study-project-spring-java/commit/69ceb1a7810835483eb33f6a8b0c88fd10d5d094)
+
+### Optimistic Lock
+
+**낙관적 락.**
+- 실제로 Lock 을 이용하지 않고 `버전을 이용`함으로써 정합성을 맞추는 방법
+- 먼저 데이터를 읽은 후 update 수행 시, 현재 내가 읽은 `버전이 맞는지 확인하며 업데이트` 수행
+- 내가 읽은 버전에서 수정사항이 생겼을 경우 애플리케이션에서 다시 읽은 후에 작업을 수행
+- 충돌이 빈번하게 일어나지 않을 경우 추천하는 방식
+
+**장점.**
+- 별도의 락을 잡지 않으므로 Pessimistic Lock 보다 성능상 이점이 있다.
+
+**단점.**
+- 업데이트 실패 시 재시도 로직을 개발자가 직접 작성해야 한다.
+
+```java
+/** Entity **/
+@Version
+private Long version;
+
+...
+
+/** Repository **/
+@Lock(value = LockModeType.OPTIMISTIC)
+@Query("select s from Stock s where s.id = :id")
+Stock findByIdWithOptimisticLock(@Param("id") Long id);
+
+...
+
+/** Service **/
+@Transactional
+public void decrease(Long id, Long quantity) {
+    final Stock stock = stockRepository.findByIdWithOptimisticLock(id);
+    stock.decrease(quantity);
+    stockRepository.save(stock);
 }
 
-..
+...
 
-@Service
+/** Facade **/
+@Component
 @RequiredArgsConstructor
-public class PessimisticLockStockService {
+public class OptimisticLockStockFacade {
 
-    private final StockRepository stockRepository;
+    private final OptimisticLockStockService optimisticLockStockService;
 
-    @Transactional
-    public void decrease(Long id, Long quantity) {
-        final Stock stock = stockRepository.findByIdWithPessimisticLock(id);
-
-        stock.decrease(quantity);
-
-        stockRepository.save(stock);
+    public void decrease(Long id, Long quantity) throws InterruptedException {
+        while (true) { // 업데이트 실패 시 재시도
+            try {
+                optimisticLockStockService.decrease(id, quantity);
+                break;
+            } catch (Exception e) {
+                Thread.sleep(50);
+            }
+        }
     }
 }
 ```
 
-장점.
-- 충돌이 빈번하게 일어난다면 `Optimistic Lock` 보 성능이 좋을 수 있다.
-- 락을 통해 업데이터를 제어하므로 데이터 정합성이 보장된다.
-
-단점.
-- 별도의 락을 잡기 때문에 성능 감소가 있을 수 있다.
-
-### Optimistic Lock
-
-- 낙관적 락
-- 실제로 Lock 을 이용하지 않고 **버전을 이용**함으로써 정합성을 맞추는 방법
-- 먼저 데이터를 읽은 후 update 수행 시, 현재 내가 읽은 버전이 맞는지 확인하며 업데이트 수행
-- 내가 읽은 버전에서 수정사항이 생겼을 경우 애플리케이션에서 다시 읽은 후에 작업을 수행
+[commit](https://github.com/jihunparkme/Study-project-spring-java/commit/db1e69c46ab0cf3c50a3f015aecc7c0ffb1db653)
 
 ### Named Lock
 
@@ -167,6 +216,15 @@ Reference.
 **Java Synchronized**
 - @Transactional 적용 불가
 - 2대 이상의 서버로 운영될 경우 적용 불가
+
+**DataBase Lock**
+- Pessimistic Lock
+  - 로우, 테이블 단위로 락킹
+  - 충돌이 빈번하게 일어나거나 예상된다면 추천
+- Optimistic Lock
+  - 버전을 이용
+  - 충돌이 빈번하게 일어나지 않을 경우 추천
+- Named Lock
 
 ## Reference
 
