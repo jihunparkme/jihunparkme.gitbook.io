@@ -270,12 +270,16 @@ public class NamedLockStockFacade {
 **DataBase Lock**
 - Pessimistic Lock
   - 로우, 테이블 단위로 락킹
+  - 락 해제 전까지 다른 스레드는 데이터를 가져갈 수 없음
+  - 데드락 주의
   - 충돌이 빈번하게 일어나거나 예상된다면 추천
 - Optimistic Lock
   - 버전을 이용
+  - 업데이트 실패 시 재시도
   - 충돌이 빈번하게 일어나지 않을 경우 추천
 - Named Lock
-  - 이름들 가진 데이터에 락킹
+  - Pessimistic Lock 과 유사하지만 이름들 가진 데이터에 락킹
+  - 트랜잭션 종료 시 락 해제, 세션 관리 필요
   - 주로 분산락 구현 시 사용
 
 ## Reference
