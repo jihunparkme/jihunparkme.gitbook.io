@@ -22,22 +22,22 @@ public void decreases(Long id, Long quantity) {
 @Test
 void decrease_inventory_concurrent_requests() throws InterruptedException {
     int threadCount = 100;
-    final ExecutorService executorService = Executors.newFixedThreadPool(32);
-    final CountDownLatch latch = new CountDownLatch(threadCount);
+    ExecutorService executorService = Executors.newFixedThreadPool(32);
+    CountDownLatch latch = new CountDownLatch(threadCount);
 
     for (int i = 0; i < threadCount; i++) {
         executorService.submit(() -> {
             try {
-                stockService.decreases(1L, 1L);
+                stockService.decrease(1L, 1L);
             } finally {
                 latch.countDown();
             }
         });
-
-        latch.await();
     }
 
-    final Stock stock = stockRepository.findById(1L).orElseThrow();
+    latch.await();
+
+    Stock stock = stockRepository.findById(1L).orElseThrow();
 
     assertEquals(0, stock.getQuantity());
 }
@@ -99,7 +99,8 @@ Java Synchronized 는 하나의 프로세스 안에서만 보장이 됩니다.
 
 Mysql
 
-`Pessimistic Lock`
+### Pessimistic Lock
+
 - 비관적 락
 - 실제로 **데이터에 Lock** 을 걸어서 정합성을 맞추는 방법
 - Row or Table 단위로 Locking
@@ -107,18 +108,55 @@ Mysql
 - **데드락**이 걸릴 수 있기 때문에 주의 필요
 
 
-`Optimistic Lock`
+```java
+public interface StockRepository extends JpaRepository<Stock, Long> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select s from Stock s where s.id = :id")
+    Stock findByIdWithPessimisticLock(@Param("id") Long id);
+}
+
+..
+
+@Service
+@RequiredArgsConstructor
+public class PessimisticLockStockService {
+
+    private final StockRepository stockRepository;
+
+    @Transactional
+    public void decrease(Long id, Long quantity) {
+        final Stock stock = stockRepository.findByIdWithPessimisticLock(id);
+
+        stock.decrease(quantity);
+
+        stockRepository.save(stock);
+    }
+}
+```
+
+장점.
+- 충돌이 빈번하게 일어난다면 `Optimistic Lock` 보 성능이 좋을 수 있다.
+- 락을 통해 업데이터를 제어하므로 데이터 정합성이 보장된다.
+
+단점.
+- 별도의 락을 잡기 때문에 성능 감소가 있을 수 있다.
+
+### Optimistic Lock
+
 - 낙관적 락
 - 실제로 Lock 을 이용하지 않고 **버전을 이용**함으로써 정합성을 맞추는 방법
 - 먼저 데이터를 읽은 후 update 수행 시, 현재 내가 읽은 버전이 맞는지 확인하며 업데이트 수행
 - 내가 읽은 버전에서 수정사항이 생겼을 경우 애플리케이션에서 다시 읽은 후에 작업을 수행
 
-`Named Lock`
+### Named Lock
+
 - 이름을 가진 [Metadata Locking](https://dev.mysql.com/doc/refman/8.0/en/metadata-locking.html)
 - 이름을 가진 Lock 획득 후, 해제할 때까지 다른 세션은 이 Lock 을 획득할 수 없도록 함
 - Transaction 종료 시 Lock 이 자동으로 해제되지 않는 점 주의
 - 별도의 명령어로 해제를 수행해 주거나 선점 시간이 끝나야 해제
 - 비관적 락과 유사하지만 로우나 테이블이 아닌 메타데이터의 락킹을 하는 방식
+
 
 Reference.
 
