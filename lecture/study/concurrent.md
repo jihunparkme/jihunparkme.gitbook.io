@@ -225,6 +225,8 @@ void getLock(@Param("key") String key);
 @Query(value = "select release_lock(:key)", nativeQuery = true)
 void releaseLock(@Param("key") String key);
 
+...
+
 /** Service **/
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public void decrease(Long id, Long quantity) {
@@ -233,6 +235,8 @@ public void decrease(Long id, Long quantity) {
 
     stockRepository.saveAndFlush(stock);
 }
+
+...
 
 /** Facade **/
 @Component
@@ -263,12 +267,65 @@ public class NamedLockStockFacade {
 
 ## Redis
 
+MySQL의 Named Lock과 유사한 방식
+
 ### Lettuce
 
 - `setnx`(set if not exist) 명령어를 활용하여 분산락 구현
 - `Spin Lock` 방식
   - 락을 획득하려는 스레드가 락을 사용할 수 있는지 반복적으로 확인하면서 락 획득을 시도하는 방식
   - 재시도 로직 개발 필요
+
+```bash
+# key 는 1 이고, value 는 lock 인 데이터 생성
+> setnx 1 lock
+(integer) 1
+
+# 이미 1 이라는 키가 있으므로 실패
+> setnx 1 lock
+(integer) 0
+
+# 키 삭제
+> del 1
+(integer) 1
+```
+
+**장점.**
+- 구현이 단순
+
+**단점.**
+- Spin Lock 방식으로 레디스에 부화를 줄 수 있음
+  - 락 획득 재시도 간 대기 시간이 필요
+
+```java
+/* Repository */
+public Boolean lock(Long key) {
+    return redisTemplate
+            .opsForValue()
+            .setIfAbsent(generateKey(key), "lock", Duration.ofMillis(3_000));
+}
+
+public Boolean unlock(Long key) {
+    return redisTemplate.delete(generateKey(key));
+}
+
+...
+
+/* Facade */
+public void decrease(Long key, Long quantity) throws InterruptedException {
+    while (!redisLockRepository.lock(key)) {
+        Thread.sleep(100);
+    }
+
+    try {
+        stockService.decrease(key, quantity);
+    } finally {
+        redisLockRepository.unlock(key);
+    }
+}
+```
+
+[commit](https://github.com/jihunparkme/Study-project-spring-java/commit/5a916ad7efe8e40d68cce113dc03e8b077c05b5d)
 
 ### Redisson
 
@@ -302,7 +359,10 @@ Thread-1 ----------> Channel -------------------> Thread-2
   - 주로 분산락 구현 시 사용
 
 **Redis**
-
+- Lettuce
+  - Spin Lock 방식
+- Redisson
+  - pub-sub 기반
 
 ## Reference
 
