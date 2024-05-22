@@ -278,10 +278,11 @@ MySQL의 Named Lock과 유사한 방식
 
 **장점.**
 - 구현이 단순
+- 별도의 라이브러리가 불필요(spring data redis 사용 시 기본적으로 Lettuce 적용)
 
 **단점.**
-- Spin Lock 방식으로 레디스에 부화를 줄 수 있음
-  - 락 획득 재시도 간 대기 시간이 필요
+- Spin Lock 방식이므로 동시에 많은 스레드가 락 획득 대기 상태라면 레디스에 부하가 갈 수 있음
+  - 락 획득 재시도 간 대기 시간도 필요
 
 ```bash
 # key 는 1 이고, value 는 lock 인 데이터 생성
@@ -359,7 +360,8 @@ Thread-1 ----------> Channel -------------------> Thread-2
 ```
 
 **장점.**
-- pub-sub 기반 구현으로 레디스의 부하를 줄여줄 수 있음
+- pub-sub 기반 구현으로 lettuce 대비 레디스에 부하가 덜 감
+- 락 획득 재시도를 기본적으로 제공
 
 **단점.**
 - 복잡한 구현
@@ -387,6 +389,12 @@ public void decrease(Long key, Long quantity) {
 }
 ```
 
+> 실무에서는 보통
+>
+> 재시도가 필요하지 않은 락은 Lettuce를 활용하고,
+>
+> 재시도가 필요한 경우 Redisson을 활용
+
 [commit](https://github.com/jihunparkme/Study-project-spring-java/commit/c9ff889d5bbda6c08b1970098329bcd34d0275e0)
 
 ## Finish
@@ -413,8 +421,12 @@ public void decrease(Long key, Long quantity) {
 **Redis**
 - Lettuce
   - Spin Lock 방식
+  - 레디스에 부하 가능성 존재
+  - 재시도가 필요하지 않은 경우 권장
 - Redisson
   - pub-sub 기반
+  - 별도의 라이브러리가 필요하고 구현이 복잡
+  - 재시도가 필요한 경우 권장
 
 ## Reference
 
