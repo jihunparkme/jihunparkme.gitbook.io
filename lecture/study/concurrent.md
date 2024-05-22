@@ -428,6 +428,11 @@ public void decrease(Long key, Long quantity) {
   - 별도의 라이브러리가 필요하고 구현이 복잡
   - 재시도가 필요한 경우 권장
 
+|Mysql|Redis|
+|---|---|
+|Mysql을 사용중이라면 별도 비용없이 사용 가능|활용중인 Redis가 없다면 별도의 구축 비용과 인프라 관리 비용이 발생|
+|Redis 보다 성능이 좋지 않음(어느정도의 트래픽까지는 문제없이 활용 가능)|Mysql 보다 성능이 좋음|
+
 ## Reference
 
 [재고시스템으로 알아보는 동시성이슈 해결방법](https://www.inflearn.com/course/%EB%8F%99%EC%8B%9C%EC%84%B1%EC%9D%B4%EC%8A%88-%EC%9E%AC%EA%B3%A0%EC%8B%9C%EC%8A%A4%ED%85%9C/dashboard)
