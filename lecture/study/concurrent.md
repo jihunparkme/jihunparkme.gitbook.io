@@ -261,6 +261,25 @@ public class NamedLockStockFacade {
 >
 > - [Locking Functions](https://dev.mysql.com/doc/refman/8.0/en/locking-functions.html)
 
+## Redis
+
+### Lettuce
+
+- `setnx`(set if not exist) 명령어를 활용하여 분산락 구현
+- `Spin Lock` 방식
+  - 락을 획득하려는 스레드가 락을 사용할 수 있는지 반복적으로 확인하면서 락 획득을 시도하는 방식
+  - 재시도 로직 개발 필요
+
+### Redisson
+
+- `pub-sub` 기반으로 Lock 구현 제공
+  - 채널을 만들고 락을 점유중인 스레드가 락 획득 대기중인 스레드에게 해제를 알려주면 안내 받은 스레드가 락 획득을 시도하는 방식
+
+```bash
+Thread-1 ----------> Channel -------------------> Thread-2
+          I'm done            Try to get a Lock
+```
+
 ## Finish
 
 **Java Synchronized**
@@ -281,6 +300,9 @@ public class NamedLockStockFacade {
   - Pessimistic Lock 과 유사하지만 이름들 가진 데이터에 락킹
   - 트랜잭션 종료 시 락 해제, 세션 관리 필요
   - 주로 분산락 구현 시 사용
+
+**Redis**
+
 
 ## Reference
 
