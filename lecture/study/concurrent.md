@@ -276,6 +276,13 @@ MySQL의 Named Lock과 유사한 방식
   - 락을 획득하려는 스레드가 락을 사용할 수 있는지 반복적으로 확인하면서 락 획득을 시도하는 방식
   - 재시도 로직 개발 필요
 
+**장점.**
+- 구현이 단순
+
+**단점.**
+- Spin Lock 방식으로 레디스에 부화를 줄 수 있음
+  - 락 획득 재시도 간 대기 시간이 필요
+
 ```bash
 # key 는 1 이고, value 는 lock 인 데이터 생성
 > setnx 1 lock
@@ -289,13 +296,6 @@ MySQL의 Named Lock과 유사한 방식
 > del 1
 (integer) 1
 ```
-
-**장점.**
-- 구현이 단순
-
-**단점.**
-- Spin Lock 방식으로 레디스에 부화를 줄 수 있음
-  - 락 획득 재시도 간 대기 시간이 필요
 
 ```java
 /* Repository */
@@ -329,13 +329,65 @@ public void decrease(Long key, Long quantity) throws InterruptedException {
 
 ### Redisson
 
+[Redisson/Spring Boot Starter](https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter)
+
 - `pub-sub` 기반으로 Lock 구현 제공
-  - 채널을 만들고 락을 점유중인 스레드가 락 획득 대기중인 스레드에게 해제를 알려주면 안내 받은 스레드가 락 획득을 시도하는 방식
+  - 채널을 만들고 락을 점유중인 스레드가 락 획득을 대기중인 스레드에게 락 해제라는 메시지를 전송하면, 메시지를 전달받은 스레드가 락 획득을 시도하는 방식
+- 락 획득을 위해 반복적으로 락 획득을 시도하는 Lettuce 대비 부하를 줄일 수 있음
 
 ```bash
 Thread-1 ----------> Channel -------------------> Thread-2
           I'm done            Try to get a Lock
 ```
+
+```bash
+# ch1 채널 구독(thread-2)
+> subscribe ch1
+1) "subscribe"
+2) "ch1"
+3) (integer) 1
+
+# 메시지 전송(thread-1)
+> publish ch1 hello
+(integer) 1
+
+# thread-2 메시지 수신
+...
+1) "message"
+2) "ch1"
+3) "hello"
+```
+
+**장점.**
+- pub-sub 기반 구현으로 레디스의 부하를 줄여줄 수 있음
+
+**단점.**
+- 복잡한 구현
+- 별도의 라이브러리 필요
+
+```java
+/* Facade */
+public void decrease(Long key, Long quantity) {
+    RLock lock = redissonClient.getLock(key.toString());
+
+    try {
+        boolean available = lock.tryLock(10, 1, TimeUnit.SECONDS); // (락 획득 시도 시간, 점유 시간)
+
+        if (!available) {
+            System.out.println("lock 획득 실패");
+            return;
+        }
+
+        stockService.decrease(key, quantity);
+    } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+[commit](https://github.com/jihunparkme/Study-project-spring-java/commit/c9ff889d5bbda6c08b1970098329bcd34d0275e0)
 
 ## Finish
 
