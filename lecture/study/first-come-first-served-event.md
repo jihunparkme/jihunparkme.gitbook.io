@@ -4,43 +4,97 @@
 
 # Intro
 
-요구사항
+**요구사항.**
 - 선착순 100명에게 할인쿠폰을 제공하는 이벤트
 - 선착순 100명에게만 지급되어야한다.
 - 101개 이상이 지급되면 안된다.
 - 순간적으로 몰리는 트래픽을 버틸 수 있어야한다.
 
-선착순 이벤트 진행 시 발생할 수 있는 문제점
+**선착순 이벤트 진행 시 발생할 수 있는 문제점.**
 - 쿠폰이 개수보다 더 많이 발급되었을 경우
 - 이벤트 페이지 접속이 안 될 경우
 - 이벤트랑 상관없는 페이지도 느려질 경우
 
-문제 해결
+**문제 해결.**
 - 트래픽이 몰렸을 때 대처할 방법
 - Redis 를 활용하여 쿠폰 발급 개수 보장하는 방법
 - Kafka 를 활용하여 다른 페이지들에 대한 영향도를 줄이는 방법
 
+# Race Condition
+
 ```java
-/** Service **/
-public void apply(Long userId) {
-    final long count = couponRepository.count();
+@Service
+@RequiredArgsConstructor
+public class ApplyService {
 
-    if (count > 100) {
-        return;
+    private final CouponRepository couponRepository;
+
+    public void apply(Long userId) {
+        final long count = couponRepository.count();
+
+        if (count > 100) {
+            return;
+        }
+
+        couponRepository.save(new Coupon(userId));
     }
-
-    couponRepository.save(new Coupon(userId));
-}
-
-...
-
-/** Test **/
-@Test
-void apply_only_once() {
-    applyService.apply(1L);
-
-    final long count = couponRepository.count();
-
-    assertThat(count).isEqualTo(1);
 }
 ```
+
+아래 테스트에서 100의 결과를 예상했지만, `동시에 들어오는 요청들이 갱신 전 값을 읽고 데이터를 추가`하면서 예상했던 개수를 초과하는 현상이 발생하게 됩니다.
+
+```java
+@Test
+void apply_multiple() throws InterruptedException {
+    int threadCount = 1000;
+    ExecutorService executorService = Executors.newFixedThreadPool(32);
+    CountDownLatch latch = new CountDownLatch(threadCount);
+
+    for (int i = 0; i < threadCount; i++) {
+        long userId = i;
+        executorService.submit(() -> {
+            try {
+                applyService.apply(userId);
+            } finally {
+                latch.countDown();
+            }
+        });
+    }
+
+    latch.await();
+
+    final long count = couponRepository.count();
+
+    assertThat(count).isEqualTo(100);
+}
+```
+
+[Concurrency issues](https://jihunparkme.gitbook.io/docs/lecture/study/concurrency-issues) 에서 배운 것과 같이 Java Synchronized 를 적용해볼 수 있지만,
+
+서버가 여러 대가 된다면 Race Condition 이 다시 발생하게 되므로 적절하지 않습니다.
+
+.
+
+또 다른 방법으로 MySQL, Redis 를 활용한 락을 구현해서 해결할 수도 있을 것 같지만, 
+
+쿠폰 개수에 대한 정합성을 원하는데 락을 활용하여 구현하면, 발급된 쿠폰의 개수를 가져오는 것부터 쿠폰을 생성할 때까지 락을 걸어야 합니다.
+
+이렇게 되면 락을 거는 구간이 길어지다보니 성능에 불이익(락이 풀릴 때까지 쿠폰 발급을 기다려야 하는)이 발생할 수 있습니다.
+
+## Redis
+
+Redis `incr` 명령어는 키에 대한 값을 1씩 증가시키는 명령어입니다.
+
+Redis 는 `싱글스레드 기반`으로 동작하여 `레이스 컨디션을 해결`할 수 있을 뿐 아니라 incr 명령어는 `성능도 굉장히 빠른` 명령어입니다.
+
+`incr` 명령어를 사용하여 발급된 쿠폰 개수를 제어한다면 성능도 빠르며 데이터 정합성도 지킬 수 있습니다.
+
+```bash
+> incr coupon_count
+(integer) 1
+
+> incr coupon_count
+(integer) 2
+```
+
+[commit](https://github.com/jihunparkme/Study-project-spring-java/commit/300944b0f04b3cb9919fa66f0b917a74edc36816)
