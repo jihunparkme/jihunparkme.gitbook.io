@@ -26,6 +26,13 @@ public class StockService {
 
 우리는 아래 테스트에서 0의 결과를 예상하지만, `동시에 들어오는 요청들이 갱신 전 값을 읽고 수정`하면서 실제 갱신이 누락되는 현상이 발생하게 됩니다.
 
+| Thread-1 | Stock      | Thread-2 |
+| -------- | ---------- | -------- |
+| select   | quantity:5 |          |
+|          | quantity:5 | select   |
+| update   | quantity:4 |          |
+|          | quantity:4 | update   |
+
 ```java
 @Test
 void decrease_inventory_concurrent_requests() throws InterruptedException {
@@ -100,6 +107,13 @@ public synchronized void decreases(Long id, Long quantity) {
 Java Synchronized 는 하나의 프로세스 안에서만 보장이 됩니다.
 
 그러다보니 서버가 1대일 경우에는 괜찮겠지만, 서버가 2대 이상일 경우 결국 `여러 스레드에서 동시에 데이터에 접근`할 수 있게 되면서 레이스 컨디션이 발생하게 됩니다.
+
+| Time  | Thread-1 | Stock      | Thread-2 |
+| ----- | -------- | ---------- | -------- |
+| 10:00 | select   | quantity:5 |          |
+|       |          | quantity:5 | select   |
+| 10:05 | update   | quantity:4 |          |
+|       |          | quantity:4 | update   |
 
 대부분의 운영 서비스는 2대 이상의 서버로 운영되기 때문에 Java Synchronized 는 거의 사용되지 않는 방법입니다.
 
@@ -402,33 +416,36 @@ public void decrease(Long key, Long quantity) {
 ## Finish
 
 **Java Synchronized**
+- 한 개의 스레드만 접근 가능하도록 제한
 - @Transactional 적용 불가
-- 2대 이상의 서버로 운영될 경우 적용 불가
+- 2대 이상의 서버로 운영될 경우 레이스 컨디션은 또 다시 발생
 
 **DataBase Lock**
 - Pessimistic Lock
   - 로우, 테이블 단위로 락킹
-  - 락 해제 전까지 다른 스레드는 데이터를 가져갈 수 없음
-  - 데드락 주의
-  - 충돌이 빈번하게 일어나거나 예상된다면 추천
+  - 락 해제 전까지 다른 스레드는 데이터를 가져갈 수 없음(데드락 주의)
+  - 충돌이 빈번하게 일어날 경우 추천
 - Optimistic Lock
   - 버전을 이용
   - 업데이트 실패 시 재시도
   - 충돌이 빈번하게 일어나지 않을 경우 추천
+  - 업데이터 실패 시 재시도 로직 개발 필요
 - Named Lock
   - Pessimistic Lock 과 유사하지만 이름들 가진 데이터에 락킹
-  - 트랜잭션 종료 시 락 해제, 세션 관리 필요
+  - 트랜잭션 종료 시 락 해제, 세션은 직접 관리 필요
   - 주로 분산락 구현 시 사용
 
 **Redis**
 - Lettuce
-  - Spin Lock 방식
-  - 레디스에 부하 가능성 존재
+  - Spin Lock 방식(레디스에 부하 가능성 존재)
+  - 재시도 로직 개발이 필요
   - 재시도가 필요하지 않은 경우 권장
 - Redisson
   - pub-sub 기반
   - 별도의 라이브러리가 필요하고 구현이 복잡
   - 재시도가 필요한 경우 권장
+
+**MySql vs. Redis**
 
 |Mysql|Redis|
 |---|---|
