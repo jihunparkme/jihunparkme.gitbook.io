@@ -112,3 +112,26 @@ Redis 는 `싱글스레드 기반`으로 동작하여 `레이스 컨디션을 �
 - 서비스 지연 혹은 오류가 발생할 수 있습니다.
 
 ## Kafka
+
+**분산 이벤트 스트리밍 플랫폼**
+- `이벤트 스트리밍`: 소스에서 목적지까지 이벤트를 실시간으로 스트리밍 하는 것
+
+```bash
+Producer ---> Topic <--- Consumer
+```
+
+Kafka Example
+
+```bash
+# 토픽생성
+$ docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic testTopic
+Created topic testTopic.
+
+# 프로듀서 실행
+$ docker exec -it kafka kafka-console-producer.sh --topic testTopic --broker-list 0.0.0.0:9092
+>Hello
+
+# 컨슈머 실행
+$ docker exec -it kafka kafka-console-consumer.sh --topic testTopic --bootstrap-server localhost:9092
+Hello
+```
