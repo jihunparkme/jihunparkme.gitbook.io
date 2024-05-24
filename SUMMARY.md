@@ -37,9 +37,9 @@
 * [Study](lecture/study/README.md)
   * [Concurrency issues](lecture/study/concurrency-issues.md)
   * [First Come First Served](lecture/study/first-come-first-served-event.md)
+  * [Performance Test](lecture/study/performance-test.md)
   * [TDD](lecture/study/tdd.md)
   * [IntelliJ](lecture/study/intelliJ.md)
-  * [Performance Test](lecture/study/performance-test.md)
 
 ## Book
 
