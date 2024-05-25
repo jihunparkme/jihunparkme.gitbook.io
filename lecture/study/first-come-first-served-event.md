@@ -135,3 +135,5 @@ $ docker exec -it kafka kafka-console-producer.sh --topic testTopic --broker-lis
 $ docker exec -it kafka kafka-console-consumer.sh --topic testTopic --bootstrap-server localhost:9092
 Hello
 ```
+
+[kafka config in spring](https://github.com/jihunparkme/Study-project-spring-java/commit/565a8f6c64847ece55c26edf20f799c390f1247c)
