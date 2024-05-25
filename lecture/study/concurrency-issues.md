@@ -98,6 +98,8 @@ public synchronized void decreases(Long id, Long quantity) {
 
  우리가 만든 클래스를 필드로 가지고 호출하게 되는데 `트랜잭션 종료 전에 다른 스레드가 갱신된 전 값을 읽게 되면` 결국 이전과 동일한 문제가 발생하게 됩니다.
 
+ [@Transactional 과 PROXY](https://velog.io/@chullll/Transactional-%EA%B3%BC-PROXY)
+
  여기서 단순하게 Transactional Annotation 을 제거하여 문제를 해결할 수는 있습니다.
 
 .
@@ -343,6 +345,8 @@ public void decrease(Long key, Long quantity) throws InterruptedException {
 ```
 
 [commit](https://github.com/jihunparkme/Study-project-spring-java/commit/5a916ad7efe8e40d68cce113dc03e8b077c05b5d)
+
+[Spin Lock](https://hogwart-scholars.tistory.com/entry/OS-Spin-Lock-%EC%8A%A4%ED%95%80%EB%9D%BD%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90)
 
 ### Redisson
 
