@@ -120,9 +120,9 @@ Redis 는 `싱글스레드 기반`으로 동작하여 `레이스 컨디션을 �
 Producer ---> Topic <--- Consumer
 ```
 
-**Kafka Example**
+### Start Kafka
 
-docker-compose.yml
+**docker-compose.yml**
 
 ```bash
 version: '3' # Docker Compose 파일 버전 지정
@@ -169,3 +169,97 @@ $ docker-compose down
 ```
 
 [kafka config in spring](https://github.com/jihunparkme/Study-project-spring-java/commit/565a8f6c64847ece55c26edf20f799c390f1247c)
+
+### Producer
+
+**api/KafkaProducerConfig.java**
+
+```java
+@Configuration
+public class KafkaProducerConfig {
+
+    @Bean
+    public ProducerFactory<String, Long> producerFactory() {
+        final Map<String, Object> config = new HashMap<>();
+
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
+
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public KafkaTemplate<String, Long> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
+}
+```
+
+**api/CouponCreateProducer.java**
+
+```java
+@Component
+@RequiredArgsConstructor
+public class CouponCreateProducer {
+
+    private final KafkaTemplate<String, Long> kafkaTemplate;
+
+    public void create(Long userId) {
+        kafkaTemplate.send("coupon_create", userId);
+    }
+}
+```
+
+[using Producer](https://github.com/jihunparkme/Study-project-spring-java/commit/49773a3dc20e49869018a608ffc26addcb9141e4)
+
+### Consumer
+
+**consumer/KafkaConsumerConfig.java**
+
+```java
+@Configuration
+public class KafkaConsumerConfig {
+
+    @Bean
+    public ConsumerFactory<String, Long> consumerFactory() {
+        final Map<String, Object> config = new HashMap<>();
+
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "group_1");
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
+
+        return new DefaultKafkaConsumerFactory<>(config);
+    }
+
+    /**
+     * 토픽으로부터 메시지를 전달받기 위한 kafka-listener 를 만드는 kafka-listener-container-factory 생성
+      */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, Long> kafkaListenerContainerFactory() {
+        final ConcurrentKafkaListenerContainerFactory<String, Long> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+
+        return factory;
+    }
+}
+```
+
+**consumer/CouponCreatedConsumer.java**
+
+```java
+@Component
+@RequiredArgsConstructor
+public class CouponCreatedConsumer {
+
+    private final CouponRepository couponRepository;
+
+    @KafkaListener(topics = "coupon_create", groupId = "group_1")
+    public void listener(Long userId) {
+        couponRepository.save(new Coupon(userId));
+    }
+}
+```
+
+[using Consumer](https://github.com/jihunparkme/Study-project-spring-java/commit/e1e308a15284cf91564119c2d64f9ee21bde355a)
