@@ -120,9 +120,38 @@ Redis 는 `싱글스레드 기반`으로 동작하여 `레이스 컨디션을 �
 Producer ---> Topic <--- Consumer
 ```
 
-Kafka Example
+**Kafka Example**
+
+docker-compose.yml
 
 ```bash
+version: '3' # Docker Compose 파일 버전 지정
+services: # 여러개의 Docker 컨테이너 서비스 정의
+  zookeeper: # Zookeeper 서비스 정의
+    image: wurstmeister/zookeeper:3.4.6
+    container_name: zookeeper
+    ports:
+      - "2181:2181" # 호스트의 2181 포트를 컨테이너의 2181 포트와 바인딩
+  kafka: # kafka 서비스 정의
+    image: wurstmeister/kafka:2.12-2.5.0
+    container_name: kafka
+    ports:
+      - "9092:9092" # 호스트의 9092 포트를 컨테이너의 9092 포트와 바인딩
+    environment: # kafka 컨테이너의 환경 변수 설정
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://localhost:9092 # 내/외부에서 접근할 수 있는 리스너 주소 설정
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT # 리스너의 보안 프로토콜 매핑
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092 # 컨테이너 내부에서 사용할 리스너 주소 설정
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE # 브로커 간 통신에 사용할 리스너 이름
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 # Kafka가 Zookeeper에 연결하기 위한 주소
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Docker 소켓을 컨테이너와 공유하여 Docker 이벤트를 관리할 수 있도록 설정
+
+```
+
+```bash
+# 카프카 실행
+$ docker-compose up -d
+
 # 토픽생성
 $ docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic testTopic
 Created topic testTopic.
@@ -134,6 +163,9 @@ $ docker exec -it kafka kafka-console-producer.sh --topic testTopic --broker-lis
 # 컨슈머 실행
 $ docker exec -it kafka kafka-console-consumer.sh --topic testTopic --bootstrap-server localhost:9092
 Hello
+
+# 카프카 종료
+$ docker-compose down
 ```
 
 [kafka config in spring](https://github.com/jihunparkme/Study-project-spring-java/commit/565a8f6c64847ece55c26edf20f799c390f1247c)
