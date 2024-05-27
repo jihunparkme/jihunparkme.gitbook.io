@@ -148,6 +148,8 @@ services: # 여러개의 Docker 컨테이너 서비스 정의
 
 ```
 
+**example**
+
 ```bash
 # 카프카 실행
 $ docker-compose up -d
@@ -167,8 +169,6 @@ Hello
 # 카프카 종료
 $ docker-compose down
 ```
-
-[kafka config in spring](https://github.com/jihunparkme/Study-project-spring-java/commit/565a8f6c64847ece55c26edf20f799c390f1247c)
 
 ### Producer
 
@@ -211,7 +211,8 @@ public class CouponCreateProducer {
 }
 ```
 
-[using Producer](https://github.com/jihunparkme/Study-project-spring-java/commit/49773a3dc20e49869018a608ffc26addcb9141e4)
+[KafkaProducerConfig](https://github.com/jihunparkme/Study-project-spring-java/commit/565a8f6c64847ece55c26edf20f799c390f1247c)
+[CouponCreateProducer](https://github.com/jihunparkme/Study-project-spring-java/commit/49773a3dc20e49869018a608ffc26addcb9141e4)
 
 ### Consumer
 
