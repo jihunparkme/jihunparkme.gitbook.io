@@ -264,3 +264,26 @@ public class CouponCreatedConsumer {
 ```
 
 [using Consumer](https://github.com/jihunparkme/Study-project-spring-java/commit/e1e308a15284cf91564119c2d64f9ee21bde355a)
+
+## Limit the number of coupons
+
+발급 가능한 쿠폰 개수 1인당 1개로 제한하기.
+
+(1) 데이터베이스 유니크키 사용하기
+- userId, couponType 에 유니크 키를 적용하는 가장 간단한 방법.
+- 보통 서비스는 한 유저가 같은 타입의 쿠폰을 여러개 가질 수 있으므로 실용적인 방법은 아님.
+
+(2) 범위로 락을 잡고 처음에 쿠폰 발급 여부를 가져와서 판단하는 방식
+- 쿠폰 발급 가능 여부만 판단하고 실제 쿠폰 생성은 컨슈머에서 수행하고 있으므로 시간차로 2개 이상의 쿠폰이 발급될 수 있음.
+- 직접 쿠폰을 발급하더라도 락의 범위가 넓어서 다른 요청들은 락이 끝날 때까지 대기상태가 되므로 성능이 안 좋아진다.
+
+(3) Rest 에서 Set 활용하기
+
+```bash
+# add set in redis
+> sadd test 1
+(integer) 1 # 추가된 value 개수
+
+> sadd test 1
+(integer) 0 # 이미 키(test)에 값(1)이 존재하므로 0을 리턴
+```
