@@ -287,3 +287,30 @@ public class CouponCreatedConsumer {
 > sadd test 1
 (integer) 0 # 이미 키(test)에 값(1)이 존재하므로 0을 리턴
 ```
+
+**AppliedUserRepository.java**
+
+```java
+@Repository
+@RequiredArgsConstructor
+public class AppliedUserRepository {
+
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public Long add(Long userId) {
+        return redisTemplate
+                .opsForSet()
+                .add("applied_user", userId.toString());
+    }
+}
+
+...
+
+/* Service */
+final Long apply = appliedUserRepository.add(userId);
+if (apply != 1) {
+    return;
+}
+```
+
+[commit](https://github.com/jihunparkme/Study-project-spring-java/commit/e1a844a4660e2d157faefb6ae5bce467c0677ad5)
