@@ -314,3 +314,11 @@ if (apply != 1) {
 ```
 
 [commit](https://github.com/jihunparkme/Study-project-spring-java/commit/e1a844a4660e2d157faefb6ae5bce467c0677ad5)
+
+## Error issuing coupon
+
+컨슈머에서 쿠폰을 발급 중 에러가 발생할 경우 FailedEvent 엔티티에 실패한 이벤트를 저장합니다.
+
+이후 배치를 통해 FailedEvent 에 쌓인 데이터를 주기적으로 읽어서 쿠폰을 발급해 준다면 결과적으로 특정 수량의 쿠폰이 모두 발급될 수 있습니다.
+
+[commit](https://github.com/jihunparkme/Study-project-spring-java/commit/398a0f5cd4cddd4d3ff572740341b41c6bdaae36)
