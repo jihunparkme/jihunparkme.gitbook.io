@@ -4,7 +4,7 @@
 
 [Github](https://github.com/tobyspringboot/hellospring)
 
-[MY Project]()
+[MY Project](https://github.com/jihunparkme/inflearn-toby-spring-6)
 
 # Intro
 
