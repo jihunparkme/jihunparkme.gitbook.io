@@ -80,3 +80,13 @@ API
 - 클래스가 다르다는 것을 제외하면 관심사의 분리가 잘 된 방법이 아니다.
 
 [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/639866635f4865340f6ddfb0f869849fa40aafb1)
+
+.
+
+### 인터페이스 도입
+- 독립적인 인터페이스를 정의하고 Service 가 사용할 메소드 이름을 정해둔다. 
+  - 이를 각 클래스가 구현하게 만들면 이를 사용하는 쪽에서 의존하는 클래스가 변경되더라도 사용하는 메소드 이름의 변경이 일어나지 않는다.
+- 하지만, 클래스의 인스턴스를 만드는 생성자를 호출하는 코드에는 클래스 이름이 등장하기 때문에 정보를 가져오는 클래스가 변경되면 Service 코드도 일부분이지만 따라서 변경되어야 한다.
+- 여전히 상속을 통한 확장만큼의 유연성도 가지지 못한다.
+
+[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/fe8c44bbe8450ece4c0c1754fd47835c50b2957a)
