@@ -103,9 +103,37 @@ API
 
 [commit]()
 
-## 오브젝트 팩토리
-- Client는 클라이언트로서의 책임과 서비스와 인터페이스 오브젝트 사이의 관계설정 책임을 두 가지를 가지고 있다. -> 관심사의 분리가 필요하다.
+### 오브젝트 팩토리
+- Client는 클라이언트로서의 책임과 서비스와 인터페이스 오브젝트 사이의 관계설정 책임을 두 가지를 가지고 있다. → 관심사의 분리가 필요하다.
 - 클라이언트의 관계설정 책임을 가진 코드를 ObjectFactory라는 이름으로 분리한다. 
   - ObjectFactory는 사용할 클래스를 선정하고 오브젝트를 만들면서 의존관계가 있다면 이를 생성자에 전달해서 만드는 기능을 담당한다.
 
+[commit]()
+
 <figure><img src="../.gitbook/assets/spring6/ObjectFactory.png" alt=""><figcaption></figcaption></figure>
+
+## 원칙과 패턴
+
+객체지향 설계원칙과 객체지향 디자인 패턴
+
+**개방-폐쇄 원칙(Open-Closed Principle)**
+- 클래스나 모듈은 확장에는 열려 있어야 하고 변경에는 닫혀 있어야 한다.
+- 클래스가 기능을 확장할 때 클래스의 코드는 변경되지 않아야 한다.
+- [TheOpenClosedPrinciple](https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html)
+
+**높은 응집도와 낮은 결합도(High Coherence and low coupling)**
+- `응집도`가 높다는 것은 하나의 모듈이 하나의 책임 또는 관심사에 집중되어 있다는 뜻. 
+  - 변화가 일어날 때 해당 모듈에서 변하는 부분이 크다.
+- 책임과 관심사가 다른 모듈과는 낮은 `결합도`, 즉 느슨하게 연결된 형태를 유지하는 것이 바람직하다.
+
+**전략 패턴(Strategy Pattern)**
+- 자신의 기능 맥락(Context)에서, 필요에 따라서 변경이 필요한 알고리즘을 인터페이스를 통해 통째로 외부로 분리시키고, 이를 구현한 구체적인 알고리즘 클래스를 필요에 따라서 바꿔서 사용할 수 있게 하는 디자인 패턴.
+- Collections.sort()는 정렬에 사용할 전략 오브제트를 전달 받아서 사용한다.
+- [strategy](https://refactoring.guru/ko/design-patterns/strategy)
+
+**제어의 역전(Inversion of Control)**
+- 제어권 이전을 통한 제어관계 역전 - 프레임워크의 기본 동작 원리
+- 제어권이 서비스 → 클라이언트 → ObjectFactory 로 이전
+- [InversionOfControl](https://www.martinfowler.com/bliki/InversionOfControl.html)
+- [Spring IoC Container and Beans](https://docs.spring.io/spring-framework/reference/core/beans/introduction.html)
+
