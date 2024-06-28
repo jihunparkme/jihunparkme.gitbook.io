@@ -102,3 +102,10 @@ API
 - 관계설정 책임을 가진 앞의 클래스(Client)는 생성자를 통해서 어떤 클래스의 오브젝트를 사용할지 결정한 것을 전달해주면 된다.
 
 [commit]()
+
+## 오브젝트 팩토리
+- Client는 클라이언트로서의 책임과 서비스와 인터페이스 오브젝트 사이의 관계설정 책임을 두 가지를 가지고 있다. -> 관심사의 분리가 필요하다.
+- 클라이언트의 관계설정 책임을 가진 코드를 ObjectFactory라는 이름으로 분리한다. 
+  - ObjectFactory는 사용할 클래스를 선정하고 오브젝트를 만들면서 의존관계가 있다면 이를 생성자에 전달해서 만드는 기능을 담당한다.
+
+<figure><img src="../.gitbook/assets/spring6/ObjectFactory.png" alt=""><figcaption></figcaption></figure>
