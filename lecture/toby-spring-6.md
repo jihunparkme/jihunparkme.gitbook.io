@@ -108,7 +108,7 @@ API
 - 클라이언트의 관계설정 책임을 가진 코드를 ObjectFactory라는 이름으로 분리한다. 
   - ObjectFactory는 사용할 클래스를 선정하고 오브젝트를 만들면서 의존관계가 있다면 이를 생성자에 전달해서 만드는 기능을 담당한다.
 
-[commit]()
+[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/f52f8f5b2828786cfa276351eb39eade595a44bf)
 
 <figure><img src="../.gitbook/assets/spring6/ObjectFactory.png" alt=""><figcaption></figcaption></figure>
 
@@ -142,3 +142,34 @@ API
 Dependency Injection
 
 [Introduction to the Spring IoC Container and Beans](https://docs.spring.io/spring-framework/reference/core/beans/introduction.html)
+
+**BeanFactory**
+- 스프링의 BeanFactory가 앞에서 만든 ObjectFactory가 제공하던 기능을 대체한다. 
+- BeanFactory는 ObjectFactory의 구성 정보를 참고해서 동작하게 만든다.
+- [The BeanFactory API](https://docs.spring.io/spring-framework/reference/core/beans/beanfactory.html#page-title)
+
+**Bean**
+- 스프링 컨테이너는 빈(bean)이라고 불리는 애플리케이션을 구성하는 오브젝트를 관리하는 기능을 담당한다.
+- [Bean Overview](https://docs.spring.io/spring-framework/reference/core/beans/definition.html)
+
+<figure><img src="../.gitbook/assets/spring6/BeanFactory.png" alt=""><figcaption></figcaption></figure>
+
+**의존관계 주입(Dependency Injection)**
+
+- IoC는 스프링의 동작원리를 정확하게 설명하기에는 너무 일반적인 프레임워크 동작원리를 설명하는 용어이다.
+- 그래서 스프링과 같이 오브젝트의 의존관계에 대한 책임을 스프링과 같은 외부 오브젝트가 담당하도록 만드는 것을 설명하는, 의존관계 주입(Dependency Injection) 패턴, 줄여서 DI라고 불리는 용어가 마틴 파울러에 의해서 제안되었고 스프링 개발자들 사이에서, 또 이 원칙을 따라서 프레임워크를 만들거나 개발 방식을 셜명하는 다른 언어와 기술에서도 넓게 사용되고 있다.
+- 스프링이 처음 등장했던 시기에는 IoC라는 용어를 주로 사용했기 때문에 이후에 DI를 사용하면서도 IoC라는 용어도 같이 쓰이기도 한다. 
+- 스프링은 IoC/DI 컨테이너라는 식으로 설명하는 문서도 많이 있다. 
+- [Inversion of Control Containers and the Dependency Injection pattern](https://martinfowler.com/articles/injection.html)
+
+**컨테이너**
+- 애플리케이션을 구성하는 오브젝트를 만들어서 담아두고 필요할 때 사용하도록 제공하는 기능을 담당
+- 보통 오브젝트를 보관하는 것뿐 아니라 생명주기(lifecycle)까지 담당
+- 스프링 컨테이너는 빈이라고 부르는 오브젝트를 생성하고 의존관계를 설정하는 것까지 담당
+  - 빈 오브젝트의 생명주기를 담당하는 기능도 제공
+
+**구성정보를 가져오는 다른 방법**
+- @Configuration, @Bean 애노테이션이 붙은 구성정보 클래스와 메소드를 통해서 만들어질 오브젝트와 의존관계를 정의하는 코드는, 같은 구성정보를 제공 받을 수 있다면 다양한 다른 방법으로 정의할 수 있다.
+- 예전에 많이 사용하던 XML을 이용하는 방법과 @Component 애노테이션이 붙은 클래스를 모두 찾아보는 빈 스캐닝 방식과 생성자 파라미터를 보고 의존 빈 오브젝트를 선택하는데 필요한 타입 정보를 가져오는 방식을 사용할 수도 있다. 
+- 빈 정보를 스캐닝에 의해서 동적으로 만들어내는 경우에는 @ComponentScan 애노테이션이 사용된다.
+실제로는 빈 스캐닝 방식과 @Configuration/@Bean을 가진 구성정보 클래스 두 가지 방식을 혼합해서 사용한다.
