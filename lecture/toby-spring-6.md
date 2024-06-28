@@ -101,7 +101,7 @@ API
 - 이후에는 오직 인터페이스에만 의존하는 코드가 되기 때문에 어떤 구현 클래스의 오브젝트를 사용하게 되더라도 서비스의 코드가 변경되지 않는다.
 - 관계설정 책임을 가진 앞의 클래스(Client)는 생성자를 통해서 어떤 클래스의 오브젝트를 사용할지 결정한 것을 전달해주면 된다.
 
-[commit]()
+[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/4b5201cf47dcd0f5ffac94ff2cce0e414c477015)
 
 ### 오브젝트 팩토리
 - Client는 클라이언트로서의 책임과 서비스와 인터페이스 오브젝트 사이의 관계설정 책임을 두 가지를 가지고 있다. → 관심사의 분리가 필요하다.
@@ -137,3 +137,8 @@ API
 - [InversionOfControl](https://www.martinfowler.com/bliki/InversionOfControl.html)
 - [Spring IoC Container and Beans](https://docs.spring.io/spring-framework/reference/core/beans/introduction.html)
 
+## 스프링 컨테이너와 의존관계 주입
+
+Dependency Injection
+
+[Introduction to the Spring IoC Container and Beans](https://docs.spring.io/spring-framework/reference/core/beans/introduction.html)
