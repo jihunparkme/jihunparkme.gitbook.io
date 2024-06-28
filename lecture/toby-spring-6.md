@@ -54,7 +54,7 @@ API
 - API로 정보를 가져와서 JSON을 오브젝트에 매핑하는 관심과 응답 객체를 준비하는 로직은 관심이 다르다.
 - 변경의 이유와 시점을 살펴보고 이를 분리하자.
 
-[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/2c818d5bfb4a966432fa8e643e3235355d1dbeb9)
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/2c818d5bfb4a966432fa8e643e3235355d1dbeb9)
 
 .
 
@@ -66,7 +66,7 @@ API
 - 하지만, 자바는 **다중 상속을 허용하지 않**으므로 다른 관심사를 분리할 경우 확장을 이용하기 어렵다.
   - 또한 상위 클래스의 변경에 따라 하위 클래스를 모두 변경해야 하므로 **상속을 통한 확장은 관심사를 분리하기에 한계**가 있다.
 
-[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/184f5ed5d1eb4c84b2e1e08273fe18223398d7f4)
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/184f5ed5d1eb4c84b2e1e08273fe18223398d7f4)
 
 .
 
@@ -79,7 +79,7 @@ API
   - 그래서 클래스가 변경되면 많은 코드가 따라서 변경되어야 한다.
 - 클래스가 다르다는 것을 제외하면 관심사의 분리가 잘 된 방법이 아니다.
 
-[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/639866635f4865340f6ddfb0f869849fa40aafb1)
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/639866635f4865340f6ddfb0f869849fa40aafb1)
 
 .
 
@@ -89,7 +89,7 @@ API
 - 하지만, 클래스의 인스턴스를 만드는 생성자를 호출하는 코드에는 클래스 이름이 등장하기 때문에 정보를 가져오는 클래스가 변경되면 서비스 코드도 일부분이지만 따라서 변경되어야 한다.
 - 여전히 상속을 통한 확장만큼의 유연성도 가지지 못한다.
 
-[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/fe8c44bbe8450ece4c0c1754fd47835c50b2957a)
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/fe8c44bbe8450ece4c0c1754fd47835c50b2957a)
 
 .
 
@@ -101,14 +101,14 @@ API
 - 이후에는 오직 인터페이스에만 의존하는 코드가 되기 때문에 어떤 구현 클래스의 오브젝트를 사용하게 되더라도 서비스의 코드가 변경되지 않는다.
 - 관계설정 책임을 가진 앞의 클래스(Client)는 생성자를 통해서 어떤 클래스의 오브젝트를 사용할지 결정한 것을 전달해주면 된다.
 
-[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/4b5201cf47dcd0f5ffac94ff2cce0e414c477015)
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/4b5201cf47dcd0f5ffac94ff2cce0e414c477015)
 
 ### 오브젝트 팩토리
 - Client는 클라이언트로서의 책임과 서비스와 인터페이스 오브젝트 사이의 관계설정 책임을 두 가지를 가지고 있다. → 관심사의 분리가 필요하다.
 - 클라이언트의 관계설정 책임을 가진 코드를 ObjectFactory라는 이름으로 분리한다. 
   - ObjectFactory는 사용할 클래스를 선정하고 오브젝트를 만들면서 의존관계가 있다면 이를 생성자에 전달해서 만드는 기능을 담당한다.
 
-[commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/f52f8f5b2828786cfa276351eb39eade595a44bf)
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/f52f8f5b2828786cfa276351eb39eade595a44bf)
 
 <figure><img src="../.gitbook/assets/spring6/ObjectFactory.png" alt=""><figcaption></figcaption></figure>
 
@@ -157,7 +157,7 @@ Dependency Injection
 **의존관계 주입(Dependency Injection)**
 
 - IoC는 스프링의 동작원리를 정확하게 설명하기에는 너무 일반적인 프레임워크 동작원리를 설명하는 용어이다.
-- 그래서 스프링과 같이 오브젝트의 의존관계에 대한 책임을 스프링과 같은 외부 오브젝트가 담당하도록 만드는 것을 설명하는, 의존관계 주입(Dependency Injection) 패턴, 줄여서 DI라고 불리는 용어가 마틴 파울러에 의해서 제안되었고 스프링 개발자들 사이에서, 또 이 원칙을 따라서 프레임워크를 만들거나 개발 방식을 셜명하는 다른 언어와 기술에서도 넓게 사용되고 있다.
+- 그래서 스프링과 같이 오브젝트의 의존관계에 대한 책임을 스프링과 같은 외부 오브젝트가 담당하도록 만드는 것을 설명하는, 의존관계 주입(`Dependency Injection`) 패턴, 줄여서 `DI`라고 불리는 용어가 마틴 파울러에 의해서 제안되었고 스프링 개발자들 사이에서, 또 이 원칙을 따라서 프레임워크를 만들거나 개발 방식을 셜명하는 다른 언어와 기술에서도 넓게 사용되고 있다.
 - 스프링이 처음 등장했던 시기에는 IoC라는 용어를 주로 사용했기 때문에 이후에 DI를 사용하면서도 IoC라는 용어도 같이 쓰이기도 한다. 
 - 스프링은 IoC/DI 컨테이너라는 식으로 설명하는 문서도 많이 있다. 
 - [Inversion of Control Containers and the Dependency Injection pattern](https://martinfowler.com/articles/injection.html)
@@ -173,3 +173,5 @@ Dependency Injection
 - 예전에 많이 사용하던 XML을 이용하는 방법과 @Component 애노테이션이 붙은 클래스를 모두 찾아보는 빈 스캐닝 방식과 생성자 파라미터를 보고 의존 빈 오브젝트를 선택하는데 필요한 타입 정보를 가져오는 방식을 사용할 수도 있다. 
 - 빈 정보를 스캐닝에 의해서 동적으로 만들어내는 경우에는 @ComponentScan 애노테이션이 사용된다.
 - 실제로는 빈 스캐닝 방식과 @Configuration/@Bean을 가진 구성정보 클래스 두 가지 방식을 혼합해서 사용한다.
+
+> [commit]()
