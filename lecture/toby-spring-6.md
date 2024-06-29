@@ -208,3 +208,5 @@ Dependency Injection
 - 가능하면 오브젝트 합성을 상속보다 더 선호하라는 디자인 패턴의 기본 객체지향 원리를 따른 것이다.
 - [전략 패턴](https://refactoring.guru/design-patterns/strategy)은 오브젝트 합성을 이용
 - [데코레이터 패턴](https://refactoring.guru/design-patterns/decorator) : 오브젝트에 부가적인 기능/책임을 동적으로 부여하는 디자인 패턴
+
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/ea6552ae0031abc3dfe60fac16923b6d4fb44772)
