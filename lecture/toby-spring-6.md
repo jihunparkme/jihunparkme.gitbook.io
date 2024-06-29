@@ -191,3 +191,20 @@ Dependency Injection
 - 스프링의 빈이 생성되고 적용되는 범위를 빈의 스코프(scope)라고 부른다. 
 - 스프링은 기본적으로 빈 오브젝트가 싱글톤 스코프를 가지도록 한다.
 - 필요에 따라 여러 개의 빈 오브젝트가 만들어지도록 할 수도 있다. 
+
+## DI와 디자인 패턴
+
+디자인 패턴을 구분하는 두 가지 방식
+- 사용 목적(purpose)
+- 스코프(scope)
+ 
+스코프에 의해서 분류하면 확장성을 가진 클래스 패턴과 오브젝트 패턴으로 나눌 수 있다.
+- 클래스 패턴: 상속(inheritance)을 이용
+- 오브젝트 패턴: 합성(composition)을 이용
+  
+<figure><img src="../.gitbook/assets/spring6/design-pattern.png" alt=""><figcaption></figcaption></figure>
+
+대부분의 디자인 패턴은 오브젝트 패턴이다. 
+- 가능하면 오브젝트 합성을 상속보다 더 선호하라는 디자인 패턴의 기본 객체지향 원리를 따른 것이다.
+- [전략 패턴](https://refactoring.guru/design-patterns/strategy)은 오브젝트 합성을 이용
+- [데코레이터 패턴](https://refactoring.guru/design-patterns/decorator) : 오브젝트에 부가적인 기능/책임을 동적으로 부여하는 디자인 패턴
