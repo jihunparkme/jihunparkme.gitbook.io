@@ -162,6 +162,8 @@ Dependency Injection
 - 스프링은 IoC/DI 컨테이너라는 식으로 설명하는 문서도 많이 있다. 
 - [Inversion of Control Containers and the Dependency Injection pattern](https://martinfowler.com/articles/injection.html)
 
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/f32e4577d35f9cde56af818dc66f0c302c47a0f5)
+
 **컨테이너**
 - 애플리케이션을 구성하는 오브젝트를 만들어서 담아두고 필요할 때 사용하도록 제공하는 기능을 담당
 - 보통 오브젝트를 보관하는 것뿐 아니라 생명주기(lifecycle)까지 담당
@@ -174,7 +176,7 @@ Dependency Injection
 - 빈 정보를 스캐닝에 의해서 동적으로 만들어내는 경우에는 @ComponentScan 애노테이션이 사용된다.
 - 실제로는 빈 스캐닝 방식과 @Configuration/@Bean을 가진 구성정보 클래스 두 가지 방식을 혼합해서 사용한다.
 
-> [commit]()
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/585e05e625b0645be0e30c69b0b92553d978929c)
 
 ## 싱글톤 레지스트리(Singleton Registry)
 
