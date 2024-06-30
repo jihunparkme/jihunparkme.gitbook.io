@@ -210,3 +210,34 @@ Dependency Injection
 - [데코레이터 패턴](https://refactoring.guru/design-patterns/decorator) : 오브젝트에 부가적인 기능/책임을 동적으로 부여하는 디자인 패턴
 
 > [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/ea6552ae0031abc3dfe60fac16923b6d4fb44772)
+
+## 의존성 역전 원칙(Dependency Inversion Principle)
+
+- (1). 상위 수준의 모듈(ex. package)은 하위 수준의 모듈에 의존해서는 안 된다. 
+  - 둘 모두 `추상화`에 의존해야 한다.
+- (2). 추상화는 구체적인 사항에 의존해서는 안 된다. 
+  - 구체적인 사항은 `추상화`에 의존해야 한다.
+
+DIP는 먼저 `인터페이스`를 통해서 추상화에 의존하도록 코드를 만들어야 한다.
+- 그리고 인터페이스 소유권의 역전도 필요하다
+
+**Separate Interface Pattern**
+- 인터페이스와 그 구현을 별개의 패키지에 위치시키는 패턴
+- 인터페이스를 이를 구현한 클래스와 같은 패키지가 아닌 이 **인터페이스를 사용하는 클라이언트와 같은 패키지에 위치**하게 한다. 
+- 만약 이를 사용하는 클래스가 여럿인 경우에는 별개의 패키지로 인터페이스 구분해둘 수 있다.
+- [separatedInterface](https://martinfowler.com/eaaCatalog/separatedInterface.html)
+
+<p align="center" width="100%">
+    <img src="../.gitbook/assets/spring6/DIP-1.png" width="41%">
+    <img src="../.gitbook/assets/spring6/DIP-2.png" width="40%">
+</p>
+
+> 의존성 역전 원칙을 잘 따르는 코드를 만드는 방법.
+>
+> (1) 인터페이스를 만들어서 추상화하기.
+>
+> (2) 모든 코드가 추상화에만 의존하도록 만들기.
+>
+> (3) 인터페이스를 사용하는 코드가 있는 모듈로 이전(역전)시키기.
+>
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/61fd849e5f17e40aaf686869acb5603427e6478a)
