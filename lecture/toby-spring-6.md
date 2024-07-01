@@ -253,3 +253,18 @@ DIP는 먼저 `인터페이스`를 통해서 추상화에 의존하도록 코드
 - 테스트를 코드로 만들고 자동으로 수행되는 테스트를 실행해서 작성한 코드에 대한 피드백
 - 테스트 작성과 실행이 개발을 하는 과정의 일부
 - 테스팅 프레임워크를 이용해서 테스트 작성과 실행 과정을 효율적으로 진행
+
+.
+
+**JUnit 테스트 작성**
+- JUnit은 켄트 벡과 에릭 감마가 처음 개발한 가장 대표적인 자동화된 테스트 수행 도구
+- 자바 외의 다른 언어로도 유사하게 개발되어지면서 이를 통틀어 xUnit이라고 불림
+
+JUnit 5
+- 스프링 프레임워크 자체 테스트에 사용되고, 스프링을 이용해서 개발하는 프로젝트에서도 가장 많이 사용
+- Junit은 기본적인 동작방식으로 각 테스트를 실행할 때마다 매번 새로운 인스턴스를 생성
+  - 모든 테스트가 다른 테스트에 영향을 받지 않고, 독립적으로 실행되도록
+- [JUnit 5](https://junit.org/junit5/)
+- [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
+
+> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/967910b5e928ac41b3cf3eeea0d52bd9f49ee0bb)
