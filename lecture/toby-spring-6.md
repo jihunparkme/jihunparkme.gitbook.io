@@ -283,3 +283,30 @@ JUnit 5
 테스트 대역(`Test Double`, Imposter), 스텁(`Stub`), 목(`Mock`)
 - [Test Double](https://martinfowler.com/bliki/TestDouble.html)
 - [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)
+
+> [commit](----)
+
+.
+
+**스프링 DI를 이용하는 테스트**
+- 스프링 컨테이너를 구성하고 여기서 테스트에 필요한 대상과 의존 오브젝트를 설정하거나 테스트에서 참고할 빈 오브젝트를 가져오게 할 수 있다.
+
+스프링은 방대한 양의 테스팅 지원 기술을 제공한다.
+  - [Spring Testing](https://docs.spring.io/spring-framework/reference/testing.html)
+
+JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@ExtendWith`과 `@ContextConfiguration`을 이용한다.
+
+.
+
+**`@ExtendedWith`**
+- JUnit5 테스트 클래스가 스프링 테스팅 기능을 사용하도록 지정
+- `@ContextConfiguration`과 결합된 합성 애노테이션인 `@SpringJUnitConfig`을 이용할 수도 있다.
+- [@SpringJUnitConfig](https://docs.spring.io/spring-framework/reference/testing/annotations/integration-junit-jupiter.html#integration-testing-annotations-junit-jupiter-springjunitconfig)
+
+**`@ContextConfiguration`**
+- [@ContextConfiguration](https://docs.spring.io/spring-framework/reference/testing/annotations/integration-spring/annotation-contextconfiguration.html#page-title)
+
+**`Autowired`**
+- 테스트 코드에 @Autowired가 붙은 인스턴스 변수를 선언하며 스프링 테스트에 의해서 인스턴스 변수의 타입과 일치하는 스프링 컨테이너의 빈 오브젝트를 주입해준다.
+- @Autowired 외에도 스프링에서 지원하는 여러가지 종류의 애노테이션을 지원한다.
+- [Standard Annotation Support](https://docs.spring.io/spring-framework/reference/testing/annotations/integration-standard.html#pagetitle)
