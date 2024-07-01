@@ -280,6 +280,6 @@ JUnit 5
 
 ## 테스트와 DI
 
-테스트 대역(Test Double, Imposter), 스텁(Stub), 목(Mock)
+테스트 대역(`Test Double`, Imposter), 스텁(`Stub`), 목(`Mock`)
 - [Test Double](https://martinfowler.com/bliki/TestDouble.html)
 - [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)
