@@ -310,3 +310,11 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 - 테스트 코드에 @Autowired가 붙은 인스턴스 변수를 선언하며 스프링 테스트에 의해서 인스턴스 변수의 타입과 일치하는 스프링 컨테이너의 빈 오브젝트를 주입해준다.
 - @Autowired 외에도 스프링에서 지원하는 여러가지 종류의 애노테이션을 지원한다.
 - [Standard Annotation Support](https://docs.spring.io/spring-framework/reference/testing/annotations/integration-standard.html#pagetitle)
+
+.
+
+**학습 테스트(Learning Test)**
+- 켄트 벡의 테스트주도개발이라는 책에서 소개된 테스트 방법의 한 가지
+- 학습 테스트는 내가 만들지 않은 코드, 라이브러리, API 등에 대한 테스트
+- 학습 테스트의 목적은 사용할 API나 프레임워크의 기능을 테스트로 작성하고 실행해보면서 사용방법을 바르게 이해했는지 확인
+- 학습 테스트는 켄트 벡의 테스트 주도 개발과 로버트 마틴의 클린 코드에서 소개
