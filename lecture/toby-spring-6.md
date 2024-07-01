@@ -268,3 +268,12 @@ JUnit 5
 - [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
 
 > [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/967910b5e928ac41b3cf3eeea0d52bd9f49ee0bb)
+
+.
+
+**PaymentService 테스트**
+- 자동화된 테스트는 언제든 실행할 수 있고 항상 동일한 테스트 결과를 얻어야 한다.
+- 때로는 외부 시스템에 대한 테스트, 현재 시간과 같이 코드에서 쉽게 제어할 수 없는 값을 이용하는 테스트를 작성해야 하는데, 이런 경우에 일관된 결과를 보장하는 테스트 코드를 작성하기가 쉽지 않다.
+- [System Under Test(SUT)](http://xunitpatterns.com/SUT.html)
+
+> [commit](----)
