@@ -54,7 +54,7 @@ API
 - API로 정보를 가져와서 JSON을 오브젝트에 매핑하는 관심과 응답 객체를 준비하는 로직은 관심이 다르다.
 - 변경의 이유와 시점을 살펴보고 이를 분리하자.
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/2c818d5bfb4a966432fa8e643e3235355d1dbeb9)
+> [관심사의 분리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/2c818d5bfb4a966432fa8e643e3235355d1dbeb9)
 
 .
 
@@ -66,7 +66,7 @@ API
 - 하지만, 자바는 **다중 상속을 허용하지 않**으므로 다른 관심사를 분리할 경우 확장을 이용하기 어렵다.
   - 또한 상위 클래스의 변경에 따라 하위 클래스를 모두 변경해야 하므로 **상속을 통한 확장은 관심사를 분리하기에 한계**가 있다.
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/184f5ed5d1eb4c84b2e1e08273fe18223398d7f4)
+> [상속을 통한 확장](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/184f5ed5d1eb4c84b2e1e08273fe18223398d7f4)
 
 .
 
@@ -79,7 +79,7 @@ API
   - 그래서 클래스가 변경되면 많은 코드가 따라서 변경되어야 한다.
 - 클래스가 다르다는 것을 제외하면 관심사의 분리가 잘 된 방법이 아니다.
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/639866635f4865340f6ddfb0f869849fa40aafb1)
+> [클래스의 분리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/639866635f4865340f6ddfb0f869849fa40aafb1)
 
 .
 
@@ -89,7 +89,7 @@ API
 - 하지만, 클래스의 인스턴스를 만드는 생성자를 호출하는 코드에는 클래스 이름이 등장하기 때문에 정보를 가져오는 클래스가 변경되면 서비스 코드도 일부분이지만 따라서 변경되어야 한다.
 - 여전히 상속을 통한 확장만큼의 유연성도 가지지 못한다.
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/fe8c44bbe8450ece4c0c1754fd47835c50b2957a)
+> [인터페이스 도입](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/fe8c44bbe8450ece4c0c1754fd47835c50b2957a)
 
 .
 
@@ -101,14 +101,14 @@ API
 - 이후에는 오직 인터페이스에만 의존하는 코드가 되기 때문에 어떤 구현 클래스의 오브젝트를 사용하게 되더라도 서비스의 코드가 변경되지 않는다.
 - 관계설정 책임을 가진 앞의 클래스(Client)는 생성자를 통해서 어떤 클래스의 오브젝트를 사용할지 결정한 것을 전달해주면 된다.
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/4b5201cf47dcd0f5ffac94ff2cce0e414c477015)
+> [관계설정 책임의 분리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/4b5201cf47dcd0f5ffac94ff2cce0e414c477015)
 
 ### 오브젝트 팩토리
 - Client는 클라이언트로서의 책임과 서비스와 인터페이스 오브젝트 사이의 관계설정 책임을 두 가지를 가지고 있다. → 관심사의 분리가 필요하다.
 - 클라이언트의 관계설정 책임을 가진 코드를 ObjectFactory라는 이름으로 분리한다. 
   - ObjectFactory는 사용할 클래스를 선정하고 오브젝트를 만들면서 의존관계가 있다면 이를 생성자에 전달해서 만드는 기능을 담당한다.
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/f52f8f5b2828786cfa276351eb39eade595a44bf)
+> [오브젝트 팩토리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/f52f8f5b2828786cfa276351eb39eade595a44bf)
 
 <figure><img src="../.gitbook/assets/spring6/ObjectFactory.png" alt=""><figcaption></figcaption></figure>
 
@@ -162,7 +162,7 @@ Dependency Injection
 - 스프링은 IoC/DI 컨테이너라는 식으로 설명하는 문서도 많이 있다. 
 - [Inversion of Control Containers and the Dependency Injection pattern](https://martinfowler.com/articles/injection.html)
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/f32e4577d35f9cde56af818dc66f0c302c47a0f5)
+> [스프링 컨테이너와 의존관계 주입](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/f32e4577d35f9cde56af818dc66f0c302c47a0f5)
 
 **컨테이너**
 - 애플리케이션을 구성하는 오브젝트를 만들어서 담아두고 필요할 때 사용하도록 제공하는 기능을 담당
@@ -176,7 +176,7 @@ Dependency Injection
 - 빈 정보를 스캐닝에 의해서 동적으로 만들어내는 경우에는 @ComponentScan 애노테이션이 사용된다.
 - 실제로는 빈 스캐닝 방식과 @Configuration/@Bean을 가진 구성정보 클래스 두 가지 방식을 혼합해서 사용한다.
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/585e05e625b0645be0e30c69b0b92553d978929c)
+> [구성정보를 가져오는 다른 방법](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/585e05e625b0645be0e30c69b0b92553d978929c)
 
 ## 싱글톤 레지스트리(Singleton Registry)
 
@@ -209,7 +209,7 @@ Dependency Injection
 - [전략 패턴](https://refactoring.guru/design-patterns/strategy)은 오브젝트 합성을 이용
 - [데코레이터 패턴](https://refactoring.guru/design-patterns/decorator) : 오브젝트에 부가적인 기능/책임을 동적으로 부여하는 디자인 패턴
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/ea6552ae0031abc3dfe60fac16923b6d4fb44772)
+> [design-patterns](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/ea6552ae0031abc3dfe60fac16923b6d4fb44772)
 
 ## 의존성 역전 원칙(Dependency Inversion Principle)
 
@@ -240,7 +240,7 @@ DIP는 먼저 `인터페이스`를 통해서 추상화에 의존하도록 코드
 >
 > (3) 인터페이스를 사용하는 코드가 있는 모듈로 이전(역전)시키기.
 >
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/61fd849e5f17e40aaf686869acb5603427e6478a)
+> [의존성 역전 원칙(DIP)](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/61fd849e5f17e40aaf686869acb5603427e6478a)
 
 # 테스트
 
@@ -267,7 +267,7 @@ JUnit 5
 - [JUnit 5](https://junit.org/junit5/)
 - [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
 
-> [commit](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/967910b5e928ac41b3cf3eeea0d52bd9f49ee0bb)
+> [JUnit 테스트 작성](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/967910b5e928ac41b3cf3eeea0d52bd9f49ee0bb)
 
 .
 
@@ -276,7 +276,7 @@ JUnit 5
 - 때로는 외부 시스템에 대한 테스트, 현재 시간과 같이 코드에서 쉽게 제어할 수 없는 값을 이용하는 테스트를 작성해야 하는데, 이런 경우에 일관된 결과를 보장하는 테스트 코드를 작성하기가 쉽지 않다.
 - [System Under Test(SUT)](http://xunitpatterns.com/SUT.html)
 
-> [commit](----)
+> [PaymentServiceTest](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/0d75d41c123feb4560d7c4ef5596eb5ff80ba3e7)
 
 ## 테스트와 DI
 
@@ -284,7 +284,7 @@ JUnit 5
 - [Test Double](https://martinfowler.com/bliki/TestDouble.html)
 - [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)
 
-> [commit](----)
+> [Stub Test](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/0f3552b0d8d7a33fca0a7029f001b39450936c6e)
 
 .
 
@@ -310,6 +310,8 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 - 테스트 코드에 @Autowired가 붙은 인스턴스 변수를 선언하며 스프링 테스트에 의해서 인스턴스 변수의 타입과 일치하는 스프링 컨테이너의 빈 오브젝트를 주입해준다.
 - @Autowired 외에도 스프링에서 지원하는 여러가지 종류의 애노테이션을 지원한다.
 - [Standard Annotation Support](https://docs.spring.io/spring-framework/reference/testing/annotations/integration-standard.html#pagetitle)
+
+> [Spring Test](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/8470fb491faa1484a353048ecd253132db96b603)
 
 .
 
