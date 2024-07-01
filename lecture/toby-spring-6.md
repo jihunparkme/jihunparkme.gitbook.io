@@ -256,7 +256,7 @@ DIP는 먼저 `인터페이스`를 통해서 추상화에 의존하도록 코드
 
 .
 
-**JUnit 테스트 작성**
+## JUnit 테스트
 - JUnit은 켄트 벡과 에릭 감마가 처음 개발한 가장 대표적인 자동화된 테스트 수행 도구
 - 자바 외의 다른 언어로도 유사하게 개발되어지면서 이를 통틀어 xUnit이라고 불림
 
@@ -277,3 +277,9 @@ JUnit 5
 - [System Under Test(SUT)](http://xunitpatterns.com/SUT.html)
 
 > [commit](----)
+
+## 테스트와 DI
+
+테스트 대역(Test Double, Imposter), 스텁(Stub), 목(Mock)
+- [Test Double](https://martinfowler.com/bliki/TestDouble.html)
+- [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)
