@@ -319,3 +319,7 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 - 학습 테스트는 내가 만들지 않은 코드, 라이브러리, API 등에 대한 테스트
 - 학습 테스트의 목적은 사용할 API나 프레임워크의 기능을 테스트로 작성하고 실행해보면서 사용방법을 바르게 이해했는지 확인
 - 학습 테스트는 켄트 벡의 테스트 주도 개발과 로버트 마틴의 클린 코드에서 소개
+
+> [Learning Test](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/c6e073ed49b2cdb69168f08c50815896ecb0b9fc)
+>
+> [Clock을 이용한 시간 테스트](https://jihunparkme.gitbook.io/docs/)
