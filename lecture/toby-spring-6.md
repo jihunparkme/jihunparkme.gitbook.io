@@ -290,13 +290,12 @@ JUnit 5
 
 **스프링 DI를 이용하는 테스트**
 - 스프링 컨테이너를 구성하고 여기서 테스트에 필요한 대상과 의존 오브젝트를 설정하거나 테스트에서 참고할 빈 오브젝트를 가져오게 할 수 있다.
-
-스프링은 방대한 양의 테스팅 지원 기술을 제공한다.
+- 스프링은 방대한 양의 테스팅 지원 기술을 제공한다.
   - [Spring Testing](https://docs.spring.io/spring-framework/reference/testing.html)
 
-JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@ExtendWith`과 `@ContextConfiguration`을 이용한다.
-
 .
+
+JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@ExtendWith`과 `@ContextConfiguration`을 이용한다.
 
 **`@ExtendedWith`**
 - JUnit5 테스트 클래스가 스프링 테스팅 기능을 사용하도록 지정
