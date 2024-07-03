@@ -333,11 +333,10 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 
 > [도메인 오브젝트 테스트](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/fd74eb03f48aad8bc86f8c4076db846488e1d5a6)
 
-# 템플릿
+.
 
-**스프링과 JDK 업그레이드**
-- 새로운 스프링 부트 프로젝트를 생성 후 참고해서 변경
-  - `gradle/wrapper/gradle-wrapper.properties`
-  - `build.gradle`
-  - `settings.gradle`
-- 변경된 라이브러리 버전 확인
+**개발자가 만드는 테스트**
+- 개발한 코드에 대한 검증 기능을 코드로 작성
+- 자동으로 테스트를 수행하고 결과를 확인
+- 테스팅 프레임워크를 활용
+- 테스트 작성과 실행도 개발 과정의 일부이다
