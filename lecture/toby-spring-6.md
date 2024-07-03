@@ -323,3 +323,12 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 > [Learning Test](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/c6e073ed49b2cdb69168f08c50815896ecb0b9fc)
 >
 > [Clock을 이용한 시간 테스트](https://jihunparkme.gitbook.io/docs/)
+
+.
+
+**도메인 모델 아키텍처 패턴**
+- 도메인 로직, 비즈니스 로직을 어디에 둘 지 결정하는 패턴
+  - (1) 트랜잭션 스크립트 - 서비스 메소드(PaymentService.prepare)
+  - (2) 도메인 모델 - 도메인 모델 오브젝트(Payment)
+
+> [도메인 오브젝트 테스트](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/fd74eb03f48aad8bc86f8c4076db846488e1d5a6)
