@@ -332,3 +332,12 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
   - (2) 도메인 모델 - 도메인 모델 오브젝트(Payment)
 
 > [도메인 오브젝트 테스트](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/fd74eb03f48aad8bc86f8c4076db846488e1d5a6)
+
+# 템플릿
+
+**스프링과 JDK 업그레이드**
+- 새로운 스프링 부트 프로젝트를 생성 후 참고해서 변경
+  - `gradle/wrapper/gradle-wrapper.properties`
+  - `build.gradle`
+  - `settings.gradle`
+- 변경된 라이브러리 버전 확인
