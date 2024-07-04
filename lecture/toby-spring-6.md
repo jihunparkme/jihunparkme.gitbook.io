@@ -371,10 +371,17 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 <figure><img src="../.gitbook/assets/spring6/template-callback.png" alt=""><figcaption></figcaption></figure>
 
 > 패턴 적용 전 리펙토링
-> - []()
+> - [WebApiExRateProvider](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/c10ca6966ded0515d659a70a39b91d257f55791a)
+> - [변하는 코드 분리하기 / 메소드 추출](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/67a4843d1797e46833f8f829e67d7a52a5826ffc)
+> - [변하지 않는 코드 분리하기 / 메소드 추출](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/18435175527e930ef8658c43f8604208cd6b3e9d)
+> - [ApiExecutor 분리 / 인터페이스 도입과 클래스 분리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/bc868838c1345774365681379abbbaa22d15f75a)
 >
 > 패턴 적용
-> - []()
+> - [ApiExecutor 콜백과 메소드 주입](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/45e49607778011c98ddf40ba2637563147dd3dc2)
+> - [ExRateExtractor 콜백](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/cea96e69f4a4a8b4c97c06a0316acbe3f29bf1be)
+> - [ApiTemplate 분리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/d2fabeb718af150eee587552bbab7cf68daf016b)
+
+
 
 
 
