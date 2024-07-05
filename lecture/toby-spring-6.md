@@ -382,11 +382,11 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 > - [ApiTemplate 분리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/d2fabeb718af150eee587552bbab7cf68daf016b)
 >
 > 디폴트 콜백과 템플릿 빈 적용
-> - 디폴트 콜백과 템플릿 빈]()
+> - [디폴트 콜백과 템플릿 빈](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/31cb20d8130890a4d44090b669b905b73fafe7b6)
 
 ## 스프링 제공 템플릿
 
-## RestTemplate
+### RestTemplate
 
 [RestTemplate](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-resttemplate) 는  HTTP API 요청을 처리하는 템플릿
 
@@ -419,7 +419,9 @@ protected <T> T doExecute(URI url, @Nullable String uriTemplate, @Nullable HttpM
   - T extractData㏗ClientHttpResponse response㏘ throws IOException;
 - `execute()`, `getForObject()`, `postForEntity()` 등 편리한 메소드 제공
 
-> [RestTemplate 활용]()
+> [RestTemplate 활용](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/25d41edb30ee6b5b4ef984c2cd83d692d1e3d5ce)
+
+### In addition
 
 **JdbcTemplate**
 - SQL 쿼리를 수행하거나 등록, 수정, 프로시저 호출을 할 때 사용할 수 있는 템플릿
@@ -436,10 +438,11 @@ protected <T> T doExecute(URI url, @Nullable String uriTemplate, @Nullable HttpM
 - JDBC, JPA, MyBatis, Hibernate 등의 다양한 데이터 기술에 모두 사용 가능
 - [Programmatic Transaction Management](https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html#tx-progtemplate)
 
-그밖에도
-- **JmsTemplate**
-- **HibernateTemplate**
-- **SqlSessionTemplate**
+**JmsTemplate**
+
+**HibernateTemplate**
+
+**SqlSessionTemplate**
 
 
 
