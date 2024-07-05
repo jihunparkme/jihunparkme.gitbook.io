@@ -444,6 +444,36 @@ protected <T> T doExecute(URI url, @Nullable String uriTemplate, @Nullable HttpM
 
 **SqlSessionTemplate**
 
+# 예외
+
+[The Java Tutorials Exceptions](https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html)
+
+예외는 정상적인 흐름의 진행을 어렵게 만드는 이벤트
+- 예외적인 상황에서만 사용
+- 많은 경우 프로그램 오류, 버그로 발생
+- 재시도, 대안을 통해 예외 상황을 복구해서 정상 흐름으로 전환을 대비
+
+**Error**
+- 시스템에 `비정상적인 상황`이 발생했을 때 사용되고 주로 JVM에서 발생
+- 일반적으로 애플리케이션에서 `복구를 기대할 수 없는 종류`의 예외의 슈퍼 클래스
+- OutOfMemoryError, ThreadDeath
+
+**Exception (checked exception)**
+- Exception은 애플리케이션이 `복구를 기대할 수도 있는 모든 예외`의 슈퍼 클래스
+  - 복구할 수 없다면 RuntimeException이나 적절한 추상화 레벨의 예외로 전환해서 던지기
+- 언체크 예외/런타임 예외가 아닌 `애플리케이션에서 발생되는 예외`는 체크 예외로 분류
+- 체크 예외는 `catch`를 사용해서 잡아내든가, 메소드에서 `throws`를 정의해서 메소드 밖으로 던져야 함
+
+**RuntimeException (unchecked exception)**
+- 명시적인 `예외처리가 강제되지 않음`
+- catch/throws를 쓰지 않아도 문제 없이 컴파일
+
+
+
+
+
+
+
 
 
 
