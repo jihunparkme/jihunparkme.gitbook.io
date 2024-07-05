@@ -380,8 +380,46 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 > - [ApiExecutor 콜백과 메소드 주입](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/45e49607778011c98ddf40ba2637563147dd3dc2)
 > - [ExRateExtractor 콜백](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/cea96e69f4a4a8b4c97c06a0316acbe3f29bf1be)
 > - [ApiTemplate 분리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/d2fabeb718af150eee587552bbab7cf68daf016b)
+>
+> 디폴트 콜백과 템플릿 빈 적용
+> - 디폴트 콜백과 템플릿 빈]()
 
 ## 스프링 제공 템플릿
+
+## RestTemplate
+
+[RestTemplate](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-resttemplate) 는  HTTP API 요청을 처리하는 템플릿
+
+- 가장 전형적인 스프링의 템플릿과 콜백 기술을 사용한 기술
+- 스프링이 제공하는 가장 오래된 동기 방식의 REST 클라이언트 기술의 하나
+- GET, POST 메소드를 사용하는 간단한 HTTP API를 호출할 때 사용하기에 편리
+- 다양한 HTTP API 기술을 이용하도록 만들 수 있다.
+- 최근에 스프링에 추가된 RestClient을 이용하면 모던한 API 스타일로 된 HTTP API를 호출하는 코드를 만들 수 있고, 여러가지 콜백 오브젝트를 지원
+
+**HTTP Client 라이브러리 확장** : [ClientHttpRequestFactory](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/client/ClientHttpRequestFactory.html)
+  - HTTP Client 기술을 사용해서 ClientHttpRequest를 생성하는 전략
+    - SimpleClientHttpRequest (HttpURLConnection)
+    - JdkClientHttpRequest (HttpClient)
+    - NettyClientRequest
+    - JettyClientRequest
+    - OkHttp3ClientReque
+
+**Message Body 변환 전략** : [HttpMessageConverter](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/converter/HttpMessageConverter.html)
+
+**RestTemplate.doExecute()**
+
+```java
+protected <T> T doExecute(URI url, @Nullable String uriTemplate, @Nullable HttpMethod method, @Nullable RequestCallback requestCallback, @Nullable ResponseExtractor<T> responseExtractor) throws RestClientException {
+```
+
+- HTTP API 호출 workflow를 가지고 있는 템플릿 메소드로 두 개의 콜백을 받음
+- `RequestCallback`
+  - void doWithRequest㏗ClientHttpRequest request㏘ throws IOException;
+- `ResponseExtractor`
+  - T extractData㏗ClientHttpResponse response㏘ throws IOException;
+- `execute()`, `getForObject()`, `postForEntity()` 등 편리한 메소드 제공
+
+> [RestTemplate 활용]()
 
 **JdbcTemplate**
 - SQL 쿼리를 수행하거나 등록, 수정, 프로시저 호출을 할 때 사용할 수 있는 템플릿
@@ -392,21 +430,16 @@ JUnit에서 스프링 컨테이너를 만들어 테스트를 수행할 때 `@Ext
 - [Unified JDBC Query/Update Operations: JdbcClient](https://docs.spring.io/spring-framework/reference/data-access/jdbc/core.html#jdbc-JdbcClient)
 - JdbcTemplate에서 사용하는 RowMapper와 같은 콜백 사용 가능
 
-**RestTemplate**
-- 스프링이 제공하는 가장 오래된 동기 방식의 REST 클라이언트 기술의 하나
-- GET, POST 메소드를 사용하는 간단한 HTTP API를 호출할 때 사용하기에 편리
-- 다양한 HTTP API 기술을 이용하도록 만들 수 있다.
-- [RestTemplate](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-resttemplate)
-- 최근에 스프링에 추가된 RestClient을 이용하면 모던한 API 스타일로 된 HTTP API를 호출하는 코드를 만들 수 있고, 여러가지 콜백 오브젝트를 지원
-
 **TransactionTemplate**
 - 스프링의 트랜잭션 추상화 기술과 함께 사용 가능한 데이터 트랜잭션 작업용 템플릿
 - @Transactional이 제공하는 트랜잭션 경계설정 기능을 TransactionTemplate으로도 모두 적용 가능
 - JDBC, JPA, MyBatis, Hibernate 등의 다양한 데이터 기술에 모두 사용 가능
 - [Programmatic Transaction Management](https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html#tx-progtemplate)
 
-
-
+그밖에도
+- **JmsTemplate**
+- **HibernateTemplate**
+- **SqlSessionTemplate**
 
 
 
