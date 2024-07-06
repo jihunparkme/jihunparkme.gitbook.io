@@ -468,11 +468,24 @@ protected <T> T doExecute(URI url, @Nullable String uriTemplate, @Nullable HttpM
 - 명시적인 `예외처리가 강제되지 않음`
 - catch/throws를 쓰지 않아도 문제 없이 컴파일
 
+# JPA
 
+자바에서 RDB를 사용하는 모든 기술(JDBC, JPA, MyBatis..)은 DB와의 연결 정보를 관리하는 DataSource를 사용
+- [Connecting with DataSource Objects](https://docs.oracle.com/javase/tutorial/jdbc/basics/sqldatasources.html)
 
+**EmbeddedDatabaseBuilder**
+- 애플리케이션 내장형 DB(H2, HSQL, Derby)를 빠르게 셋업하고 DataSource를 생성하는데 사용하는 빌더
+- [Class EmbeddedDatabaseBuilder](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/datasource/embedded/EmbeddedDatabaseBuilder.html)
 
+**LocalContainerEntityManagerFactoryBean**
+- EntityManagerFactory를 XML 없이 스프링의 빈 설정용 팩토리 메소드에서 간단히 생성하는데 사용
+- [Using LocalContainerEntityManagerFactoryBean](https://docs.spring.io/spring-framework/reference/data-access/orm/jpa.html#orm-jpa-setup-lcemfb)
 
+JPA의 EntityManager는 EntityManagerFactory가 있어야 만들 수 있다.
 
+<figure><img src="../.gitbook/assets/spring6/jpa.png" alt=""><figcaption></figcaption></figure>
+
+- Repository, EntityManagerFactory, DataSource 는 Bean으로 등록되어 관리
 
 
 
