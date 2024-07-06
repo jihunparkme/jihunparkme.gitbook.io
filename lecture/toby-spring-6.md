@@ -517,12 +517,16 @@ finally {
 }
 ```
 
+### Order 리포지토리와 예외
+
+JDBC를 수행중에 발생하는 예외는 `SQLException`으로 만들어져서 던져진다.
+- [Handling SQLExceptions](https://docs.oracle.com/javase/tutorial/jdbc/basics/sqlexception.html)
+
+JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLException을 랩핑해서 `JPA의 표준 예외`로 만들어서 던져진다.
+- [jakarta.persistence.PersistenceException](https://jakarta.ee/specifications/persistence/2.2/apidocs/javax/persistence/persistenceexception)
+표준 JPA의 예외 안에 JPA의 구현 기술(Hibernate 등)의 예외가 다시 랩핑되어서 던져진다
+
 > [Order 리포지토리와 예외](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/520cc76f7d38b40ffa1b6c1ff1f50767d567b0ea)
-
-
-
-
-
 
 
 
