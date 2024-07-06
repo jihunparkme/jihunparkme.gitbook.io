@@ -485,11 +485,10 @@ JPA의 EntityManager는 EntityManagerFactory가 있어야 만들 수 있다.
 
 <figure><img src="../.gitbook/assets/spring6/jpa.png" alt=""><figcaption></figcaption></figure>
 
-- Repository, EntityManagerFactory, DataSource 는 Bean으로 등록되어 관리
+- `Repository`, `EntityManagerFactory`, `DataSource` 는 Bean으로 등록되어 관리
+- 스프링 부트의 자동 구성 방식을 이용해 JPA 사용 시 `EntityManagerFactory`, `DataSource` 빈을 자동으로 등록
 
-
-
-
+> [JPA를 이용한 Order 저장](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/52b34841d2c7ffe8670af5b47e2e149ce4a02304)
 
 
 
