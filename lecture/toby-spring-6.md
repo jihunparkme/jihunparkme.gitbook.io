@@ -468,7 +468,7 @@ protected <T> T doExecute(URI url, @Nullable String uriTemplate, @Nullable HttpM
 - 명시적인 `예외처리가 강제되지 않음`
 - catch/throws를 쓰지 않아도 문제 없이 컴파일
 
-# JPA
+## JPA
 
 자바에서 RDB를 사용하는 모든 기술(JDBC, JPA, MyBatis..)은 DB와의 연결 정보를 관리하는 DataSource를 사용
 - [Connecting with DataSource Objects](https://docs.oracle.com/javase/tutorial/jdbc/basics/sqldatasources.html)
@@ -489,6 +489,49 @@ JPA의 EntityManager는 EntityManagerFactory가 있어야 만들 수 있다.
 - 스프링 부트의 자동 구성 방식을 이용해 JPA 사용 시 `EntityManagerFactory`, `DataSource` 빈을 자동으로 등록
 
 > [JPA를 이용한 Order 저장](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/52b34841d2c7ffe8670af5b47e2e149ce4a02304)
+
+### EntityManager와 트랜잭션
+
+코드에 의해서 엔티티 매니저를 생성하고 트랜잭션을 가져와 JPA의 기능을 사용하는 기본 코드는 다음과 같은 구조를 가진다.
+- [Database transaction demarcation](https://docs.jboss.org/hibernate/stable/entitymanager/reference/en/html/transactions.html#transactions-demarcation)
+
+```java
+// Non-managed environment idiom
+EntityManager em = emf.createEntityManager();
+EntityTransaction tx = null;
+try {
+    tx = em.getTransaction();
+    tx.begin();
+
+    // do some work
+    ...
+
+    tx.commit();
+}
+catch (RuntimeException e) {
+    if ( tx != null && tx.isActive() ) tx.rollback();
+    throw e; // or display error message
+}
+finally {
+    em.close();
+}
+```
+
+> [Order 리포지토리와 예외](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/520cc76f7d38b40ffa1b6c1ff1f50767d567b0ea)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
