@@ -574,3 +574,14 @@ public interface PlatformTransactionManager extends TransactionManager {
     void rollback(TransactionStatus status) throws TransactionException;
 }
 ```
+
+.
+
+**JDBC 데이터 액세스 기술**
+
+JdbcClient를 이용하면 SQL을 사용하는 간단한 코드로 안전하고, 트랜잭션 추상화가 적용된 DB 액세스 코드를 작성 가능
+- [Unified JDBC Query/Update Operations: JdbcClient](https://docs.spring.io/spring-framework/reference/data-access/jdbc/core.html#jdbc-JdbcClient)
+
+JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`를 `Transaction Manager Object`로 등록해서 사용
+
+.
