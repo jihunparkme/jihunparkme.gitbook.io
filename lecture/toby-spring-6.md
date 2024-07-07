@@ -549,16 +549,28 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
 >
 > -[DataAccessException과 예외 추상화](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/70b990fbbb05967cda370f8f1d86fd7c807f47f6)
 
+# 서비스 추상화
 
+자바 서버 기술(J2Ee/JavaEE)은 여러 계층으로 구분해서 개발하는 레이어 아키텍처를 이용
+- [Java Designing Applications](https://docs.oracle.com/cd/E19644-01/817-5448/dgdesign.html)
+- [Create Web Applications Efficiently With the Spring Boot MVC Framework](https://openclassrooms.com/en/courses/5684146-create-web-applications-efficiently-with-the-spring-boot-mvc-framework/6156961-organize-your-application-code-in-three-tier-architecture)
 
+보통 애플리케이션의 **비즈니스 로직/도메인 로직의 코드가 위치하는 계층**을 `서비스 계층`이라고 부른다. 그 외에도 다양한 이름으로 불린다.
+- [Service Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
 
+## 트랜잭션 서비스 추상화
 
+스프링의 트랜잭션 관리 기술의 핵심은 트랜잭션 추상화
+- [Understanding the Spring Framework Transaction Abstraction](https://docs.spring.io/spring-framework/reference/data-access/transaction/strategies.html#page-title)
 
----
+데이터 액세스 기술에 상관없이 공통적으로 적용되는 트랜잭션 인터페이스인 `PlatformTransactionManager` 제공
 
-**번외. 스프링과 JDK 업그레이드**
-- 새로운 스프링 부트 프로젝트를 생성 후 참고해서 변경
-  - `gradle/wrapper/gradle-wrapper.properties`
-  - `build.gradle`
-  - `settings.gradle`
-- 변경된 라이브러리 버전 확인
+```java
+public interface PlatformTransactionManager extends TransactionManager {
+    TransactionStatus getTransaction(@Nullable TransactionDefinition definition) throws TransactionException;
+
+    void commit(TransactionStatus status) throws TransactionException;
+
+    void rollback(TransactionStatus status) throws TransactionException;
+}
+```
