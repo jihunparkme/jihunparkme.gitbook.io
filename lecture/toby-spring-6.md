@@ -523,16 +523,31 @@ JDBC를 수행중에 발생하는 예외는 `SQLException`으로 만들어져서
 - [Handling SQLExceptions](https://docs.oracle.com/javase/tutorial/jdbc/basics/sqlexception.html)
 
 JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLException을 랩핑해서 `JPA의 표준 예외`로 만들어서 던져진다.
-- [jakarta.persistence.PersistenceException](https://jakarta.ee/specifications/persistence/2.2/apidocs/javax/persistence/persistenceexception)
-표준 JPA의 예외 안에 JPA의 구현 기술(Hibernate 등)의 예외가 다시 랩핑되어서 던져진다
+- [jakarta.persistence.PersistenceException](https://jakarta.ee/specifications/persistence/2.2/apidocs/javax/persistence/persistenceexception) 표준 JPA의 예외 안에 JPA의 구현 기술(Hibernate 등)의 예외가 다시 랩핑되어서 던져진다
 
 > [Order 리포지토리와 예외](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/520cc76f7d38b40ffa1b6c1ff1f50767d567b0ea)
 
+### DataAccessException 추상화
 
+**JDBC SQLException**
+- JDBC를 기반으로 하는 모든 기술에서 발생하는 예외
+  - JDBC, MyBatis, JPA ...
+- DB 에러코드에 의존하거나, 데이터 기술에 의존적인 예외처리
 
+**DataAccessException**
+- DB의 에러코드와 데이터 액세스 기술에 독립적인 예외 구조
+- 적절한 예외 번역(exception translation) 도구를 제공
+- [Uses of Class org.springframework.dao.DataAccessException](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/dao/class-use/DataAccessException.html)
 
+<figure><img src="../.gitbook/assets/spring6/dataAccessException.png" alt=""><figcaption></figcaption></figure>
 
+스프링의 데이터 예외 추상화가 적용되면 JDBC의 SQLException, JPA의 예외 등이 스프링이 정의한 예외 계층구조의 예외로 번역되고, 실제 발생한 예외는 래핑된 형태로 전달
 
+- [Consistent Exception Hierarchy](https://docs.spring.io/spring-framework/reference/data-access/dao.html#dao-exceptions)
+
+> 기술의 변화가 예외 처리하는 코드에 영향을 주지 않도록 만들자.
+>
+> -[DataAccessException과 예외 추상화](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/70b990fbbb05967cda370f8f1d86fd7c807f47f6)
 
 
 
