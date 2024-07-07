@@ -555,8 +555,33 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
 - [Java Designing Applications](https://docs.oracle.com/cd/E19644-01/817-5448/dgdesign.html)
 - [Create Web Applications Efficiently With the Spring Boot MVC Framework](https://openclassrooms.com/en/courses/5684146-create-web-applications-efficiently-with-the-spring-boot-mvc-framework/6156961-organize-your-application-code-in-three-tier-architecture)
 
-보통 애플리케이션의 **비즈니스 로직/도메인 로직의 코드가 위치하는 계층**을 `서비스 계층`이라고 부른다. 그 외에도 다양한 이름으로 불린다.
-- [Service Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
+## 서비스
+
+**스프링 애플리케이션의 빈이 존재하는 계층 구조**
+
+<figure><img src="../.gitbook/assets/spring6/spring-bean-layer.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**서비스**
+
+- 클라이언트에게 서비스를 제공해주는 오브젝트나 모듈
+- 서비스는 일반적으로 상태를 가지지 않음(stateless)
+  - 상태없는 싱글톤 스프링 빈을 사용하기 적합(@Component, @Service)
+- 보통 애플리케이션의 **비즈니스 로직/도메인 로직의 코드가 위치하는 계층**을 `서비스 계층`이라고 부르고, 그 외에도 다양한 이름으로 불린다.
+  - [Service Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
+
+.
+
+**서비스의 종류**
+- 애플리케이션 서비스 (application service)
+  - 비즈니스 로직을 담당하기 시작하는 시작점, 종료가 되는 경계에 있는 서비스
+- 도메인 서비스 (domain servic)
+  - 비즈니스 로직을 특정 엔티티로는 표현하기 힘든 로직을 담는 서비스
+- 인프라 서비스 (infrastructure service)
+  - 도메인/애플리케이션 로직에 참여하지 않고, 기술을 제공하는 서비스
+  - 메일, 캐시, 트랜잭션, 메시징..
+  - 서비스 추상화의 대상
 
 ## 트랜잭션 서비스 추상화
 
