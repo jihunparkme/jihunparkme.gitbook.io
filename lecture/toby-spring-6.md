@@ -585,3 +585,19 @@ JdbcClient를 이용하면 SQL을 사용하는 간단한 코드로 안전하고,
 JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`를 `Transaction Manager Object`로 등록해서 사용
 
 .
+
+**트랜잭션 프록시**
+
+스프링의 트랜잭션 프록시는 `ProxyFactoryBean`과 `AOP 프록시`를 이용해서 만들어진다.
+- [JDK- and CGLIB-based proxies](https://docs.spring.io/spring-framework/reference/core/aop-api/pfb.html#aop-pfb-proxy-types)
+- [Decorator Pattern](https://refactoring.guru/design-patterns/decorator)
+- [Proxy Pattern](https://refactoring.guru/design-patterns/proxy)
+
+---
+
+**번외. 스프링과 JDK 업그레이드**
+- 새로운 스프링 부트 프로젝트를 생성 후 참고해서 변경
+  - `gradle/wrapper/gradle-wrapper.properties`
+  - `build.gradle`
+  - `settings.gradle`
+- 변경된 라이브러리 버전 확인
