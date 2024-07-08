@@ -582,6 +582,17 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
   - 메일, 캐시, 트랜잭션, 메시징..
   - 서비스 추상화의 대상
 
+### Application Service
+
+가장 중요한 도메인/애플리케이션/비즈니스 로직 (도메인 오브젝트/엔티티 활용)
+- `@Service` 빈으로 구성
+- Application/Service 계층에 존재
+- 인프라 서비스의 도움이 필요
+  - 인프라 레이어에 존재하는 기술에 가능한 의존하지 않도록 만들어야 함
+- PaymentService - ExRateService에 적용된 DIP
+
+> [애플리케이션 서비스 도입](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/eab78b77f93aeeacc23b9acf768734e3861f1aef)
+
 ## 트랜잭션 서비스 추상화
 
 스프링의 트랜잭션 관리 기술의 핵심은 트랜잭션 추상화
