@@ -593,6 +593,26 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
 
 > [애플리케이션 서비스 도입](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/eab78b77f93aeeacc23b9acf768734e3861f1aef)
 
+### 기술에 독립적인 서비스
+
+**OrderService**
+- 데이터 액세스 기술 JPA에 의존
+- JPA를 사용하는 `Repository`, `Transaction Manager` 에 의존
+
+**Order**
+- `@Entity`가 붙은 JPA 엔티티로 작성
+  - **컴파일 시점에만** JPA 라이브러리에 의존
+- 클래스 코드에는 JPA 기술과 관련된 내용이 들어가지 않음
+- JPA를 사용하지 않으면 런타임에는 JPA 라이브러리에 의존하지 않음
+
+**Order에서 JPA 메타데이터 분리**
+- `@Entity`은 컴파일타임 라이브러리 의존성만 가짐
+- 엔티티의 동작에는 영향을 주지 않기 때문에 엔티티 클래스를 다른 데이터 기술에서 사용 가능
+  - 제거하고 싶다면 외부 XML 디스크립터를 사용
+
+> Order에서 JPA 메타데이터 분리
+> - [기술에 독립적인 애플리케이션 서비스](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/e7f3b2f680161050bec52de445738acae9cdb001)
+
 ## 트랜잭션 서비스 추상화
 
 스프링의 트랜잭션 관리 기술의 핵심은 트랜잭션 추상화
