@@ -611,7 +611,10 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
   - 제거하고 싶다면 외부 XML 디스크립터를 사용
 
 > Order에서 JPA 메타데이터 분리
-> - [기술에 독립적인 애플리케이션 서비스](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/e7f3b2f680161050bec52de445738acae9cdb001)
+> - [Order에서 JPA 메타데이터 분리](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/e7f3b2f680161050bec52de445738acae9cdb001)
+>
+> 특정 기술(JPA)에 의존하지 않는 애플리케이션 서비스
+> - [OrderRepository DIP](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/5fd3df62eba81a17d23129fbf6fce9ea784d2830)
 
 ## 트랜잭션 서비스 추상화
 
