@@ -189,3 +189,32 @@ ONE = 1
 설명하는 상수 정리법에 뒤따르는 몇 가지 일들..
 - 한번에 바뀌어야 하거나 함께 이해해야 하는 상수들을 한 곳에 모아두고
 - 다른 이유로 묶인 변수들을 분리하는 후속 작업을 진행
+
+---
+
+## CH10. 명시적인 매개변수
+
+> 다루고 있는 일부 데이터가 명시적으로 전달되지 않는 것을 발견한다면 
+> 
+> 앞부분에서 매개변수 값을 채운 후, 뒷부분에서 명시적으로 전달하는 루틴을 나누자.
+
+**before**
+
+```java
+params = { a: 1, b: 2 }
+foo(params)
+
+function foo(params)
+    ...params.a...   ...params.b...
+```
+
+**after**
+- foo를 메서드를 나누어 명시적 매개변수 정리를 적용
+
+```java
+function foo(params)
+    foo_body(params.a, params.b)
+
+function foo_body(a, b)
+    ...a... ...b...
+```
