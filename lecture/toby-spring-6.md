@@ -751,6 +751,3 @@ Spring Proxy AOP
   - `build.gradle`
   - `settings.gradle`
 - 변경된 라이브러리 버전 확인
-
-
-트랜잭션 서비스 추상화 부터 커밋 링크.
