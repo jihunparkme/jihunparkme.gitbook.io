@@ -618,20 +618,40 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
 
 ## 트랜잭션 서비스 추상화
 
-스프링의 트랜잭션 관리 기술의 핵심은 트랜잭션 추상화
+**Transaction은 데이터 기술에 따라 방법이 다르다**
+- JDBC
+- JPA
+- MyBatis
+- Jooq
+
+**추상화**
+- 구현의 복잡함과 디테일을 감추고 중요한 것만 남기는 기법
+- 여러 인프라 서비스 기술의 공통적이고 핵심적인 기능을 인터페이스로 정의
+- 이를 구현하는 어댑터를 만들어 일관된 사용이 가능하게 만드는 것
+
+**스프링 트랜잭션 관리 기술의 핵심은 트랜잭션 추상화**
 - [Understanding the Spring Framework Transaction Abstraction](https://docs.spring.io/spring-framework/reference/data-access/transaction/strategies.html#page-title)
 
 데이터 액세스 기술에 상관없이 공통적으로 적용되는 트랜잭션 인터페이스인 `PlatformTransactionManager` 제공
 
-```java
-public interface PlatformTransactionManager extends TransactionManager {
-    TransactionStatus getTransaction(@Nullable TransactionDefinition definition) throws TransactionException;
+<figure><img src="../.gitbook/assets/spring6/platformTransactionManager.png" alt=""><figcaption></figcaption></figure>
 
-    void commit(TransactionStatus status) throws TransactionException;
+- `PlatformTransactionManager` 
+  - 트랜잭션 매니저를 인터페이스 형태로 만들어서 트랜잭션을 위한 공통적인 핵심 기능을 추상화
+  
+    ```java
+    public interface PlatformTransactionManager extends TransactionManager {
+        TransactionStatus getTransaction(@Nullable TransactionDefinition definition) throws TransactionException;
 
-    void rollback(TransactionStatus status) throws TransactionException;
-}
-```
+        void commit(TransactionStatus status) throws TransactionException;
+
+        void rollback(TransactionStatus status) throws TransactionException;
+    }
+    ```
+- `JpaTransactionManager`, `DataSourceTransactionManager`, `JtaTransactionManager`, `HibernateTransactionManager`
+  - 트랜잭션 사용방법이 다른 기술들을 중간에서 변환해주는 어댑터
+
+> [트랜잭션 서비스 추상화]()
 
 .
 
@@ -659,3 +679,6 @@ JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`�
   - `build.gradle`
   - `settings.gradle`
 - 변경된 라이브러리 버전 확인
+
+
+트랜잭션 서비스 추상화 부터 커밋 링크.
