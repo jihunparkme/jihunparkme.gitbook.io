@@ -682,6 +682,22 @@ JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`�
 - [Decorator Pattern](https://refactoring.guru/design-patterns/decorator)
 - [Proxy Pattern](https://refactoring.guru/design-patterns/proxy)
 
+> [트랜잭션 프록시]()
+
+### @Transactional and AOP
+
+스프링이 만들어주는 트랜잭션 프록시
+- `@Tranactional`이 붙은 클래스의 메소드가 트랜잭션 안에서 실행되도록 프록시를 생성
+
+Spring Proxy AOP
+- AOP는 스프링에서 그다지 성공하지 못한 핵심 기술 중의 하나
+- 활용 용도가 제한적이면서 막상 사용하기는 매우 어려움
+- 스프링이 만들어 놓은 `트랜잭션`과 `보안` 기술에서는 유용하게 활용
+- 직접 활용하려면 꽤 많은 학습이 필요
+- AOP는 아니더라도 데코레이터/프록시 패턴의 동작원리를 이해하면 필요한 곳에 활용 가능
+
+> [@Transactional과 AOP]()
+
 ---
 
 **번외. 스프링과 JDK 업그레이드**
