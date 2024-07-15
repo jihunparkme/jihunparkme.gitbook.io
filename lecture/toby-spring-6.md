@@ -651,7 +651,7 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
 - `JpaTransactionManager`, `DataSourceTransactionManager`, `JtaTransactionManager`, `HibernateTransactionManager`
   - 트랜잭션 사용방법이 다른 기술들을 중간에서 변환해주는 어댑터
 
-> [트랜잭션 서비스 추상화]()
+> [트랜잭션 서비스 추상화](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/af1b37247580de38bf8ec02722249657ad7c4a8b)
 
 ### JDBC 데이터 액세스 기술
 
@@ -664,7 +664,7 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
 
 JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`를 `Transaction Manager Object`로 등록해서 사용
 
-> [JDBC 데이터 엑세스 기술]()
+> [JDBC 데이터 엑세스 기술](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/02527c0f1c6bf4d3ac38414a738ad482cbdb3846)
 
 ### 트랜잭션 테스트
 
@@ -673,7 +673,7 @@ JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`�
   - 모든 작업이 성공하면 하나의 트랜잭션으로 진행된 것인지 여러개의 트랜잭션으로 쪼개진 것인지 확인이 어려움
 - 트랜잭션 중간에 실패하는 케이스를 만들 수 있다면 롤백 여부로 확인 가능
 
-> [트랜잭션 테스트]()
+> [트랜잭션 테스트](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/dfa3c80f9690d93c062ba440b8b7bd11a2031753)
 
 ### 트랜잭션 프록시
 
@@ -682,7 +682,7 @@ JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`�
 - [Decorator Pattern](https://refactoring.guru/design-patterns/decorator)
 - [Proxy Pattern](https://refactoring.guru/design-patterns/proxy)
 
-> [트랜잭션 프록시]()
+> [트랜잭션 프록시](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/595a24ee7811da3490ac4ce90293f2c6576d477d)
 
 ### @Transactional and AOP
 
@@ -696,7 +696,7 @@ Spring Proxy AOP
 - 직접 활용하려면 꽤 많은 학습이 필요
 - AOP는 아니더라도 데코레이터/프록시 패턴의 동작원리를 이해하면 필요한 곳에 활용 가능
 
-> [@Transactional과 AOP]()
+> [@Transactional과 AOP](https://github.com/jihunparkme/inflearn-toby-spring-6/commit/c717d3fd957ba697be918cc738499b73874bd22e)
 
 ### 스프링으로 어떻게 개발할 것인가?
 
