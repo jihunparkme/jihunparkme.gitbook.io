@@ -657,10 +657,16 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
 
 **JDBC 데이터 액세스 기술**
 
-JdbcClient를 이용하면 SQL을 사용하는 간단한 코드로 안전하고, 트랜잭션 추상화가 적용된 DB 액세스 코드를 작성 가능
+`JdbcClient`
+- Spring 6.1에서 추가
+- SQL을 사용하는 JDBC 데이터 처리 코드를 유연하게 작성하도록 지원(일종의 템플릿/콜백)
+  - SQL을 사용하는 간단한 코드로 안전하고, 트랜잭션 추상화가 적용된 DB 액세스 코드를 작성 가능
+- 스프링의 JdbcTemplate의 대체
 - [Unified JDBC Query/Update Operations: JdbcClient](https://docs.spring.io/spring-framework/reference/data-access/jdbc/core.html#jdbc-JdbcClient)
 
 JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`를 `Transaction Manager Object`로 등록해서 사용
+
+> [JDBC 데이터 엑세스 기술]()
 
 .
 
