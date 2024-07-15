@@ -653,9 +653,7 @@ JPA를 이용하는 코드에서 예외가 발생하면 주로 JDBC의 SQLExcept
 
 > [트랜잭션 서비스 추상화]()
 
-.
-
-**JDBC 데이터 액세스 기술**
+### JDBC 데이터 액세스 기술
 
 `JdbcClient`
 - Spring 6.1에서 추가
@@ -668,9 +666,16 @@ JDBC를 직접 사용하는 코드를 이용할 때는 `JdbcTransactionManager`�
 
 > [JDBC 데이터 엑세스 기술]()
 
-.
+### 트랜잭션 테스트
 
-**트랜잭션 프록시**
+트랜잭션이 필요한 곳에 정확하게 적용되었는지 테스트하기는 매우 어렵다.
+- 특히 `JDBC`처럼 **자동 커밋**이 되거나 `SpringDataJPA`처럼 기본 리포지토리 구현에서 **트랜잭션을 알아서 적용**해주는 기술을 사용할 경우
+  - 모든 작업이 성공하면 하나의 트랜잭션으로 진행된 것인지 여러개의 트랜잭션으로 쪼개진 것인지 확인이 어려움
+- 트랜잭션 중간에 실패하는 케이스를 만들 수 있다면 롤백 여부로 확인 가능
+
+> [트랜잭션 테스트]()
+
+### 트랜잭션 프록시
 
 스프링의 트랜잭션 프록시는 `ProxyFactoryBean`과 `AOP 프록시`를 이용해서 만들어진다.
 - [JDK- and CGLIB-based proxies](https://docs.spring.io/spring-framework/reference/core/aop-api/pfb.html#aop-pfb-proxy-types)
