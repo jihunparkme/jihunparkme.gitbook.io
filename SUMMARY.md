@@ -5,6 +5,9 @@
 
 ## Lecture
 
+* [Java](lecture/java/README.md)
+  * [multithread-concurrency](lecture/java/multithread-concurrency.md)
+  * [The Java](lecture/java/the-java.md)
 * [Tobe](lecture/toby/README.md)
   * [Toby Spring 6](lecture/toby/spring-6.md)
   * [Toby Spring Boot](lecture/toby/spring-boot.md)
@@ -13,7 +16,6 @@
   * [02.DDD 설계](lecture/msa/ddd-1.md)
   * [03.DDD 구현](lecture/msa/ddd-2.md)
   * [04.EDA 구현](lecture/msa/eda.md)
-* [The Java](lecture/the-java.md)
 * [Spring Boot](lecture/spring-boot.md)
 * [Spring Batch](lecture/spring-boot-base-spring-batch.md)
 * [Spring Core Advanced](lecture/spring-core-principles-advanced.md)
