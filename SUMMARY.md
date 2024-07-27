@@ -8,7 +8,7 @@
 * [Java](lecture/java/README.md)
   * [multithread-concurrency](lecture/java/multithread-concurrency.md)
   * [The Java](lecture/java/the-java.md)
-* [Tobe](lecture/toby/README.md)
+* [Toby](lecture/toby/README.md)
   * [Toby Spring 6](lecture/toby/spring-6.md)
   * [Toby Spring Boot](lecture/toby/spring-boot.md)
 * [MSA](lecture/msa/README.md)
