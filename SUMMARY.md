@@ -5,14 +5,15 @@
 
 ## Lecture
 
-* [Toby Spring 6](lecture/toby-spring-6.md)
+* [Tobe](lecture/toby/README.md)
+  * [Toby Spring 6](lecture/toby/spring-6.md)
+  * [Toby Spring Boot](lecture/toby/spring-boot.md)
 * [MSA](lecture/msa/README.md)
   * [01.Micro Service](lecture/msa/micro-service.md)
   * [02.DDD 설계](lecture/msa/ddd-1.md)
   * [03.DDD 구현](lecture/msa/ddd-2.md)
   * [04.EDA 구현](lecture/msa/eda.md)
 * [The Java](lecture/the-java.md)
-* [Toby Spring Boot](lecture/toby-spring-boot.md)
 * [Spring Boot](lecture/spring-boot.md)
 * [Spring Batch](lecture/spring-boot-base-spring-batch.md)
 * [Spring Core Advanced](lecture/spring-core-principles-advanced.md)
