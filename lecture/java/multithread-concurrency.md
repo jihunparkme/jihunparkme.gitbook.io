@@ -181,9 +181,33 @@ CPU 4개 / 스레드 4개
 - 객체(인스턴스)와 배열이 생성되는 영역이다
 - 가비지 컬렉션(GC)이 이루어지는 주요 영역이며, 더 이상 참조되지 않는 객체는 GC에 의해 제거
 
+### Thread 
 
+```java
+/**
+ * Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 스레드를 생성
+ */
+public class HelloThread extends Thread {
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName() + ": run()");
+    }
+}
 
+...
 
+HelloThread helloThread = new HelloThread();
+helloThread.start();
+```
+
+**start()**
+- 스레드를 실행하는 메서드
+- HelloThread 스레드가 별도의 스레드에서 run() 메서드를 실행
+- main 스레드가 run() 을 호출하는 것이 아니고, main 스레드는 단지 start() 메서드를 통해 Thread-n 스레드에게 실행을 지시
+
+> 스레드는 순서와 실행 기간을 모두 보장하지 않는다.
+
+[thread start 01]()
 
 
 
