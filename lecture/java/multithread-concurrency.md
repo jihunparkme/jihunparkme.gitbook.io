@@ -183,24 +183,9 @@ CPU 4개 / 스레드 4개
 
 ### Thread 
 
-```java
-/**
- * Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 스레드를 생성
- */
-public class HelloThread extends Thread {
-    @Override
-    public void run() {
-        System.out.println(Thread.currentThread().getName() + ": run()");
-    }
-}
+Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 스레드를 생성
 
-...
-
-HelloThread helloThread = new HelloThread();
-helloThread.start();
-```
-
-**start()**
+**Thread.start()**
 - 스레드 실행 메서드
 - HelloThread 스레드가 별도의 스레드에서 run() 메서드를 실행
 - main 스레드는 start() 메서드를 통해 Thread-n 스레드에게 실행을 지시
@@ -208,7 +193,24 @@ helloThread.start();
 
 > 스레드는 순서와 실행 기간을 모두 보장하지 않는다.
 
-[thread start]()
+[thread start]() -> [java adv1] 스레드 시작1
+
+...
+
+### Daemon Thread
+
+스레드는 User Thread, Daemon Thread 2가지 종류로 구분
+
+**User Thread(non-daemon Thread)**
+- 프로그램의 주요 작업을 수행
+- 작업이 완료될 때까지 실행
+- 모든 user thread가 종료되면 JVM도 종료
+
+**Daemon Thread**
+- 백그라운드에서 보조적인 작업을 수행
+- 모든 user thread가 종료되면 daemon thread는 자동으로 종료
+
+[Daemon Thread]() -> [java adv1] 데몬 스레드
 
 
 
