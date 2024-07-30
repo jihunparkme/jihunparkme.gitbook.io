@@ -185,7 +185,7 @@ CPU 4개 / 스레드 4개
 
 Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 스레드를 생성
 
-[thread start]() -> [java adv1] 스레드 시작1
+[thread start](https://github.com/jihunparkme/inflearn-java-adv1/commit/31e406b4aadea4f26bccb23ab966e4dbec8acea9)
 
 **Thread.start()**
 - 스레드 실행 메서드
@@ -208,7 +208,7 @@ Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 �
 - 백그라운드에서 보조적인 작업을 수행
 - 모든 user thread가 종료되면 daemon thread는 자동으로 종료
 
-[Daemon Thread]() -> [java adv1] 데몬 스레드
+[Daemon Thread](https://github.com/jihunparkme/inflearn-java-adv1/commit/405718ae09ebcca5a0d1cfd847ded0a704539c60)
 
 ### implements Runnable
 
@@ -217,7 +217,7 @@ Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 �
 - 스레드와 해당 스레드가 실행할 작업이 서로 분리되어 있다는 차이
   - 스레드 객체를 생성할 때, 실행할 작업을 생성자로 전달
 
-[Runnable Thread]() -> 
+[Runnable Thread](https://github.com/jihunparkme/inflearn-java-adv1/commit/4ae155fbcf9f167f2a78ae78ea6d58080385392a)
 
 **Thread 클래스 상속 방식**
 
@@ -242,7 +242,7 @@ Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 �
 > 
 > 스레드와 실행할 작업을 명확히 분리하고, 인터페이스를 사용하므로 Thread 클래스를 직접 상속하는 방식보다 더 유연하고 유지보수 하기 쉬운 코드를 만들 수 있다.
 
-
+### Logger
 
 
 
