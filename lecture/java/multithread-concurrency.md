@@ -352,6 +352,41 @@ log("mainThread.getState() = " + mainThread.getState());
   - 스레드가 정상적으로 종료되거나, 예외가 발생하여 종료된 경우 Terminated 상태로 전이
 - 스레드는 한 번 종료되면 다시 시작할 수 없음
 
+```java
+public static void main(String[] args) throws InterruptedException {
+    Thread thread = new Thread(new MyRunnable(), "myThread");
+    log("myThread.state1 = " + thread.getState()); // (1) NEW
+
+    log("myThread.start()");
+    thread.start();
+    Thread.sleep(1000);
+
+    log("myThread.state3 = " + thread.getState()); // (3) TIMED_WAITING (Thread.sleep())
+    Thread.sleep(4000);
+
+    log("myThread.state5 = " + thread.getState()); // (5) TERMINATED
+    log("end");
+}
+
+static class MyRunnable implements Runnable {
+    public void run() {
+        try {
+            log("start");
+            log("myThread.state2 = " + Thread.currentThread().getState()); // (2) RUNNABLE
+
+            log("sleep() start");
+            Thread.sleep(3000);
+            log("sleep() end");
+
+            log("myThread.state4 = " + Thread.currentThread().getState()); // (4) RUNNABLE
+            log("end");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+
 ...
 
 
