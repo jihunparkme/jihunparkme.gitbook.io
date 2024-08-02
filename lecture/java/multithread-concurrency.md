@@ -404,11 +404,10 @@ static class MyRunnable implements Runnable {
 
 ### Join
 
-[join이 필요한 상황]()
+[join이 필요한 상황](https://github.com/jihunparkme/inflearn-java-adv1/commit/8e8510bb33ad9056e902588d24a9c71b7fe186eb)
 - 기대와 다르게 두 결과 모두 0이 나온다.
 
-[join 사용]()
-- 
+[join 사용](https://github.com/jihunparkme/inflearn-java-adv1/commit/2c21b02a50957803c6a4fb4d5415f2560045203d)
 
 **Waiting (대기 상태)**
 - 스레드가 다른 스레드의 특정 작업이 완료되기를 무기한 기다리는 상태
