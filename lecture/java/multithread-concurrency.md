@@ -423,6 +423,30 @@ static class MyRunnable implements Runnable {
 
 ...
 
+### Interrupt
+
+> 인터럽트를 사용하면 `WAITING`, `TIMED_WAITING` 같은 대기 상태의 스레드를 직접 깨워서, 작동하는 `RUNNABLE` 상태로 만들 수 있다.
+
+- 스레드가 인터럽트 상태일 때
+  - InterruptedException 을 던지는 메서드(ex. Thread.sleep())를 호출하거나, 이미 호출하고 대기중이라면 InterruptedException 발생
+
+[thread.interrupt()](https://github.com/jihunparkme/inflearn-java-adv1/commit/98dd2c51c7a7c6b0789a9b70cae41a7174f9b1e6)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Section
 
 ### Sub Section
