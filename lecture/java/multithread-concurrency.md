@@ -425,17 +425,29 @@ static class MyRunnable implements Runnable {
 
 ### Interrupt
 
-> 인터럽트를 사용하면 `WAITING`, `TIMED_WAITING` 같은 대기 상태의 스레드를 직접 깨워서, 작동하는 `RUNNABLE` 상태로 만들 수 있다.
+> 인터럽트를 사용하면 `WAITING`, `TIMED_WAITING` 같은 대기 상태의 스레드를 직접 깨워서, 
+> 
+> 작동하는 `RUNNABLE` 상태로 만들 수 있다.
 
-- 스레드가 인터럽트 상태일 때
-  - InterruptedException 을 던지는 메서드(ex. Thread.sleep())를 호출하거나, 이미 호출하고 대기중이라면 InterruptedException 발생
+스레드가 인터럽트 상태일 때
+- InterruptedException 을 던지는 메서드(ex. Thread.sleep())를 호출하거나
+- 이미 위 메서드를 호출하고 대기중이라면 InterruptedException 발생
 
-[thread.interrupt()](https://github.com/jihunparkme/inflearn-java-adv1/commit/98dd2c51c7a7c6b0789a9b70cae41a7174f9b1e6)
+`Thread.currentThread().isInterrupted()`
+- 스레드의 인터럽트 상태를 단순히 확인
 
+`Thread.interrupted()`
+- 인터럽트를 직접 체크해서 사용할 경우 
+  - 스레드가 인터럽트 상태일 경우, `true 반환` 후 해당 스레드의 인터럽트 `상태를 false 로 변경`
+  - 스레드가 인터럽트 상태가 아닐 경우, `false 반환` 후 해당 스레드의 인터럽트 상태를 변경하지 않음
 
+[thread.interrupted()]()
 
-
-
+> 인터럽트 예외가 발생하고, 스레드의 인터럽트 상태를 정상(false)으로 돌리지 않으면, 이후에도 계속 인터럽트가 발생
+>
+> 그러므로, 자바에서 인터럽트 예외가 발생하거나 인터럽트의 목적을 달성하면, 스레드의 인터럽트 상태를 다시 정상(false)으로 돌린다.
+> - InterruptedException
+> - Thread.interrupted()
 
 
 
