@@ -455,6 +455,7 @@ static class MyRunnable implements Runnable {
 - [인터럽트 도입]()
   - 종료( q )를 입력하면 즉시 종료
 - [인터럽트 개선]()
+  - Thread.interrupted() 메서드를 사용하여 해당 스레드가 인터럽트 상태인지 아닌지 확인
 
 
 
