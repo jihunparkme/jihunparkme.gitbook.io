@@ -453,6 +453,7 @@ static class MyRunnable implements Runnable {
 - [시작]()
   - 종료 입력 시 바로 반응하지 않는 문제
 - [인터럽트 도입]()
+  - 종료( q )를 입력하면 즉시 종료
 - [인터럽트 개선]()
 
 
