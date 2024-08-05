@@ -441,7 +441,7 @@ static class MyRunnable implements Runnable {
   - 스레드가 인터럽트 상태일 경우, `true 반환` 후 해당 스레드의 인터럽트 `상태를 false 로 변경`
   - 스레드가 인터럽트 상태가 아닐 경우, `false 반환` 후 해당 스레드의 인터럽트 상태를 변경하지 않음
 
-[thread.interrupted()]()
+[thread.interrupted()](https://github.com/jihunparkme/inflearn-java-adv1/commit/548ac91a4139c64305c55db64f1640c33cb708d9)
 
 > 인터럽트 예외가 발생하고, 스레드의 인터럽트 상태를 정상(false)으로 돌리지 않으면, 이후에도 계속 인터럽트가 발생
 >
