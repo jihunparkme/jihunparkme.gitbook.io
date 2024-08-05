@@ -449,6 +449,11 @@ static class MyRunnable implements Runnable {
 > - InterruptedException
 > - Thread.interrupted()
 
+**프린터 예제**
+- [시작]()
+  - 종료 입력 시 바로 반응하지 않는 문제
+- [인터럽트 도입]()
+- [인터럽트 개선]()
 
 
 
