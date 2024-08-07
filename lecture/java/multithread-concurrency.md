@@ -450,11 +450,11 @@ static class MyRunnable implements Runnable {
 > - Thread.interrupted()
 
 **프린터 예제**
-- [시작]()
+- [시작](https://github.com/jihunparkme/inflearn-java-adv1/commit/59710931eb9b510d05569e802955903f9605dce1)
   - 종료 입력 시 바로 반응하지 않는 문제
-- [인터럽트 도입]()
+- [인터럽트 도입](https://github.com/jihunparkme/inflearn-java-adv1/commit/616c32471b088f05e6be540f84a8dc43fe229c15)
   - 종료( q )를 입력하면 즉시 종료
-- [인터럽트 개선]()
+- [인터럽트 개선](https://github.com/jihunparkme/inflearn-java-adv1/commit/ad1a54bf021ca860b9e1fca9c3e81b6b0d59bb20)
   - Thread.interrupted() 메서드를 사용하여 해당 스레드가 인터럽트 상태인지 아닌지 확인
 
 ### Yield
