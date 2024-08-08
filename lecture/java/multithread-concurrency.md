@@ -459,13 +459,15 @@ static class MyRunnable implements Runnable {
 
 ### Yield
 
-> 어떤 스레드를 얼마나 실행할지는 운영체제가 스케줄링을 통해 결정
-> 
-> 특정 스레드가 크게 바쁘지 않은 상황에 다른 스레드에게 CPU 실행 기회를 양보
-> 
-> 스케줄링 큐에 대기 중인 다른 스레드가 CPU 실행 기회를 더 빨리 얻을 수 있음
+> 현재 실행 중인 스레드가 자발적으로 다른 스레드에게 CPU를 양보
+>
+> yield() 메서드를 호출한 스레드는 RUNNABLE 상태를 유지
 
+자바에서 Thread.yield() 메서드를 호출하면 현재 실행 중인 스레드가 CPU를 양보하도록 힌트 제공
+- 다른 스레드에게 실행 기회를 제공
+- `RUNNABLE` 상태를 유지하기 때문에, 양보할 스레드가 없다면 본인 스레드가 계속 실행
 
+[Thread.yield()](https://github.com/jihunparkme/inflearn-java-adv1/commit/4d98ad7f2e5ba03a5a1546dce72981f61e8564aa)
 
 
 
