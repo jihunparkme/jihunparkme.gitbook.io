@@ -453,9 +453,11 @@ static class MyRunnable implements Runnable {
 - [시작](https://github.com/jihunparkme/inflearn-java-adv1/commit/59710931eb9b510d05569e802955903f9605dce1)
   - 종료 입력 시 바로 반응하지 않는 문제
 - [인터럽트 도입](https://github.com/jihunparkme/inflearn-java-adv1/commit/616c32471b088f05e6be540f84a8dc43fe229c15)
-  - 종료( q )를 입력하면 즉시 종료
+  - 종료(q)를 입력하면 즉시 종료
 - [인터럽트 개선](https://github.com/jihunparkme/inflearn-java-adv1/commit/ad1a54bf021ca860b9e1fca9c3e81b6b0d59bb20)
   - Thread.interrupted() 메서드를 사용하여 해당 스레드가 인터럽트 상태인지 아닌지 확인
+- [yield를 활용한 CPU 자원 양보](https://github.com/jihunparkme/inflearn-java-adv1/commit/d77423d163b525634d44d534df7a1421ae0522ee)
+  - 작업이 비어있으면 다른 스레드에 작업을 양보
 
 ### Yield
 
@@ -467,11 +469,7 @@ static class MyRunnable implements Runnable {
 - 다른 스레드에게 실행 기회를 제공
 - `RUNNABLE` 상태를 유지하기 때문에, 양보할 스레드가 없다면 본인 스레드가 계속 실행
 
-[Thread.yield()](https://github.com/jihunparkme/inflearn-java-adv1/commit/4d98ad7f2e5ba03a5a1546dce72981f61e8564aa)
-
-
-
-
+[Thread.yield() Example](https://github.com/jihunparkme/inflearn-java-adv1/commit/4d98ad7f2e5ba03a5a1546dce72981f61e8564aa)
 
 ## Section
 
