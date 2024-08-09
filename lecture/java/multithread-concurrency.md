@@ -455,7 +455,7 @@ static class MyRunnable implements Runnable {
 - [인터럽트 도입](https://github.com/jihunparkme/inflearn-java-adv1/commit/616c32471b088f05e6be540f84a8dc43fe229c15)
   - 종료(q)를 입력하면 즉시 종료
 - [인터럽트 개선](https://github.com/jihunparkme/inflearn-java-adv1/commit/ad1a54bf021ca860b9e1fca9c3e81b6b0d59bb20)
-  - Thread.interrupted() 메서드를 사용하여 해당 스레드가 인터럽트 상태인지 아닌지 확인
+  - Thread.interrupted() 메서드를 사용하여 해당 스레드가 인터럽트 상태인지 아닌지 확인하고, 스레드의 인터럽트 상태를 다시 정상으로 전환
 - [yield를 활용한 CPU 자원 양보](https://github.com/jihunparkme/inflearn-java-adv1/commit/d77423d163b525634d44d534df7a1421ae0522ee)
   - 작업이 비어있으면 다른 스레드에 작업을 양보
 
