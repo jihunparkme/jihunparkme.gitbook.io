@@ -459,6 +459,8 @@ static class MyRunnable implements Runnable {
 - [yield를 활용한 CPU 자원 양보](https://github.com/jihunparkme/inflearn-java-adv1/commit/d77423d163b525634d44d534df7a1421ae0522ee)
   - 작업이 비어있으면 다른 스레드에 작업을 양보
 
+...
+
 ### Yield
 
 > 현재 실행 중인 스레드가 자발적으로 다른 스레드에게 CPU를 양보
@@ -470,6 +472,13 @@ static class MyRunnable implements Runnable {
 - `RUNNABLE` 상태를 유지하기 때문에, 양보할 스레드가 없다면 본인 스레드가 계속 실행
 
 [Thread.yield() Example](https://github.com/jihunparkme/inflearn-java-adv1/commit/4d98ad7f2e5ba03a5a1546dce72981f61e8564aa)
+
+...
+
+### volatile
+
+[메모리 가시성 문제]()
+- 스레드가 while 문에서 빠져나오지 못하고 계속 실행 상태
 
 ## Section
 
