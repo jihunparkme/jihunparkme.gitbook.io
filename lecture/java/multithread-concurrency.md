@@ -483,7 +483,7 @@ static class MyRunnable implements Runnable {
 > 
 > 이름 그대로 메모리에 변경한 값이 보이는가, 보이지 않는가의 문제
 
-[메모리 가시성(memory visibility) 문제]()
+[메모리 가시성(memory visibility) 문제](https://github.com/jihunparkme/inflearn-java-adv1/commit/3b15afb9d9e72bc0be87a6d37927bbbe65474b40)
 - 스레드가 while 문에서 빠져나오지 못하고 계속 실행 상태
 
 <details>
