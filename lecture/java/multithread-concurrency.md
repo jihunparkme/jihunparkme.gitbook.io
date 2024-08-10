@@ -477,8 +477,63 @@ static class MyRunnable implements Runnable {
 
 ### volatile
 
-[메모리 가시성 문제]()
+**메모리 가시성(memory visibility)**
+
+> 멀티스레드 환경에서 한 스레드가 변경한 값이 다른 스레드에서 언제 보이는지에 대한 문제
+> 
+> 이름 그대로 메모리에 변경한 값이 보이는가, 보이지 않는가의 문제
+
+[메모리 가시성(memory visibility) 문제]()
 - 스레드가 while 문에서 빠져나오지 못하고 계속 실행 상태
+
+<details>
+<summary>CPU와 캐시 메모리이 대하여 / 펼치기</summary>
+
+...
+
+CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
+
+**메인 메모리**
+- CPU에서 가까운 거리에 위치
+- CPU에 비해 상대적으로 느린 속도
+- CPU에 비해 상대적으로 저렴한 가격
+
+**캐시 메모리**
+- CPU와 가까이운 거리에 위치
+- 매우 빠른 속도의 메모리
+- 상대적으로 비싼 가격
+
+**캐시 메모리에 값을 보관**
+
+<figure><img src="../../.gitbook/assets/java-adv/volatile-1.png" alt=""><figcaption></figcaption></figure>
+
+- 각 스레드가 flag 값을 사용하면 CPU는 이 값을 효율적으로 처리하기 위해 **캐시 메모리에 불러오고 보관**
+- 이후부터는 캐시 메모리에 있는 flag 사용
+
+**main 스레드에서 flag 값을 변경할 경우**
+
+<figure><img src="../../.gitbook/assets/java-adv/volatile-2.png" alt=""><figcaption></figcaption></figure>
+
+- main 스레드에서 flag 값 변경 시 CPU 코어 1이 사용하는 캐시 메모리의 flag 값만 변함
+  - 메인 메모리에 이 값이 즉시 반영되지 않음
+- work 스레드가 사용하는 CPU 코어2의 캐시 메모리의 flag 값은 여전히 true
+
+**캐시 메모리에 있는 값이 메인 메모리에 반영되는 시기**
+
+<figure><img src="../../.gitbook/assets/java-adv/volatile-3.png" alt=""><figcaption></figcaption></figure>
+
+- CPU 코어 1의 캐시 메모리에 있는 flag 값이 언제 메인 메모리에 반영될지는 알 수 없다.
+  - CPU 설계 방식과 종류의 따라 다르고 극단적으로 보면 평생 반영되지 않을 수도 있음
+- 메인 메모리에 반영을 한다고 해도, CPU 코어 2의 캐시 메모리에 언제 반영될지도 알 수 없다.
+
+**캐시 메모리를 메인 메모리에 반영하거나, 메인 메모리의 변경 내역을 캐시 메모리에 다시 불러오는 시기**
+
+- CPU 설계 방식과 실행 환경에 따라 다를 수 있음
+  - 즉시, 몇 밀리초 후, 몇 초 후, 평생 반영되지 않을 수도 있음
+- 주로 `컨텍스트 스위칭`이 될 때, 캐시 메모리도 함께 갱신되는데, 이 부분도 환경에 따라 달라질 수 있음
+  - ex. Thread.sleep(), Syste.out 시 스레드가 잠시 쉬는데, 이럴 때 컨텍스트 스위칭이 되면서 주로 갱신
+</details>
+
 
 ## Section
 
