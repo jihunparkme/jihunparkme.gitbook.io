@@ -543,6 +543,8 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 - 캐시 메모리를 사용하면 CPU 처리 성능을 개선하지만, 때로는 성능 향상보다 여러 스레드에서 같은 시점에 정확히 같은 데이터를 보는 것이 더 중요할 수 있음
 - 이 경우, 성능을 약간 포기하는 대신 값을 읽고 쓸 때 모두 메인 메모리에 직접 접근하도록 자바에서는 `volatile` 키워드 제공
 
+<figure><img src="../../.gitbook/assets/java-adv/volatile-3.png" alt=""><figcaption></figcaption></figure>
+
 [volatile 키워드 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/6132aa073db6742081a6a056c25bce5c153304e6)
 
 ## Section
