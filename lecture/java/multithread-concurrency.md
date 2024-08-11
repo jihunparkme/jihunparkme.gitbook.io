@@ -532,6 +532,8 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
   - 즉시, 몇 밀리초 후, 몇 초 후, 평생 반영되지 않을 수도 있음
 - 주로 `컨텍스트 스위칭`이 될 때, 캐시 메모리도 함께 갱신되는데, 이 부분도 환경에 따라 달라질 수 있음
   - ex. Thread.sleep(), Syste.out 시 스레드가 잠시 쉬는데, 이럴 때 컨텍스트 스위칭이 되면서 주로 갱신
+
+[Example](https://github.com/jihunparkme/inflearn-java-adv1/commit/2ebb7d6e7b37a31fb6d847269c700ee8b07ee8f5)
 </details>
 
 .
