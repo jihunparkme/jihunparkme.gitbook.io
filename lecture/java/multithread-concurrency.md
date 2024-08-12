@@ -549,6 +549,38 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 
 [volatile 키워드 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/6132aa073db6742081a6a056c25bce5c153304e6)
 
+...
+
+### Java Memory Model
+
+#### ℹ️ 메모리 가시성(memory visibility)
+- 멀티스레드 환경에서 한 스레드가 변경한 값이 다른 스레드에서 언제 보이는지에 대한 것
+- 메모리에 변경한 값이 보이는가, 보이지 않는가의 문제
+
+#### ℹ️ Java Memory Model
+- Java Memory Model(JMM)은 자바 프로그램이 어떻게 메모리에 접근하고 수정할 수 있는지를 규정
+- 특히 멀티스레드 프로그래밍에서 스레드 간의 상호작용을 정의
+- 핵심은 여러 스레드들의 작업 순서를 보장하는 happens-before 관계에 대한 정의
+
+#### ℹ️ happens-before
+- Java Memory Model(JMM)에서 스레드 간의 작업 순서를 정의하는 개념
+- 한 스레드에서 수행한 작업을 다른 스레드가 참조할 때 최신 상태가 보장
+- ex. A 작업에서 변경된 내용은 B 작업이 시작되기 전에 모두 메모리에 반영
+
+.
+
+**happens-before 관계가 발생하는 경우**
+- 프로그램 순서 규칙
+- volatile 변수 규칙
+- 스레드 시작/종료/인터럽트 규칙
+- 객체 생성 규칙
+- 모니터 락 규칙
+- 전이 규칙
+- ...
+
+> volatile 또는 스레드 동기화 기법(synchronized, ReentrantLock ..)을 사용하면 메모리 가시성의 문제가 발생하지 않는다
+
+
 ## Section
 
 ### Sub Section
