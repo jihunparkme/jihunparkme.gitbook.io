@@ -22,6 +22,8 @@
   - CPU가 매우 빠르게 두 프로그램의 코드를 번갈아 수행한다면, 사람이 느낄 때 두 프로그램이 동시에 실행되는 것처럼 느껴짐
   - 시분할(Time Sharing) 기법: 프로그램의 실행 시간을 분할해서 마치 동시에 실행되는 것 처럼 하는 기법
 
+...
+
 #### ℹ️ Multiprocessing
 
 > 컴퓨터 시스템에서 둘 이상의 프로세서(CPU Core)를 사용하여 여러 작업을 동시에 처리하는 기술
@@ -38,7 +40,7 @@
 |하드웨어 기반으로 성능을 향상|소프트웨어 기반으로 CPU 시간을 분할하여 각 작업에 할당|
 |다중 코어 프로세서를 사용하는 현대 컴퓨터 시스템| 현대 운영 체제에서 여러 애플리케이션이 동시에 실행되는 환경|
 
-...
+---
 
 ### 프로세스와 스레드
 
@@ -57,6 +59,8 @@
 - Heap: 동적으로 할당되는 메모리 영역
 - Stack: 메서드(함수) 호출 시 생성되는 지역 변수와 반환 주소가 저장되는 영역(스레드에 포함)
 
+...
+
 #### ℹ️ Thread
 
 > 프로세스 내에서 실행되는 작업의 단위
@@ -72,7 +76,7 @@
 
 `프로세스`는 실행 환경과 자원을 제공하는 컨테이너 역할, `스레드`는 CPU를 사용해서 코드를 하나하나 실행하는 역할
 
-...
+---
 
 ### 스레드와 스케줄링
 
@@ -100,7 +104,7 @@
   - 프로세스 자체는 운영체제의 스케줄러에 의해 직접 실행되지 않으며, **프로세스 내의 스레드가 실행**
     - 1개의 프로세스 안에 하나의 스레드만 실행되는 경우도 있고, 여러 스레드가 실행되는 경우도 존재
 
-...
+---
 
 ### 컨텍스트 스위칭
 
@@ -158,7 +162,7 @@ CPU 4개 / 스레드 4개
 > 
 > 이 경우 CPU-바운드 작업에 최적화된 CPU 숫자를 고려
 
-...
+---
 
 ## Thread creation and execution
 
@@ -181,7 +185,7 @@ CPU 4개 / 스레드 4개
 - 객체(인스턴스)와 배열이 생성되는 영역이다
 - 가비지 컬렉션(GC)이 이루어지는 주요 영역이며, 더 이상 참조되지 않는 객체는 GC에 의해 제거
 
-...
+---
 
 ### extends Thread 
 
@@ -197,7 +201,7 @@ Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 �
 
 > 스레드는 순서와 실행 기간을 모두 보장하지 않는다.
 
-...
+---
 
 ### Daemon Thread
 
@@ -214,7 +218,7 @@ Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 �
 
 [Daemon Thread](https://github.com/jihunparkme/inflearn-java-adv1/commit/405718ae09ebcca5a0d1cfd847ded0a704539c60)
 
-...
+---
 
 ### implements Runnable
 
@@ -248,7 +252,7 @@ Thread 클래스를 상속 받거나 Runnable 인터페이스를 구현하여 �
 > 
 > 스레드와 실행할 작업을 명확히 분리하고, 인터페이스를 사용하므로 Thread 클래스를 직접 상속하는 방식보다 더 유연하고 유지보수 하기 쉬운 코드를 만들 수 있다.
 
-...
+---
 
 ## 스레드 제어와 생명 주기
 
@@ -311,7 +315,7 @@ log("mainThread.getThreadGroup() = " + mainThread.getThreadGroup());
 log("mainThread.getState() = " + mainThread.getState());
 ```
 
-...
+---
 
 ### 스레드의 생명 주기
 
@@ -400,7 +404,7 @@ static class MyRunnable implements Runnable {
 >
 > 최근에는 체크 예외보다는 언체크 예외를 선호
 
-...
+---
 
 ### Join
 
@@ -421,7 +425,7 @@ static class MyRunnable implements Runnable {
 - `join(ms)` : 호출 스레드는 특정 시간 만큼만 대기
   - 호출 스레드는 지정한 시간이 지나면 다시 RUNNABLE 상태가 되면서 다음 코드를 수행
 
-...
+---
 
 ### Interrupt
 
@@ -459,7 +463,7 @@ static class MyRunnable implements Runnable {
 - [yield를 활용한 CPU 자원 양보](https://github.com/jihunparkme/inflearn-java-adv1/commit/d77423d163b525634d44d534df7a1421ae0522ee)
   - 작업이 비어있으면 다른 스레드에 작업을 양보
 
-...
+---
 
 ### Yield
 
@@ -473,7 +477,7 @@ static class MyRunnable implements Runnable {
 
 [Thread.yield() Example](https://github.com/jihunparkme/inflearn-java-adv1/commit/4d98ad7f2e5ba03a5a1546dce72981f61e8564aa)
 
-...
+---
 
 ### volatile
 
@@ -549,7 +553,7 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 
 [volatile 키워드 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/6132aa073db6742081a6a056c25bce5c153304e6)
 
-...
+---
 
 ### Java Memory Model
 
@@ -557,10 +561,14 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 - 멀티스레드 환경에서 한 스레드가 변경한 값이 다른 스레드에서 언제 보이는지에 대한 것
 - 메모리에 변경한 값이 보이는가, 보이지 않는가의 문제
 
+...
+
 #### ℹ️ Java Memory Model
 - Java Memory Model(JMM)은 자바 프로그램이 어떻게 메모리에 접근하고 수정할 수 있는지를 규정
 - 특히 멀티스레드 프로그래밍에서 스레드 간의 상호작용을 정의
 - 핵심은 여러 스레드들의 작업 순서를 보장하는 happens-before 관계에 대한 정의
+
+...
 
 #### ℹ️ happens-before
 - Java Memory Model(JMM)에서 스레드 간의 작업 순서를 정의하는 개념
@@ -579,6 +587,23 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 - ...
 
 > volatile 또는 스레드 동기화 기법(synchronized, ReentrantLock ..)을 사용하면 메모리 가시성의 문제가 발생하지 않는다
+
+---
+
+## synchronized
+
+### 동시성 문제
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Section
