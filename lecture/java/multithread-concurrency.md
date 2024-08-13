@@ -592,6 +592,10 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 
 ## synchronized
 
+> 자바에서 동기화(synchronization)는 여러 스레드가 동시에 접근할 수 있는 자원(예: 객체, 메서드)에 대해 일관성 있고 안전한 접근을 보장하기 위한 메커니즘
+> 
+> 동기화는 주로 멀티스레드 환경에서 발생할 수 있는 문제(데이터 손상이나 예기치 않은 결과)를 방지하기 위해 사용
+
 ### Concurrency Issue
 
 > 멀티스레드를 사용할 때 가장 주의해야 할 점은, 같은 자원(리소스)에 여러 스레드가 동시에 접근할 때 발생하는 동시성 문제
@@ -614,9 +618,15 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 
 ---
 
-### Java synchronized
+### synchronized method
 
-> 한 번에 하나의 스레드만 실행할 수 있는 코드 구간을 생성
+> 메서드를 synchronized 로 선언해서, 메서드에 접근하는 스레드가 하나뿐이도록 보장
+
+```java
+public synchronized void synchronizedMethod() {
+    // something
+}
+```
 
 - 모든 객체(인스턴스)는 내부에 자신만의 락(lock)을 보유
   - aka. 모니터 락(monitor lock)
@@ -629,7 +639,43 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 - 참고) 락을 획득하는 순서는 보장되지 않음
 - 참고) 자바 메모리 가시성 문제는 자동으로 해결
 
-[synchronized 적용]()
+[synchronized method 적용]() -> [java adv1] synchronized 메서드 
+
+---
+
+### synchronized code block
+
+> 코드 블록을 synchronized 로 감싸서, 동기화를 구현
+
+```java
+public void method() {
+    synchronized(this) {
+        // synchronized code
+    }
+}
+```
+
+- synchronized 의 가장 큰 장점이자 단점은 **한 번에 하나의 스레드만 실행**할 수 있다는 점
+- 여러 스레드가 동시에 실행하지 못하기 때문에, 전체로 보면 **성능이 떨어질 수 있음**
+- 따라서 `synchronized` 를 통해 여러 스레드를 동시에 실행할 수 없는 코드 구간은 꼭 필요한 곳으로 한정해서 설정이 필요
+  - `synchronized code block`으로 **필요한 부분에 임계 영역을 지정** 가능
+  - 여러 스레드가 동시에 수행되는 부분을 더 늘려서, **전체적으로 성능을 향상**
+
+[synchronized code block 적용]() -> [java adv1] synchronized 코드 블럭
+
+...
+
+#### 동기화를 사용해서 해결할 수 있는 문제들
+- **경합 조건(Race condition)**
+  - 두 개 이상의 스레드가 경쟁적으로 동일한 자원을 수정할 때 발생하는 문제
+- **데이터 일관성**
+  - 여러 스레드가 동시에 읽고, 쓰는 데이터의 일관성을 유지
+  - 동기화는 멀티스레드 환경에서 필수적인 기능이지만, 과도하게 사용할 경우 성능 저하를 초래
+    - 꼭 필요한 곳에 적절히 사용 필요
+
+
+
+
 
 
 
