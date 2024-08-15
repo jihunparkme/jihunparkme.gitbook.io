@@ -654,7 +654,7 @@ public synchronized void synchronizedMethod() {
 - 참고) 락을 획득하는 순서는 보장되지 않음
 - 참고) 자바 메모리 가시성 문제는 자동으로 해결
 
-[synchronized method 적용]() -> [java adv1] synchronized 메서드 
+[synchronized method 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/54adf48802ff393be6972190c7346a95654900bc)
 
 ---
 
@@ -676,7 +676,7 @@ public void method() {
   - `synchronized code block`으로 **필요한 부분에 임계 영역을 지정** 가능
   - 여러 스레드가 동시에 수행되는 부분을 더 늘려서, **전체적으로 성능을 향상**
 
-[synchronized code block 적용]() -> [java adv1] synchronized 코드 블럭
+[synchronized code block 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/68a127db284e3aa2c456a5af26fe4f10d7c3e86f)
 
 ...
 
