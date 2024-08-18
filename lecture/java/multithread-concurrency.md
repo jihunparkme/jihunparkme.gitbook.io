@@ -689,10 +689,29 @@ public void method() {
     - 꼭 필요한 곳에 적절히 사용 필요
 
 
+## LockSupport
 
+> synchronized 의 문제를 해결하기 위해 더 유연하고, 세밀한 제어가 가능한 방법들이 필요
+> 
+> 자바 1.5부터 java.util.concurrent 라는 동시성 문제 해결을 위한 라이브러리 패키지가 추가
+>
+> 그중 가장 기본이 되는 기능으로 synchronized 의 가장 큰 단점인 무한 대기 문제를 해결
 
+**synchronized 단점**
+- `무한 대기`: BLOCKED 상태의 스레드는 락이 풀릴 때 까지 무한 대기
+  - 특정 시간까지만 대기하는 타임아웃 불가
+  - 중간에 인터럽트 불가
+- `공정성`: 락이 돌아왔을 때 BLOCKED 상태의 여러 스레드 중에 어떤 스레드가 락을 획득할 지 알 수 없음
+  - 최악의 경우 특정 스레드가 너무 오랜기간 락을 획득하지 못할 수 있음
 
+**LockSupport 대표 기능**
 
+- `park()` : 스레드를 **WAITING** 상태로 변경
+  - 누가 깨워주기 전까지는 계속 대기
+  - CPU 실행 스케줄링에 들어가지 않음
+- `parkNanos(nanos)` : 스레드를 나노초 동안만 **TIMED_WAITING** 상태로 변경
+  - 지정한 나노초가 지나면 **TIMED_WAITING** 상태에서 빠져나오고 **RUNNABLE** 상태로 변경된다.
+- `unpark(thread)` : **WAITING** 상태의 대상 스레드를 **RUNNABLE** 상태로 변경
 
 
 ## Section
