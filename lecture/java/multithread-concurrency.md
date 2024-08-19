@@ -724,8 +724,8 @@ public void method() {
   - 지정한 나노초가 지나면 **TIMED_WAITING** 상태에서 빠져나오고 **RUNNABLE** 상태로 변경
 - `unpark(thread)` : **WAITING** 상태의 대상 스레드를 **RUNNABLE** 상태로 변경
 
-[LockSupport.unpark example]() -> [java adv1] LockSupport1
-[LockSupport.parkNanos(nanos) example]() -> [java adv1] LockSupport2
+[LockSupport.unpark example](https://github.com/jihunparkme/inflearn-java-adv1/commit/3f951a58b4799fafdbffbf1838c9d706e9c42686)
+[LockSupport.parkNanos(nanos) example](https://github.com/jihunparkme/inflearn-java-adv1/commit/acd561fa8e50212ca41a3cd13c829a212800ef76)
 
 ...
 
@@ -854,7 +854,7 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 - `기아 현상 방지`: 모든 스레드가 언젠가 락을 획득할 수 있게 보장
 - `성능 저하`: 우선수위 선정을 위해 락을 획득하는 속도가 느려질 수 있음
 
-[ReentrantLock fair mode example]() [java adv1] ReentrantLock 공정성
+[ReentrantLock fair mode example](https://github.com/jihunparkme/inflearn-java-adv1/commit/3af8269c32f80f55a4562c614380cd095c1293bf)
 
 ---
 
