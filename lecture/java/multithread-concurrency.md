@@ -694,18 +694,26 @@ public void method() {
 
 ### LockSupport
 
-> synchronized 의 문제를 해결하기 위해 더 유연하고, 세밀한 제어가 가능한 방법들이 필요
+>  LockSupport 은 `ReentrantLock` 에서 활용되어 synchronized 의 단점을 극복하면서도 
 > 
-> 자바 1.5부터 java.util.concurrent 라는 동시성 문제 해결을 위한 라이브러리 패키지가 추가
->
-> 그중 가장 기본이 되는 기능으로 synchronized 의 가장 큰 단점인 무한 대기 문제를 해결
+> 매우 편리하게 임계 영역을 다룰 수 있는 다양한 기능 제공
+
+synchronized 의 문제를 해결하기 위해 더 유연하고, 세밀한 제어가 가능한 방법들이 필요
+- 자바 1.5부터 java.util.concurrent 라는 동시성 문제 해결을 위한 라이브러리 패키지가 추가
+
+.
 
 **synchronized 단점**
-- `무한 대기`: BLOCKED 상태의 스레드는 락이 풀릴 때 까지 무한 대기
-  - 특정 시간까지만 대기하는 타임아웃 불가
+- `무한 대기`: BLOCKED 상태의 스레드는 락이 풀릴 때 까지 **무한 대기**
+  - 특정 시간까지만 대기하는 타임아웃 불가 
+    - -> **LockSupport.parkNanos()** 를 사용하면 **특정 시간까지만** 대기 가능
   - 중간에 인터럽트 불가
+    - -> **park()**, **parkNanos()** 는 인터럽트를 걸 수 있음
+
 - `공정성`: 락이 돌아왔을 때 BLOCKED 상태의 여러 스레드 중에 어떤 스레드가 락을 획득할 지 알 수 없음
   - 최악의 경우 특정 스레드가 너무 오랜기간 락을 획득하지 못할 수 있음
+
+.
 
 **LockSupport 대표 기능**
 
