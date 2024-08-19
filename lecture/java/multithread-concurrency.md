@@ -698,7 +698,7 @@ public void method() {
 > 
 > 매우 편리하게 임계 영역을 다룰 수 있는 다양한 기능 제공
 
-synchronized 의 문제를 해결하기 위해 더 유연하고, 세밀한 제어가 가능한 방법들이 필요
+자바 1.0부터 존재한 synchronized 의 문제를 해결하기 위해 더 유연하고, 세밀한 제어가 가능한 방법들이 필요
 - 자바 1.5부터 java.util.concurrent 라는 동시성 문제 해결을 위한 라이브러리 패키지가 추가
 
 .
@@ -748,9 +748,72 @@ synchronized 의 문제를 해결하기 위해 더 유연하고, 세밀한 제�
 
 ---
 
+### ReentrantLock
 
+> synchronized 와 BLOCKED 상태를 통한 통한 임계 영역 관리의 한계를 극복하기 위해 
+> 
+> 자바 1.5부터 Lock 인터페이스와 ReentrantLock 구현체를 제공
 
+참고. 여기서 사용하는 락은 객체 내부에 있는 모니터 락이 아님
+- Lock 인터페이스와 ReentrantLock 이 제공하는 기능
+- 모니터 락과 BLOCKED 상태는 synchronized 에서만 사용
 
+...
+
+#### ℹ️ Lock Interface
+
+- 동시성 프로그래밍에서 쓰이는 안전한 임계 영역을 위한 락을 구현하는데 사용
+  - synchronized 의 단점인 무한 대기 문제 해결
+- 고수준의 동기화 기법을 구현 가능
+  - 락을 특정 시간 만큼만 시도하거나, 인터럽트 가능한 락을 사용할 때 유용
+  - 개발자에게 다양한 선택권을 제공
+- 대표적인 구현체로 ReentrantLock
+
+```java
+public interface Lock {
+    /** 
+     * 락을 획득
+     * - 만약 다른 스레드가 이미 락을 획득했다면, 락이 풀릴 때까지 현재 스레드는 WAITING
+     * - 인터럽트에 응답하지 않음
+     */
+    void lock();
+    /**
+     * 락 획득을 시도하되, 다른 스레드가 인터럽트할 수 있도록 함
+     * - 만약 다른 스레드가 이미 락을 획득했다면, 현재 스레드는 락을 획득할 때까지 대기
+     * - 대기 중에 인터럽트가 발생하면 InterruptedException 이 발생하며 락 획득을 포기
+     */
+    void lockInterruptibly() throws InterruptedException;
+    /**
+     * 획득을 시도하고, 즉시 성공 여부를 반환
+     * - 만약 다른 스레드가 이미 락을 획득했다면 false 반환
+     * - 그렇지 않으면 락을 획득하고 true 반환
+     */
+    boolean tryLock();
+    /**
+     * 주어진 시간 동안 락 획득 시도
+     * - 주어진 시간 안에 락을 획득하면 true 반환
+     * - 주어진 시간이 지나도 락을 획득하지 못한 경우 false 반환
+     * - 대기 중 인터럽트가 발생하면 InterruptedException 이 발생하며 락 획득을 포기
+     */
+    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
+    /**
+     * 락을 해제
+     * - 락을 해제하면 락 획득을 대기 중인 스레드 중 하나가 락을 획득할 수 있게 됨
+     * - 락을 획득한 스레드가 호출해야 하며
+     * - 그렇지 않으면 IllegalMonitorStateException 발생
+     */
+    void unlock();
+    /**
+     * Condition 객체를 생성하여 반환
+     * - Condition 객체는 락과 결합되어 사용
+     * - 스레드가 특정 조건을 기다리거나 신호를 받을 수 있도록 함
+     * - Object.wait(), notify(), notifyAll() 메서드와 유사한 역할
+     */
+    Condition newCondition();
+}
+```
+
+---
 
 
 
