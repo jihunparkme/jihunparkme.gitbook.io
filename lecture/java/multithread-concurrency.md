@@ -688,8 +688,11 @@ public void method() {
   - 동기화는 멀티스레드 환경에서 필수적인 기능이지만, 과도하게 사용할 경우 성능 저하를 초래
     - 꼭 필요한 곳에 적절히 사용 필요
 
+---
 
-## LockSupport
+## concurrent.Lock
+
+### LockSupport
 
 > synchronized 의 문제를 해결하기 위해 더 유연하고, 세밀한 제어가 가능한 방법들이 필요
 > 
@@ -710,8 +713,38 @@ public void method() {
   - 누가 깨워주기 전까지는 계속 대기
   - CPU 실행 스케줄링에 들어가지 않음
 - `parkNanos(nanos)` : 스레드를 나노초 동안만 **TIMED_WAITING** 상태로 변경
-  - 지정한 나노초가 지나면 **TIMED_WAITING** 상태에서 빠져나오고 **RUNNABLE** 상태로 변경된다.
+  - 지정한 나노초가 지나면 **TIMED_WAITING** 상태에서 빠져나오고 **RUNNABLE** 상태로 변경
 - `unpark(thread)` : **WAITING** 상태의 대상 스레드를 **RUNNABLE** 상태로 변경
+
+[LockSupport.unpark example]() -> [java adv1] LockSupport1
+
+...
+
+#### ℹ️ BLOCKED vs WAITING
+
+**BLOCKED** , **WAITING** , **TIMED_WAITING** 상태 모두 스레드가 대기
+- 실행 스케줄링에 들어가지 않기 때문에, CPU 입장에서 보면 실행하지 않는 비슷한 상태
+
+`BLOCKED 상태`
+- **synchronized** 에서 락을 획득하기 위해 대기할 때 사용
+  - **synchronized** 에서만 사용하는 특별한 대기 상태
+- 인터럽트가 걸려도 대기 상태를 빠져나오지 못함
+
+`WAITING`, `TIMED_WAITING` 상태
+- 범용적으로 활용할 수 있는 대기 상태
+- 인터럽트가 걸리면 대기 상태를 빠져나오고, RUNNABLE 상태로 변경
+- 다양한 상황에서 사용
+  - Thread.join() , Thread.join(long millis)
+  - Thread.park() , Thread.parkNanos(long millis)
+  - Object.wait() , Object.wait(long timeout)
+
+---
+
+
+
+
+
+
 
 
 ## Section
