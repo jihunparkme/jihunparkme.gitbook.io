@@ -854,6 +854,8 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 - `기아 현상 방지`: 모든 스레드가 언젠가 락을 획득할 수 있게 보장
 - `성능 저하`: 우선수위 선정을 위해 락을 획득하는 속도가 느려질 수 있음
 
+[ReentrantLock fair mode example]() [java adv1] ReentrantLock 공정성
+
 ---
 
 
