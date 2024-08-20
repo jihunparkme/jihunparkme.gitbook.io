@@ -814,6 +814,10 @@ public interface Lock {
 }
 ```
 
+- [ReentrantLock Lock example]() -> [java adv1] ReentrantLock 활용
+- [ReentrantLock tryLock Example]() -> [java adv1] ReentrantLock tryLock 활용
+- [ReentrantLock tryLock time Example]() -> ReentrantLock tryLock time 활용
+
 ...
 
 #### ℹ️ 공정성
@@ -858,6 +862,40 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 
 ---
 
+## 생산자 소비자 문제
+
+**생산자(Producer)**
+- 데이터를 생성하는 역할
+- ex. 파일에서 데이터를 읽어오거나 네트워크에서 데이터를 받아오는 스레드
+
+**소비자(Consumer)**
+- 생성된 데이터를 사용하는 역할
+- ex. 데이터를 처리하거나 저장하는 스레드s
+
+**버퍼(Buffer)**
+- 생산자가 생성한 데이터를 일시적으로 저장하는 공간
+- 한정된 크기를 가지며, 생산자와 소비자가 이 버퍼를 통해 데이터를 주고 받음
+
+.
+
+생산자/소비자 문제가 발생할 수 있는 상황
+
+**생산자가 너무 빠를 때**
+- 버퍼가 가득 차서 더 이상 데이터를 넣을 수 없을 때까지 생산자가 데이터를 생성
+- 버퍼가 가득 찬 경우 생산자는 버퍼에 빈 공간이 생길 때까지 대기
+
+**소비자가 너무 빠를 때**
+- 버퍼가 비어서 더 이상 소비할 데이터가 없을 때까지 소비자가 데이터를 처리
+- 버퍼가 비어있을 때 소비자는 버퍼에 새로운 데이터가 들어올 때까지 대기
+
+.
+
+**생산자-소비자 문제(producer-consumer problem)**
+- 생산자-소비자 문제는, 생산자 스레드와 소비자 스레드가 특정 자원을 함께 생산하고, 소비하면서 발생하는 문제
+
+**한정된 버퍼 문제(bounded-buffer problem)**
+- 이 문제는 결국 중간에 있는 버퍼의 크기가 한정되어 있기 때문에 발생
+- 한정된 버퍼 문제라고도 불림
 
 
 
