@@ -814,9 +814,9 @@ public interface Lock {
 }
 ```
 
-- [ReentrantLock Lock example]() -> [java adv1] ReentrantLock 활용
-- [ReentrantLock tryLock Example]() -> [java adv1] ReentrantLock tryLock 활용
-- [ReentrantLock tryLock time Example]() -> ReentrantLock tryLock time 활용
+- [ReentrantLock Lock example](https://github.com/jihunparkme/inflearn-java-adv1/commit/dd0ee63f0a27d8688069701ea92a76eb38e4b1b8)
+- [ReentrantLock tryLock Example](https://github.com/jihunparkme/inflearn-java-adv1/commit/a0a2ca3cce5fa64ab801e5f5be0fd3616a8d903a)
+- [ReentrantLock tryLock time Example](https://github.com/jihunparkme/inflearn-java-adv1/commit/a9739ceeee42fc6389731b75767bd7c2e2fbe9c8)
 
 ...
 
