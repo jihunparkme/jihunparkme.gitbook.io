@@ -897,7 +897,11 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 - 이 문제는 결국 중간에 있는 버퍼의 크기가 한정되어 있기 때문에 발생
 - 한정된 버퍼 문제라고도 불림
 
+.
 
+Example
+- [생산자 소비자 문제 발생]() -> [java adv1] 생산자 소비자 문제 example01
+- [생산자 소비자 문제 DeadLock]() -> [java adv1] 생산자 소비자 문제 example 02
 
 ## Section
 
