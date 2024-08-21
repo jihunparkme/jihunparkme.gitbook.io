@@ -917,8 +917,9 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 - 모든 스레드를 깨워야 할 필요가 있는 경우에 유용
 
 Example
-- [생산자 소비자 문제 발생]() -> [java adv1] 생산자 소비자 문제 example01
-- [생산자 소비자 문제 DeadLock]() -> [java adv1] 생산자 소비자 문제 example 02
+- [생산자 소비자 문제 발생](https://github.com/jihunparkme/inflearn-java-adv1/commit/07e2e1553e2b5eb9cd992b12706ab000d473af59)
+- [생산자 소비자 문제 DeadLock](https://github.com/jihunparkme/inflearn-java-adv1/commit/58da5718e78d1e76c7820caa73a9bb44295513aa)
+- [생산자 소비자 문제 Object wait(), notify() 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/d886f06b9bb67bc56fb3aa55917ffa67d03dd782)
 
 ## Section
 
