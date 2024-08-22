@@ -929,8 +929,16 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 
 Example
 - [생산자 소비자 문제 발생](https://github.com/jihunparkme/inflearn-java-adv1/commit/07e2e1553e2b5eb9cd992b12706ab000d473af59)
+  - 스레드를 제어할 수 없기 때문에 한정된 버퍼 상황에서 문제가 발생
+    - 버퍼가 가득 찬 경우: 생산자의 데이터를 버린다.
+    - 버퍼에 데이터가 없는 경우: 소비자는 데이터를 획득할 수 없다.(null)
 - [생산자 소비자 문제 DeadLock](https://github.com/jihunparkme/inflearn-java-adv1/commit/58da5718e78d1e76c7820caa73a9bb44295513aa)
+  - 반복문을 사용해서 스레드를 대기하는 방법
+  - 임계 영역 안에서 락을 들고 대기하기 때문에, 다른 스레드가 임계 영역에 접근할 수 없음
+  - 나머지 스레드는 모두 BLOCKED 상태가 되고, 스레드들이 멈추는 문제 발생
 - [생산자 소비자 문제 Object wait(), notify() 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/d886f06b9bb67bc56fb3aa55917ffa67d03dd782)
+  - wait(), notify(), notifyAll()을 사용해서 문제 해결
+  - 하지만, 원하는 스레드를 선택해서 깨울 수 없어 비효율 발생
 
 ## Section
 
