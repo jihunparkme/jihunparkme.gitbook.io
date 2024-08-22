@@ -404,9 +404,9 @@ static class MyRunnable implements Runnable {
 >
 > 최근에는 체크 예외보다는 언체크 예외를 선호
 
----
+...
 
-### Join
+#### ℹ️ Join
 
 [join이 필요한 상황](https://github.com/jihunparkme/inflearn-java-adv1/commit/8e8510bb33ad9056e902588d24a9c71b7fe186eb)
 - 기대와 다르게 두 결과 모두 0이 나온다.
@@ -425,9 +425,9 @@ static class MyRunnable implements Runnable {
 - `join(ms)` : 호출 스레드는 특정 시간 만큼만 대기
   - 호출 스레드는 지정한 시간이 지나면 다시 RUNNABLE 상태가 되면서 다음 코드를 수행
 
----
+...
 
-### Interrupt
+#### ℹ️ Interrupt
 
 > 인터럽트를 사용하면 `WAITING`, `TIMED_WAITING` 같은 대기 상태의 스레드를 직접 깨워서, 
 > 
@@ -463,9 +463,9 @@ static class MyRunnable implements Runnable {
 - [yield를 활용한 CPU 자원 양보](https://github.com/jihunparkme/inflearn-java-adv1/commit/d77423d163b525634d44d534df7a1421ae0522ee)
   - 작업이 비어있으면 다른 스레드에 작업을 양보
 
----
+...
 
-### Yield
+#### ℹ️ Yield
 
 > 현재 실행 중인 스레드가 자발적으로 다른 스레드에게 CPU를 양보
 >
@@ -477,9 +477,9 @@ static class MyRunnable implements Runnable {
 
 [Thread.yield() Example](https://github.com/jihunparkme/inflearn-java-adv1/commit/4d98ad7f2e5ba03a5a1546dce72981f61e8564aa)
 
----
+...
 
-### volatile
+#### ℹ️ volatile
 
 **메모리 가시성(memory visibility)**
 
@@ -918,7 +918,7 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 
 .
 
-**Object wait(), notify()의 한계**
+### Object wait(), notify()의 한계
 - **스레드 대기 집합 하나에** 생산자, 소비자 스레드를 모두 관리하고, `notify()`를 호출할 때 **임의의 스레드가 선택**
   - 큐에 데이터가 없는 상황에 소비자가 같은 소비자를 깨우거나
   - 큐에 데이터가 가득 차있는데 생산자가 같은 생산자를 깨우는 비효율 발생
@@ -939,6 +939,21 @@ Example
 - [생산자 소비자 문제 Object wait(), notify() 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/d886f06b9bb67bc56fb3aa55917ffa67d03dd782)
   - wait(), notify(), notifyAll()을 사용해서 문제 해결
   - 하지만, 원하는 스레드를 선택해서 깨울 수 없어 비효율 발생
+
+---
+
+### Lock Condition
+
+
+
+
+
+
+
+
+
+
+
 
 ## Section
 
