@@ -970,14 +970,17 @@ Condition.signal()
 
 #### synchronized 대기
 
-- 대기1: 락 획득 대기
-  - `BLOCKED` 상태로 락 대기 집합에서 락 획득 대기
+- 대기1: 모니터 락 획득 대기
+  - 자바 객체 내부의 락 대기 집합(모니터 락 대기 집합)에서 관리
+  - `BLOCKED` 상태로 락 획득 대기
   - synchronized 를 시작할 때 락이 없으면 대기
-  - 다른 스레드가 synchronized 를 빠져나갈 때 대기가 풀리며 락 획득 시도
+  - 다른 스레드가 synchronized 를 빠져나갈 때 락을 획득 시도
+    - 락을 획득하면 락 대기 집합 탈출
 - 대기2: wait() 대기
-  - `WAITING` 상대로 스레드 대기 집합에서 대기
-    - wait() 를 호출 시 스레드 대기 집합에서 대기
-  - 다른 스레드가 notify() 를 호출 했을 때 탈출
+  - `wait()` 호출 시 자바 객체 내부의 스레드 대기 집합에서 관리
+  - `WAITING` 상태로 대기
+  - 다른 스레드가 notify() 호출 시 스레드 대기 집합 탈출
+
 
 <figure><img src="../../.gitbook/assets/java-adv/synchronized-monitor-lock.png" alt=""><figcaption></figcaption></figure>
 
@@ -985,6 +988,28 @@ Condition.signal()
 > - 모니터 락
 > - 락 대기 집합(모니터 락 대기 집합) / 1차 대기소
 > - 스레드 대기 집합 / 2차 대기소
+
+...
+
+#### ReentrantLock 대기
+
+- 대기1: ReentrantLock 락 획득 대기
+  - ReentrantLock 의 대기 큐에서 관리
+  - `WAITING` 상태로 락 획득 대기
+  - `lock.lock()` 호출 시 락이 없으면 대기
+  - 다른 스레드가 `lock.unlock()` 호출 시 대기가 풀리며 락 획득 시도
+    - 락을 획득하면 대기 큐 탈출
+- 대기2: await() 대기
+  - `condition.await()` 호출 시 condition 객체의 스레드 대기 공간에서 관리
+  - `WAITING` 상대로 대기
+  - 다른 스레드가 `condition.signal()` 호출 시 condition 객체의 스레드 대기 공간에서 탈출
+
+<figure><img src="../../.gitbook/assets/java-adv/reentrantLock.png" alt=""><figcaption></figcaption></figure>
+
+
+
+
+
 
 
 
