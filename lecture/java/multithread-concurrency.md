@@ -916,9 +916,9 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 - 모든 대기 중인 스레드가 락을 획득할 수 있는 기회를 얻음
 - 모든 스레드를 깨워야 할 필요가 있는 경우에 유용
 
-...
+.
 
-#### Object wait(), notify()의 한계
+**Object wait(), notify()의 한계**
 - **스레드 대기 집합 하나에** 생산자, 소비자 스레드를 모두 관리하고, `notify()`를 호출할 때 **임의의 스레드가 선택**
   - 큐에 데이터가 없는 상황에 소비자가 같은 소비자를 깨우거나
   - 큐에 데이터가 가득 차있는데 생산자가 같은 생산자를 깨우는 비효율 발생
@@ -946,7 +946,7 @@ Example
 
 Example
 - [synchronized -> ReentrantLock 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/229de0d1ab24444260efad43d5afcd2260fcc5cc)
-- [생산자 소비자 대기 공간 분리 ]() -> [java adv1] 생산자 소비자 대기 공간 분리
+- [생산자 소비자 대기 공간 분리]() -> [java adv1] 생산자 소비자 대기 공간 분리
 
 .
 
@@ -962,12 +962,29 @@ Condition.signal()
 - 대기 중인 스레드 중 하나를 깨움
   - 일반적으로는 FIFO 순서로 깨우고, 자바 버전과 구현에 따라 차이
   - 보통 Condition 구현은 Queue 구조를 사용하기 때문에 FIFO 순서
-- ReentrantLock 을 가지고 있는 스레드가 호출해야 한다.ㄴ
+- ReentrantLock 을 가지고 있는 스레드가 호출해야 함
 
+---
 
+### 스래드의 대기
 
+#### synchronized 대기
 
+- 대기1: 락 획득 대기
+  - `BLOCKED` 상태로 락 대기 집합에서 락 획득 대기
+  - synchronized 를 시작할 때 락이 없으면 대기
+  - 다른 스레드가 synchronized 를 빠져나갈 때 대기가 풀리며 락 획득 시도
+- 대기2: wait() 대기
+  - `WAITING` 상대로 스레드 대기 집합에서 대기
+    - wait() 를 호출 시 스레드 대기 집합에서 대기
+  - 다른 스레드가 notify() 를 호출 했을 때 탈출
 
+<figure><img src="../../.gitbook/assets/java-adv/synchronized-monitor-lock.png" alt=""><figcaption></figcaption></figure>
+
+> 자바(synchronized)의 모든 객체 인스턴스는 멀티스레드와 임계 영역을 다루기 위해 내부에 3가지 기본 요소를 가짐
+> - 모니터 락
+> - 락 대기 집합(모니터 락 대기 집합) / 1차 대기소
+> - 스레드 대기 집합 / 2차 대기소
 
 
 
