@@ -946,9 +946,23 @@ Example
 
 Example
 - [synchronized -> ReentrantLock 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/229de0d1ab24444260efad43d5afcd2260fcc5cc)
-- [생산자 소비자 대기 공간 분리 ]() -> 
+- [생산자 소비자 대기 공간 분리 ]() -> [java adv1] 생산자 소비자 대기 공간 분리
 
+.
 
+**Object.notify() vs Condition.signal()**
+
+Object.notify()
+- 대기 중인 스레드 중 임의의 하나를 선택해서 깨움
+  - 스레드가 깨어나는 순서는 정의되어 있지 않고, JVM 구현에 따라 차이
+  - 보통은 먼저 들어온 스레드가 먼저 수행되지만 구현에 따라 다를 수 있음
+- synchronized 블록 내에서 모니터 락을 가지고 있는 스레드가 호출해야 함
+
+Condition.signal()
+- 대기 중인 스레드 중 하나를 깨움
+  - 일반적으로는 FIFO 순서로 깨우고, 자바 버전과 구현에 따라 차이
+  - 보통 Condition 구현은 Queue 구조를 사용하기 때문에 FIFO 순서
+- ReentrantLock 을 가지고 있는 스레드가 호출해야 한다.ㄴ
 
 
 
