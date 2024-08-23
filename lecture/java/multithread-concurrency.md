@@ -948,7 +948,11 @@ Example
 - [synchronized -> ReentrantLock 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/229de0d1ab24444260efad43d5afcd2260fcc5cc)
 - [생산자 소비자 대기 공간 분리]() -> [java adv1] 생산자 소비자 대기 공간 분리
 
-.
+<p align="center" width="100%">
+  <img src="../../.gitbook/assets/java-adv/lock-condition-1.png" width="40%">
+  <img src="../../.gitbook/assets/java-adv/lock-condition-2.png" width="40%">
+</p>
+
 
 **Object.notify() vs Condition.signal()**
 
