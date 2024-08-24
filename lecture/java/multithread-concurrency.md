@@ -946,7 +946,7 @@ Example
 
 Example
 - [synchronized -> ReentrantLock 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/229de0d1ab24444260efad43d5afcd2260fcc5cc)
-- [생산자 소비자 대기 공간 분리]() -> [java adv1] 생산자 소비자 대기 공간 분리
+- [생산자 소비자 대기 공간 분리](https://github.com/jihunparkme/inflearn-java-adv1/commit/fe6db09e821ecfcad11622c13c7210f664fd06c8)
 
 <p align="center" width="100%">
   <img src="../../.gitbook/assets/java-adv/lock-condition-1.png" width="40%">
