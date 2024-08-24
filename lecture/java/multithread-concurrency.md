@@ -633,7 +633,7 @@ CPU 는 처리 성능 개선을 위해 중간에 캐시 메모리를 사용
 
 ---
 
-### synchronized method
+#### synchronized method
 
 > 메서드를 synchronized 로 선언해서, 메서드에 접근하는 스레드가 하나뿐이도록 보장
 
@@ -658,7 +658,7 @@ public synchronized void synchronizedMethod() {
 
 ---
 
-### synchronized code block
+#### synchronized code block
 
 > 코드 블록을 synchronized 로 감싸서, 동기화를 구현
 
@@ -897,7 +897,7 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 - 이 문제는 결국 중간에 있는 버퍼의 크기가 한정되어 있기 때문에 발생
 - 한정된 버퍼 문제라고도 불림
 
-### Object wait(), notify()
+#### Object wait(), notify()
 
 **Object.wait()**
 - 현재 스레드가 가진 락을 반납하고 대기(WAITING) 상태로 전환
