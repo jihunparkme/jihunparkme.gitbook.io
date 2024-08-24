@@ -1010,12 +1010,18 @@ Condition.signal()
 
 <figure><img src="../../.gitbook/assets/java-adv/reentrantLock.png" alt=""><figcaption></figcaption></figure>
 
+### BlockingQueue
 
+> 자바는 생산자 소비자 문제를 해결하기 위해
+> 
+> `java.util.concurrent.BlockingQueue` 라는 특별한 멀티스레드 자료 구조를 제공
 
+큐가 특정 조건이 만족될 때까지 스레드의 작업을 차단(blocking)
 
-
-
-
+- **데이터 추가 차단**
+  - 큐가 가득 차면 데이터 추가 작업(`put()`)을 시도하는 스레드는 공간이 생길 때까지 차단
+- **데이터 획득 차단**
+  - 큐가 비어 있으면 획득 작업(`take()`)을 시도하는 스레드는 큐에 데이터가 들어올 때까지 차단
 
 ## Section
 
