@@ -1024,10 +1024,6 @@ Condition.signal()
   - 큐가 비어 있으면 획득 작업(`take()`)을 시도하는 스레드는 큐에 데이터가 들어올 때까지 차단
 
 BlockingQueue 인터이스 주요 메서드
-- 대표적인 구현체
-  - ArrayBlockingQueue
-  - LinkedBlockingQueue
-  - BlockingDeque
 
 ```java
 public interface BlockingQueue<E> extends Queue<E> {
@@ -1044,15 +1040,58 @@ public interface BlockingQueue<E> extends Queue<E> {
 }
 ```
 
+대표적인 구현체
+- ArrayBlockingQueue
+- LinkedBlockingQueue
+- BlockingDeque
+
 [BlockingQueue example]() -> [java adv1] BlockingQueue example
 
+...
 
+#### BlockingQueue 기능
 
+큐가 가득 찼을 때 생각할 수 있는 선택지
+- 예외를 던지고, 예외를 받아서 처리
+- 대기하지 않고, 즉시 false 반환
+- 대기
+- 특정 시간 만큼만 대기
 
+||Throws exception | Special value | Blocks | Times out|
+|---|---|---|---|---
+|Insert|add(e)|offer(e)|put(e)|offer(e, time, unit)|
+|Remove|remove()|poll()|take()|poll(time, unit)|
+|Examine|element()|peek()|not applicable|not applicable|
 
+**Throws Exception / 대기 시 예외**
+- add(e): 지정된 요소를 큐에 추가
+  - 큐가 가득 차면 IllegalStateException 예외
+- remove(): 큐에서 요소를 제거하며 반환
+  - 큐가 비어 있으면 NoSuchElementException 예외
+- element(): 큐의 머리 요소를 반환하지만, 요소를 큐에서 제거하지 않음
+  - 큐가 비어 있으면 NoSuchElementException 예외
 
+**Special Value / 대기 시 즉시 반환**
+- offer(e): 지정된 요소를 큐에 추가하려고 시도
+  - 큐가 가득 차면 false 반환
+- poll(): 큐에서 요소를 제거하고 반환
+  - 큐가 비어 있으면 null 반환
+- peek(): 큐의 머리 요소를 반환하지만, 요소를 큐에서 제거하지 않음
+  - 큐가 비어 있으면 null 반환
 
+**Blocks / 대기**
+- put(e): 지정된 요소를 큐에 추가할 때까지 대기
+  - 큐가 가득 차면 공간이 생길 때까지 대기
+- take(): 큐에서 요소를 제거하고 반환
+  - 큐가 비어 있으면 요소가 준비될 때까지 대기
+- Examine (관찰): 해당 사항 없음.
 
+**Times Out / 시간 대기**
+- offer(e, time, unit): 지정된 요소를 큐에 추가하려고 시도
+  - 지정된 시간 동안 큐가 비워지기를 기다리다가 시간이 초과되면 false 반환
+- poll(time, unit): 큐에서 요소를 제거하고 반환
+  - 큐에 요소가 없다면 지정된 시간 동안 요소가 준비되기를 기다리다가 시간이 초과되면 null 반환
+- Examine (관찰): 해당 사항 없음
 
 ## Section
 
