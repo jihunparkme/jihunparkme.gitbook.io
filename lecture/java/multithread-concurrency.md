@@ -1023,6 +1023,37 @@ Condition.signal()
 - **데이터 획득 차단**
   - 큐가 비어 있으면 획득 작업(`take()`)을 시도하는 스레드는 큐에 데이터가 들어올 때까지 차단
 
+BlockingQueue 인터이스 주요 메서드
+- 대표적인 구현체
+  - ArrayBlockingQueue
+  - LinkedBlockingQueue
+  - BlockingDeque
+
+```java
+public interface BlockingQueue<E> extends Queue<E> {
+  // 데이터 추가
+  boolean add(E e);
+  boolean offer(E e);
+  void put(E e) throws InterruptedException;
+  boolean offer(E e, long timeout, TimeUnit unit) throws InterruptedException;
+  // 데이터 획득
+  E take() throws InterruptedException;
+  E poll(long timeout, TimeUnit unit) throws InterruptedException;
+  boolean remove(Object o);
+  //...
+}
+```
+
+[BlockingQueue example]() -> [java adv1] BlockingQueue example
+
+
+
+
+
+
+
+
+
 ## Section
 
 ### Sub Section
