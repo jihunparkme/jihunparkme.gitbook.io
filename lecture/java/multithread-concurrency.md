@@ -1093,6 +1093,25 @@ public interface BlockingQueue<E> extends Queue<E> {
   - 큐에 요소가 없다면 지정된 시간 동안 요소가 준비되기를 기다리다가 시간이 초과되면 null 반환
 - Examine (관찰): 해당 사항 없음
 
+.
+
+기능 테스트
+- [BlockingQueue 즉시 반환(offer, poll)]() -> [java adv1] BlockingQueue 즉시 반환(offer, poll)
+- [BlockingQueue 시간 대기(offer, poll)]() -> [java adv1] BlockingQueue 시간 대기(offer, poll)
+- [BlockingQueue 예외(add, remove)]() -> [java adv1] BlockingQueue 예외(add, remove)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Section
 
 ### Sub Section
