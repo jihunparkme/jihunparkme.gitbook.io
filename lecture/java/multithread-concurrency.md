@@ -1045,7 +1045,7 @@ public interface BlockingQueue<E> extends Queue<E> {
 - LinkedBlockingQueue
 - BlockingDeque
 
-[BlockingQueue example]() -> [java adv1] BlockingQueue example
+[BlockingQueue example](https://github.com/jihunparkme/inflearn-java-adv1/commit/bb67e660fb1627b7ca5a2877e614c248a8d04293)
 
 ...
 
@@ -1096,9 +1096,9 @@ public interface BlockingQueue<E> extends Queue<E> {
 .
 
 기능 테스트
-- [BlockingQueue 즉시 반환(offer, poll)]() -> [java adv1] BlockingQueue 즉시 반환(offer, poll)
-- [BlockingQueue 시간 대기(offer, poll)]() -> [java adv1] BlockingQueue 시간 대기(offer, poll)
-- [BlockingQueue 예외(add, remove)]() -> [java adv1] BlockingQueue 예외(add, remove)
+- [BlockingQueue 즉시 반환(offer, poll)](https://github.com/jihunparkme/inflearn-java-adv1/commit/0070c4f6b0376c65724bf21614f60b53e00f845c)
+- [BlockingQueue 시간 대기(offer, poll)](https://github.com/jihunparkme/inflearn-java-adv1/commit/794a24459b1e26de52b7ed237891360dcc1fc393)
+- [BlockingQueue 예외(add, remove)](https://github.com/jihunparkme/inflearn-java-adv1/commit/177b76d97f9035a7ae6542aca80028625a1d1e3e)
 
 
 
