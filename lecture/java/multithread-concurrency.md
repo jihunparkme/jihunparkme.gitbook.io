@@ -1100,11 +1100,20 @@ public interface BlockingQueue<E> extends Queue<E> {
 - [BlockingQueue 시간 대기(offer, poll)](https://github.com/jihunparkme/inflearn-java-adv1/commit/794a24459b1e26de52b7ed237891360dcc1fc393)
 - [BlockingQueue 예외(add, remove)](https://github.com/jihunparkme/inflearn-java-adv1/commit/177b76d97f9035a7ae6542aca80028625a1d1e3e)
 
+---
 
+## CAS / 원자적 연산
 
+**원자적 연산(atomic operation)**
+- 해당 연산이 더 이상 나눌 수 없는 단위로 수행된다는 것을 의미
+- 중단되지 않고, 다른 연산과 간섭 없이 완전히 실행되거나 전혀 실행되지 않는 성질
+- 멀티스레드 상황에서 다른 스레드의 간섭 없이 안전하게 처리되는 연산
 
-
-
+```java
+volatile int i = 0;
+i = 1; // 원자적 연산 O
+i = i + 1; // 원자젹 연산 X
+```
 
 
 
