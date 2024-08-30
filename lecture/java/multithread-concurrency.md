@@ -1115,7 +1115,13 @@ i = 1; // 원자적 연산 O
 i = i + 1; // 원자젹 연산 X
 ```
 
-
+commit
+- [원자적 연산의 시작]()
+- [volatile 적용]()
+- [synchronized 적용]()
+- [AtomicInteger 적용]()
+  - 멀티스레드 상황에 안전한 증가, 감소 연산 제공
+  - AtomicLong, AtomicBoolean 등 다양한 Atomic 클래스 존재
 
 
 
