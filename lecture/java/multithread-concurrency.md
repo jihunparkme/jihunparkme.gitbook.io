@@ -1138,6 +1138,14 @@ commit
 - 락을 완전히 대체하는 것은 아니고, **작은 단위의 일부 영역에 적용** 가능
   - 기본은 락을 사용하고, 특별한 경우에 CAS를 적용
 
+```java
+AtomicInteger atomicInteger = new AtomicInteger();
+// atomicInteger 값이 0일 경우 1로 변경(원자적으로 실행)
+boolean result1 = atomicInteger.compareAndSet(0, 1);
+```
+
+[incrementAndGet 구현](https://github.com/jihunparkme/inflearn-java-adv1/commit/0fb39a5c6b25eed381904814f3a5f569b502f286)
+
 .
 
 **CPU 하드웨어의 지원**
