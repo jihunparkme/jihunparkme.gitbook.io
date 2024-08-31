@@ -1116,13 +1116,13 @@ i = i + 1; // 원자젹 연산 X
 ```
 
 commit
-- [원자적 연산의 시작]()
-- [volatile 적용]()
-- [synchronized 적용]()
-- [AtomicInteger 적용]()
+- [원자적 연산의 시작](https://github.com/jihunparkme/inflearn-java-adv1/commit/f4bb66db631532eb80de9c9679923c0dfdc4e4e1)
+- [volatile 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/004af03154467b5a4de9e71c608fdbe855622589)
+- [synchronized 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/ed63c78b3a9a4cf88a68b8064f69e48fec9c5e38)
+- [AtomicInteger 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/07db57a8292b96efd2c2b3af502fc4538d315353)
   - 멀티스레드 상황에 안전한 증가, 감소 연산 제공
   - AtomicLong, AtomicBoolean 등 다양한 Atomic 클래스 존재
-- [성능 비교]()
+- [성능 비교](https://github.com/jihunparkme/inflearn-java-adv1/commit/e56cb2bc387d341e392f573ba94308eab64e6506)
 
 ...
 
