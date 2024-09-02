@@ -1284,7 +1284,11 @@ while(lock.compareAndSet(false, true)) {}
 > 
 > AtomicInteger와 같은 CAS 연산을 사용하는 라이브러리들을 잘 사용하는 정도면 충분
 
+---
 
+## 동시성 컬렉션
+
+> 컬렉션 프레임워크가 제공하는 대부분의 연산은 원자적인 연산이 아니다!
 
 
 
