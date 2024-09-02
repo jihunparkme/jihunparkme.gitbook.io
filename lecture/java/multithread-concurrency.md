@@ -1188,10 +1188,10 @@ boolean result1 = atomicInteger.compareAndSet(0, 1);
 > CAS는 단순한 연산 뿐만 아니라, 락을 구현하는데 사용
 
 commit
-- [CAS 없이 직접 락 구현]()
+- [CAS 없이 직접 락 구현](https://github.com/jihunparkme/inflearn-java-adv1/commit/dc9abcf4c2891e8469f02e8b1afb2b89b0f652cd)
   - 원자적이지 않아서 동시성 문제 발생
     - 락 사용 여부 확인, 락의 값 변경
-- [CAS를 적용한 락 구현]()
+- [CAS를 적용한 락 구현](https://github.com/jihunparkme/inflearn-java-adv1/commit/e6451a8025d55cff33ef2f94a8bd8ff90455fc54)
   - 원자적으로 연산
     - 락을 사용하지 않는다면 락의 값을 변경
 
