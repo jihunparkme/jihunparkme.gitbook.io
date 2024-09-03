@@ -1302,6 +1302,25 @@ commit
 - **성능 향상**: 실제 객체의 생성을 지연시키거나 캐싱하여 성능을 최적화
 - **부가 기능 제공**: 실제 객체에 추가적인 기능(로깅, 인증, 동기화 등)을 투명하게 제공
 
+.
+
+**자바 synchronized 프록시**
+- Collections는 다양한 synchronized 동기화 메서드 지원
+- List, Collection, Map, Set 등 다양한 동기화 프록시 생성 가능
+  - synchronizedList()
+  - synchronizedCollection()
+  - synchronizedMap()
+  - synchronizedSet()
+  - synchronizedNavigableMap()
+  - synchronizedNavigableSet()
+  - synchronizedSortedMap()
+  - synchronizedSortedSet()
+
+**synchronized 프록시 방식의 단점**
+- 동기화 오버헤드 발생
+- 전체 컬렉션에 대해 동기화가 이루어지므로 잠금 범위가 넓어짐
+- 정교한 동기화 불가
+
 ## Section
 
 ### Sub Section
