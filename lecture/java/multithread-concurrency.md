@@ -1321,6 +1321,47 @@ commit
 - 전체 컬렉션에 대해 동기화가 이루어지므로 잠금 범위가 넓어짐
 - 정교한 동기화 불가
 
+.
+
+**자바 동시성 컬렉션**
+- `java.util.concurrent` 패키지에는 고성능 멀티스레드 환경을 지원하는 다양한 동시성 컬렉션 클래스들을 제공
+- synchronized, Lock(ReentrantLock), CAS, 분할 잠
+금 기술(segment lock)등 다양한 방법을 섞어서 매우 정교한 동기화를 구현하면서 동시에 성능도 최적화
+
+**동시성 컬렉션의 종류**
+- List
+  - CopyOnWriteArrayList → ArrayList 대안
+- Set
+  - CopyOnWriteArraySet → HashSet 대안
+  - ConcurrentSkipListSet → TreeSet 대안(정렬된 순서 유지, Comparator 사용 가능)
+- Map
+  - ConcurrentHashMap → HashMap 대안
+  - ConcurrentSkipListMap → TreeMap 대안(정렬된 순서 유지, Comparator 사용 가능)
+- Queue
+  - ConcurrentLinkedQueue: 동시성 큐, 비 차단(non-blocking) 큐
+- Deque
+  - ConcurrentLinkedDeque: 동시성 데크, 비 차단(non-blocking) 큐
+
+LinkedHashSet, LinkedHashMap 처럼 입력 순서를 유지하면서 멀티스레드 환경에서 사용할 수 있는 구현체는 제공하지 않고, 필요하다면 Collections.synchronizedXxx() 사용
+
+**스레드를 차단하는 블로킹 큐(BlockingQueue)**
+- ArrayBlockingQueue
+  - 크기가 고정된 블로킹 큐
+  - 공정(fair) 모드 사용 가능. 단, 공정 모드 사용 시 성능 저하 가능성
+- LinkedBlockingQueue
+  - 크기가 무한하거나 고정된 블로킹 큐
+- PriorityBlockingQueue
+  - 우선순위가 높은 요소를 먼저 처리하는 블로킹 큐
+- SynchronousQueue
+  - 데이터를 저장하지 않는 블로킹 큐
+  - 생산자가 데이터를 추가하면 소비자가 그 데이터를 받을 때까지 대기
+  - 생산자-소비자 간의 직접적인 핸드오프(hand-off) 메커니즘 제공
+    - 중간에 큐 없이 생산자, 소비자가 직접 거래
+- DelayQueue
+  - 지연된 요소를 처리하는 블로킹 큐
+  - 각 요소는 지정된 지연 시간이 지난 후에야 소비
+  - 일정 시간이 지난 후 작업을 처리해야 하는 스케줄링 작업에 사용
+
 ## Section
 
 ### Sub Section
