@@ -1424,6 +1424,10 @@ public interface ExecutorService extends Executor, AutoCloseable {
 }
 ```
 
+[ExecutorService example](https://github.com/jihunparkme/inflearn-java-adv1/commit/b0f7c97f24ab71c28a8bc9a7c2f3c4fe48625f50)
+
+<figure><img src="../../.gitbook/assets/java-adv/thread-pool-executor.png" alt=""><figcaption></figcaption></figure>
+
 
 ## Section
 
