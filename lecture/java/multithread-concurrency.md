@@ -1437,6 +1437,79 @@ public interface ExecutorService extends Executor, AutoCloseable {
 
 > 작업의 미래 결과를 받을 수 있는 객체
 
+**Future Interface**
+
+```java
+package java.util.concurrent;
+
+public interface Future<V> {
+  /** 아직 완료되지 않은 작업을 취소
+   * 작업이 실행 중이 아니거나 아직 시작되지 않았으면 취소 
+   * 실행 중인 작업의 경우 mayInterruptIfRunning=true 면 중단 시도
+   * - 취소 상태의 Future 에 Future.get() 을 호출하면 CancellationException 런타임 예외 발생
+   * 
+   * [매개변수]
+   * mayInterruptIfRunning = true
+   * - Future 를 취소 상태로 변경
+   * - 이때 작업이 실행중이라면 Thread.interrupt()를 호출해서 작업 중단 
+   *
+   * mayInterruptIfRunning = false
+   * - Future 를 취소 상태로 변경
+   * - 단, 이미 실행 중인 작업을 중단하지는 않음
+   * 
+   * [반환값]
+   * - 작업이 성공적으로 취소된 경우 true
+   * - 이미 완료되었거나 취소할 수 없는 경우 false
+   */
+  boolean cancel(boolean mayInterruptIfRunning);
+  /** 작업이 취소 여부 확인
+   * 작업이 cancel() 메서드에 의해 취소된 경우에 true 반환
+   * - 작업이 취소된 경우 true, 그렇지 않은 경우 false
+   */
+  boolean isCancelled();
+
+  /**  작업 완료 여부 확인
+   * 작업이 정상적으로 완료되었거나, 취소되었거나, 예외가 발생하여 종료된 경우 true 반환
+   * - 작업이 완료된 경우 true, 그렇지 않은 경우 false
+   */
+  boolean isDone();
+  
+  /** 작업이 완료될 때까지 대기하고, 완료되면 작업 결과 반환
+   * 작업이 완료될 때까지 get()을 호출한 현재 스레드를 대기(블록킹)
+   * 작업이 완료되면 결과를 반환
+   * 
+   * [예외]
+   * - InterruptedException: 대기 중에 현재 스레드가 인터럽트된 경우 발생
+   * - ExecutionException : 작업 계산 중에 예외가 발생한 경우 발생
+   */
+  V get() throws InterruptedException, ExecutionException;
+  /** get() 과 같은데, 시간 초과되면 예외를 발생
+   * 지정된 시간 동안 결과를 대기
+   * 시간이 초과되면 TimeoutException 발생
+   * 
+   * [매개변수]
+   * - timeout : 대기할 최대 시간
+   * - unit: timeout 매개변수의 시간 단위 지정
+   * 
+   * [예외]
+   * - InterruptedException : 대기 중에 현재 스레드가 인터럽트된 경우 발생
+   * - ExecutionException : 계산 중에 예외가 발생한 경우 발생
+   * - TimeoutException : 주어진 시간 내에 작업이 완료되지 않은 경우 발생
+   */
+  V get(long timeout, TimeUnit unit)
+  throws InterruptedException, ExecutionException, TimeoutException;
+  
+  enum State {
+      RUNNING,
+      SUCCESS,
+      FAILED,
+      CANCELLED
+  }
+  
+  default State state() {}
+}
+```
+
 ```java
 Future<Integer> future = es.submit(new MyCallable()); 
 ```
@@ -1454,13 +1527,26 @@ Integer result = future.get();
 
 **Future 동작**
 - [Future 동작 확인](https://github.com/jihunparkme/inflearn-java-adv1/commit/9ba88d6bd7b37a1fa20a880d612e7a31451fe70e)
-- [Future 활용](https://github.com/jihunparkme/inflearn-java-adv1/commit/3b4ee1aed1a499d01873dbe42ed46a92afd84eb4)
 
   <p align="left" width="150%">
       <img src="../../.gitbook/assets/java-adv/future-1.png" width="70%">
       <img src="../../.gitbook/assets/java-adv/future-1-5.png" width="70%">
       <img src="../../.gitbook/assets/java-adv/future-2.png" width="70%">
   </p>
+
+- [Future 활용](https://github.com/jihunparkme/inflearn-java-adv1/commit/3b4ee1aed1a499d01873dbe42ed46a92afd84eb4)
+  - Future 미사용: 두 스레드가 `순차적으로` 수행
+  - Future 사용: 두 스레드가 `동시에` 수행
+
+
+
+
+
+
+
+
+
+
 
 
 ## Section
