@@ -1452,12 +1452,12 @@ Integer result = future.get();
 - Future가 미완료 상태:
   - 작업이 아직 수행되지 않았거나 수행 중 -> 요청 스레드가 결과를 받기 위해 블로킹 상태로 대기
 
-- []()
-<p align="left" width="150%">
-    <img src="../../.gitbook/assets/java-adv/future-1.png" width="70%">
-    <img src="../../.gitbook/assets/java-adv/future-1-5.png" width="70%">
-    <img src="../../.gitbook/assets/java-adv/future-2.png" width="70%">
-</p>
+- [Future 동작 확인](https://github.com/jihunparkme/inflearn-java-adv1/commit/9ba88d6bd7b37a1fa20a880d612e7a31451fe70e)
+  <p align="left" width="150%">
+      <img src="../../.gitbook/assets/java-adv/future-1.png" width="70%">
+      <img src="../../.gitbook/assets/java-adv/future-1-5.png" width="70%">
+      <img src="../../.gitbook/assets/java-adv/future-2.png" width="70%">
+  </p>
 
 
 ## Section
