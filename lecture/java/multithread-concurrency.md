@@ -1537,6 +1537,7 @@ Integer result = future.get();
 - [Future 활용](https://github.com/jihunparkme/inflearn-java-adv1/commit/3b4ee1aed1a499d01873dbe42ed46a92afd84eb4)
   - Future 미사용: 두 스레드가 `순차적으로` 수행
   - Future 사용: 두 스레드가 `동시에` 수행
+- [Future 취소 동작 확인]() -> Future 취소
 
 
 
