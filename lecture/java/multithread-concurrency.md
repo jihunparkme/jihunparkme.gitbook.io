@@ -1393,16 +1393,36 @@ LinkedHashSet, LinkedHashMap 처럼 입력 순서를 유지하면서 멀티스�
   - 체크 예외(checked exception)를 던질 수 없음
   - 체크 예외의 처리는 메서드 내부에서 처리 필요
 
-#### ℹ️ Executor Framework
+### Executor Framework
 
-> 스레드 풀, 스레드 관리, Runnable의 문제점, 생산자 소비자 문제까지 해결해주는 자바 멀티스레드 최고의 도구
+> 멀티스레딩 및 병렬 처리를 쉽게 사용할 수 있도록 돕는 기능의 모음
 > 
-> 멀티스레드 기술의 총 집합이 여기에 포함
+> 작업 실행 관리, 스레드 풀 관리를 효율적으로 처리해서 개발자가 직접 스레드를 생성하고 관리하는 복잡함 해소
+> 
+> 스레드 풀, 스레드 관리, Runnable의 문제점, 생산자 소비자 문제까지 해결해주는 자바 멀티스레드 최고의 도구
 
+```java
+package java.util.concurrent;
 
+public interface Executor {
+    void execute(Runnable command);
+}
 
+...
 
+/** ExecutorService
+ * Executor Framework 사용 시 대부분 ExecutorService 인터페이스 사용
+ * ExecutorService 인터페이스의 기본 구현체는 ThreadPoolExecutor
+ */
+public interface ExecutorService extends Executor, AutoCloseable {
+    <T> Future<T> submit(Callable<T> task);
+    
+    @Override
+    default void close(){...}
 
+    ...
+}
+```
 
 
 ## Section
