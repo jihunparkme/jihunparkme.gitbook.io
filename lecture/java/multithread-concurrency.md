@@ -1433,7 +1433,31 @@ public interface ExecutorService extends Executor, AutoCloseable {
 - [Runnable의 불편함](https://github.com/jihunparkme/inflearn-java-adv1/commit/f036209d7a8be478e35f45b8be8599996069e7d4)
 - [Callable 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/7c3b8e4c79fedb4a091f93d14c915fb3f519bfed)
 
+### Future
 
+> 작업의 미래 결과를 받을 수 있는 객체
+
+```java
+Future<Integer> future = es.submit(new MyCallable()); 
+```
+- submit() 호출시 future 는 즉시 반환
+-  덕분에 요청 스레드는 블로킹 되지 않고, 필요한 작업을 수행
+
+```java
+Integer result = future.get();
+```
+- 작업의 결과가 필요하면 Future.get() 호출
+- Future가 완료 상태:
+  - Future 에 결과도 포함 -> 요청 스레드는 대기하지 않고, 값을 즉시 반환
+- Future가 미완료 상태:
+  - 작업이 아직 수행되지 않았거나 수행 중 -> 요청 스레드가 결과를 받기 위해 블로킹 상태로 대기
+
+- []()
+<p align="left" width="150%">
+    <img src="../../.gitbook/assets/java-adv/future-1.png" width="70%">
+    <img src="../../.gitbook/assets/java-adv/future-1-5.png" width="70%">
+    <img src="../../.gitbook/assets/java-adv/future-2.png" width="70%">
+</p>
 
 
 ## Section
