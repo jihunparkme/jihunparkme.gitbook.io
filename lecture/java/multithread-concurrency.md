@@ -1424,9 +1424,16 @@ public interface ExecutorService extends Executor, AutoCloseable {
 }
 ```
 
-[ExecutorService example](https://github.com/jihunparkme/inflearn-java-adv1/commit/b0f7c97f24ab71c28a8bc9a7c2f3c4fe48625f50)
+**ExecutorService**
+- [ExecutorService example](https://github.com/jihunparkme/inflearn-java-adv1/commit/b0f7c97f24ab71c28a8bc9a7c2f3c4fe48625f50)
 
 <figure><img src="../../.gitbook/assets/java-adv/thread-pool-executor.png" alt=""><figcaption></figcaption></figure>
+
+**Runnable과 Callable 비교**
+- [Runnable의 불편함](https://github.com/jihunparkme/inflearn-java-adv1/commit/f036209d7a8be478e35f45b8be8599996069e7d4)
+- [Callable 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/7c3b8e4c79fedb4a091f93d14c915fb3f519bfed)
+
+
 
 
 ## Section
