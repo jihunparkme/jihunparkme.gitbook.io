@@ -1291,10 +1291,10 @@ while(lock.compareAndSet(false, true)) {}
 > 컬렉션 프레임워크가 제공하는 대부분의 연산은 원자적인 연산이 아니므로 스레드 세이프 하지 않다.
 
 commit
-- [컬렉션 동시성 문제]() -> 동시성 컬렉션이 필요한 이유2 동시성 문제
-- [컬렉션 동기화를 위한 synchronized 적용]() -> 동시성 컬렉션이 필요한 이유3- 동기화 리스트를 위한 synchronized
+- [컬렉션 동시성 문제](https://github.com/jihunparkme/inflearn-java-adv1/commit/8ac7cdc8ab0d7f3dd4d1614029a79d0046aeb0ae)
+- [컬렉션 동기화를 위한 synchronized 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/55b3c469da16daf6a6cc87e26e871b2bb1c963ea)
   - 모든 컬렉션을 복사해서 동기화용으로 새로 구현해야 하는 문제점
-- [컬렉션 동기화를 위한 프록시 패턴 도입]() -> 동시성 컬렉션이 필요한 이유3- 동기화를 위한 프록시 패턴 도입
+- [컬렉션 동기화를 위한 프록시 패턴 도입](https://github.com/jihunparkme/inflearn-java-adv1/commit/37b2479516de7a0f3dd7c3e9de767c74e16ee562)
   - 객체에 대한 접근을 제어하기 위해 대리인/인터페이스 역할을 하는 객체를 제공하는 패턴
 
 프록시 패턴의 주요 목적
@@ -1307,14 +1307,14 @@ commit
 **자바 synchronized 프록시**
 - Collections는 다양한 synchronized 동기화 메서드 지원
 - List, Collection, Map, Set 등 다양한 동기화 프록시 생성 가능
-  - synchronizedList()
-  - synchronizedCollection()
-  - synchronizedMap()
-  - synchronizedSet()
-  - synchronizedNavigableMap()
-  - synchronizedNavigableSet()
-  - synchronizedSortedMap()
-  - synchronizedSortedSet()
+  - `synchronizedList()`
+  - `synchronizedCollection()`
+  - `synchronizedMap()`
+  - `synchronizedSet()`
+  - `synchronizedNavigableMap()`
+  - `synchronizedNavigableSet()`
+  - `synchronizedSortedMap()`
+  - `synchronizedSortedSet()`
 
 **synchronized 프록시 방식의 단점**
 - 동기화 오버헤드 발생
