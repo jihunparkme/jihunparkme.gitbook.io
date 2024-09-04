@@ -1364,7 +1364,7 @@ LinkedHashSet, LinkedHashMap 처럼 입력 순서를 유지하면서 멀티스�
 
 ## Thread Pool And Executor
 
-#### 스레드를 직접 사용할 경우의 문제점
+#### ℹ️ 스레드를 직접 사용할 경우의 문제점
 
 **1). 스레드 생성 시간으로 인한 성능 문제**
 - 메모리 할당:
@@ -1392,6 +1392,15 @@ LinkedHashSet, LinkedHashMap 처럼 입력 순서를 유지하면서 멀티스�
 - 예외 처리: 
   - 체크 예외(checked exception)를 던질 수 없음
   - 체크 예외의 처리는 메서드 내부에서 처리 필요
+
+#### ℹ️ Executor Framework
+
+> 스레드 풀, 스레드 관리, Runnable의 문제점, 생산자 소비자 문제까지 해결해주는 자바 멀티스레드 최고의 도구
+> 
+> 멀티스레드 기술의 총 집합이 여기에 포함
+
+
+
 
 
 
