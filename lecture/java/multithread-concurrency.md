@@ -1424,7 +1424,7 @@ public interface ExecutorService extends Executor, AutoCloseable {
 }
 ```
 
-#### ℹ️ ExecutorService
+### ExecutorService
 - [ExecutorService example](https://github.com/jihunparkme/inflearn-java-adv1/commit/b0f7c97f24ab71c28a8bc9a7c2f3c4fe48625f50)
 
 <figure><img src="../../.gitbook/assets/java-adv/thread-pool-executor.png" alt=""><figcaption></figcaption></figure>
@@ -1463,6 +1463,11 @@ public interface ExecutorService extends Executor, AutoCloseable {
 
 example
 - [ExecutorService 우아한 종료]() -> ExecutorService 우아한 종료. 클래스 파일로..
+- [Executor 스레드 풀 관리]() -> Executor 스레드 풀 관리. 클래스 파일로..
+- [Executor 고정 풀 전략]() -> Executor 스레드 풀 관리 - 고정 풀 전략 파일로..
+- [Executor 캐시 풀 전략]() -> Executor 스레드 풀 관리 - 캐시 풀 전략 파일로..
+- [사용자 정의 풀 전략]() -> 사용자 정의 풀 전략. 파일로
+- [Executor 예외 정책]() -> Executor 예외 정책
 
 ### Future
 
@@ -1571,28 +1576,3 @@ Integer result = future.get();
 - [Future 취소 동작 확인]() -> Future 취소
 - [Future 예외 동작 확인]() -> Future 예외
 - [invokeAll & invokeAny]() -> Future invokeAll and invokeAny
-
-
-
-
-
-
-
-
-
-
-
-
-## Section
-
-### Sub Section
-
-#### ℹ️
-
-...
-
-### Sub Section
-
----
-
-## Section
