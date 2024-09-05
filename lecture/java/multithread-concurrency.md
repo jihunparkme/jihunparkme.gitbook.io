@@ -1538,6 +1538,8 @@ Integer result = future.get();
   - Future 미사용: 두 스레드가 `순차적으로` 수행
   - Future 사용: 두 스레드가 `동시에` 수행
 - [Future 취소 동작 확인]() -> Future 취소
+- [Future 예외 동작 확인]() -> Future 예외
+- [invokeAll & invokeAny]() -> Future invokeAll and invokeAny
 
 
 
