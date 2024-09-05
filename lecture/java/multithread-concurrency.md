@@ -1433,6 +1433,34 @@ public interface ExecutorService extends Executor, AutoCloseable {
 - [Runnable의 불편함](https://github.com/jihunparkme/inflearn-java-adv1/commit/f036209d7a8be478e35f45b8be8599996069e7d4)
 - [Callable 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/7c3b8e4c79fedb4a091f93d14c915fb3f519bfed)
 
+.
+
+**중료 메서드**
+
+- 서비스 종료
+  - `void shutdown()`
+    - 새로운 작업을 받지 않고, 이미 제출된 작업을 모두 완료한 후에 종료
+    - 논 블로킹 메서드
+  - `List<Runnable> shutdownNow()`
+    - 실행 중인 작업을 중단하고, 대기 중인 작업을 반환하며 즉시 종료
+    - 실행 중인 작업을 중단하기 위해 인터럽트 발생
+    - 논 블로킹 메서드
+- 서비스 상태 확인
+  - `boolean isShutdown()`
+    - 서비스가 종료되었는지 확인
+  - `boolean isTerminated()`
+    - shutdown(), shutdownNow() 호출 후, 모든 작업이 완료되었는지 확인
+- 작업 완료 대기
+  - `boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException`
+    - 서비스 종료 시 모든 작업이 완료될 때까지 대기
+    - 이때 지정된 시간까지만 대기
+    - 블로킹 메서드
+  - `close()`
+    - 자바 19부터 지원하는 서비스 종료 메서드
+    - shutdown() 과 동일
+    - 정확히 shutdown() 호출 후, 하루를 기다려도 작업이 완료되지 않으면 shutdownNow() 호출
+    - 호출한 스레드에 인터럽트가 발생해도 shutdownNow() 호출
+
 ### Future
 
 > 작업의 미래 결과를 받을 수 있는 객체
@@ -1513,8 +1541,8 @@ public interface Future<V> {
 ```java
 Future<Integer> future = es.submit(new MyCallable()); 
 ```
-- submit() 호출시 future 는 즉시 반환
--  덕분에 요청 스레드는 블로킹 되지 않고, 필요한 작업을 수행
+- submit() 호출 시 future 는 즉시 반환
+- 덕분에 요청 스레드는 블로킹 되지 않고, 필요한 작업을 수행
 
 ```java
 Integer result = future.get();
