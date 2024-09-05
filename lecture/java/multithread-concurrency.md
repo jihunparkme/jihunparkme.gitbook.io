@@ -1408,7 +1408,7 @@ public interface Executor {
     void execute(Runnable command);
 }
 
-...
+Executor
 
 /** ExecutorService
  * Executor Framework 사용 시 대부분 ExecutorService 인터페이스 사용
@@ -1424,7 +1424,7 @@ public interface ExecutorService extends Executor, AutoCloseable {
 }
 ```
 
-**ExecutorService**
+#### ℹ️ ExecutorService
 - [ExecutorService example](https://github.com/jihunparkme/inflearn-java-adv1/commit/b0f7c97f24ab71c28a8bc9a7c2f3c4fe48625f50)
 
 <figure><img src="../../.gitbook/assets/java-adv/thread-pool-executor.png" alt=""><figcaption></figcaption></figure>
@@ -1435,7 +1435,7 @@ public interface ExecutorService extends Executor, AutoCloseable {
 
 .
 
-**중료 메서드**
+**ExecutorService 중료 메서드**
 
 - 서비스 종료
   - `void shutdown()`
@@ -1460,6 +1460,9 @@ public interface ExecutorService extends Executor, AutoCloseable {
     - shutdown() 과 동일
     - 정확히 shutdown() 호출 후, 하루를 기다려도 작업이 완료되지 않으면 shutdownNow() 호출
     - 호출한 스레드에 인터럽트가 발생해도 shutdownNow() 호출
+
+example
+- [ExecutorService 우아한 종료]() -> ExecutorService 우아한 종료. 클래스 파일로..
 
 ### Future
 
