@@ -5,8 +5,6 @@
 
 ## Lecture
 
-* [Kotlin](lecture/kotlin/README.md)
-  * [Begin Kotlin](lecture/kotlin/begin-kotlin.md)
 * [Java](lecture/java/README.md)
   * [Multithread Concurrency](lecture/java/multithread-concurrency.md)
   * [The Java](lecture/java/the-java.md)
@@ -49,6 +47,7 @@
 
 ## Book
 
+* [Kotlin In Action](book/kotlin-in-action.md)
 * [Kent Beck Tidy First?](book/kent-beck-tidy-first.md)
 * [대규모 시스템 설계 기초](book/system-design-interview/README.md)
   * [01.사용자 수에 따른 규모 확장성](book/system-design-interview/01.md)
