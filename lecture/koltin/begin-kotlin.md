@@ -269,3 +269,348 @@ println("number") // 실행 X
 - 따라서 try의 값을 변수에 대입 가능
 
 ---
+
+# **함수 정의와 호출**
+
+## 컬렉션 만들기
+
+```kotlin
+val set = hashSetOf(1, 7, 53)
+val list = arrayListOf(1, 7, 53)
+val map = hashMapOf(1 to "one", 7 to "seven", 53 to "fifty-three")
+
+...
+
+fun main(args: Array<String>) {
+    val strings = listOf("first", "second", "fourteenth")
+    println(strings.last()) // 리스트의 마지막 원소
+    val numbers = setOf(1, 14, 2)
+    println(numbers.max()) // 컬렉션에서 최댓값
+}
+```
+
+## **확장 함수와 확장 프로퍼티**
+
+> **메소드를 다른 클래스에 추가**
+> 
+
+**`확장 함수`**
+
+- 어떤 클래스의 멤버 메소드인 것처럼 호출할 수 있지만 그 클래스의 밖에 선언된 함수
+- 확장 함수를 만들려면 추가하려는 함수 이름 앞에 그 함수가 확장할 클래스의 이름을 덧붙이자
+- **확장 함수는 오버라이드할 수 없음**
+
+```kotlin
+package strings
+// 문자열의 마지막 문자를 돌려주는 확장 메소드
+fun String.lastChar(): Char = this.get(this.length - 1)
+
+...
+
+// String = 클래스 이름 : 수신 객체 타입(receiver type)
+// "Kotlin" = 확장 함수가 호출되는 대상 : 수신 객체(receiver object)
+println("Kotlin".lastChar())
+```
+
+**임포트와 확장함수**
+
+- 확장 함수를 사용하기 위해서는 그 함수를 다른 클래스나 함수와 마찬가지로 임포트 필요
+
+```kotlin
+import strings.lastChar // 명시적으로 사용
+import strings.* // * 사용 가능
+import strings.lastChar as last // as 키워드를 사용 가능
+```
+
+**함수를 호출하기 쉽게 만들기**
+
+```kotlin
+// AS-IS
+fun <T> joinToString(
+        collection: Collection<T>,
+        separator: String = ";", // 디폴트 파라미터
+        prefix: String = "(",
+        postfix: String = ")"
+): String {
+
+    val result = StringBuilder(prefix)
+
+    for ((index, element) in collection.withIndex()) {
+        if (index > 0) result.append(separator)
+        result.append(element)
+    }
+
+    result.append(postfix)
+    return result.toString()
+}
+
+val list = listOf(1, 2, 3)
+println(joinToString(list, "; ", "(", ")"))
+println(joinToString(collection = list, separator = ";", prefix = "(", postfix = ")"))
+println(joinToString(list))
+println(joinToString(list, "; "))
+
+...
+
+// TO-BE : 확장 함수로 유틸리티 함수 정의
+fun <T> Collection<T>.joinToString(
+        separator: String = ", ",
+        prefix: String = "",
+        postfix: String = ""
+): String {
+    val result = StringBuilder(prefix)
+
+    for ((index, element) in this.withIndex()) {
+        if (index > 0) result.append(separator)
+        result.append(element)
+    }
+
+    result.append(postfix)
+    return result.toString()
+}
+
+fun main(args: Array<String>) {
+    val list = arrayListOf(1, 2, 3)
+    println(list.joinToString(" "))
+}
+
+val list = listOf(1, 2, 3)
+println(list.joinToString2("; ", "(", ")"))
+println(list.joinToString2(separator = ";", prefix = "(", postfix = ")"))
+println(list.joinToString2())
+println(list.joinToString2("; "))
+
+```
+
+**`확장 프로퍼티`**
+
+- 기존 클래스 객체에 대한 프로퍼티 형식의 구문으로 사용할 수 있는 API를 추가
+- 상태를 저장할 적절한 방법이 없으므로 아무 상태도 가질 수 없음
+- 계산한 값을 담을 장소가 전혀 없으므로 초기화 코드도 사용 불가
+
+```kotlin
+val String.lastChar: Char
+		get() = get(length -1)
+
+var StringBuilder.lastChar: Char
+    get() = get(length - 1) // 뒷받침하는 필드가 없어서 최소한 게터는 꼭 정의
+    set(value: Char) {
+        this.setCharAt(length - 1, value)
+    }
+
+@Test
+fun `확장 프로퍼티`() {
+    println("Kotlin".lastChar) // n
+    
+    val sb = StringBuilder("Kotlin?")
+    sb.lastChar = '!'
+    println(sb) // Kotlin!
+}
+```
+
+## **가변 인자 함수**
+
+> 메소드를 호출할 때 원하는 개수만큼 값을 인자로 넘기면 자바 컴파일러가 배열에 그 값들을 넣어주는 기능
+> 
+- 자바는 타입 뒤에 ...를 붙이지만, 코틀린은 파라미터 앞에 `varag` 변경자를 붙인다.
+
+```kotlin
+public fun <T> listOf(vararg elements: T): List<T> = 
+		if (elements.size > 0) elements.asList() else emptyList()
+
+fun main(args: Array<String>) {
+    val list = listOf("one", "two", "eight")
+}
+```
+
+**이미 배열에 들어있는 원소를 가변 길이 인자로 넘길 때**
+
+- 자바에서는 배열을 그냥 넘기면 되지만,
+- 코틀린에서는 배열을 명시적으로 풀어서 `배열의 각 원소가 인자로 전달`되게 해야 한다.
+- 기술적으로는 `스프레드(spread) 연산자`가 이러한 작업을 수행
+
+```kotlin
+fun main(args: Array<String>) {
+    val list = listOf("args: ", *args)
+}
+```
+
+## **값의 쌍 다루기 (중위호출, 구조 분해 선언)**
+
+> 맵을 만들려면 `mapOf` 함수를 사용
+> 
+
+```kotlin
+val map = mapOf(1 to "one", 7 to "seven", 53 to "fifty-three")
+```
+
+- `중위 호출`이라는 특별한 방식으로 `to`라는 일반 메소드를 호출
+- 중위 호출 시에는 수신 객체와 유일한 메소드 인자 사이에 메소드 이름을 넣는다
+
+```kotlin
+1.to("one") // "to" 메소드를 일반적인 방식으로 호출함
+1 to "one" // "to" 메소드를 중위 호출 방식으로 호출함
+```
+
+**메소드를 중위 호출에 사용하도록 허용하고 싶을 경우 `infix` 변경자를 메소드 선언 앞에 추가**
+
+```kotlin
+/**
+ * Creates a tuple of type [Pair] from this and [that].
+ *
+ * This can be useful for creating [Map] literals with less noise, for example:
+ * @sample samples.collections.Maps.Instantiation.mapFromPairs
+ */
+public infix fun <A, B> A.to(that: B): Pair<A, B> = Pair(this, that)
+```
+
+이러한 기능을 `구조 분해 선언`이라고 부른다. 
+
+- Pair 인스턴스 외 다른 객체에도 구조 분해 적용 가능
+    - ex) key, value 두 변수를 맵의 원소를 사용해 초기화
+
+```kotlin
+for ((index, element) in collection.withIndex()) {
+		println("$index: $element")
+}
+```
+
+## 문자열과 정규식
+
+**문자열 나누기**
+
+> split 함수에 전달하는 값의 타입에 따라 정규식이나 일반 텍스트 중 어느 것으로 문자열을 분리하는지 쉽게 알 수 있다.
+> 
+
+```kotlin
+println("12.345-6.A".split("\\\\.|-".toRegex())) // 정규식을 명시적으로 만든다. 
+```
+
+간단한 경우에는 꼭 정규식을 쓸 필요가 없다.
+
+- split 확장 함수를 오버로딩한 버전 중에는 구분 문자열을 하나 이상 인자로 받는 함수가 있다.
+
+```kotlin
+println("12.345-6.A".split(".","-")) // 여러 구분 문자열을 지정한다. 
+[12, 345, 6, A]
+```
+
+**3중 따옴표 문자열**
+
+> 역슬래시(\)를 포함한 어떤 문자도 이스케이프 불필요
+> 
+
+```kotlin
+// AS-IS
+fun parsePath(path: String) {
+    val directory = path.substringBeforeLast("/")
+    val fullName = path.substringAfterLast("/")
+
+    val fileName = fullName.substringBeforeLast(".")
+    val extension = fullName.substringAfterLast(".")
+
+    println("Dir: $directory, name: $fileName, ext: $extension")
+    // Dir: /Users/yole/kotlin-book, name: chapter, ext: adoc
+}
+
+fun main(args: Array<String>) {
+    parsePath("/Users/yole/kotlin-book/chapter.adoc")
+}
+
+...
+
+// TO-BE
+// 정규식을 사용하지 않고도 문자열을 쉽게 파싱
+// 정규식이 필요할 때는 코틀린 라이브러리를 사용하면 더 편리
+fun parsePath(path: String) {
+    val regex = """(.+)/(.+)\\.(.+)""".toRegex()
+    val matchResult = regex.matchEntire(path) // 정규식을 인자로 받은 path에 매치
+    if (matchResult != null) {
+		    // 그룹별로 분해한 매치 결과를 의미하는 destructured 프로퍼티를 각 변수에 대입
+        val (directory, filename, extension) = matchResult.destructured
+        // 구조 분해 선언은 Pair로 두 변수를 초기화할 때 썼던 구문과 동일
+        println("Dir: $directory, name: $filename, ext: $extension")
+    }
+}
+```
+
+## 로컬 함수와 확장
+
+> 함수에서 추출한 함수를 원 함수 내부에 중첩시킬 수 있다.
+문법적인 부가 비용을 들이지 않고도 깔끔하게 코드를 조직 가능
+> 
+- 로컬 함수와 확장으로 코드를 다듬는 과정
+    
+    ```kotlin
+    // AS-IS
+    fun saveUser(user: User) {
+        if (user.name.isEmpty()) {
+            throw IllegalArgumentException(
+                "Can't save user ${user.id}: empty Name")
+        }
+    
+        if (user.address.isEmpty()) {
+            throw IllegalArgumentException(
+                "Can't save user ${user.id}: empty Address")
+        }
+    
+        // Save user to the database
+    }
+    
+    ...
+    
+    // 첫 번째 개선
+    fun saveUser(user: User) {
+        fun validate(user: User,
+                     value: String,
+                     fieldName: String) {
+            if (value.isEmpty()) {
+                throw IllegalArgumentException(
+                    "Can't save user ${user.id}: empty $fieldName")
+            }
+        }
+    
+        validate(user, user.name, "Name")
+        validate(user, user.address, "Address")
+        // Save user to the database
+    }
+    
+    ...
+    
+    // 두 번째 개선
+    fun saveUser(user: User) {
+    		// user 파라미터를 중복 사용하지 않는다. 
+        fun validate(value: String, fieldName: String) { 
+            if (value.isEmpty()) {
+                throw IllegalArgumentException(
+    		            // 바깥 함수의 파라미터에 직접 접근할 수 있다. 
+                    "Can't save user ${user.id}: " +
+                        "empty $fieldName")
+            }
+        }
+    
+        validate(user.name, "Name")
+        validate(user.address, "Address")
+        // Save user to the database
+    }
+    
+    ...
+    
+    // TO-BE (User 클래스를 확장한 함수)
+    fun User.validateBeforeSave() {
+        fun validate(value: String, fieldName: String) {
+            if (value.isEmpty()) {
+                throw IllegalArgumentException(
+                   "Can't save user $id: empty $fieldName")
+            }
+        }
+    
+        validate(name, "Name")
+        validate(address, "Address")
+    }
+    
+    fun saveUser(user: User) {
+        user.validateBeforeSave()
+        // Save user to the database
+    }
+    ```
