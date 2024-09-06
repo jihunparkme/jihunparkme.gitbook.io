@@ -272,7 +272,7 @@ Thread mainThread = Thread.currentThread();
 log("mainThread = " + mainThread);
 /**
  * 1
- * 스레드의 고유 식별자를 반환하는 메서드(각 스레드에 대해 유일한 ID) -> ID는 스레드가 생성될 때 할당되며, 직접 지정할 수 없다
+ * 스레드의 고유 식별자를 반환하는 메서드(각 스레드에 대해 유일한 ID) → ID는 스레드가 생성될 때 할당되며, 직접 지정할 수 없다
  */
 log("mainThread.threadId() = " + mainThread.threadId());
 /**
@@ -706,9 +706,9 @@ public void method() {
 **synchronized 단점**
 - `무한 대기`: BLOCKED 상태의 스레드는 락이 풀릴 때 까지 **무한 대기**
   - 특정 시간까지만 대기하는 타임아웃 불가 
-    - -> **LockSupport.parkNanos()** 를 사용하면 **특정 시간까지만** 대기 가능
+    - → **LockSupport.parkNanos()** 를 사용하면 **특정 시간까지만** 대기 가능
   - 중간에 인터럽트 불가
-    - -> **park()**, **parkNanos()** 는 인터럽트를 걸 수 있음
+    - → **park()**, **parkNanos()** 는 인터럽트를 걸 수 있음
 
 - `공정성`: 락이 돌아왔을 때 BLOCKED 상태의 여러 스레드 중에 어떤 스레드가 락을 획득할 지 알 수 없음
   - 최악의 경우 특정 스레드가 너무 오랜기간 락을 획득하지 못할 수 있음
@@ -922,7 +922,7 @@ ReentrantLock 락은 공정성(fairness) 모드와 비공정(non-fair) 모드로
 - **스레드 대기 집합 하나에** 생산자, 소비자 스레드를 모두 관리하고, `notify()`를 호출할 때 **임의의 스레드가 선택**
   - 큐에 데이터가 없는 상황에 소비자가 같은 소비자를 깨우거나
   - 큐에 데이터가 가득 차있는데 생산자가 같은 생산자를 깨우는 비효율 발생
-- 대기 상태의 스레드가 실행 순서를 계속 얻지 못해서 실행되지 않는 상황이 올 수 있음 -> 스레드 기아(starvation) 상태
+- 대기 상태의 스레드가 실행 순서를 계속 얻지 못해서 실행되지 않는 상황이 올 수 있음 → 스레드 기아(starvation) 상태
   - `notify()` 대신 `notifyAll()`을 사용해서 스레드 기아 문제는 막을 수 있지만, 비효율은 막지 못함
 
 .
@@ -945,7 +945,7 @@ Example
 ### Lock Condition
 
 Example
-- [synchronized -> ReentrantLock 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/229de0d1ab24444260efad43d5afcd2260fcc5cc)
+- [synchronized → ReentrantLock 적용](https://github.com/jihunparkme/inflearn-java-adv1/commit/229de0d1ab24444260efad43d5afcd2260fcc5cc)
 - [생산자 소비자 대기 공간 분리](https://github.com/jihunparkme/inflearn-java-adv1/commit/fe6db09e821ecfcad11622c13c7210f664fd06c8)
 
 <p align="center" width="100%">
@@ -1462,12 +1462,12 @@ public interface ExecutorService extends Executor, AutoCloseable {
     - 호출한 스레드에 인터럽트가 발생해도 shutdownNow() 호출
 
 example
-- [ExecutorService 우아한 종료]() -> ExecutorService 우아한 종료. 클래스 파일로..
-- [Executor 스레드 풀 관리]() -> Executor 스레드 풀 관리. 클래스 파일로..
-- [Executor 고정 풀 전략]() -> Executor 스레드 풀 관리 - 고정 풀 전략 파일로..
-- [Executor 캐시 풀 전략]() -> Executor 스레드 풀 관리 - 캐시 풀 전략 파일로..
-- [사용자 정의 풀 전략]() -> 사용자 정의 풀 전략. 파일로
-- [Executor 예외 정책]() -> Executor 예외 정책
+- [ExecutorService 우아한 종료](https://github.com/jihunparkme/inflearn-java-adv1/blob/main/java-adv1/src/thread/executor/ExecutorShutdownMain.java)
+- [Executor 스레드 풀 관리](https://github.com/jihunparkme/inflearn-java-adv1/blob/main/java-adv1/src/thread/executor/poolsize/PoolSizeMainV1.java)
+- [Executor 고정 풀 전략](https://github.com/jihunparkme/inflearn-java-adv1/blob/main/java-adv1/src/thread/executor/poolsize/PoolSizeMainV2.java)
+- [Executor 캐시 풀 전략](https://github.com/jihunparkme/inflearn-java-adv1/blob/main/java-adv1/src/thread/executor/poolsize/PoolSizeMainV3.java)
+- [사용자 정의 풀 전략](https://github.com/jihunparkme/inflearn-java-adv1/blob/main/java-adv1/src/thread/executor/poolsize/PoolSizeMainV4.java)
+- [Executor 예외 정책](https://github.com/jihunparkme/inflearn-java-adv1/commit/ac5353edf0149ddddb1a0f054b4ba0d119673a33)
 
 ### Future
 
@@ -1557,9 +1557,9 @@ Integer result = future.get();
 ```
 - 작업의 결과가 필요하면 Future.get() 호출
 - Future가 완료 상태:
-  - Future 에 결과도 포함 -> 요청 스레드는 대기하지 않고, 값을 즉시 반환
+  - Future 에 결과도 포함 → 요청 스레드는 대기하지 않고, 값을 즉시 반환
 - Future가 미완료 상태:
-  - 작업이 아직 수행되지 않았거나 수행 중 -> 요청 스레드가 결과를 받기 위해 블로킹 상태로 대기
+  - 작업이 아직 수행되지 않았거나 수행 중 → 요청 스레드가 결과를 받기 위해 블로킹 상태로 대기
 
 **Future 동작**
 - [Future 동작 확인](https://github.com/jihunparkme/inflearn-java-adv1/commit/9ba88d6bd7b37a1fa20a880d612e7a31451fe70e)
@@ -1573,6 +1573,6 @@ Integer result = future.get();
 - [Future 활용](https://github.com/jihunparkme/inflearn-java-adv1/commit/3b4ee1aed1a499d01873dbe42ed46a92afd84eb4)
   - Future 미사용: 두 스레드가 `순차적으로` 수행
   - Future 사용: 두 스레드가 `동시에` 수행
-- [Future 취소 동작 확인]() -> Future 취소
-- [Future 예외 동작 확인]() -> Future 예외
-- [invokeAll & invokeAny]() -> Future invokeAll and invokeAny
+- [Future 취소 동작 확인](https://github.com/jihunparkme/inflearn-java-adv1/commit/93e7a785f9a1bb9083a39b61489896e6c6ffd3a7)
+- [Future 예외 동작 확인](https://github.com/jihunparkme/inflearn-java-adv1/commit/816ad52ddce6bcc1f3500107e76c7bbdd3115b62)
+- [invokeAll & invokeAny](https://github.com/jihunparkme/inflearn-java-adv1/commit/56c466319e0e036f3af5f23aa07bbbd61a3fa69f)
