@@ -19,7 +19,6 @@
 ## **코틀린의 컴파일러(Kotlin Compiler)**
 
 > 코틀린 컴파일러는 JVM에서 실행될 수 있는 **바이트코드가 포함된 클래스 파일을 생성**
-> 
 
 <figure><img src="../../.gitbook/assets/kotlin/kotlin-compiler.png" alt=""><figcaption></figcaption></figure>
 
@@ -62,8 +61,8 @@ fun max(a: Int, b: Int) = if (a > b) a else b
 ## 변수
 
 > 코틀린에서는 보통 타입 지정을 생략
-기본적으로는 모든 변수를 val 키워드를 사용해 불변 변수로 선언하고, 나중에 꼭 필요할 때에만 var로 변경
 > 
+> 기본적으로는 모든 변수를 val 키워드를 사용해 불변 변수로 선언하고, 나중에 꼭 필요할 때에만 var로 변경
 
 ```kotlin
 val answer = 42 // 타입 생략
@@ -94,7 +93,6 @@ fun main(args: Array<String>) {
 ## 클래스와 프로퍼티
 
 > 코틀린의 기본 가시성은 public
-> 
 
 ```kotlin
 // Java
@@ -132,7 +130,6 @@ class Person(
 ## enum & when
 
 > when은 자바의 switch를 대치하되 훨씬 더 강력
-> 
 
 **enum**
 
@@ -179,7 +176,6 @@ fun mix(c1: Color, c2: Color) =
 **스마트 캐스트: 타입 검사와 타입 캐스트를 조합**
 
 > 코틀린에서는 is를 사용해 변수 타입을 검사 (like. java instanceof)
-> 
 
 ```kotlin
 fun eval(e: Expr): Int {
@@ -235,8 +231,8 @@ fun main(args: Array<String>) {
 **in으로 컬렉션이나 범위의 원소 검사**
 
 > `in`으로 어떤 값이 범위에 속하는지 검사
-`!in`을 사용하면 어떤 값이 범위에 속하지 않는지 검사
 > 
+> `!in`을 사용하면 어떤 값이 범위에 속하지 않는지 검사
 
 ```kotlin
 fun recognize(c: Char) = when (c) {
@@ -249,8 +245,8 @@ fun recognize(c: Char) = when (c) {
 ## 예외처리
 
 > 함수는 정상적으로 종료할 수 있지만 오류가 발생하면 예외를 던질 수 있음
-단, 함수가 던질 수 있는 예외를 선언하지 않아도 된다
 > 
+> 단, 함수가 던질 수 있는 예외를 선언하지 않아도 된다
 
 ```kotlin
 // 조건이 참이면 number 값이 초기화되고, 거짓이면 초기화되지 않고 throw 호출
@@ -292,7 +288,6 @@ fun main(args: Array<String>) {
 ## **확장 함수와 확장 프로퍼티**
 
 > **메소드를 다른 클래스에 추가**
-> 
 
 **`확장 함수`**
 
@@ -411,7 +406,6 @@ fun `확장 프로퍼티`() {
 ## **가변 인자 함수**
 
 > 메소드를 호출할 때 원하는 개수만큼 값을 인자로 넘기면 자바 컴파일러가 배열에 그 값들을 넣어주는 기능
-> 
 - 자바는 타입 뒤에 ...를 붙이지만, 코틀린은 파라미터 앞에 `varag` 변경자를 붙인다.
 
 ```kotlin
@@ -438,7 +432,6 @@ fun main(args: Array<String>) {
 ## **값의 쌍 다루기 (중위호출, 구조 분해 선언)**
 
 > 맵을 만들려면 `mapOf` 함수를 사용
-> 
 
 ```kotlin
 val map = mapOf(1 to "one", 7 to "seven", 53 to "fifty-three")
@@ -480,7 +473,6 @@ for ((index, element) in collection.withIndex()) {
 **문자열 나누기**
 
 > split 함수에 전달하는 값의 타입에 따라 정규식이나 일반 텍스트 중 어느 것으로 문자열을 분리하는지 쉽게 알 수 있다.
-> 
 
 ```kotlin
 println("12.345-6.A".split("\\\\.|-".toRegex())) // 정규식을 명시적으로 만든다. 
@@ -498,7 +490,6 @@ println("12.345-6.A".split(".","-")) // 여러 구분 문자열을 지정한다.
 **3중 따옴표 문자열**
 
 > 역슬래시(\)를 포함한 어떤 문자도 이스케이프 불필요
-> 
 
 ```kotlin
 // AS-IS
@@ -537,80 +528,83 @@ fun parsePath(path: String) {
 ## 로컬 함수와 확장
 
 > 함수에서 추출한 함수를 원 함수 내부에 중첩시킬 수 있다.
-문법적인 부가 비용을 들이지 않고도 깔끔하게 코드를 조직 가능
 > 
-- 로컬 함수와 확장으로 코드를 다듬는 과정
-    
-    ```kotlin
-    // AS-IS
-    fun saveUser(user: User) {
-        if (user.name.isEmpty()) {
+> 문법적인 부가 비용을 들이지 않고도 깔끔하게 코드를 조직 가능
+
+로컬 함수와 확장으로 코드를 다듬는 과정
+
+```kotlin
+// AS-IS
+fun saveUser(user: User) {
+    if (user.name.isEmpty()) {
+        throw IllegalArgumentException(
+            "Can't save user ${user.id}: empty Name")
+    }
+
+    if (user.address.isEmpty()) {
+        throw IllegalArgumentException(
+            "Can't save user ${user.id}: empty Address")
+    }
+
+    // Save user to the database
+}
+
+...
+
+// 첫 번째 개선
+fun saveUser(user: User) {
+    fun validate(user: User,
+                    value: String,
+                    fieldName: String) {
+        if (value.isEmpty()) {
             throw IllegalArgumentException(
-                "Can't save user ${user.id}: empty Name")
+                "Can't save user ${user.id}: empty $fieldName")
         }
-    
-        if (user.address.isEmpty()) {
+    }
+
+    validate(user, user.name, "Name")
+    validate(user, user.address, "Address")
+    // Save user to the database
+}
+
+...
+
+// 두 번째 개선
+fun saveUser(user: User) {
+        // user 파라미터를 중복 사용하지 않는다. 
+    fun validate(value: String, fieldName: String) { 
+        if (value.isEmpty()) {
             throw IllegalArgumentException(
-                "Can't save user ${user.id}: empty Address")
+                    // 바깥 함수의 파라미터에 직접 접근할 수 있다. 
+                "Can't save user ${user.id}: " +
+                    "empty $fieldName")
         }
-    
-        // Save user to the database
     }
-    
-    ...
-    
-    // 첫 번째 개선
-    fun saveUser(user: User) {
-        fun validate(user: User,
-                     value: String,
-                     fieldName: String) {
-            if (value.isEmpty()) {
-                throw IllegalArgumentException(
-                    "Can't save user ${user.id}: empty $fieldName")
-            }
+
+    validate(user.name, "Name")
+    validate(user.address, "Address")
+    // Save user to the database
+}
+
+...
+
+// TO-BE (User 클래스를 확장한 함수)
+fun User.validateBeforeSave() {
+    fun validate(value: String, fieldName: String) {
+        if (value.isEmpty()) {
+            throw IllegalArgumentException(
+                "Can't save user $id: empty $fieldName")
         }
-    
-        validate(user, user.name, "Name")
-        validate(user, user.address, "Address")
-        // Save user to the database
     }
-    
-    ...
-    
-    // 두 번째 개선
-    fun saveUser(user: User) {
-    		// user 파라미터를 중복 사용하지 않는다. 
-        fun validate(value: String, fieldName: String) { 
-            if (value.isEmpty()) {
-                throw IllegalArgumentException(
-    		            // 바깥 함수의 파라미터에 직접 접근할 수 있다. 
-                    "Can't save user ${user.id}: " +
-                        "empty $fieldName")
-            }
-        }
-    
-        validate(user.name, "Name")
-        validate(user.address, "Address")
-        // Save user to the database
-    }
-    
-    ...
-    
-    // TO-BE (User 클래스를 확장한 함수)
-    fun User.validateBeforeSave() {
-        fun validate(value: String, fieldName: String) {
-            if (value.isEmpty()) {
-                throw IllegalArgumentException(
-                   "Can't save user $id: empty $fieldName")
-            }
-        }
-    
-        validate(name, "Name")
-        validate(address, "Address")
-    }
-    
-    fun saveUser(user: User) {
-        user.validateBeforeSave()
-        // Save user to the database
-    }
-    ```
+
+    validate(name, "Name")
+    validate(address, "Address")
+}
+
+fun saveUser(user: User) {
+    user.validateBeforeSave()
+    // Save user to the database
+}
+```
+
+---
