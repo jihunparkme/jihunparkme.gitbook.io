@@ -6,7 +6,7 @@
 ## Lecture
 
 * [Java](lecture/java/README.md)
-  * [multithread-concurrency](lecture/java/multithread-concurrency.md)
+  * [Multithread Concurrency](lecture/java/multithread-concurrency.md)
   * [The Java](lecture/java/the-java.md)
 * [Toby](lecture/toby/README.md)
   * [Toby Spring 6](lecture/toby/spring-6.md)
