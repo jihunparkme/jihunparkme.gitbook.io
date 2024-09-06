@@ -5,6 +5,8 @@
 
 ## Lecture
 
+* [Kotlin](lecture/kotlin/README.md)
+  * [Begin Kotlin](lecture/kotlin/begin.md)
 * [Java](lecture/java/README.md)
   * [Multithread Concurrency](lecture/java/multithread-concurrency.md)
   * [The Java](lecture/java/the-java.md)
