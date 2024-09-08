@@ -756,12 +756,9 @@ fun TalkativeButton.giveSpeesh() {
 **코틀린과 자바의 가시성**
 
 코틀린의 변경자는 컴파일된 자바 바이트코드 안에서도 그대로 유지
-
-단,  private 클래스와 internal 변경자는 제외
-
-코틀린 private 클래스 → 자바 패키지 전용 클래스로 컴파일
-
-코틀린 internal 변경자 → 자바 public
+- 단,  private 클래스와 internal 변경자는 제외
+- 코틀린 private 클래스 → 자바 패키지 전용 클래스로 컴파일
+- 코틀린 internal 변경자 → 자바 public
 
 {% endhint %}
 
@@ -1068,7 +1065,7 @@ fun `클래스 위임 by 키워드 사용`() {
 
 {% hint style="info" %} 
 
-Utils 클래스에 적용할 수 있을 것 같다.
+**Utils 클래스에 적용할 수 있을 것 같다.**
 
 {% endhint %}
 
