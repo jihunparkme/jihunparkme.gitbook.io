@@ -93,3 +93,39 @@ https://developers.redhat.com/learning/learn:apache-kafka:kafka-101/resource/res
 - 파티션 데이터의 삭제 타이밍은 옵션에 따라 다르다.
     - `log.retention.ms`: 데이터 최대 보존 시간
     - `log.retention.byte`: 데이터 최대 보존 크기
+
+# **Broker, Replication, ISR**
+
+<figure><img src="../../.gitbook/assets/kafka/kafka-server.png" alt=""><figcaption></figcaption></figure>
+
+## Kafka **Broker**
+
+> 카프카가 설치되어 있는 서버 단위
+- 보통 `3개 이상의 브로커`로 구성하여 사용하는 것을 권장
+- 만일, 파티션 1개, Replication 이 1 인 토픽이 존재, 브로커가 3대일 경우
+    - 브로커 3대 중 1대에 해당 토픽의 정보가 저장
+
+## Kafka **Replication**
+
+> 파티션의 복제를 뜻함
+> 
+> 파티션의 고가용성을 위해 사용
+
+Replication
+
+- `Replication = 1` 이라면, 파티션은 1개만 존재한다는 의미
+- `Replication = 2` 이라면, 파티션은 원본 1개와 복제본 1개로 존재
+- `Replication = 3` 이라면, 파티션은 원본 1개와 복제본 2개로 존재
+
+<figure><img src="../../.gitbook/assets/kafka/kafka-replication.png" alt=""><figcaption></figcaption></figure>
+
+**ISR(In Sync Replica)**
+
+- 여기서 1개의 원본 파티션은 `Leader partition` 이라고 부르고,
+- 나머지 복제본 파티션은 `Follower partition`
+    - Leader partition 이 죽게 되면 복제본이 Leader partition 역할을 승계
+- Leader + Follower partition 을 합쳐서 `ISR`(In Sync Replica) 이라고 볼 수 있다.
+
+브로커 개수에 따라서 Replication 개수가 제한
+
+- 브로커 개수가 3이면 Replication은 4가 될 수 없다.
