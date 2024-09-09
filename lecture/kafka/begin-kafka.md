@@ -310,10 +310,9 @@ Replication
 
 참고.
 
-- https://blog.voidmainvoid.net/243
-- https://blog.voidmainvoid.net/244
-- https://blog.voidmainvoid.net/245
-- https://blog.voidmainvoid.net/245
+- [Burrow - kafka consumer의 지연(lag)을 모니터링할 수 있는 효과적인 opensource tool](https://blog.voidmainvoid.net/243)
+- [Kafka Burrow에서 consumer의 lag을 정의하는(평가하는) 방법 - Consumer Lag Evaluation Rules](https://blog.voidmainvoid.net/244)
+- [Kafka burrow http endpoint 정리](https://blog.voidmainvoid.net/245)
 
 # RabbutMQ, Redis Queue, Kafka
 
