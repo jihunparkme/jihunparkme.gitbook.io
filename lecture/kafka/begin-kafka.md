@@ -235,7 +235,7 @@ Replication
 > `Burrow`는 오픈소스로 Golang으로 작성
 - 컨슈머 lag 모니터링을 도와주는 독립적인 애플리케이션
 
-### Burrow의 특징
+## Burrow의 특징
 
 1️⃣ 멀티 카프카 클러스터 지원
 
