@@ -378,3 +378,86 @@ fun `람다를 함수형 인터페이스로 명시적으로 변경`() {
     createAllDoneRunnable().run()
 }
 ```
+
+# **수신 객체 지정 람다**
+
+> 자바의 람다에는 없는 코틀린 람다의 독특한 기능
+- 수신 객체를 명시하지 않고 **람다의 본문 안에서 다른 객체의 메소드를 호출 가능**
+
+## with 함수
+
+> 특정 객체의 이름을 반복하지 않고도 그 객체에 대해 다양한 연산을 수행
+- 어떤 객체에 대한 참조를 반복해서 언급하지 않으면서 그 객체의 메소드를 호출 가능
+
+```kotlin
+@Test
+fun `with function`() {
+    fun alphabet(): String {
+        val result = StringBuilder()
+        for (letter in 'A'..'Z') {
+            result.append(letter)
+        }
+        result.append("Now I know the alphabet!")
+        return result.toString()
+    }
+
+    fun alphabetUsingWith(): String {
+        val stringBuilder = StringBuilder()
+        // 첫 번째 인자로 받은 객체를 두 번째 인자로 받은 람다의 수신 객체 생성
+        return with(stringBuilder) {
+            for (letter in 'A'..'Z') {
+                // 본문에서는 this를 사용해 인자로 받은 수신 객체에 접근 가능
+                this.append(letter)
+            }
+            append("Now I know the alphabet!")
+            // with가 반환하는 값은 람다 코드를 실행한 결과(람다 코드의 마지막 식의 값)
+            // 람다의 결과 대신 수신 객체가 필요한 경우 apply 라이브러리 함수를 사용
+            this.toString()
+        }
+    }
+
+    assertEquals("ABCDEFGHIJKLMNOPQRSTUVWXYZNow I know the alphabet!", alphabet())
+    assertEquals("ABCDEFGHIJKLMNOPQRSTUVWXYZNow I know the alphabet!", alphabetUsingWith())
+}
+```
+
+## apply 함수
+
+> 거의 with와 동일하고, 항상 자신에게 전달된 객체(즉 수신 객체)를 반환
+- 어떤 객체라도 빌더 스타일의 API를 사용해 생성하고 초기화
+
+```kotlin
+@Test
+fun `apply function`() {
+    fun alphabet() = StringBuilder().apply {
+        for (letter in 'A'..'Z') {
+            append(letter)
+        }
+        append("Now I know the alphabet!")
+    }.toString()
+
+    assertEquals("ABCDEFGHIJKLMNOPQRSTUVWXYZNow I know the alphabet!", alphabet())
+}
+```
+
+`with`와 `apply`는 수신 객체 지정 람다를 사용하는 일반적인 예제 중 하나
+
+- 더 구체적인 함수를 비슷한 패턴으로 활용 가능
+- ex. 표준 라이브러리의 buildString 함수를 사용하여 단순화
+
+```kotlin
+@Test
+fun `buildString`() {
+    // buildString 함수는 StringBuilder를 활용해 String을 만드는 경우 사용할 수 있는 우아한 해법
+    fun alphabet() = buildString {
+        for (letter in 'A'..'Z') {
+            append(letter)
+        }
+        append("Now I know the alphabet!")
+    }
+
+    assertEquals("ABCDEFGHIJKLMNOPQRSTUVWXYZNow I know the alphabet!", alphabet())
+}
+```
+
+---
