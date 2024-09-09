@@ -51,6 +51,59 @@ https://developers.redhat.com/learning/learn:apache-kafka:kafka-101/resource/res
 - 데이터를 가져가는 역할
 - ex. 로그 적재, 로그 처리
 
+# Producer
+
+> 데이터를 카프카에 보내는 역할
+> 
+> ex) 엄청난 양의 클릭 로그
+
+**역할**
+
+- Topic에 해당하는 메시지 생성
+- 특정 Topic으로 데이터를 publish(전송)
+- 카프카 브로커로 데이터 전송 시, 전송 성공 여부 확인 가능
+  - 실패 시 재시도 가능
+
+카프카 클라이언트인 컨슈머와 프로듀서 사용을 위해 아파치 카프카 라이브러리 추가
+
+- ⚠️ 카프카는 브로커 버전과 클라이언트 버전의 하위호환성이 완벽하게 모든 버전에 대해서 지원하지 않으므로 주의 필요
+  - 브로커 버전과 클라이언트 버전의 호환성 확인 필수
+
+```groovy
+// https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
+implementation 'org.apache.kafka:kafka-clients:3.8.0'
+```
+
+카프카 프로듀서 작성 코드
+
+- 카프카 브로커의 주소 목록은 2개 이상의 ip, port 설정 권장
+    - 하나의 브로커가 비정상일 경우 다른 브로커에 연결되어 사용 가능
+- key/value 에 대한 StringSerializer 직렬화 설정
+    - ByteArray, String, Integer Serializer 사용 가능
+    - `Key`:  메시지를 보내면, 토픽의 파티션이 지정될 때 사용
+
+<figure><img src="../../.gitbook/assets/kafka/producer.png" alt=""><figcaption></figcaption></figure>
+
+프로듀서가 토픽의 파티션에 들어가는 과정
+
+- key = null
+    
+    <figure><img src="../../.gitbook/assets/kafka/producer-key-null.png" alt=""><figcaption></figcaption></figure>
+    
+- key ≠ null
+    - 키를 사용할 경우 파티션 개수를 고려
+    - 추후에 생성하지 않는 것을 권장
+    
+    <figure><img src="../../.gitbook/assets/kafka/producer-key-not-null.png" alt=""><figcaption></figcaption></figure>
+    
+
+**데이터 유실, 브로커의 이슈에 대처하기 위한 추가 옵션과 코드가 필요**
+
+참고.
+
+- [아파치 Kafka 개요 및 설명](https://blog.voidmainvoid.net/179)
+- [Kafka broker와 java client의 버젼 하위호환성 정리](https://blog.voidmainvoid.net/193)
+
 # Topic
 
 > 카프카에는 다양한 데이터가 들어갈 수 있다.
@@ -286,7 +339,6 @@ Replication
 ## 이벤트 브로커
 
 > 메시지 브로커의 특징과 조금 다른 구조
-> 
 
 1️⃣ 이벤트 또는 메시지라고도 불리는 레코드를 딱 하나만 보관하고, 인덱스를 통해 개별 엑세스를 관리
 
