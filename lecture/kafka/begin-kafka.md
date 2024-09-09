@@ -27,3 +27,69 @@ After Kafka
 <figure><img src="../../.gitbook/assets/kafka/kafka-cluster.png" alt=""><figcaption></figcaption></figure>
 
 https://developers.redhat.com/learning/learn:apache-kafka:kafka-101/resource/resources:what-are-partitions
+
+## **Kafka features**
+
+<figure><img src="../../.gitbook/assets/kafka/kafka-features.png" alt=""><figcaption></figcaption></figure>
+
+**Source Application (Kakfa Producer)**
+
+- 데이터를 보내는 역할
+  - ex. 클릭 로그, 결제 로그
+- 여러 데이터 포맷을 지원(json, tsv, avro ..)
+
+**Kafka**
+
+- 각종 데이터를 담는 `토픽`을 가지고 있음
+- 유연한 `Queue 역할`을 담당
+- 데이터 흐름에 있어서 `fault tolerant`(고가용성)으로
+  - 서버 이슈가 생기거나 갑작스럽게 전원이 내려갈 경우에서도 데이터를 손실 없이 복구 가능
+- 낮은 지연(`latency`)과 높은 처리량(`Throughput`)을 통해 효과적으로 `대량의 데이터`를 처리
+
+**Target Application (Kakfa Consumer)**
+
+- 데이터를 가져가는 역할
+- ex. 로그 적재, 로그 처리
+
+# Topic
+
+> 카프카에는 다양한 데이터가 들어갈 수 있다.
+> 
+> 여기서 데이터가 들어갈 수 있는 공간을 `Topic` 이라고 부른다.
+
+<figure><img src="../../.gitbook/assets/kafka/kafka-topic-1.png" alt=""><figcaption></figcaption></figure>
+
+일반적인 AMQP와는 다소 다르게 동작
+
+- 카프카에서는 여러개의 토픽을 생성 가능
+- 토픽은 데이터베이스 테이블이나 파일시스템의 폴더와 유사한 성질을 가짐
+- 토픽은 이름을 가질 수 있는데 목적에 따라 설정
+    - 어떤 데이터를 담는지 명확하게 명시
+
+## 카프카 토픽의 내부
+
+<figure><img src="../../.gitbook/assets/kafka/kafka-topic-2.png" alt=""><figcaption></figcaption></figure>
+
+> 하나의 토픽은 여러개의 파티션으로 구성 가능
+- 첫 번째 파티션은 0번 부터 시작
+- 하나의 파티션은 큐같이 내부 데이터가 파티션 끝부터 쌓이게 된다.
+- 컨슈머는 가장 오래된 순서로 데이터를 가져간다.
+    - 데이터가 더이상 들어오지 않으면 컨슈머는 또 다른 데이터가 들어올 때까지 대기
+- 컨슈머가 토픽 내부에서 데이터를 가져가더라도 데이터는 삭제되지 않는다.
+    - 파티션에 남은 데이터는 새로운 컨슈머가 붙었을 때 다시 0번부터 사용 가능
+    - 단, 컨슈머 그룹이 달라야 하고, `auto.offset.reset = earliest` 일 경우
+    - **동일 데이터를 두 번 처리**할 수도 있는데 이는 카프카를 사용하는 아주 중요한 이유
+        - 엘라스틱서치, 하둡 등 다른 저장소에 데이터를 저장해야 하는 등의 경우
+
+**파티션이 2개 이상인 경우**
+
+<figure><img src="../../.gitbook/assets/kafka/kafka-topic-3.png" alt=""><figcaption></figcaption></figure>
+
+> 프로듀서는 데이터를 보낼 때 키 지정이 가능
+- 키를 지정하지 않고(null), 기본 파티셔너설정을 사용할 경우 → 라운드 로빈(`Round robin`)으로 할당
+- 키가 있고, 기본 파티셔너를 사용할 경우 → `키의 해시 값`을 구하고, 특정 파티션에 할당
+- 파티션을 늘리는 것은 가능하지만 줄일 수는 없으므로 주의가 필요
+    - 파티션을 늘리면 컨슈머의 개수를 늘려서 데이터 처리 분산이 가능
+- 파티션 데이터의 삭제 타이밍은 옵션에 따라 다르다.
+    - `log.retention.ms`: 데이터 최대 보존 시간
+    - `log.retention.byte`: 데이터 최대 보존 크기
