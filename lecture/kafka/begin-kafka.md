@@ -210,3 +210,54 @@ Replication
     - 그 중 높은 숫자의 `lag`를 `records-lag-max` 라고 부름.
 
 <center><img src="../../.gitbook/assets/kafka/consumer-lag-2.png" width="50%"></center>
+
+# **Burrow**
+
+<https://github.com/linkedin/Burrow>
+
+> 카프카 컨슈머 Lag 모니터링 필수 요소
+
+**Before**
+
+`Kafka-client` 라이브러리를 사용해서 Java, Scala와 같은 언어를 통해 카프카 컨슈머 구현
+
+- 구현한 `KafkaConsumer` 객체를 통해 현재 `lag` 정보를 가져올 수 있음
+- `lag`을 실시간 모니터링하고 싶을 경우, 데이터를 `Elasticsearch`, `InfluxDB` 와 같은 저장소에 넣은 뒤
+    - Grafana 대시보드를 통해 확인 가능
+- 단, Consumer 단위에서 lag 을 모니터링하는 것은 위험하고 운영요소가 많이 들어감
+    - 컨슈머 로직단에서 lag 을 수집하는 것은 컨슈머 상태에 디펜던시가 걸림
+    - 컨슈머가 비정상적으로 종료되면 컨슈머는 lag 정보를 보낼 수 없으므로, 더이상 lag 측정 불가
+    - 추가적으로 컨슈머가 개발될 때마다 해당 컨슈머에 lag 정보를 특정 저장소에 저장할 수 있도록 로직 개발 필요
+    - 컨슈머 lag 수집 불가 컨슈머라면 모니터링이 어려워 운영이 까다로워짐
+
+**Using Burrow**
+
+> `Burrow`는 오픈소스로 Golang으로 작성
+- 컨슈머 lag 모니터링을 도와주는 독립적인 애플리케이션
+
+### Burrow의 특징
+
+1️⃣ 멀티 카프카 클러스터 지원
+
+- 카프카 클러스터가 여러개더라도 Burrow application 1개만 실행해서 연동하면
+    - 카프카 클러스터들에 붙은 컨슈머의 lag을 모두 모니터링 가능
+    
+    <center><img src="../../.gitbook/assets/kafka/burrow.png" width="50%"></center>
+    
+
+2️⃣ Sliding window를 통한 consumer status 확인
+
+- ERROR, WARNING, OK 로 표현
+- `WARNING`: 데이터양이 일시적으로 많아지면서 컨슈머 오프셋이 증가되고 있을 경우
+- `ERROR`: 데이터양이 많이지고 있는데 컨슈머가 데이터를 가져가지 않을 경우
+
+3️⃣ HTTP api 제공
+
+- 정보들을 Burrow API 를 통해 조회 가능
+
+참고.
+
+- https://blog.voidmainvoid.net/243
+- https://blog.voidmainvoid.net/244
+- https://blog.voidmainvoid.net/245
+- https://blog.voidmainvoid.net/245
