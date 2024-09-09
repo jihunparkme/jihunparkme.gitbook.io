@@ -461,3 +461,244 @@ fun `buildString`() {
 ```
 
 ---
+
+# 타입 시스템
+
+## 널 가능성
+
+> 널이 될 수 있는지 여부를 타입 시스템에 추가함으로써 컴파일러가 여러 가지 오류를 컴파일 시 
+> 
+> 미리 감지해서 실행 시점에 발생할 수 있는 예외의 가능성을 줄일 수 있다.
+
+## **안전한 호출 연산자: ?.**
+
+> `?.`은 null 검사와 메소드 호출을 한 번의 연산으로 수행
+
+`s?.toUpperCase()` == `if(s ≠ null) s.toUpperCase() else null`
+
+```kotlin
+@Test
+fun `안전한 호출 연산자`() {
+    class Address(val streetAddress: String, val zipCode: Int,
+                  val city: String, val country: String)
+
+    class Company(val name: String, val address: Address?)
+
+    class Person(val name: String, val company: Company?)
+
+    fun Person.countryName(): String {
+        val country = this.company?.address?.country
+        return if (country != null) country else "Unknown"
+    }
+
+    val person = Person("Dmitry", null)
+    assertEquals("Unknown", person.countryName())
+
+    val person2 = Person("Dmitry", Company("JetBrains", null))
+    assertEquals("Unknown", person2.countryName())
+
+    val person3 = Person("Dmitry", Company("JetBrains", Address("ABC Street", 42, "Seoul", "KOREA")))
+    assertEquals("KOREA", person3.countryName())
+}
+```
+
+## **엘비스 연산자: ?:**
+
+> 코틀린은 null 대신 사용할 디폴트 값을 지정할 때 편리하게 사용할 수 있는 연산자를 제공
+
+코틀린에서는 return 이나 throw 등의 연산도 식이다. 
+
+- 따라서 엘비스 연산자의 유항에 return, throw 등의 연산을 넣을 수 있고,
+- 엘비스 연산자를 더욱 편하게 사용할 수 있다.
+
+```kotlin
+@Test
+fun `엘비스 연산자`() {
+    class Address(val streetAddress: String, val zipCode: Int,
+                  val city: String, val country: String)
+
+    class Company(val name: String, val address: Address?)
+
+    class Person(val name: String, val company: Company?)
+
+    fun printShippingLabel(person: Person) {
+        val address = person.company?.address
+            ?: throw IllegalArgumentException("No address")
+        with (address) {
+            print(streetAddress + ". ")
+            println("$zipCode $city, $country")
+        }
+    }
+
+    val address = Address("ABC Street", 42, "Seoul", "KOREA")
+    val jetbrains = Company("JetBrains", address)
+    val person = Person("Dmitry", jetbrains)
+
+    // ABC Street. 42 Seoul, KOREA
+    printShippingLabel(person)
+    assertThrows<IllegalArgumentException> {
+        printShippingLabel(Person("Alexey", null))
+    }
+}
+```
+
+## **안전한 캐스트: as?**
+
+> `as?`는 값을 대상 타입으로 변환할 수 없으면 null 반환
+
+<figure><img src="../../.gitbook/assets/kotlin/as.png" alt=""><figcaption></figcaption></figure>
+
+https://livebook.manning.com/book/kotlin-in-action/chapter-6
+
+```kotlin
+@Test
+fun `안전한 캐스트`() {
+    class Person(val firstName: String, val lastName: String) {
+        override fun equals(o: Any?): Boolean {
+            // 파라미터로 받은 값이 원하는 타입인지 쉽게 검사하고 캐스트하고,
+            // 타입이 맞지 않으면 쉽게 false 반환
+            val otherPerson = o as? Person ?: return false
+
+            return otherPerson.firstName == firstName &&
+                    otherPerson.lastName == lastName
+        }
+
+        override fun hashCode(): Int =
+            firstName.hashCode() * 37 + lastName.hashCode()
+    }
+
+    val p1 = Person("Dmitry", "Jemerov")
+    val p2 = Person("Dmitry", "Jemerov")
+    assertTrue(p1 == p2)
+    assertFalse(p1.equals(42))
+}
+```
+
+## **널 아님 단언: !!**
+
+> `!!`으로 어떤 값이든 널이 될 수 없는 타입으로 (강제로) 바꿀 수 있다. 
+> 
+> 실제 널에 대해 `!!`를 적용하면 NPE가 발생
+
+```kotlin
+@Test
+fun `널 아님 단언`() {
+    fun ignoreNulls(s: String?): Int {
+        val sNotNull: String = s!!
+        return sNotNull.length
+    }
+
+    assertEquals(3, ignoreNulls("abc"))
+    assertThrows<NullPointerException> {
+        ignoreNulls(null)
+    }
+}
+```
+
+⚠️ `!! 단언문` 사용 시 주의사항이 있다. 
+
+- `!!`를 사용해서 발생하는 NPE 예외의 스택 트레이스(stack trace)에는 어떤 파일의 몇 번째 줄인지에 대한 정보는 들어있지만, 어떤 식에서 예외가 발생했는지에 대한 정보는 들어있지 않다.
+- 어떤 값이 널이었는지 확실히 하기 위해 여러 `!! 단언문`을 한 줄에 함께 쓰는 일을 피하자.
+
+```kotlin
+// 아래와 같은 식으로 코드를 작성하지 말자
+person.company!!.address!!.country 
+```
+
+## **let 함수**
+
+> `let 함수`를 사용하면 널이 될 수 있는 식을 더 쉽게 다룰 수 있다.
+
+`let 함수`를 안전한 호출 연산자와 함께 사용하면 원하는 식을 평가해서 결과가 널인지 검사한 다음에 
+- **그 결과를 변수에 넣는 작업**을 간단한 식을 사용해 한꺼번에 처리
+
+`let 함수`는 자신의 수신 객체를 인자로 전달받은 람다에게 넘긴다. 
+
+- 널이 될 수 있는 값에 대해 안전한 호출 구문을 사용해 `let`을 호출하되
+- 널이 될 수 없는 타입을 인자로 받는 람다를 `let`에 전달
+
+<figure><img src="../../.gitbook/assets/kotlin/let.png" alt=""><figcaption></figcaption></figure>
+
+```kotlin
+@Test
+fun `let 함수`() {
+    fun sendEmailTo(email: String): String {
+        return "Sending email to $email"
+    }
+
+    var email: String? = "aaron@example.com"
+    assertEquals("Sending email to aaron@example.com", 
+						    email?.let { sendEmailTo(it) })
+
+    email = null
+    assertEquals(null, 
+						    email?.let { sendEmailTo(it) })
+}
+```
+
+`let`을 쓰면 긴 식의 결과를 저장하는 변수를 따로 만들 필요가 없다.
+
+- 여러 값이 널인지 검사해야 한다면 `let` 호출을 중첩시켜서 처리할 수 있다.
+- 그렇게 `let`을 중첩시켜 처리하면 코드가 복잡해져서 알아보기 어려워진다.
+    - 그런 경우 일반적인 `if`를 사용해 모든 값을 한꺼번에 검사하는 편이 낫다.
+
+## **나중에 초기화할 프로퍼티 (**lateinit)
+
+> 코틀린에서 클래스 안의 널이 될 수 없는 프로퍼티를 생성자 안에서 초기화하지 않고,
+> 
+> 특별한 메소드 안에서 초기화할 수는 없다.
+
+코틀린에서는 일반적으로 생성자에서 모든 프로퍼티를 초기화해야 한다. 
+
+- 프로퍼티 타입이 널이 될 수 없는 타입이라면 반드시 널이 아닌 값으로 그 프로퍼티를 초기화해야 한다.
+- 그런 초기화 값을 제공할 수 없으면 널이 될 수 있는 타입을 사용할 수밖에 없다.
+- 하지만 널이 될 수 있는 타입을 사용하면 모든 프로퍼티 접근에 널 검사를 넣거나 `!!` 연산자를 써야 한다.
+
+프로퍼티를 여러 번 사용해야 할 경우 코드가 지저분해지는데
+ * 이를 해결하기 위해 `lateinit` 변경자를 사용해서 프로퍼티를 나중에 초기화(late-initialized)할 수 있다.
+
+```kotlin
+// AS-IS
+class MyService {
+    fun performAction(): String = "foo"
+}
+
+class MyTest {
+    // null로 초기화하기 위해 널이 될 수 있는 타입인 프로퍼티를 선언
+    private var myService: MyService? = null
+
+    @Before fun setUp() {
+        // setUp 메소드 안에서 실제 초깃값을 지정
+        myService = MyService()
+    }
+
+    @Test fun testAction() {
+        // 널 가능성에 신경 써야 하므로, !!나 ? 사용 필수
+        assertEquals("foo",
+            myService!!.performAction())
+    }
+}
+
+---
+
+// TO-BE
+class MyService {
+    fun performAction(): String = "foo"
+}
+
+class MyTest {
+    // 초기화하지 않고 널이 될 수 없는 프로퍼티를 선언
+    private lateinit var myService: MyService
+
+    @Before fun setUp() {
+        myService = MyService()
+    }
+
+    @Test fun testAction() {
+        // 널 검사를 수행하지 않고 프로퍼티를 사용
+        Assert.assertEquals("foo",
+            myService.performAction())
+    }
+}
+```
+
