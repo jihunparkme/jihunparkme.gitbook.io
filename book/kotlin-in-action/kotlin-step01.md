@@ -277,3 +277,104 @@ fun `flatten`() {
     assertEquals(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9), lists.flatten())
 }
 ```
+
+# sequence
+
+## **지연 계산(lazy) 컬렉션 연산**
+
+map, filter 같은 컬렉션 함수는 결과 컬렉션을 즉시 생성하는데
+
+- 이는 컬렉션 함수를 연쇄하면 매 단계마다 계산 중간 결과를 새로운 컬렉션에 임시로 담는다는 뜻
+- 시퀀스(`sequence`)를 사용하면 중간 임시 컬렉션을 사용하지 않고도 컬렉션 연산을 연쇄할 수 있다.
+
+```kotlin
+@Test
+fun `lazy`() {
+    /**
+     * map(1) filter(1)
+     * map(2) filter(4)
+     * map(3) filter(9)
+     * map(4) filter(16)
+     */
+    listOf(1, 2, 3, 4).asSequence() // 원본 컬렉션을 시퀀스로 변환
+        .map { print("map($it) "); it * it } // 시퀀스도 컬렉션과 똑같은 API 제공
+        .filter { println("filter($it) "); it % 2 == 0 }
+        .toList() // 결과 시퀀스를 다시 리스트로 변환
+}
+```
+
+## **시퀀스 연산 실행: 중간 연산과 최종 연산**
+
+> 시퀀스에 대한 연산은 중간 연산과 최종 연산으로 나뉜다.
+
+`중간 연산`은 다른 시퀀스를 반환
+- 그 시퀀스는 최초 시퀀스의 원소를 변환하는 방법을 안다.
+
+`최종 연산`은 결과를 반환
+
+```kotlin
+@Test
+fun `sequence`() {
+		// 시퀀스의 모든 연산은 각 원소에 대해 순차적으로 적용
+		// 첫 번째 원소가 처리되고, 다시 두 번째 원소가 처리되며, 이런 처리가 모든 원소에 대해 적용
+    listOf(1, 2, 3, 4).asSequence()
+        .map { print("map($it) "); it * it }
+        .filter { print("filter($it) "); it % 2 == 0 }
+        .toList()
+    // map(1) filter(1) map(2) filter(4) map(3) filter(9) map(4) filter(16) 
+}
+```
+
+# **자바 함수형 인터페이스 활용**
+
+## 자바  메소드에 람다를 인자로 전달
+
+> 함수형 인터페이스를 인자로 원하는 자바 메소드에 코틀린 람다를 전달할 수 있다.
+
+```kotlin
+ @Test
+fun `자바 메소드에 람다를 인자로 전달`() {
+    fun postponComputation(num: Int, runnable: Runnable) {
+        println("num is : " + num)
+        runnable.run()
+    }
+
+		// 객체 식을 함수형 인터페이스 구현으로
+    postponComputation(1000, object : Runnable {
+        override fun run() {
+            println(42)
+        }
+    })
+
+		// 프로그램 전체에서 Runnable의 인스턴스는 단 하나만 생성
+    postponComputation(1000) { println(42) }
+}
+```
+
+- 무명 객체는 메소드 호출 때마다 새로운 객체가 생성되지만,
+- 람다는 메소드를 호출할 때마다 반복 사용
+- 단, 람다가 주변 영역의 변수를 참조할 경우 매 호출마다 같은 인스턴스를 사용할 수 없음
+    - 이 경우 컴파일러는 매번 주변 영역의 변수를 참조한 새로운 인스턴스를 생성
+
+```kotlin
+fun handlerComputation(id: String) {
+		// handlerComputation 호출 때마다 새로 Runnable 인스턴스 생성
+		postponeComputation(1000) { println(id) }
+}
+```
+
+## **람다를 함수형 인터페이스로 명시적으로 변경**
+
+> SAM 생성자는 람다를 함수형 인터페이스의 인스턴스로 변환할 수 있게 컴파일러가 자동으로 생성한 함수
+- 컴파일러가 자동으로 람다를 함수형 인터페이스 무명 클래스로 바꾸지 못하는 경우 SAM 생성자 사용 가능
+
+```kotlin
+@Test
+fun `람다를 함수형 인터페이스로 명시적으로 변경`() {
+    fun createAllDoneRunnable(): Runnable {
+        return Runnable { println("All done!") }
+    }
+
+    createAllDoneRunnable().run()
+}
+```
