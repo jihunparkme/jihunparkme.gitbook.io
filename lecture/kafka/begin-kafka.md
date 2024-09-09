@@ -129,3 +129,32 @@ Replication
 브로커 개수에 따라서 Replication 개수가 제한
 
 - 브로커 개수가 3이면 Replication은 4가 될 수 없다.
+
+## **Replication & Ack**
+
+<figure><img src="../../.gitbook/assets/kafka/replication-ack.png" alt=""><figcaption></figcaption></figure>
+
+프로듀서가 토픽의 파티션에 데이터를 전달할 때 전달받는 주체가 `Leader partition`
+
+- 프로듀서에는 ack 라는 상세 옵션을 통해 고가용성 유지 가능
+- ack 옵션 중 하나를 선택
+    - `0`
+        - 프로듀서는 Leader partition에 데이터를 전송하고 응답값은 받지 않음
+        - 데이터가 정상적으로 전송되었는지, 나머지 파티션에 정상 복제되었는지 보장할 수 없음
+        - 속도는 빠르지만 데이터 유실 가능성 존재
+    - `1`
+        - 프로듀서는 Leader partition에 데이터를 전송하고, 데이터를 정상적으로 받았는지 응답값 수신
+        - 단, 나머지 파티션에 복제되었는지는 알 수 없음
+        - Leader partition이 데이터를 받은 즉시 브로커 장애가 발생한다면 데이터 유실 가능성 존재
+    - `all`
+        - 1 옵션에 추가로 follower partition에 복제가 잘 이루어졌는지 응답을 수신
+        - 데이터가 유실될 일은 없지만, 속도가 0, 1 옵션에 비해 현저히 느리다는 단점
+
+## **Replication count**
+
+> replication 개수가 많아지면 그만큼 브로커의 리소스 사용량도 늘어나게 된다.
+
+<figure><img src="../../.gitbook/assets/kafka/replication-count.png" alt=""><figcaption></figcaption></figure>
+
+- 카프카에 들어오는 데이터량과 저장시간을 잘 고려하여 replication 개수 산정이 필요
+    - 3개 이상의 브로커 사용 시 replication 은 3으로 설정하는 것을 추천
