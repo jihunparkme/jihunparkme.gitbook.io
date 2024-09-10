@@ -864,3 +864,37 @@ fun `unit type`() {
 
 - 의미: ***함수가 정상적으로 종료되지 않음***을 표현
 - 특징: 예외를 던지거나 무한 루프에 빠지는 함수에서 사용. 모든 타입의 하위 타입
+
+## **Nothing 타입**
+
+> 코틀린에는 성공적으로 값을 돌려주는 일이 없는 '반환 값'이라는 개념 자체가 의미 없는 함수가 일부 존재한다
+
+- 주로 예외를 던지거나 무한 루프에 빠지는 함수들은 정상적으로 종료되지 않기 때문에 반환값이 없음
+- 이러한 함수들은 `Nothing` 타입을 반환
+
+```kotlin
+@Test
+fun `nothing`() {
+    class Address(val streetAddress: String, val zipCode: Int,
+                  val city: String, val country: String)
+    class Company(val name: String, val address: Address?)
+
+    fun fail(message: String) : Nothing {
+        throw IllegalStateException(message)
+    }
+
+    val company = Company("JetBrains", Address("ABC Street", 42, "Seoul", "KOREA"))
+    val address = company.address ?: fail("No address")
+    assertEquals("Seoul", address.city)
+
+    val company2 = Company("JetBrains", null)
+    assertThrows<IllegalStateException> {
+        company2.address ?: fail("No address")
+    }
+}
+```
+
+`Nothing` 타입은 아무 값도 포함하지 않는다. 
+
+- 따라서, 함수의 반환 타입이나 반환 타입으로 쓰일 타입 파라미터만 사용 가능
+- 컴파일러는 Nothing이 반환 타입인 함수가 정상 종료되지 않음을 알고 그 함수를 호출하는 코드 분석 시 사용
