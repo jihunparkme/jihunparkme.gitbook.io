@@ -731,3 +731,28 @@ fun `원시 타입`() {
     - `부동소수점 수 타입` : Float, Double
     - `문자 타입` : Char
     - `불리언 타입` : Boolean
+
+## **널이 될 수 있는 원시 타입: Int?, Boolean? …**
+
+> 코틀린에서 널이 될 수 있는 원시 타입을 사용하면 그 타입은 자바의 래퍼 타입으로 컴파일
+> 
+
+코틀린에서 적절한 타입을 찾으려면 그 변수나 프로퍼티에 널이 들어갈 수 있는지만 고민하면 된다.
+
+```kotlin
+@Test
+fun `널이 될 수 있는 원시 타입`() {
+    data class Person(val name: String,
+                      val age: Int? = null) {
+
+        fun isOlderThan(other: Person): Boolean? {
+            if (age == null || other.age == null)
+                return null
+            return age > other.age
+        }
+    }
+
+    assertEquals(false, Person("Sam", 35).isOlderThan(Person("Amy", 42)))
+    assertEquals(null, Person("Sam", 35).isOlderThan(Person("Jane")))
+}
+```
