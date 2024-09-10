@@ -76,11 +76,13 @@ implementation 'org.apache.kafka:kafka-clients:3.8.0'
 
 카프카 프로듀서 작성 코드
 
-- 카프카 브로커의 주소 목록은 2개 이상의 ip, port 설정 권장
+- `bootstrap.servers`: 카프카 브로커의 주소 목록은 2개 이상의 ip, port 설정 권장
     - 하나의 브로커가 비정상일 경우 다른 브로커에 연결되어 사용 가능
-- key/value 에 대한 StringSerializer 직렬화 설정
+- `key/value.serializer`: key/value 에 대한 StringSerializer 직렬화 설정
     - ByteArray, String, Integer Serializer 사용 가능
-    - `Key`:  메시지를 보내면, 토픽의 파티션이 지정될 때 사용
+- topic: `click_log`
+- value: `login`
+- `Key`:  메시지를 보내면, 토픽의 파티션이 지정될 때 사용
 
 <figure><img src="../../.gitbook/assets/kafka/producer.png" alt=""><figcaption></figcaption></figure>
 
@@ -103,6 +105,81 @@ implementation 'org.apache.kafka:kafka-clients:3.8.0'
 
 - [아파치 Kafka 개요 및 설명](https://blog.voidmainvoid.net/179)
 - [Kafka broker와 java client의 버젼 하위호환성 정리](https://blog.voidmainvoid.net/193)
+
+---
+
+# Consumer
+
+> 다른 메시징 시스템에서는 컨슈머가 ***데이터를 가져가면 큐 내부 데이터가 사라지지만***,
+> 
+> 카프카에서는 ***컨슈머가 데이터를 가져가더라도 데이터 유지***
+
+이러한 특징은 카프카, 카프카 컨슈머를 데이터 파이프라인트로 운영하는데 핵심적인 역할
+
+<figure><img src="../../.gitbook/assets/kafka/consumer.png" alt=""><figcaption></figcaption></figure>
+
+- 카프카 컨슈머는 기본적으로 토픽 내부의 파티션에 저장된 데이터를 가져온다.
+    - 이렇게 데이터를 가져오는 것을 `polling`
+
+**역할**
+
+- 토픽의 파티션으로부터 데이터를 폴링(polling)
+    - 특정 DB에 저장하거나, 또 다른 파이프라인에 전달 가능
+- 파티션 오프셋 위치 기록(commit)
+- 컨슈머 그룹을 통해 병렬처리
+    - 파티션 개수에 따라 컨슈머를 여러개 만들게 되면 병렬처리
+
+**카프카 컨슈머 작성 코드**
+
+- `bootstrap.servers`관련 설정은 프로듀서와 동일
+- `group.id` (aka. 컨슈머 그룹) : 컨슈머들의 묶음
+- `key/value.deserializer`: key/value 에 대한 StringDeserializer 역직렬화 설정
+- consumer group: `click_log_greoup`
+- topic: `click_log` → consumer.subscribe()
+    - 특정 토픽의 일부 파티션의 데이터만 가져올 경우 consumer.assign()
+    - key가 존재하는 데이터라면 이 방식으로 데이터의 순서를 보장하는 데이터처리 가능
+        
+    <center><img src="../../.gitbook/assets/kafka/consumer-key.png" width="50%"></center>
+        
+- 컨슈머는 poll()을 통해 데이터를 가져오는데, 설정 시간 동안 데이터를 대기
+    - 0.5초 동안 데이터 도착을 대기하고 이후 코드를 실행
+    - 0.5초 동안 데이터가 들어오지 않을 경우 빈값의 records 변수 반환
+    - records 변수는 데이터 배치로서 레코드의 묶음 list
+    - 실제 카프카에서 데이터를 처리할 때는 가장 작은 단위인 record로 나누어 처리
+
+<figure><img src="../../.gitbook/assets/kafka/consumer-code.png" alt=""><figcaption></figcaption></figure>
+
+**데이터가 컨슈머로 전달되는 과정**
+
+- `offset`은 토픽, 파티션별 별개로 지정
+- `offset`의 역할은 컨슈머가 ***데이터를 어느 지점까지 읽었는지 확인 용도***
+- 컨슈머가 데이터를 읽기 시작하면 `offset` `commit`
+    - `offset` 정보는 `__consumer_offsets` 토픽에 저장
+    - 컨슈머가 사고로 실행이 중지되어 재실행하면 ***시작 위치부터 다시 복구하여 데이터 처리*** 가능
+
+<figure><img src="../../.gitbook/assets/kafka/consumer-data.png" alt=""><figcaption></figcaption></figure>
+
+**컨슈머는 몇개까지 생성 가능❓**
+
+- 컨슈머 1, 파티션 2 → 2개의 파티션에서 데이터 폴링
+- 컨슈머 2, 파티션 2 → 각 컨슈머가 각각의 파티션을 할당
+
+> 컨슈머 개수는 파티션 개수보다 작거나 같아야 한다.
+> 
+> Consumer cnt ≤ partition cnt
+
+<figure><img src="../../.gitbook/assets/kafka/consumer-count.png" alt=""><figcaption></figcaption></figure>
+
+여러 파티션을 가진 토픽에 대해서 컨슈머를 병렬처리하고 싶을 경우, 
+
+- 반드시 컨슈머를 파티션 개수보다 적은 개수로 실행시켜야 한다.
+
+**컨슈머 그룹이 다른 컨슈머들의 동작**
+
+- 각기 다른 컨슈머 그룹에 속한 컨슈머들은 다른 컨슈머 그룹에 영향을 미치지 않음
+- `__consumer_offsets` 토픽에는 컨슈머 그룹, 토픽별로 `offset`을 나누어 저장
+
+> 이러한 카프카의 특징으로 하나의 토픽으로 들어온 데이터는 다양한 역할을 하는 컨슈머들이 각자 원하는 데이터로 처리가 가능
 
 # Topic
 
