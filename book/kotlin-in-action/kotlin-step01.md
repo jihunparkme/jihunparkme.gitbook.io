@@ -7,111 +7,111 @@
 
 - 람다를 사용하여 코드 조각을 다른 함수에게 인자로 넘기기
     
-    ```kotlin
-    /**
-     * Performing operation on: 5
-     * Result: 10
-     */
-    fun performOperation(num: Int, operation: (Int) -> Unit) {
-        println("Performing operation on: $num")
-        operation(num)
+```kotlin
+/**
+    * Performing operation on: 5
+    * Result: 10
+    */
+fun performOperation(num: Int, operation: (Int) -> Unit) {
+    println("Performing operation on: $num")
+    operation(num)
+}
+
+// 코드 조각을 performOperation 함수의 인자로 넘기기
+// 람다가 함수 인자인 경우 괄호 밖으로 람다를 빼내기
+performOperation(5) { 
+    // // 람다 인자가 하나뿐인 경우 인자 이름을 지정하지 않고 디폴트 이름(it)으로 사용 가능
+    println("Result: ${it * 2}") 
+}
+```
+
+- 람다 안에서 바깥 함수의 변수 읽기/쓰기
+
+```kotlin
+var result = 0
+val add: (Int) -> Unit = { result += it }
+add(5)
+assertEquals(5, result)
+```
+
+- 메소드, 생성자, 프로퍼티 이름 앞에 `::`을 붙이면 각각에 대한 참조 생성 가능
+    - 참조를 람다 대신 다른 함수에게 넘길 수 있음
+
+```kotlin
+fun printMessage(message: String): String {
+    return message
+}
+
+// 메소드, 생성자, 프로퍼티 참조
+val ref = ::printMessage
+assertEquals("Hello", ref("Hello"))
+```
+
+- 컬렉션 함수 활용으로 컬렉션에 대한 연산을 직접 원소를 이터레이션 하지 않고 수행
+
+```kotlin
+val numbers = listOf(1, 2, 3, 4, 5)
+val evenNumbers = numbers.filter { it % 2 == 0 }
+val doubledNumbers = numbers.map { it * 2 }
+val allEven = numbers.all { it % 2 == 0 }
+val anyEven = numbers.any { it % 2 == 0 }
+
+assertEquals(listOf(2, 4), evenNumbers)
+assertEquals(listOf(2, 4, 6, 8, 10), doubledNumbers)
+assertFalse(allEven)
+assertTrue(anyEven)
+```
+
+- 시퀀스를 사용하면 중간 결과를 담는 컬렉션을 생성하지 않고도 컬렉션에 대한 여러 연산을 조합 가능
+
+```kotlin
+val numbers = listOf(1, 2, 3, 4, 5)
+val result = numbers.asSequence()
+    .filter { it % 2 == 0 }
+    .map { it * 2 }
+    .toList()
+
+assertEquals(listOf(4, 8), result)
+```
+
+- 함수형 인터페이스(추상 메소드가 단 하나뿐인 SAM 인터페이스)를 인자로 받는 자바 함수를 호출할 경우 람다를 함수형 인터페이스 인자 대신 넘길 수 있다.
+
+```kotlin
+// Runnable 인터페이스를 인자로 받는 자바 메소드 호출
+val thread = Thread { println("Running in a thread") }
+thread.start()
+```
+
+- 수신 객체 지정 람다를 사용하면 람다 안에서 미리 정해둔 수신 객체의 메소드를 직접 호출 가능
+
+```kotlin
+fun buildString(): String {
+    return StringBuilder().apply {
+        append("Hello, ")
+        append("World!")
+    }.toString()
+}
+
+assertEquals("Hello, World!", buildString())
+```
+
+- 표준 라이브러리의 `with` 함수를 사용하면 어떤 객체에 대한 참조를 반복해서 언급하지 않으면서 그 객체의 메소드를 호출 가능
+    - `apply`를 사용하면 어떤 객체라도 빌더 스타일의 API를 사용해 생성하고 초기화 가능
+
+```kotlin
+val result = with(StringBuilder()) {
+        append("Hello, ")
+        append("World!")
+        toString()
     }
-    
-    // 코드 조각을 performOperation 함수의 인자로 넘기기
-    // 람다가 함수 인자인 경우 괄호 밖으로 람다를 빼내기
-    performOperation(5) { 
-    	// // 람다 인자가 하나뿐인 경우 인자 이름을 지정하지 않고 디폴트 이름(it)으로 사용 가능
-    	println("Result: ${it * 2}") 
-    }
-    ```
-    
-    - 람다 안에서 바깥 함수의 변수 읽기/쓰기
-    
-    ```kotlin
-    var result = 0
-    val add: (Int) -> Unit = { result += it }
-    add(5)
-    assertEquals(5, result)
-    ```
-    
-    - 메소드, 생성자, 프로퍼티 이름 앞에 `::`을 붙이면 각각에 대한 참조 생성 가능
-        - 참조를 람다 대신 다른 함수에게 넘길 수 있음
-    
-    ```kotlin
-    fun printMessage(message: String): String {
-        return message
-    }
-    
-    // 메소드, 생성자, 프로퍼티 참조
-    val ref = ::printMessage
-    assertEquals("Hello", ref("Hello"))
-    ```
-    
-    - 컬렉션 함수 활용으로 컬렉션에 대한 연산을 직접 원소를 이터레이션 하지 않고 수행
-    
-    ```kotlin
-    val numbers = listOf(1, 2, 3, 4, 5)
-    val evenNumbers = numbers.filter { it % 2 == 0 }
-    val doubledNumbers = numbers.map { it * 2 }
-    val allEven = numbers.all { it % 2 == 0 }
-    val anyEven = numbers.any { it % 2 == 0 }
-    
-    assertEquals(listOf(2, 4), evenNumbers)
-    assertEquals(listOf(2, 4, 6, 8, 10), doubledNumbers)
-    assertFalse(allEven)
-    assertTrue(anyEven)
-    ```
-    
-    - 시퀀스를 사용하면 중간 결과를 담는 컬렉션을 생성하지 않고도 컬렉션에 대한 여러 연산을 조합 가능
-    
-    ```kotlin
-    val numbers = listOf(1, 2, 3, 4, 5)
-    val result = numbers.asSequence()
-        .filter { it % 2 == 0 }
-        .map { it * 2 }
-        .toList()
-    
-    assertEquals(listOf(4, 8), result)
-    ```
-    
-    - 함수형 인터페이스(추상 메소드가 단 하나뿐인 SAM 인터페이스)를 인자로 받는 자바 함수를 호출할 경우 람다를 함수형 인터페이스 인자 대신 넘길 수 있다.
-    
-    ```kotlin
-    // Runnable 인터페이스를 인자로 받는 자바 메소드 호출
-    val thread = Thread { println("Running in a thread") }
-    thread.start()
-    ```
-    
-    - 수신 객체 지정 람다를 사용하면 람다 안에서 미리 정해둔 수신 객체의 메소드를 직접 호출 가능
-    
-    ```kotlin
-    fun buildString(): String {
-        return StringBuilder().apply {
-            append("Hello, ")
-            append("World!")
-        }.toString()
-    }
-    
-    assertEquals("Hello, World!", buildString())
-    ```
-    
-    - 표준 라이브러리의 `with` 함수를 사용하면 어떤 객체에 대한 참조를 반복해서 언급하지 않으면서 그 객체의 메소드를 호출 가능
-        - `apply`를 사용하면 어떤 객체라도 빌더 스타일의 API를 사용해 생성하고 초기화 가능
-    
-    ```kotlin
-    val result = with(StringBuilder()) {
-          append("Hello, ")
-          append("World!")
-          toString()
-      }
-      assertEquals("Hello, World!", result)
-    
-      val result2 = StringBuilder().apply {
-          append("Hello, ")
-          append("World!")
-      }.toString()
-      assertEquals("Hello, World!", result2)
-    ```
+    assertEquals("Hello, World!", result)
+
+    val result2 = StringBuilder().apply {
+        append("Hello, ")
+        append("World!")
+    }.toString()
+    assertEquals("Hello, World!", result2)
+```
 </details>
 
 ## **람다 식과 멤버 참조**
@@ -934,3 +934,5 @@ fun addValidNumbers(numbers: List<Int?>) {
     println("Invalid numbers: ${numbers.size - validNumbers.size}")
 }
 ```
+
+## **읽기 전용과 변경 가능한 컬렉션**
