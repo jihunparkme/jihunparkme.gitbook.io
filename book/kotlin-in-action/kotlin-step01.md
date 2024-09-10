@@ -898,3 +898,39 @@ fun `nothing`() {
 
 - 따라서, 함수의 반환 타입이나 반환 타입으로 쓰일 타입 파라미터만 사용 가능
 - 컴파일러는 Nothing이 반환 타입인 함수가 정상 종료되지 않음을 알고 그 함수를 호출하는 코드 분석 시 사용
+
+# **컬렉션과 배열**
+
+## **널 가능성과 컬렉션**
+
+> 컬렉션 안에 널 값을 넣을 수 있는지 여부는 어떤 변수의 값이 널이 될 수 있는지 여부와 마찬가지로 중요
+
+```kotlin
+fun addValidNumbers(numbers: List<Int?>) {
+    var sumOfValidNumbers = 0
+    var invalidNumbers = 0
+    // 리스트의 원소에 접근하면 Int? 타입의 값 획득
+    for (number in numbers) {
+        // 따라서 널 검사 필요
+        if (number != null) {
+            sumOfValidNumbers += number
+        } else {
+            invalidNumbers++
+        }
+    }
+    println("Sum of valid numbers: $sumOfValidNumbers")
+    println("Invalid numbers: $invalidNumbers")
+}
+```
+
+널이 될 수 있는 값으로 이루어진 컬렉션으로 널 값을 걸러내는 경우가 자주 있다보니 
+
+- 코틀린 표준 라이브러리는 `filterNotNull` 함수를 제공
+
+```kotlin
+fun addValidNumbers(numbers: List<Int?>) {
+    val validNumbers = numbers.filterNotNull()
+    println("Sum of valid numbers: ${validNumbers.sum()}")
+    println("Invalid numbers: ${numbers.size - validNumbers.size}")
+}
+```
