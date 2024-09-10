@@ -800,3 +800,22 @@ fun `문자열을 숫자로 변환`() {
     }
 }
 ```
+
+## **Any, Any?: 최상위 타입**
+
+> 자바에서는 `Object`가 클래스 계층의 최상위 타입이라면
+코틀린에서는 `Any` 타입이 원시 타입(Int 등)을 포함한 모든 타입 조상 타입
+> 
+
+```kotlin
+@Test
+fun `Any 타입 테스트`() {
+    val anyInt: Any = 42
+    val anyString: Any = "Hello, World!"
+    val anyList: Any = listOf(1, 2, 3)
+
+    assertTrue(anyInt is Int)
+    assertTrue(anyString is String)
+    assertTrue(anyList is List<*>)
+}
+```
