@@ -703,3 +703,31 @@ class MyTest {
 ```
 
 # 코틀린의 원시 타입
+
+## **원시 타입: Int, Boolean …**
+
+> 코틀린은 원시 타입과 래퍼 타입을 구분하지 않으므로 항상 같은 타입을 사용
+> 
+
+```kotlin
+@Test
+fun `원시 타입`() {
+    fun showProgress(progress: Int): String {
+        // 원시 타입의 값에 대해 메소드 호출 가능
+        val percent = progress.coerceIn(0, 100)
+        return "We're ${percent}% done!"
+    }
+
+    assertEquals("We're 90% done!", showProgress(90))
+    assertEquals("We're 100% done!", showProgress(130))
+}
+```
+
+코틀린은 실행 시점에 숫자 타입이 가능한 한 가장 효율적인 방식으로 표현
+
+- 대부분의 경우 코틀린의 Int 타입은 자바 `int` 타입으로 컴파일
+- 자바 원시 타입에 해당하는 타입들
+    - `정수 타입` : Byte, Short, Int, Long
+    - `부동소수점 수 타입` : Float, Double
+    - `문자 타입` : Char
+    - `불리언 타입` : Boolean
