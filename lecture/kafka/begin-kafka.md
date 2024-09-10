@@ -442,3 +442,62 @@ Replication
 
 - 딱 한번 일어난 이벤트 데이터를 브로커에 저장하여 단일 진실 공급원으로 사용
 - 장애 발생 시 장애가 일어난 지점부터 재처리 가능
+
+---
+
+# Kafka Streams
+
+> 토픽에 있는 데이터를 낮은 지연과 함께 안전하고, 빠른 속도로 데이터 처리
+
+[Kafka Streams](https://kafka.apache.org/documentation/streams/)
+
+**👍🏼 장점**
+
+**1️⃣ 카프카와 완벽 호환**
+
+> 메시지 유실, 중복이 발생하지 않고, 딱 한 번만 처리될 수 있는 강력한 기능을 제공
+
+- 대부분 카프카를 이벤트 저장소로 사용하고, 저장된 데이터를 **Spark**, **Logstash** 같은 툴로 연동
+    - 외부 오픈소스 툴은 빠르게 발전하는 카프카 버전에 따라오지 못 하는 단점이 존재
+    - 반면, 스트림즈는 카프카 릴리즈 때마다 카프카 클러스터와 완벽하게 호환
+- 카프카 보안, ACL 같은 것들이 붙어 있더라도 ***완벽 호환, 성능 개선도 진행***
+
+**2️⃣ 스케줄링 도구 불필요**
+
+- 카프카와 연동하는 스트림 프로세싱 툴로 **Spark Streaming**이 널리 사용
+  - 하지만, 스파크 운영을 위해 **yarn**, **messos** 같은 클러스터 관리자 또는 리소스 매니저 같은 것이 필요
+  - 클러스터 운영을 위해 대규모 장비 구축이 필요
+- 카프카 스트림즈를 사용하면 스케줄링 도구는 불필요
+- **스트림즈 애플리케이션**은 컨슈머, WAS 애플리케이션을 배포하는 것처럼 ***원하는 만큼 배포 가능***
+  - 적은 양의 데이터를 처리한다면 2개 정도, 데이터를 많이 처리해야 한다면 스케일 아웃(10~20개)
+
+3️⃣ [Streams DSL](https://kafka.apache.org/21/documentation/streams/developer-guide/dsl-api.html)과 [Processor API](https://kafka.apache.org/10/documentation/streams/developer-guide/processor-api.html) 제공
+
+- 스트림즈 구현은 대부분 **DSL**로 해결
+  - 이벤트 기반 데이터 처리 시 필요한 다양한 기능들 map, join, window와 같은 메서드를 제공
+  - **Streams DSL**만이 제공하는 KStream, KTable, GlobalKTable은 독특한 스트림 처리 개념
+      - 카프카를 스트림 데이터 처리뿐 아니라 대규모 key-value 저장소로도 사용 가능
+- **Streams DSL**에 없는 기능은 Processor API를 사용해서 로직을 작성
+- 카프카의 풍부한 기능을 사용하고 싶다면 `Kafka Streams`가 답!
+
+4️⃣ 로컬 상태 저장소를 사용
+
+- 실시간으로 들어오는 데이터를 처리하는 방식
+  - 비상태(`stateless`) 기반 처리
+      - ***필터링***이나 ***데이터***를 변환하는 처리
+      - 데이터가 들어오는 즉시 바로 처리하고, 프로듀스하여 유실이나 중복이 발생할 염려가 적음
+      - 개발을 위한 낮은 허들
+  - 상태(`stateful`) 기반 처리
+      - (분산 프로세스를) 직접 개발하기 위한 높은 허들
+      - window, join, aggregation 같은 처리는 이전에 받은 데이터를 프로세스가 메모리에 저장하고 있으면서 다음 데이터를 참조해서 처리해야 함
+- 상태 기반 처리 개발의 어려움을 극복하도록 도와주는 것이 `Kafka Streams`
+  - 상태를 로컬 `rocksdb`를 사용해서 저장
+  - 이 상태에 대한 변환 정보는 카프카 변경로그(`changelog`) 토픽에 저장
+  - 프로세스에 장애가 발생하더라도 상태가 모두 안전하게 저장되어 자연스럽게 장애 복구
+
+**Sample Code**
+
+- payment 토픽에 메시지 키가 unknows 인 데이터를 필터링해서
+- unknow-payment 토픽으로 보내는 스트림즈 코드
+
+<figure><img src="../../.gitbook/assets/kafka/kafka-streams.png" alt=""><figcaption></figcaption></figure>
