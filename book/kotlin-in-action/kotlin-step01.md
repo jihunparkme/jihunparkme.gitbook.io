@@ -642,7 +642,7 @@ fun `let 함수`() {
 - 그렇게 `let`을 중첩시켜 처리하면 코드가 복잡해져서 알아보기 어려워진다.
     - 그런 경우 일반적인 `if`를 사용해 모든 값을 한꺼번에 검사하는 편이 낫다.
 
-## **나중에 초기화할 프로퍼티 (**lateinit)
+## 나중에 초기화할 프로퍼티 (lateinit)
 
 > 코틀린에서 클래스 안의 널이 될 수 없는 프로퍼티를 생성자 안에서 초기화하지 않고,
 > 
@@ -704,10 +704,9 @@ class MyTest {
 
 # 코틀린의 원시 타입
 
-## **원시 타입: Int, Boolean …**
+## 원시 타입: Int, Boolean …
 
 > 코틀린은 원시 타입과 래퍼 타입을 구분하지 않으므로 항상 같은 타입을 사용
-> 
 
 ```kotlin
 @Test
@@ -732,10 +731,9 @@ fun `원시 타입`() {
     - `문자 타입` : Char
     - `불리언 타입` : Boolean
 
-## **널이 될 수 있는 원시 타입: Int?, Boolean? …**
+## 널이 될 수 있는 원시 타입: Int?, Boolean? …
 
 > 코틀린에서 널이 될 수 있는 원시 타입을 사용하면 그 타입은 자바의 래퍼 타입으로 컴파일
-> 
 
 코틀린에서 적절한 타입을 찾으려면 그 변수나 프로퍼티에 널이 들어갈 수 있는지만 고민하면 된다.
 
@@ -754,5 +752,51 @@ fun `널이 될 수 있는 원시 타입`() {
 
     assertEquals(false, Person("Sam", 35).isOlderThan(Person("Amy", 42)))
     assertEquals(null, Person("Sam", 35).isOlderThan(Person("Jane")))
+}
+```
+
+## **숫자 변환**
+
+> 코틀린과 자바의 가장 큰 차이점 중 하나는 숫자를 변환하는 방식
+
+코틀린은 한 타입의 숫자를 ***다른 타입의 숫자로 자동 변환하지 않는다.*** 
+
+- 결과 타입이 허용하는 숫자의 범위가 원래 타입의 범위보다 넓은 경우 조차도 자동 변환은 불가능
+
+```kotlin
+@Test
+fun `숫자 변환`() {
+    val i = 1
+    val l: Long = i // 컴파일 오류: Type mismatch. Required: Long, Found: Int
+    val l2: Long = i.toLong()
+}
+```
+
+코틀린은 모든 원시 타입에 대한 변환 함수를 제공
+
+- ex) toByte(), toShort(), toChar() …
+- 표현 범위가 더 넓은 타입으로 변환하는 함수도 있고,
+- 표현 범위가 더 좁은 타입으로 변환하면서, 값을 벗어나는 경우 일부를 잘라내는 함수(Long.toInt())도 존재
+
+**문자열을 숫자로 변환**
+
+코틀린 표준 라이브러리는 ***문자열을 원시 타입으로 변환하는 여러 함수를 제공***
+
+- ex. toInt, toByte, toBoolean …
+- 이런 함수는 문자열의 내용을 각 원시 타입을 표기하는 문자열로 파싱
+- 파싱 실패 시 `NumberFormatException` 발생
+
+```kotlin
+@Test
+fun `문자열을 숫자로 변환`() {
+    assertEquals(123, "123".toInt())
+    assertEquals(123.45, "123.45".toDouble())
+
+    assertThrows<NumberFormatException> {
+        "abc".toInt()
+    }
+    assertThrows<NumberFormatException> {
+        "abc".toDouble()
+    }
 }
 ```
