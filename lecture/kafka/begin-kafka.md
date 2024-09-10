@@ -51,6 +51,8 @@ https://developers.redhat.com/learning/learn:apache-kafka:kafka-101/resource/res
 - 데이터를 가져가는 역할
 - ex. 로그 적재, 로그 처리
 
+---
+
 # Producer
 
 > 데이터를 카프카에 보내는 역할
@@ -181,6 +183,8 @@ implementation 'org.apache.kafka:kafka-clients:3.8.0'
 
 > 이러한 카프카의 특징으로 하나의 토픽으로 들어온 데이터는 다양한 역할을 하는 컨슈머들이 각자 원하는 데이터로 처리가 가능
 
+---
+
 # Topic
 
 > 카프카에는 다양한 데이터가 들어갈 수 있다.
@@ -223,6 +227,8 @@ implementation 'org.apache.kafka:kafka-clients:3.8.0'
 - 파티션 데이터의 삭제 타이밍은 옵션에 따라 다르다.
     - `log.retention.ms`: 데이터 최대 보존 시간
     - `log.retention.byte`: 데이터 최대 보존 크기
+
+---
 
 # **Broker, Replication, ISR**
 
@@ -289,6 +295,8 @@ Replication
 - 카프카에 들어오는 데이터량과 저장시간을 잘 고려하여 replication 개수 산정이 필요
     - 3개 이상의 브로커 사용 시 replication 은 3으로 설정하는 것을 추천
 
+---
+
 # Partitioner
 
 > 프로듀서가 데이터를 보내면 무조건 파티셔너를 통해서 브로커로 데이터가 전송
@@ -319,6 +327,8 @@ Replication
     - 라운드 로빈으로 파티션에 할당 (전통적인 라운드 로빈 방식과는 조금 다르게 동작)
     - 배치단위로 데이터 전송 시 파티션에 적절히 분배
 
+---
+
 # Consumer Lag
 
 > 프로듀서가 넣은 데이터 오프셋과 컨슈머가 가져간 데이터의 오프셋
@@ -340,6 +350,8 @@ Replication
     - 그 중 높은 숫자의 `lag`를 `records-lag-max` 라고 부름.
 
 <center><img src="../../.gitbook/assets/kafka/consumer-lag-2.png" width="50%"></center>
+
+---
 
 # **Burrow**
 
@@ -391,6 +403,8 @@ Replication
 - [Kafka Burrow에서 consumer의 lag을 정의하는(평가하는) 방법 - Consumer Lag Evaluation Rules](https://blog.voidmainvoid.net/244)
 - [Kafka burrow http endpoint 정리](https://blog.voidmainvoid.net/245)
 
+---
+
 # RabbutMQ, Redis Queue, Kafka
 
 메시징 플랫폼의 두 가지 종류
@@ -411,6 +425,8 @@ Replication
 
 - 메시지를 받아서 적절히 처리하고 나면, 즉시 또는 짧은 시간 내에 삭제되는 구조
 - 데이터를 보내고, 처리하고, 삭제
+
+---
 
 ## 이벤트 브로커
 
