@@ -597,3 +597,24 @@ Replication
 > REST API를 통해 반복적으로 생성해서 뛰어난 효율을 가짐
 
 ***반복적으로 파이프라인 생성이 필요할 때***는 컨슈머로 여러번 만들기보다 `커넥트`를 구축하여 `커넥터`를 반복적으로 실행하는 방식으로 진행하는 것을 권장
+
+---
+
+# **Confluent Kafka cloud Service**
+
+[Kora by Confluent Cloud: 10x better Kafka](https://www.confluent.io/confluent-cloud/)
+
+> 카프카를 직접 서버로 구축하지 않아도 SaaS 형태로 사용 가능한 서비스
+
+카프카를 Saas 형태로 사용할 수 있는 서비스
+
+- 1️⃣ AWS `MSK`(Managed Streaming for Kafka)
+
+- 2️⃣ Confluent `Cloud Kafka`
+
+**Confluent Kafka cloud Service 는 클릭 몇번의 설정으로 즉시 구축된 kafka cluster 사용 가능**
+
+- 기존 개발자들이 직접 서버를 발급받고, zookeeper 설치 및 각종 script 명령을 통한 kafka 실행하는 방식과는 차원이 다른 방식
+- 대부분의 동작이 웹 인터페이스를 통해 쉽고, 간편하게 사용 가능
+- 클러스터 운영에 들어가는 개발자의 리소스를 줄일 수 있는 장점
+    - 당장 개발자 리소스가 부족하고, 스트리밍 서비스를 빨리 만들어야 하는 경우 유용
