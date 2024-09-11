@@ -53,6 +53,21 @@ https://developers.redhat.com/learning/learn:apache-kafka:kafka-101/resource/res
 
 ---
 
+# **카프카 클러스터 설치**
+
+[AWS에 카프카 클러스터를 설치, 실행해보기!](https://www.youtube.com/watch?v=Qr0HVvtMFhg)
+
+[AWS에 카프카 클러스터 설치하기(ec2, 3 brokers)](https://blog.voidmainvoid.net/325)
+
+> 아파치 카프카를 설치하기 위해 2가지 애플리케이션이 필요
+
+1️⃣ 주키퍼
+
+- 카프카 관련 정보를 저장하는 역할
+
+2️⃣ 카프카
+---
+
 # Producer
 
 > 데이터를 카프카에 보내는 역할
