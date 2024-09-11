@@ -50,8 +50,9 @@
 ## Book
 
 * [Kotlin in Action](book/kotlin-in-action/README.md)
-  * [begin-kotlin](book/kotlin-in-action/begin-kotlin.md)
-  * [kotlin step01](book/kotlin-in-action/kotlin-step01.md)
+  * [Begin Kotlin](book/kotlin-in-action/begin-kotlin.md)
+  * [Kotlin Step01](book/kotlin-in-action/kotlin-step01.md)
+  * [Kotlin Step02](book/kotlin-in-action/kotlin-step02.md)
 * [Kent Beck Tidy First?](book/kent-beck-tidy-first.md)
 * [대규모 시스템 설계 기초](book/system-design-interview/README.md)
   * [01.사용자 수에 따른 규모 확장성](book/system-design-interview/01.md)
