@@ -948,3 +948,35 @@ fun addValidNumbers(numbers: List<Int?>) {
     - 원소를 추가/삭제하거나, 컬렉션 안의 원소를 모두 지우는 등의 메소드를 제공
 
 <center><img src="../../.gitbook/assets/kotlin/collection.png" width="70%"></center>
+
+## **코틀린 컬렉션과 자바**
+
+> 코틀린은 모든 자바 컬렉션 인터페이스마다 읽기 전용 인터페이스와 변경 가능한 인터페이스 
+> 
+> 두 가지 표현 제공
+
+<figure><img src="../../.gitbook/assets/kotlin/collection-java.png" alt=""><figcaption></figcaption></figure>
+
+이런 성질로 컬렉션의 변경 가능성과 관련해 자바에서 중요한 문제가 발생
+
+- 자바는 읽기 전용 컬렉션과 변경 가능 컬렉션을 구분하지 않으므로,
+- 코틀린에서 읽기 전용 컬렉션으로 선언된 객체라도 자바 코드에서는 그 컬렉션 객체의 내용 변경 가능
+
+```kotlin
+/* Kotlin */
+object CollectionInterop {
+    fun getReadOnlyList(): List<String> {
+				// 읽기 전용 컬렉션으로 선언된 객체
+        return listOf("A", "B", "C")
+    }
+}
+
+/* Java */
+@Test
+void testModifyReadOnlyList() {
+    List<String> readOnlyList = CollectionInterop.getReadOnlyList();
+    readOnlyList.set(0, "Z");
+		// 자바 코드에서는 코틀린의 읽기 전용 컬렉션 내용 변경 가능
+    assertEquals("Z", readOnlyList.get(0));
+}
+```
