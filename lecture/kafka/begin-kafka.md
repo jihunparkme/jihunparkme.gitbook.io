@@ -501,3 +501,84 @@ Replication
 - unknow-payment 토픽으로 보내는 스트림즈 코드
 
 <figure><img src="../../.gitbook/assets/kafka/kafka-streams.png" alt=""><figcaption></figcaption></figure>
+
+---
+
+# Kafka Connect
+
+[Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html)
+
+> 반복적인 데이터 파이프 라인을 효과적으로 배포하고, 관리하는 ***데이터 파이프 라인 플랫폼***
+
+`Kafka Connect` 는 `Connect`와 `connector`로 구성
+
+## Kafka Connect
+
+> Connector를 동작하도록 실행해 주는 프로세스
+
+파이프 라인으로 동작하는 Connector를 동작하기 위해 반드시 실행
+
+.
+
+`Connect`**는 크게 두 가지로 구성**
+
+**1️⃣ 단일 실행 모드 커넥트**
+
+- 간단한 데이터 파이프라인을 구성하거나 개발용으로 주로 사용
+
+2️⃣ **분산 모드 커넥트**
+
+- 여러개의 커넥트를 한 개의 클러스터로 묶어서 운영
+- 클러스터로 묶은 커넥트는 일부 커넥트에서 장애가 발생하더라도 파이프라인을 자연스럽게 failover(장애 복구 기능)
+  - 나머지 실행중인 커넥트에서 데이터를 지속적으로 처리할 수 있도록 지원
+
+## Kafka Connector
+
+> 실질적으로 데이터를 처리하는 코드가 담긴 ***jar 패키지***
+
+일련의 템플릿과 같은 특정 동작을 하는 코드 뭉치
+
+- 커넥터 안에는 파이프라인에 필요한 ***여러 동작들과 설정, 실행 메서드***들이 포함
+- 만일, 토픽에서 Oracle DB에 데이터를 저장하고 싶다면
+  - 커넥터에 insert 메서드를 구현하고, 커넥터를 실행하는 방식으로 운영
+- 직접 구현할 수도 있지만 깃허브, 컨플루언트에 오픈소스로 제공
+  - 사용중인 카프카 클러스터와 싱크/소스로 사용하는 DB가 있다면 오픈소스 커넥터를 검색해서 사용 가능
+
+.
+
+**커넥터는 크게 두 가지로 구성**
+
+**1️⃣ Sink Connector**
+
+- 어딘가로 데이터를 싱크한다는 의미
+- 특정 토픽에 있는 데이터를 Oracle, mySQL, ES 같이 특정 저장소에 저장을 하는 역할 (like. Consumer)
+    - Oracle Sink Connector, mySQL Sink Connector, ..
+
+**2️⃣ Source Connector**
+
+- 데이터 베이스로부터 데이터를 가져와서 토픽에 넣는 역할 (like. Producer)
+
+## Connect & Connector 관계
+
+커넥트를 실행할 때 커넥터가 어디에 위치하는지 config 파일에 그 위치를 지정
+
+- 커넥터 jar 패키지가 있는 디렉토리를 config 파일에 지정
+    
+    ```bash
+    plugin.path=/var/connectors
+    ```
+    
+- 그 후 커넥트를 실행하게 되면 이 jar 파일의 커넥터들을 함께 모아서 커넥터를 실행할 수 있도록 준비 상태에돌입
+- 실행중인 커넥트에서 커넥터를 실행하려면 REST API 활용
+  - 커넥트를 활용하면 파이프라인 생성 시 추가로 개발, 배포하는 과정 없이 REST API 를 통해 커넥터를 통한 파이프 라인들이 분산해서 생성
+  - 예로, 특정 토픽에 있는 데이터를 Oracle DB의 특정 테이블로 보낼 때 JSON 으로 설정을 생성
+      - 그리고 이 body를 REST API 를 통해 커넥트에 명령
+          
+<figure><img src="../../.gitbook/assets/kafka/kafka-connect.png" alt=""><figcaption></figcaption></figure>
+            
+
+> 개발, 배포, 모니터링 구축 과정들이 커넥트에서는 템플릿 형태로 커넥터를 개발하고, 
+> 
+> REST API를 통해 반복적으로 생성해서 뛰어난 효율을 가짐
+
+***반복적으로 파이프라인 생성이 필요할 때***는 컨슈머로 여러번 만들기보다 `커넥트`를 구축하여 `커넥터`를 반복적으로 실행하는 방식으로 진행하는 것을 권장
