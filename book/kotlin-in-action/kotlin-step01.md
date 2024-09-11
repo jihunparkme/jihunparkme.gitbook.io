@@ -1,4 +1,4 @@
-# Kotlin step 01
+# Kotlin step 01 - 람다와 타입
 
 <details>
 <summary>📒 람다 프로그래밍 요약</summary>
