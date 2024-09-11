@@ -936,3 +936,15 @@ fun addValidNumbers(numbers: List<Int?>) {
 ```
 
 ## **읽기 전용과 변경 가능한 컬렉션**
+
+> 코틀린 컬렉션과 자바 컬렉션을 나누는 가장 중요한 특성 하나는 
+> 
+> 코틀린에서는 컬렉션안의 ***데이터에 접근하는 인터페이스***와
+> 
+> 컬렉션 안의 ***데이터를 변경하는 인터페이스***를 분리했다는 점
+
+- 일반적인 읽기 전용 라이브러리를 사용하려면 `kotlin.collections.Collection` 라이브러리를 사용
+- 컬렉션의 데이터를 수정하려면 `kotlin.collections.MutableCollection` 인터페이스를 사용
+    - 원소를 추가/삭제하거나, 컬렉션 안의 원소를 모두 지우는 등의 메소드를 제공
+
+<center><img src="../../.gitbook/assets/kotlin/collection.png" width="70%"></center>
