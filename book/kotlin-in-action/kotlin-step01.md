@@ -980,3 +980,102 @@ void testModifyReadOnlyList() {
     assertEquals("Z", readOnlyList.get(0));
 }
 ```
+
+## **객체의 배열과 원시 타입의 배열**
+
+> 코틀린 배열은 ***타입 파라미터를 받는 클래스***
+
+```kotlin
+fun main(args: Array<String>) {
+    for (i in args.indices) {
+         println("Argument $i is: ${args[i]}")
+    }
+}
+```
+
+**배열의 원소 타입은 바로 그 타입 파라미터에 의해 정해지고, 코틀린에서 배열을 만드는 방법은 다양하다.**
+
+```kotlin
+/*
+ * `arrayOf` 함수에 원소를 넘기면 배열을 만들 수 있다.
+ */
+@Test
+fun `test arrayOf`() {
+    val array = arrayOf(1, 2, 3)
+    assertEquals(3, array.size)
+    assertEquals(1, array[0])
+    assertEquals(2, array[1])
+    assertEquals(3, array[2])
+}
+
+/**
+ * `arrayOfNulls` 함수에 정수 값을 인자로 넘기면 모든 원소가 null이고
+ * 인자로 넘긴 값과 크기가 같은 배열을 만들 수 있다.
+ * 원소 타입이 널이 될 수 있는 타입인 경우에만 이 함수를 사용 가능
+ */
+@Test
+fun `test arrayOfNulls`() {
+    val array = arrayOfNulls<String>(3)
+    assertEquals(3, array.size)
+    assertNull(array[0])
+    assertNull(array[1])
+    assertNull(array[2])
+}
+
+/*
+ * `Array 생성자`는 배열 크기와 람다를 인자로 받아서 람다를 호출해서 각 배열 원소를 초기화
+ * `arryOf`를 쓰지 않고 각 원소가 널이 아닌 배열을 만들어야 하는 경우 이 생성자를 사용
+ */
+@Test
+fun `test Array constructor`() {
+    val array = Array(3) { i -> i * 2 }
+    assertEquals(3, array.size)
+    // 람다를 호출해서 각 배열 원소를 초기화
+    assertEquals(0, array[0])
+    assertEquals(2, array[1])
+    assertEquals(4, array[2])
+    
+    val letters = Array(26) { i -> ('a' + i).toString() }
+    assertEquals("abcdefghijklmnopqrstuvwxyz" , letters.joinToString(""))
+}
+
+/**
+ * 컬렉션의 모든 요소를 포함하는 형식화된 배열을 반환
+ */
+@Test
+fun `test toTypedArray`() {
+    val strings = listOf("a", "b", "c")
+    assertEquals("a/b/c", "%s/%s/%s".format(*strings.toTypedArray()))
+}
+
+/**
+ * [separator]를 사용하고 제공된 경우 주어진 [prefix] 및 [postfix]를 사용하여 
+ * 구분된 모든 요소에서 문자열을 생성
+ */
+@Test
+fun `test joinToString`() {
+    val squares = IntArray(5) { i -> (i+1) * (i+1) }
+    assertTrue(squares.contentEquals(intArrayOf(1, 4, 9, 16, 25)))
+    assertEquals("{1, 4, 9, 16, 25}",
+        squares.joinToString(separator = ", ", prefix = "{", postfix = "}"))
+}
+
+/**
+ * 각 요소에 대해 지정된 작업을 수행하여 요소에 순차적 인덱스를 제공
+ */
+@Test
+fun `test forEachIndexed`() {
+    fun testForEachIndexed(args: Array<String>) {
+        args.forEachIndexed { index, element ->
+            println("Argument $index is: $element")
+        }
+    }
+
+    /**
+     * Argument 0 is: 10
+     * Argument 1 is: 20
+     * Argument 2 is: 30
+     */
+    testForEachIndexed(arrayOf("10", "20", "30"))
+}
+```
