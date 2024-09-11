@@ -1,7 +1,5 @@
 # Kotlin step 01
 
-# 람다 프로그래밍
-
 <details>
 <summary>📒 람다 프로그래밍 요약</summary>
 
@@ -113,6 +111,165 @@ val result = with(StringBuilder()) {
     assertEquals("Hello, World!", result2)
 ```
 </details>
+
+<details>
+<summary>📕 코틀린 타입 시스템 요약</summary>
+
+- 널이 될 수 있는 타입을 지원해 NullPointerException 오류를 컴파일 시점에 감지
+
+```kotlin
+ @Test
+fun `널이 될 수 있는 타입`() {
+    var nullableString: String? = "Hello"
+    assertNotNull(nullableString)
+    nullableString = null
+    assertNull(nullableString)
+}
+```
+
+- 안전한 호출(`?.`), 엘비스 연산자(`?:`), 널 아님 단언(`!!`), `let` 함수 등을 사용하여 널이 될 수 있는 타입을 간결한 코드로 핸들링
+
+```kotlin
+@Test
+fun `안전한 호출, 엘비스 연산자, 널 아님 단언, let 함수`() {
+    var nullableString: String? = "Hello"
+    assertEquals(5, nullableString?.length)
+    
+    nullableString = null
+    assertEquals(0, nullableString?.length ?: 0)
+    
+    assertThrows<NullPointerException> {
+        nullableString!!.length
+    }
+    
+    nullableString = "Hello"
+    nullableString?.let {
+        assertEquals("Hello", it)
+    }
+}
+```
+
+- `as?` 연산자를 사용하면 값을 다른 타입으로 취급
+    - 플랫폼 타입을 널이 될 수 있는 타입, 널이 될 수 없는 타입으로 사용 가능
+
+```kotlin
+@Test
+fun `as? 연산자와 플랫폼 타입`() {
+    val obj: Any = "Hello"
+    val str: String? = obj as? String
+    assertNotNull(str)
+    
+    val intObj: Any = 42
+    val int: Int? = intObj as? Int
+    assertNotNull(int)
+}
+```
+
+- 컴파일러는 숫자 타입을 자바 원시 타입(int 등)으로 컴파일
+
+```kotlin
+@Test
+fun `숫자 타입과 자바 원시 타입`() {
+    val intVal: Int = 42
+    assertTrue(intVal is Int)
+}
+
+```
+
+- 널이 될 수 있는 원시 타입(Int? 등)은 자바의 박싱한 원시 타입에 대응
+
+```kotlin
+@Test
+fun `널이 될 수 있는 원시 타입`() {
+    val nullableInt: Int? = 42
+    assertNotNull(nullableInt)
+}
+```
+
+- `Any` 타입은 다른 모든 타입의 조상 타입이며, 자바의 `Object`에 해당
+    - `Unit`은 자바의 `void`와 유사
+
+```kotlin
+@Test
+fun `Any 타입과 Unit 타입`() {
+    val anyVal: Any = 42
+    assertTrue(anyVal is Any)
+    
+    fun returnUnit(): Unit {
+        // do something
+    }
+    assertEquals(Unit, returnUnit())
+}
+```
+
+- 정상적으로 끝나지 않는 함수의 반환 타입을 지정할 때 Nothing 타입 사용
+
+```kotlin
+@Test
+fun `Nothing 타입`() {
+    fun fail(message: String): Nothing {
+        throw IllegalStateException(message)
+    }
+    
+    assertThrows<IllegalStateException> {
+        fail("This is an error")
+    }
+}
+```
+
+- 코틀린 컬렉션은 표준 자바 컬렉션 클래스를 사용
+    - 코틀린은 자바보다 컬렉션을 더 개선해서 읽기 전용 컬렉션과 변경 가능한 컬렉션을 구분
+
+```kotlin
+@Test
+fun `코틀린 컬렉션과 자바 컬렉션`() {
+    val readOnlyList: List<String> = listOf("a", "b", "c")
+    val mutableList: MutableList<String> = mutableListOf("a", "b", "c")
+    
+    assertEquals(3, readOnlyList.size)
+    assertEquals(3, mutableList.size)
+    
+    mutableList.add("d")
+    assertEquals(4, mutableList.size)
+}
+```
+
+- 자바 클래스를 코틀린에서 확장하거나 자바 인터페이스를 코틀린에서 구현하는 경우
+    - 메소드 파라미터의 널 가능성과 변경 가능성에 대해 깊은 생각이 필요
+
+```kotlin
+class KotlinClass : JavaInterface {
+   override fun someMethod(param: String?) {
+       // handle nullability
+   }
+}
+```
+
+- 코틀린의 `Array` 클래스는 일반 제네릭 클래스처럼 보이지만 Array는 자바 배열로 컴파일
+
+```kotlin
+@Test
+fun `Array 클래스와 자바 배열`() {
+    val array: Array<String> = arrayOf("a", "b", "c")
+    assertEquals(3, array.size)
+}
+```
+
+- 원시 타입의 배열은 `IntArray`와 같이 각 타입에 대한 특별한 배열로 표현
+
+```kotlin
+@Test
+fun `원시 타입의 배열`() {
+    val intArray: IntArray = intArrayOf(1, 2, 3)
+    assertEquals(3, intArray.size)
+    assertEquals(1, intArray[0])
+}
+```
+</details>
+
+---
+
+# 람다 프로그래밍
 
 ## **람다 식과 멤버 참조**
 
