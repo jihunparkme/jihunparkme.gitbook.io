@@ -76,3 +76,31 @@ fun `연산자 정의`() {
     assertEquals("aaa", result)
 }
 ```
+
+## **복합 대입 연산자 오버로딩**
+
+> `+=`, `-=` 등의 연산자는 복합 대입(compound assignment) 연산자라 불림
+
+```kotlin
+operator fun Point.plus(other: Point): Point {
+    return Point(x + other.x, y + other.y)
+}
+
+@Test
+fun `복합 대입 연산자`() {
+    var point = Point(1, 2)
+    point += Point(3, 4)
+    assertEquals(Point(4, 6), point)
+}
+```
+
+코틀린 표준 라이브러리는 변경 가능한 컬렉션에 대해 `plusAssign`을 정의
+
+```kotlin
+@Test
+fun `test plusAssign operator`() {
+    val mutableList = mutableListOf(1, 2, 3)
+    mutableList += 4
+    assertEquals(listOf(1, 2, 3, 4), mutableList)
+}
+```
