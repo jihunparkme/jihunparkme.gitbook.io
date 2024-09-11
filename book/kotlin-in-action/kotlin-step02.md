@@ -104,3 +104,31 @@ fun `test plusAssign operator`() {
     assertEquals(listOf(1, 2, 3, 4), mutableList)
 }
 ```
+
+## **단항 연산자 오버로딩**
+
+> 단항 연산자 오버로딩하는 절차도 이항 연산자와 동일
+
+```kotlin
+data class Point(val x: Int, val y: Int)
+
+operator fun Point.unaryMinus(): Point {
+    return Point(-x, -y)
+}
+
+@Test
+fun `단항 연산자`() {
+    val p = Point(10, 20)
+    assertEquals(Point(-10, -20), -p)
+}
+```
+
+**ℹ️ 오버로딩할 수 있는 단항 산술 연산자**
+
+| Expression | Function name |
+| ---------- | ------------- |
+| +a         | unaryPlus     |
+| -a         | unaryMinus    |
+| !a         | not           |
+| ++a, a++   | inc           |
+| --a, a--   | dec           |
