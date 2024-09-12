@@ -387,3 +387,94 @@ fun `코틀린 관례`() {
     assertEquals(listOf("one", "two", "three"), values)
 }
 ```
+
+---
+
+# **프로퍼티 접근자 로직 재활용: 위임 프로퍼티**
+
+> 위임 프로퍼티(`delegated property`)를 사용하면 값을 뒷받침하는 필드에 단순히 저장하는 것보다 
+> 
+> 더 복잡한 방식으로 작동하는 프로퍼티를 쉽게 구현 가능하다.
+> 
+> 또한, 그 과정에서 접근자 로직을 매번 재구현할 필요도 없다.
+
+위임은 객체가 직접 작업을 수행하지 않고, 다른 도우미 객체가 그 작업을 처리하게 맡기는 디자인 패턴을 말한다.
+
+- 이때 작업을 처리하는 도우미 객체를 `위임 객체`라고 부른다.
+
+## **위임 프로퍼티 사용: by lazy()를 사용한 프로퍼티 초기화 지연**
+
+```kotlin
+// AS-IS
+@Test
+fun `**AS-IS by lazy**`() {
+    data class Email(val address: String)
+
+    class Person(val name: String) {
+        // 데이터를 저장하고 emails의 위임 객체 역활을 하는 _emails 프로퍼티
+        private var _emails: List<Email>? = null
+
+        val emails: List<Email>
+            get() {
+                if (_emails == null) {
+                    _emails = loadEmails(this) // 최초 접근 시 이메일 가져오기
+                }
+                return _emails!! // 저장해 둔 데이터가 있으면 그 데이터를 반환
+            }
+
+        private fun loadEmails(person: Person): List<Email> {
+            println("Loading emails for ${person.name}")
+            return listOf(
+                Email("alice@example.com"),
+                Email("alice.work@example.com")
+            )
+        }
+    }
+
+    val p = Person("Alice")
+    assertEquals(listOf(
+        Email("alice@example.com"),
+        Email("alice.work@example.com")
+    ), p.emails)  // 최초로 emails를 읽을 때 단 한번만 이메일을 가져온다.
+    assertEquals(listOf(
+        Email("alice@example.com"),
+        Email("alice.work@example.com")
+    ), p.emails)
+}
+
+// TO-BE
+/* 
+ * 지연 초기화해야 하는 프로퍼티가 많아지면 코드가 복잡해지고, 
+ * 스레드 안전하지 않아서 언제나 제대로 작동한다고 말할 수 없다.
+ * 이 경우 위임 프로퍼티를 사용하면 훨씬 더 간편해진다.
+ */
+@Test
+fun `by lazy`() {
+    data class Email(val address: String)
+
+    class Person(val name: String) {
+		    // lazy 함수는 코틀린 관례에 맞는 시그니처의 getValue 메소드가 들어있는 객체를 반환
+		    // 따라서 lazy를 by 키워드와 함께 사용해 위임 프로퍼티를 만들 수 있다.
+        val emails by lazy { loadEmails(this) }
+
+        private fun loadEmails(person: Person): List<Email> {
+            println("Loading emails for ${person.name}")
+            return listOf(
+                Email("alice@example.com"),
+                Email("alice.work@example.com")
+            )
+        }
+    }
+
+    val p = Person("Alice")
+    val emails1 = p.emails // 최초로 emails를 읽을 때 단 한번만 이메일을 가져온다.
+    val emails2 = p.emails
+
+    assertEquals(emails1, emails2)
+    assertEquals(listOf(
+        Email("alice@example.com"),
+        Email("alice.work@example.com")
+    ), emails1)
+}
+
+```
