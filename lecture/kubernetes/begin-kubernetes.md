@@ -2,6 +2,8 @@
 
 [대세는 쿠버네티스](https://inf.run/yW34) 강의를 요약한 내용입니다.
 - [K8S 실습 자료실](https://kubetm.github.io/k8s/)
+- [Install v1.27 (mac m series)](https://kubetm.github.io/k8s/02-beginner/cluster-install-case7/)
+- [ Kubernetes](https://kubernetes.io/)
 
 <figure><img src="../../.gitbook/assets/kubernetes/kubernetes-introduction.png" alt=""><figcaption></figcaption></figure>
 
