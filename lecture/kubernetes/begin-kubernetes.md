@@ -227,3 +227,137 @@ spec:
 
 **CronJob**
 - 특정 작업을 주기적으로 수행하고 종료되도록 `Pod`에 `Job` 적용
+
+---
+
+# Pod
+
+> Container
+> 
+> Label
+> 
+> NodeSchedule
+
+<figure><img src="../../.gitbook/assets/kubernetes/object-pod.png" alt=""><figcaption></figcaption></figure>
+
+## Container
+
+<figure><img src="../../.gitbook/assets/kubernetes/container.png" alt=""><figcaption></figcaption></figure>
+
+`Pod`
+- Pod 안에는 하나의 독립적인 서비스를 구동할 수 있는 컨터이너들이 존재
+  - 컨테이너들은 서비스가 연결될 수 있도록 포트를 보유
+  - 한 컨테이너가 하나 이상의 포트를 가질 수 있지만, 한 Pod 내에서 컨테이너들끼리 중복 불가
+  - Pod 안의 컨테이너는 한 호스트로 묶여있는 개념
+- Pod 생성 시 고유 IP 주소 할당
+  - 쿠버네티스 클러스터 내에서만 해당 IP를 통해 해당 Pod에 접근 가능
+  - 외부에서는 해당 IP로 접근 불가
+  - 만일 Pod에 문제가 생기면 시스템이 감지하여 Pod를 삭제시키고 다시 재생성하는데, 이때 IP 주소는 변경
+- Pod 생성 스크립트
+  
+  ```sh
+  apiVersion: v1
+  kind: Pod # Pod 생성
+  metadata:
+   name: pod-1 # Pod 이름
+  spec:
+  containers: # 두 개의 컨테이너 생성
+   - name: container1 # 컨테이너 이름
+     image: tmkube/p8000 # 이미지 이름
+     ports:
+     - containerPort: 8000 # 컨테이너 포트
+   - name: container2
+     image: tmkube/p8080
+     ports:
+     - containerPort: 8080
+  ```
+
+## Label
+
+<figure><img src="../../.gitbook/assets/kubernetes/label.png" alt=""><figcaption></figcaption></figure>
+
+Label은 Pod 뿐 아니라 모든 오브젝트에 달 수 있는데, Pod에서 가장 많이 사용
+- 목적에 따라 오브젝트들을 분류하고, 분류된 오브젝트만 따로 골라서 연결
+- key/value 가 한 쌍으로 이루어짐
+- 한 Pod에는 여러개의 Label을 달 수 있음
+- ex) web, db, server 타입이 한 쌍으로 개발/상용 환경으로 나뉘어 구성
+
+Service Example
+- 특정 타입의 Pod만 사용할 경우, type:web인 Label이 달린 Pod들을 서비스에 연결하여 해당 서비스 정보를 전달
+- 상용 환경을 담당하는 운영자라면, lo:product인 Label이 달린 Pod들을 서비스에 연결하여 해당 서비스 정보를 전달
+
+Label 활용 스크립트
+- Pod 생성 시 Label 등록
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-2
+  labels:
+    type: web # key
+    lo: dev # value
+spec:
+  containers:
+  - name: container
+    image: tmkube/init
+```
+
+- Service 생성 시 특정 라벨이 붙어있는 Pod 연결
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-1
+spec:
+  selector:
+    type: web # key:value
+ports:
+  - port: 8080
+```
+
+## Node Schedule
+
+<figure><img src="../../.gitbook/assets/kubernetes/node-schedule.png" alt=""><figcaption></figcaption></figure>
+
+Pod는 결국 여러 노드들 중에 한 노드에 올라가야 한다.
+- 이 방법이 대해 직접 노드를 선택하는 방식과 쿠버네티스가 자동으로 지정해주는 방식이 존재
+
+1️⃣ 직접 선택하는 방식
+- 노드에 Label 등록 후, Pod 생성 시 노드를 지정
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+ name: pod-3
+spec:
+ nodeSelector:
+ hostname: node1 # 노드 라벨과 매칭되는 key: value
+ containers:
+ - name: container
+   image: tmkube/init
+```
+
+2️⃣ 쿠버네티스의 스케줄러가 판단해서 지정하는 방식
+- ex) Pod 생성 시 Pod에서 요구될 리소스의 사용량을 명시하여 메모리 사용량에 맞게 Pod 스케줄링
+  
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+ name: pod-4
+spec:
+ containers:
+ - name: container
+   image: tmkube/init
+   resources:
+     requests:
+       memory: 2Gi # 2G 메모리 요구
+   limits: # 자원의 성격에 따라 다르게 판단
+     # memory: 초과 시 Pod 종료.
+     # cpu: 초과 시 request 수치로 낮추고, 종료되진 않음
+     memory: 3Gi # 최대 허용 메모리
+```
+
