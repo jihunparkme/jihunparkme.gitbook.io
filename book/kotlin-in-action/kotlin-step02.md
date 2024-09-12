@@ -337,3 +337,53 @@ fun `component 함수`() {
     assertEquals("kt", ext)
 }
 ```
+
+## **구조 분해 선언과 루프**
+
+> 함수 본문 내의 선언문 뿐 아니라, 
+> 
+> 변수 선언이 들어갈 수 있는 장소라면 어디든 구조 분해 선언을 사용 가능
+
+```kotlin
+ fun printEntries(map: Map<String, String>) {
+    // 구조 분해 선언
+    for ((key, value) in map) {
+        println("$key -> $value")
+    }
+}
+
+@Test
+fun `구조 분해 선언과 루프`() {
+    /**
+     * Oracle -> Java
+     * JetBrains -> Kotlin
+     */
+    val map = mapOf("Oracle" to "Java", "JetBrains" to "Kotlin")
+    printEntries(map)
+}
+```
+
+**두 가지 코틀린 관례를 활용한 예시**
+
+- ***객체를 이터페이션***하는 관례
+- ***구조 분해 선언***
+
+```kotlin
+@Test
+fun `코틀린 관례`() {
+    val map = mapOf(1 to "one", 2 to "two", 3 to "three")
+    val keys = mutableListOf<Int>()
+    val values = mutableListOf<String>()
+
+    for (entry in map.entries) {
+        // 코틀린 라이브러리는 Map.Entry에 대한 확장 함수로 component1, component2 제공
+        val key = entry.component1()
+        val value = entry.component2()
+        keys.add(key)
+        values.add(value)
+    }
+
+    assertEquals(listOf(1, 2, 3), keys)
+    assertEquals(listOf("one", "two", "three"), values)
+}
+```
