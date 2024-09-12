@@ -72,7 +72,7 @@
 - 시스템을 모듈별로 분리해서 개발했을 때 큰 효과를 발휘
 
 <details>
-<summary>Getting-Started</summary>
+<summary> Getting-Started</summary>
 
 <figure><img src="../../.gitbook/assets/kubernetes/getting-started-kubernetes.png" alt=""><figcaption></figcaption></figure>
 
@@ -179,3 +179,49 @@ spec:
   - 192.168.56.30 # 접속 IP
 ```
 </details>
+
+---
+
+# Overview Kubernetes
+
+<figure><img src="../../.gitbook/assets/kubernetes/overview-kubernetes.png" alt=""><figcaption></figcaption></figure>
+
+## Object
+
+쿠버네티스에서 서버 한 대는 `Master`로 사용하고, 다른 서버(`Node`)는 마스터에 연결
+- 이것이 하나의 쿠버네티스 클러스터라는 개념에 묶임
+- `Master`: 쿠버네티스의 전반적인 기능들을 컨트롤하는 역할
+- `Node`: 자원을 제공하는 역할. 클러스터의 전체 자원을 늘리고 싶다면 노드를 계속 추가
+
+`Namespace`
+- 쿠버네티스 오브젝트들을 독립된 공간으로 분리
+- 쿠버네티스 최소 배포 단위인 `Pod`가 존재
+  - `Pod` 안에는 여러개의 컨테이너가 존재
+  - `Pod`에서는 여러 앱(`Container`)이 동작
+  - `Pod`에 문제가 생겨서 재성성되면 그 안에 데이터는 날라가므로, `Volume`을 `Pod`에 연결하여 데이터를 관리
+- `Pod`들에게 외부로부터 연결이 가능하도록 `IP`를 할당해주는 `Service`가 존재
+  - 서로 다른 `Namespace`에 있는 파드에는 연결 불가
+- `ResourceQuota`, `LimitRange`를 달아서 한 `Namespace`에서 사용할 수 있는 자원의 양 한정
+  - `Pod` 개수 제한, CPU/Memory 제한 등..
+- `ConfigMap`, `Secret`을 통해 `Pod` 생성 시 `Container` 안에 환경 변수 값이나 파일을 만운팅
+
+## Controller
+
+> `Pod`들을 관리
+>
+> - 사용 용도에 따라 다양한 컨트롤러 제공
+
+**Replication Controller, ReplicaSet**
+- 가장 기본적인 컨트롤러
+- `Pod`가 죽으면, 감지해서 다시 살려줌
+- `Pod`의 개수를 늘리거나 줄임 (Scale In/Out)
+
+**Deployment**
+- 배포 후에 `Pod`들을 새 버전으로 업그레이드
+- 업그레이드 중 문제 발생 시 쉬운 롤백 제공
+
+**DemonSet**
+- 한 노드에 `Pod`가 하나씩만 유지되도록 지원
+
+**CronJob**
+- 특정 작업을 주기적으로 수행하고 종료되도록 `Pod`에 `Job` 적용
