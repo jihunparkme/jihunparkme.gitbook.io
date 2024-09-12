@@ -142,8 +142,8 @@ fun `단항 연산자`() {
 ## **동등성 연산자: equals**
 
 > 코틀린이 `==` 연산자 호출을 `equals` 메소드 호출로 컴파일
-`≠` 연산자를 사용하는 식도 `equals` 호출로 컴파일
 > 
+> `≠` 연산자를 사용하는 식도 `equals` 호출로 컴파일
 
 ```kotlin
 class Point(val x: Int, val y: Int) {
@@ -164,8 +164,9 @@ fun `동등성 연산자`() {
 
 ## **순서 연산자: compareTo**
 
-> 자바에서 정렬, 최댓값, 최솟값 등 값을 비교해야 하는 알고리즘에 사용할 클래스는 `Comparable` 인터페이스 구현이 필요하듯, 코틀린도 같은 Comparable 인터페이스를 지원
+> 자바에서 정렬, 최댓값, 최솟값 등 값을 비교해야 하는 알고리즘에 사용할 클래스는 `Comparable`
 > 
+> 인터페이스 구현이 필요하듯, 코틀린도 같은 Comparable 인터페이스를 지원
 
 ```kotlin
  @Test
@@ -215,5 +216,84 @@ fun `순서 연산자`() {
 @Test
 fun `compareValuesBy compareTo`() {
     assertTrue("abc" < "bac")
+}
+```
+
+---
+
+# **컬렉션과 범위에 대해 쓸 수 있는 관례**
+
+## **in 관례**
+
+> `In`은 객체가 컬렉션에 들어있는지 검사.
+> 
+> `in` 연산자와 대응하는 함수는 `contains`
+
+```kotlin
+data class Point(val x: Int, val y: Int)
+
+data class Rectangle(val upperLeft: Point, val lowerRight: Point)
+
+operator fun Rectangle.contains(p: Point): Boolean {
+    // 20 in (10 <= true < 50) && 30 in (20 <= true < 50)
+    return p.x in upperLeft.x until lowerRight.x &&
+            p.y in upperLeft.y until lowerRight.y
+}
+
+@Test
+fun `in 관례`() {
+    val rect = Rectangle(Point(10, 20), Point(50, 50))
+    assertTrue(Point(20, 30) in rect)
+    assertFalse(Point(5, 5) in rect)
+}
+```
+
+## **rangeTo 관례**
+
+> 범위를 만들려면 `..` 구문을 사용
+
+예를 들어 1..10은 1부터 10까지 모든 수가 들어있는 범위를 가리킨다.
+
+<center><img src="../../.gitbook/assets/kotlin/rangeTo.png" width="50%"></center>
+
+https://livebook.manning.com/book/kotlin-in-action/chapter-7/65
+
+```kotlin
+@Test
+fun `rangeTo 관례`() {
+    val n = 9
+    assertEquals(IntRange(0, 10), 0..(n + 1))
+    (0..n).forEach { print(it) } // 0123456789
+}
+```
+
+## **for 루프를 위한 iterator 관례**
+
+> 코틀린에서는 `iterator` 메소드를 확장 함수로 정의 가능
+> 
+> 이런 성질로 인해 일반 자바 문자열에 대한 for 루프가 가능
+
+```kotlin
+operator fun ClosedRange<LocalDate>.iterator(): Iterator<LocalDate> =
+    object : Iterator<LocalDate> {
+        var current = start
+
+        override fun hasNext() =
+            current <= endInclusive
+
+        override fun next() = current.apply {
+            current = plusDays(1)
+        }
+    }
+
+@Test
+fun `for 루프를 위한 iterator 관례`() {
+    val newYear = LocalDate.ofYearDay(2024, 1)
+    val daysOff = newYear.minusDays(1)..newYear
+    /**
+     * 2023-12-31
+     * 2024-01-01
+     */
+    for (dayOff in daysOff) { println(dayOff) }
 }
 ```
