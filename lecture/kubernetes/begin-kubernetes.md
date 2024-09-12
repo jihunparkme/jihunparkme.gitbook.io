@@ -7,6 +7,8 @@
 
 <figure><img src="../../.gitbook/assets/kubernetes/kubernetes-introduction.png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../../.gitbook/assets/kubernetes/kubernetes-intro.png" alt=""><figcaption></figcaption></figure>
+
 # Why Kubernetes?
 
 <figure><img src="../../.gitbook/assets/kubernetes/why-kubernetes.png" alt=""><figcaption></figcaption></figure>
