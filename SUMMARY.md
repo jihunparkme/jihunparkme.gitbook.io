@@ -5,6 +5,8 @@
 
 ## Lecture
 
+* [Kubernetes](lecture/kubernetes/README.md)
+  * [Begin Kubernetes](lecture/kubernetes/begin-kubernetes.md)
 * [Kafka](lecture/kafka/README.md)
   * [Begin Kafka](lecture/kafka/begin-kafka.md)
 * [Java](lecture/java/README.md)
