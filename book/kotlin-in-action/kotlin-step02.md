@@ -297,3 +297,43 @@ fun `for 루프를 위한 iterator 관례`() {
     for (dayOff in daysOff) { println(dayOff) }
 }
 ```
+
+---
+
+# **구조 분해 선언과 component 함수**
+
+> 구조 분해를 사용하면 복합적인 값을 분해해서 여러 다른 변수를 한꺼번에 초기화 가능
+
+```kotlin
+data class Point(val x: Int, val y: Int)
+
+@Test
+fun `구조 분해 선언`() {
+    val p = Point(10, 20)
+    val (x, y) = p
+    assertEquals(10, x)
+    assertEquals(20, y)
+}
+```
+
+**구조 분해 선언은 함수에서 여러 값을 반환할 때 유용**
+
+- 👎🏻 여러 값을 한꺼번에 반환해야 하는 함수가 있다면 반환해야 하는 모든 값이 들어갈 데이터 클래스를 정의하고 함수의 반환 타입을 그 데이터 클래스로 바꿔주어야 한다.
+- 👍🏼 구조 분해 선언 구문을 사용하면 이런 ***함수가 반환하는 값을 쉽게 풀어서 여러 변수에 넣을 수 있다.***
+
+```kotlin
+data class NameComponents(val name: String,
+                          val extension: String)
+
+fun splitFilename(fullName: String): NameComponents {
+    val result = fullName.split('.', limit = 2)
+    return NameComponents(result[0], result[1]) // 함수에서 데이터 클래스의 인스턴스를 반환
+}
+
+@Test
+fun `component 함수`() {
+    val (name, ext) = splitFilename("example.kt") // 구조 분해 선언 구문을 사용해 데이터 클래스를 해체
+    assertEquals("example", name)
+    assertEquals("kt", ext)
+}
+```
