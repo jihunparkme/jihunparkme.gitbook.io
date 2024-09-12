@@ -495,3 +495,157 @@ kubectl exec pod1 -it /bin/bash
 kubectl exec pod1 -c con1 -it /bin/bash
 ```
 </details>
+
+---
+
+# Service
+
+<figure><img src="../../.gitbook/assets/kubernetes/service.png" alt=""><figcaption></figcaption></figure>
+
+## Cluster Ip
+
+<figure><img src="../../.gitbook/assets/kubernetes/cluster-ip.png" alt=""><figcaption></figcaption></figure>
+
+1️⃣ 서비스는 기본적으로 자신의 `클러스터 IP`를 보유
+- 해당 서비스를 Pod에 연결시키면 *서비스의 IP를 통해서도 파트에 접근* 가능
+- Pod는 장애가 발생하면 IP가 재생성되어 변하므로, Pod IP로 직집 접근하지 않고 서비스를 통해 접근
+  - 서비스는 사용자가 직접 지우지 않는 한, 삭제되거나 재생성되지 않음
+  - 해당 서비스 IP로 접근 시 항상 연결되어있는 Pod로 접근 가능
+
+2️⃣ 서비스는 여러 종류가 존재하는데, 그 종류에 따라 Pod에 접근하는 방식에 차이
+- 가장 기본적인 방식이 `클러스터 IP` 방식
+  - 해당 IP는 쿠버네티스 클러스터에서만 접근이 가능한 IP (외부에서는 접근 불가)
+  - 여러개의 Pod 연결 시 트래픽을 분산해서 Pod에 전달
+
+⚒️ 적용 사례
+
+> 클러스터 IP는 외부에서 접근할 수 없고, 클러스터 내에서만 사용하는 IP
+
+- 인가된 사용자(운영자)만 접근
+- 쿠버네티스 대시보드 관리
+- Pod 서비스 상태 디버깅
+
+**Pod**
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-1
+  labels:
+     app: pod
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: k8s-node1
+  containers:
+  - name: container
+    image: kubetm/app
+    ports:
+    - containerPort: 8080
+```
+
+**Service**
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-1
+spec:
+  selector:
+    app: pod # Pod와 연결
+  ports:
+    - port: 9000 # 9000 포트로 서비스에 접근하면
+      targetPort: 8080 # 타겟이 되는 Pod에 8080 포트로 연결
+  type: ClusterIP # 서비스 타입. default: ClusterIP
+```
+
+```sh
+curl 10.104.103.107:9000/hostname
+
+kubectl get service svc-1
+```
+
+## Node Port
+
+<figure><img src="../../.gitbook/assets/kubernetes/node-port.png" alt=""><figcaption></figcaption></figure>
+
+1️⃣ NodePort 타입으로 생성해도 서비스에는 기본적으로 `클러스터 IP` 할당
+- 클러스터 IP와 같은 기능이 포함
+
+2️⃣ 쿠버네티스 클러스터에 연결되어 있는 모든 `노드`에게 똑같은 `포트`가 할당
+- 외부로부터 어느 노드건 그 IP의 포트로 접속하면 해당 서비스에 연결
+- 서비스는 기본 역할인 자신과 연결되어 있는 Pod에게 트래픽을 전달
+
+3️⃣ 서비스 입장에서는 어떤 노드한테 들어온 트래픽인지 상관없이 자신과 연결된 Pod에게 트래픽을 전달
+- ex) 1번 노드의 IP로 접근하더라도, 2번 노드의 Pod에게 트래픽을 전달
+- 특정 노드의 IP로 접근하는 트래픽을 해당 노드의 Pod한테만 트래픽을 전달하도록 설정도 가능
+  - `externalTrafficPolicy: Local` 옵션 추가
+
+⚒️ 적용 사례
+
+> 물리적인 Host IP를 통해 Pod에 접근
+>
+> 대부분 Host IP는 보안적으로 내부망에서만 접근 가능하므로, 클러스터 밖에는 있지만 내부망 안에서 접근이 필요할 경우 사용
+
+- 내부망 연결
+- 일시적인 외부 연동 용도
+
+**Service**
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-2
+spec:
+  selector:
+    app: pod
+  ports:
+  - port: 9000
+    targetPort: 8080
+    nodePort: 30000 # 노드 포트 지정(30000~32767 사이로 할당 가능). default. 자동 할당
+  type: NodePort # 서비스 타입
+  externalTrafficPolicy: Local # 요청을 받은 노드의 Pod로 트래픽을 전달
+```
+
+```sh
+kubectl get service svc-2
+```
+
+## Load Balancer
+
+<figure><img src="../../.gitbook/assets/kubernetes/load-balancer.png" alt=""><figcaption></figcaption></figure>
+
+1️⃣ 기본적으로 NodePort 타입의 기능을 포함
+
+2️⃣ `Load Balancer`가 생겨서 각 노드의 트래픽을 분산
+- 단, Load Balancer에 접근하기 위한 외부 접속 IP 주소는 쿠버네티스를 설치했을 때 기본적으로 생기지 않음
+- 별도로 외부 접속 ip를 할당해주는 플러그인 설치가 되어야 IP가 생성
+- Google Cloud Platform, AWS Kubernetes Platform 등 사용 시 자체적으로 플러그인이 포함되어 IP 생성
+
+⚒️ 적용 사례
+
+> 내부 IP를 노출시키지 않고, 외부 IP를 통해 안정적으로 서비스를 노출
+
+- 외부에 시스템 노출용
+
+**Service**
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-3
+spec:
+  selector:
+    app: pod
+  ports:
+  - port: 9000
+    targetPort: 8080
+  type: LoadBalancer # 서비스 타입
+```
+
+```sh
+kubectl get service svc-3
+```
