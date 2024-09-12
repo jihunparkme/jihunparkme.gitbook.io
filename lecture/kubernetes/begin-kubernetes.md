@@ -272,6 +272,28 @@ spec:
      - containerPort: 8080
   ```
 
+- ReplicationController 생성 스크립트
+
+  ```sh
+  apiVersion: v1
+  kind: ReplicationController
+  metadata:
+    name: replication-1
+  spec:
+    replicas: 1
+    selector:
+      app: rc
+    template:
+      metadata:
+        name: pod-1
+        labels:
+          app: rc
+      spec:
+        containers:
+        - name: container
+          image: kubetm/init
+  ```
+
 ## Label
 
 <figure><img src="../../.gitbook/assets/kubernetes/label.png" alt=""><figcaption></figcaption></figure>
@@ -313,7 +335,7 @@ metadata:
 spec:
   selector:
     type: web # key:value
-ports:
+  ports:
   - port: 8080
 ```
 
@@ -331,13 +353,13 @@ Pod는 결국 여러 노드들 중에 한 노드에 올라가야 한다.
 apiVersion: v1
 kind: Pod
 metadata:
- name: pod-3
+  name: pod-3
 spec:
- nodeSelector:
- hostname: node1 # 노드 라벨과 매칭되는 key: value
- containers:
- - name: container
-   image: tmkube/init
+  nodeSelector:
+    kubernetes.io/hostname: k8s-node1 # 노드 라벨과 매칭되는 key: value
+  containers:
+  - name: container
+    image: kubetm/init
 ```
 
 2️⃣ 쿠버네티스의 스케줄러가 판단해서 지정하는 방식
@@ -347,17 +369,129 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
- name: pod-4
+  name: pod-4
 spec:
- containers:
- - name: container
-   image: tmkube/init
-   resources:
-     requests:
-       memory: 2Gi # 2G 메모리 요구
-   limits: # 자원의 성격에 따라 다르게 판단
-     # memory: 초과 시 Pod 종료.
-     # cpu: 초과 시 request 수치로 낮추고, 종료되진 않음
-     memory: 3Gi # 최대 허용 메모리
+  containers:
+  - name: container
+    image: kubetm/init
+    resources:
+      requests:
+        memory: 2Gi # 2G 메모리 요구
+      limits: # 자원의 성격에 따라 다르게 판단
+        # memory: 초과 시 Pod 종료.
+        # cpu: 초과 시 request 수치로 낮추고, 종료되진 않음
+        memory: 3Gi # 최대 허용 메모리
 ```
 
+...
+
+Controller + Label + Node Schedule 스크립트
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-4                           # Pod 이름
+  labels:                               # Label 
+    type: web                           
+    lo: dev  
+spec:
+  nodeSelector:                         # Node 직접 지정
+    kubernetes.io/hostname: k8s-node1   
+  containers:
+  - name: container                     # 컨테이너 이름
+    image: kubetm/init                  # 이미지 선택
+    ports:
+    - containerPort: 8080               
+    resources:                          # 자원 사용량 설정
+      requests:
+        memory: 1Gi
+      limits:
+        memory: 1Gi
+```
+
+<details>
+<summary> 📖 참고. kubectl</summary>
+
+**Create**
+- 같은 이름의 Pod가 존재할 경우 생성이 안됨
+
+```sh
+# 파일이 있을 경우
+kubectl create -f ./pod.yaml
+
+# 내용과 함께 바로 작성할 경우
+kubectl create -f - <<END
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+  - name: container
+    image: kubetm/init
+END
+```
+
+**Apply**
+- 기존에 같은 이름의 Pod가 존재하면 업데이트
+
+```sh
+kubectl apply -f ./pod.yaml
+```
+
+**Get**
+
+```sh
+# 기본 Pod 리스트 조회 (Namepsace 포함)
+kubectl get pods -n defalut
+
+# 더 많은 내용 출력
+kubectl get pods -o wide
+
+# Pod 이름 지정
+kubectl get pod pod1
+
+# Json 형태로 출력
+kubectl get pod pod1 -o json
+```
+
+**Describe**
+
+```sh
+# 상세 출력
+kubectl describe pod pod1
+```
+
+**Delete**
+
+```sh
+# 파일이 있을 경우 생성한 방법 그대로 삭제
+kubectl delete -f ./pod.yaml
+
+# 내용과 함께 바로 작성한 경우 생성한 방법 그대로 삭제
+kubectl delete -f - <<END
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+  - name: container
+    image: kubetm/init
+END
+
+# Pod 이름 지정
+kubectl delete pod pod1
+```
+
+**Exec**
+
+```sh
+# Pod 이름이 pod1인 Container로 들어가기 (나올땐 exit)
+kubectl exec pod1 -it /bin/bash
+
+# (Pod에 Container가 두 개 이상 있을 경우) pod1의 con1 Container로 들어가기 
+kubectl exec pod1 -c con1 -it /bin/bash
+```
+</details>
