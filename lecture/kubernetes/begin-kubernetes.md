@@ -1,6 +1,7 @@
 # Begin Kubernetes
 
-[대세는 쿠버네티스](https://inf.run/yW34) 강의를 요약한 내용입니다. 
+[대세는 쿠버네티스](https://inf.run/yW34) 강의를 요약한 내용입니다.
+- [K8S 실습 자료실](https://kubetm.github.io/k8s/)
 
 <figure><img src="../../.gitbook/assets/kubernetes/kubernetes-introduction.png" alt=""><figcaption></figcaption></figure>
 
@@ -69,3 +70,112 @@
 - 쿠버네티스는 여러 컨테이너들을 한 파드에 묶거나, 한 컨테이너만 파드에 담을 수 있음
   - 한 파드가 하나의 배포 단위이므로 필요한 파드만 확장 가능
 - 시스템을 모듈별로 분리해서 개발했을 때 큰 효과를 발휘
+
+<details>
+<summary>Getting-Started</summary>
+
+<figure><img src="../../.gitbook/assets/kubernetes/getting-started-kubernetes.png" alt=""><figcaption></figcaption></figure>
+
+## Linux
+
+**Install nodejs in CentOS**
+
+```sh
+yum install epel-release
+yum -y install nodejs
+```
+
+**hello.js**
+
+```js
+var http = require('http');
+var content = function(req, resp) {
+ resp.end("Hello Kubernetes!" + "\n");
+ resp.writeHead(200);
+}
+var w = http.createServer(content);
+w.listen(8000);
+```
+
+**run hello.js**
+
+```sh
+node hello.js
+```
+
+## Docker
+
+[docker hub](https://hub.docker.com/)
+
+Dockerfile
+```sh
+FROM node:slim # docker hub 에서 가져올 이미지:버전
+EXPOSE 8000 # 노출시킬 포트
+COPY hello.js . # 현재 디렉토리의 hello.js 파일 복사
+CMD node hello.js # 컨테이너 구동 시 실행시킬 명령어
+```
+
+**Run Docker Container**
+
+```sh
+# 이미지 빌드
+# -t : 레파지토리/이미지명:버전 디렉토리
+# . : Dockerfile 위치 (다른 이름으로 지정 시 파일 이름)
+docker build -t kubetm/hello .
+
+# 생성한 이미지 확인
+docker images
+
+# 컨테이너 구동
+# -d : 백그라운드 모드
+# -p : 포트변경 (노출:구동)
+docker run -d -p 8100:8000 kubetm/hello
+
+# 컨테이너 접속
+docker ps
+docker exec -it c403442e8a59 /bin/bash
+```
+
+**Push Docker Image**
+
+```sh
+docker login
+docker push kubetm/hello
+```
+
+## Kubernetes
+
+**Generate Pod**
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-pod # 파드 종류
+  labels:
+    app: hello # 파드 이름
+spec:
+  containers:
+  - name: hello-container # 컨테이너 이름
+    image: kubetm/hello # docker hub에서 가져올 이미지
+    ports:
+    - containerPort: 8000 # 노출 포트
+```
+
+**Generate Service**
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-svc
+spec:
+  selector:
+    app: hello # pod metadata.name.labels.app과 매칭하여 pod에 연결
+  ports:
+    - port: 8200 # 노출 포트
+      targetPort: 8000 # 컨테이너 포트
+  externalIPs:
+  - 192.168.56.30 # 접속 IP
+```
+</details>
