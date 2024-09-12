@@ -1,5 +1,179 @@
 # 코틀린 Step02 - 오버로딩과 고차 함수
 
+<details>
+<summary>📒 연산자 오버로딩과 기타 관례 요약</summary>
+
+- 표준 수학 연산자 오버로딩
+
+```kotlin
+data class Point(val x: Int, val y: Int) {
+    operator fun plus(other: Point): Point {
+        return Point(x + other.x, y + other.y)
+    }
+}
+
+@Test
+fun `test operator overloading`() {
+    val p1 = Point(10, 20)
+    val p2 = Point(30, 40)
+    val result = p1 + p2
+    assertEquals(Point(40, 60), result)
+}
+```
+
+- 비교 연산자는 `equals`와 `compareTo` 메소드로 변환
+
+```kotlin
+    class Person(val name: String, val age: Int) : Comparable<Person> {
+    override fun compareTo(other: Person): Int {
+        return age - other.age
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Person) return false
+        return name == other.name && age == other.age
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode() * 31 + age
+    }
+}
+
+@Test
+fun `test comparison operators`() {
+    val p1 = Person("Alice", 30)
+    val p2 = Person("Bob", 25)
+    val p3 = Person("Alice", 30)
+
+    assertTrue(p1 > p2)
+    assertFalse(p1 == p2)
+    assertTrue(p1 == p3)
+}
+```
+
+- `get`, `set`, `contains` 함수를 정의하면 그 클래스의 인스턴스에 대해 `[]`와 `in` 연산 사용 가능
+    - 해당 객체는 코틀린 컬렉션 객체와 유사
+
+```kotlin
+class CustomCollection {
+    private val items = mutableListOf<String>()
+
+    operator fun get(index: Int): String {
+        return items[index]
+    }
+
+    operator fun set(index: Int, value: String) {
+        items[index] = value
+    }
+
+    operator fun contains(value: String): Boolean {
+        return items.contains(value)
+    }
+
+    fun add(value: String) {
+        items.add(value)
+    }
+}
+
+@Test
+fun `test get, set, contains`() {
+    val collection = CustomCollection()
+    collection.add("Hello")
+    collection.add("World")
+    assertEquals("Hello", collection[0]) // get()
+
+    collection[1] = "Kotlin" // set()
+    assertEquals("Kotlin", collection[1]) // get()
+    assertTrue("Kotlin" in collection) // contains()
+}
+```
+
+- `rangeTo`, `iterator` 함수를 정의하면 범위를 만들거나 컬렉션과 배열의 원소를 이터레이션 가능
+
+```kotlin
+class CustomRange(val start: Int, val end: Int) {
+    operator fun rangeTo(other: CustomRange): IntRange {
+        return start..other.end
+    }
+
+    operator fun iterator(): Iterator<Int> {
+        return (start..end).iterator()
+    }
+}
+
+@Test
+fun `test rangeTo and iterator`() {
+    val range = CustomRange(1, 5)
+    val result = mutableListOf<Int>()
+    for (i in range) { // iterator()
+        result.add(i)
+    }
+    assertEquals(listOf(1, 2, 3, 4, 5), result)
+
+    val range2 = CustomRange(6, 10)
+    val combinedRange = range..range2 // rangeTo()
+    assertEquals((1..10), combinedRange)
+}
+```
+
+- `구조 분해 선언`을 통해 한 객체의 상태를 분해해서 여러 변수에 대입 가능
+    - 함수가 여러 값을 한꺼번에 반환해야 하는 경우 유용
+
+```kotlin
+data class Person(val name: String, val age: Int)
+
+@Test
+fun `test destructuring declaration`() {
+    val person = Person("Alice", 30)
+    val (name, age) = person
+    assertEquals("Alice", name)
+    assertEquals(30, age)
+}
+```
+
+- `위임 프로퍼티`를 통해 프로퍼티 값을 저장, 초기화, 읽거나 변경할 때 사용하는 로직을 재활용 가능
+    - 위임 프로퍼티는 프레임워크를 만들 때 아주 유용
+    - `Delegates.observable` 함수를 사용하면 프로퍼티 변경 관찰자를 쉽게 추가 가능
+
+```kotlin
+class User {
+    var name: String by Delegates.observable("<no name>") { _, old, new ->
+        println("Name changed from $old to $new")
+    }
+}
+
+@Test
+fun `test delegated property`() {
+    val user = User()
+    assertEquals("<no name>", user.name)
+
+    user.name = "Alice"
+    assertEquals("Alice", user.name)
+
+    user.name = "Bob"
+    assertEquals("Bob", user.name)
+}
+```
+
+- 표준 라이브러리 함수인 `lazy`를 통해 지연 초기화 프로퍼티를 쉽게 구현
+
+```kotlin
+class LazyInitialization {
+    val lazyValue: String by lazy {
+        println("Computed!")
+        "Hello"
+    }
+}
+
+@Test
+fun `test lazy property`() {
+    val instance = LazyInitialization()
+    assertEquals("Hello", instance.lazyValue) // 최초로 접근 시 초기화
+}
+```
+</details>
+
 ---
 
 # **산술 연산자 오버로딩**
