@@ -943,3 +943,118 @@ fun readFirstLineFromFile(path: String): String {
 }
 ```
 
+---
+
+# **고차 함수 안에서 흐름 제어**
+
+## **람다 안의 return문: 람다를 둘러싼 함수로부터 반환**
+
+> 람다 안에서 return을 사용하면 람다로부터만 반환되는 게 아니라 그 람다를 호출하는 함수가 실행을 끝내고 반환된다.
+
+자신을 둘러싸고 있는 블록보다 더 바깥에 있는 다른 블록을 반환하게 만드는 return 문을 `non-local return`이라 부른다.
+
+- 이렇게 return이 바깥쪽 함수를 반환시킬 수 있는 때는 람다를 인자로 받는 함수가 인라인 함수인 경우뿐
+- forEach는 인라인 함수이므로 람다 본문과 함께 인라이닝
+- 따라서 return 식이 바깥쪽 함수(lookForAlice)를 반환시키도록 쉽게 컴파일
+
+```kotlin
+@Test
+fun `람다 안의 return문`() {
+    data class Person(val name: String, val age: Int)
+
+    fun lookForAlice(people: List<Person>): String {
+        for (person in people) {
+            if (person.name == "Alice") {
+                return "Found!"
+            }
+        }
+        return "Alice is not found"
+    }
+
+    fun lookForAliceForEach(people: List<Person>): String {
+        people.forEach {
+            if (it.name == "Alice") {
+                return "Found!"
+            }
+        }
+        return "Alice is not found"
+    }
+
+    val people = listOf(Person("Alice", 29), Person("Bob", 31))
+
+    assertEquals("Found!", lookForAlice(people))
+    assertEquals("Found!", lookForAliceForEach(people))
+
+    val people2 = listOf(Person("Bob", 31))
+    assertEquals("Alice is not found", lookForAlice(people2))
+    assertEquals("Alice is not found", lookForAliceForEach(people2))
+}
+```
+
+## **람다로부터 반환: 레이블을 사용한 return**
+
+> 람다 식에서도 `local return`을 사용할 수 있다.
+
+람다 안에서 `local return`은 for루프의 break와 비슷한 역할을 한다. 
+
+- 단, `local return`과 `non-local return`을 구분하기 위해 레이블(label)을 사용해야 한다.
+
+```kotlin
+@Test
+fun `람다로부터 반환`() {
+    data class Person(val name: String, val age: Int)
+
+    fun lookForAlice(people: List<Person>): String {
+        people.forEach label@{
+            // 람다를 호출하는 함수가 끝나지 않고 람다로부터 반환
+            if (it.name == "Alice") return@label
+        }
+
+        return "Alice might be somewhere"
+   }
+
+    val people = listOf(Person("Alice", 29), Person("Bob", 31))
+    assertEquals("Alice might be somewhere", lookForAlice(people))
+
+    val people2 = listOf(Person("Bob", 31))
+    assertEquals("Alice might be somewhere", lookForAlice(people2))
+}
+```
+
+✅ 람다에 레이블을 붙여서 사용하는 대신 람다를 인자로 받는 인라인 함수의 이름을 return 뒤에 레이블로 사용해도 된다.
+
+```kotlin
+fun lookForAlice(people: List<Person>) {
+    people.forEach {
+        if (it.name == "Alice") return@forEach
+    }
+    println("Alice might be somewhere")
+}
+```
+
+## **무명 함수: 기본적으로 로컬 return**
+
+> 무명 함수는 코드 블록을 함수에 넘길 때 사용할 수 있는 다른 방법
+
+```kotlin
+@Test
+fun `무명 함수`() {
+    data class Person(val name: String, val age: Int)
+
+    fun lookForAlice(people: List<Person>) {
+        people.forEach(fun (person) {
+            if (person.name == "Alice") return
+            println("${person.name} is not Alice")
+        })
+    }
+
+    val people = listOf(Person("Alice", 29), Person("Bob", 31))
+    lookForAlice(people) // Bob is not Alice
+}
+```
+
+무명 함수는 일반 함수와 비슷해 보이지만, 차이는 ***함수 이름이나 파라미터 타입을 생략할 수 있다는 점 뿐***
+
+- 무명 함수 안에서 레이블이 붙지 않은 return 식은 무명 함수 자체를 반환시킬 뿐 무명 함수를 둘러싼 다른 함수를 반환시키지 않는다.
+    - return에 적용되는 규칙은 단순히 fun 키워드를 사용해 정의된 가장 안쪽 함수를 반환시킨다는 점
+- 람다 식의 구현 방법이나 람다 식을 인라인 함수에 넘길 때 어떻게 본문이 인라이닝 되는지 등의 규칙을 무명 함수에도 모두 적용 가능
