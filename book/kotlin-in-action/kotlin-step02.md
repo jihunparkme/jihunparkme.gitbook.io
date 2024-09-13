@@ -652,3 +652,181 @@ fun `by lazy`() {
 }
 
 ```
+
+---
+
+# 고차 함수 정의
+
+> `고차 함수`는 다른 함수를 인자로 받거나 함수를 반환하는 함수
+> 
+> 코틀린에서는 람다나 함수 참조를 사용해 ***함수를 값으로 표현 가능***
+> 
+> 따라서 고차 함수는 람다나 함수 참조를 인자로 넘길 수 있거나, 람다나 함수 참조를 반환하는 함수
+
+## 함수 타입
+
+> 함수 타입을 정의하려면 함수 파라미터의 타입을 괄호 안에 넣고, 
+> 
+> 그 뒤에 화살표(→)를 추가한 다음, 함수의 반환 타입을 지정
+
+<center><img src="../../.gitbook/assets/kotlin/function.png" width="50%"></center>
+
+https://livebook.manning.com/book/kotlin-in-action/chapter-8
+
+Unit 타입은 의미 있는 값을 반환하지 않는 함수 반환 타입에 쓰는 특별한 타입
+
+- 그냥 함수를 정의한다면 함수의 파라미터 목록 뒤에 오는 Unit 반환 타입 지정을 생략해도 되지만,
+- ⚠️ 함수 타입을 선언할 때는 반환 타입을 반드시 명시해야 하므로 Unit을 필수로 명시
+
+## **인자로 받은 함수 호출**
+
+> 인자로 받은 함수를 호출하는 구문은 일반 함수를 호출하는 구문과 동일
+
+```kotlin
+fun twoAndThree(operation: (Int, Int) -> Int): Int { // 함수 타입의 인자를 받는 함수
+    val result = operation(2, 3)
+    return result
+}
+
+@Test
+fun `인자로 받은 함수 호출`() {
+    assertEquals(5, twoAndThree { a, b -> a + b })
+    assertEquals(6, twoAndThree { a, b -> a * b })
+}
+```
+
+## **디폴트 값을 지정한 함수 타입 파라미터나 널이 될 수 있는 함수 타입 파라미터**
+
+> 파라미터를 함수 타입으로 선언할 때도 디폴트 값을 정할 수 있다.
+
+```kotlin
+fun <T> Collection<T>.joinToString(
+    separator: String = ", ",
+    prefix: String = "",
+    postfix: String = "",
+    transform: (T) -> String = { it.toString() } // 함수 타입 파라미터를 선언하면서 람다를 디폴트 값으로 지정
+): String {
+    val result = StringBuilder(prefix)
+
+    for ((index, element) in this.withIndex()) {
+        if (index > 0) result.append(separator)
+        result.append(transform(element)) // transform 파라미터로 받은 함수를 호출
+    }
+
+    result.append(postfix)
+    return result.toString()
+}
+
+@Test
+fun `파라미터를 함수 타입으로 선언할 때도 디폴트 값 설정 가능`() {
+    val letters = listOf("Alpha", "Beta")
+
+    assertEquals("Alpha, Beta", letters.joinToString()) // 디폴트 변환 함수 사용
+    assertEquals("alpha, beta", letters.joinToString { it.lowercase() }) // 람다를 인자로 전달
+    assertEquals("alpha! beta! ",
+        letters.joinToString(separator = "! ", postfix = "! ", transform = { it.lowercase() })
+    ) // 이름 붙은 인자 구문을 사용해 람다를 포함하는 여러 인자를 전달
+}
+```
+
+## **함수를 함수에서 반환**
+
+> 다른 함수를 반환하는 함수를 정의하려면 함수의 반환 타입으로 함수 타입을 지정
+> 
+> 함수를 반환하려면 return 식에 람다나 멤버 참조나 함수 타입의 값을 계산하는 식 등을 넣으면 된다.
+
+```kotlin
+data class Person(
+    val firstName: String,
+    val lastName: String,
+    val phoneNumber: String?
+)
+
+class ContactListFilters {
+    var prefix: String = ""
+    var onlyWithPhoneNumber: Boolean = false
+
+    fun getPredicate(): (Person) -> Boolean { // 함수를 반환하는 함수를 정의한다.
+        val startsWithPrefix = { p: Person ->
+            p.firstName.startsWith(prefix) || p.lastName.startsWith(prefix)
+        }
+        if (!onlyWithPhoneNumber) {
+            return startsWithPrefix // 함수 타입의 변수 반환
+        }
+        return {  // 람다 반환
+            startsWithPrefix(it)
+                    && it.phoneNumber != null
+        }
+    }
+}
+
+@Test
+fun `함수를 함수에서 반환`() {
+    val contacts = listOf(
+        Person("Dmitry", "Jemerov", "123-4567"),
+        Person("Svetlana", "Isakova", null)
+    )
+    val contactListFilters = ContactListFilters()
+    with(contactListFilters) {
+        prefix = "Dm"
+        onlyWithPhoneNumber = true
+    }
+    assertEquals(
+        listOf(Person("Dmitry", "Jemerov", "123-4567")),
+        contacts.filter(contactListFilters.getPredicate()) // 반환된 람다 적용
+    )
+
+    with(contactListFilters) {
+        prefix = "Sv"
+        onlyWithPhoneNumber = false
+    }
+    assertEquals(
+        listOf(Person("Svetlana", "Isakova", null)),
+        contacts.filter(contactListFilters.getPredicate()) // 반환된 함수 타입 변수 적용
+    )
+}
+```
+
+## **람다를 활용한 중복 제거**
+
+> 함수 타입과 람다 식은 재활용하기 좋은 코드를 만들 때 쓸 수 있는 훌륭한 도구
+
+웹 사이트 방문 기록을 분석하는 예시
+
+```kotlin
+@Test
+    fun `람다를 활용한 중복 제거`() {
+    /**
+     * Case 01. 중복이 발생하는 코드
+     */
+    val averageWindowsDuration = log
+        .filter { it.os == OS.WINDOWS }.map(SiteVisit::duration).average()
+
+    val averageMacDuration = log
+        .filter { it.os == OS.MAC }.map(SiteVisit::duration).average()
+
+    assertEquals(23.0, averageWindowsDuration)
+    assertEquals(22.0, averageMacDuration)
+
+    /**
+     * Case 02. 함수를 사용하여 일반 함수를 통해 중복을 줄이기
+     */
+    fun List<SiteVisit>.averageDurationFor(os: OS) =
+        filter { it.os == os }.map(SiteVisit::duration).average()
+
+    assertEquals(23.0, log.averageDurationFor(OS.WINDOWS))
+    assertEquals(22.0, log.averageDurationFor(OS.MAC))
+
+    /**
+     * Case 02. 고차 함수를 이용하여 함수를 확장
+     * > 특정 OS의 평균 방문 시간을 구하고 싶다거나, 특정 페이지 평균 방문 시간을 구하고 싶을 경우
+     */
+    fun List<SiteVisit>.averageDurationFor(predicate: (SiteVisit) -> Boolean) =
+        filter(predicate).map(SiteVisit::duration).average()
+
+    // 모바일 디바이스(IOS, 안드로이드)의 평균 방문 시간
+    assertEquals(12.15, log.averageDurationFor { it.os in setOf(OS.ANDROID, OS.IOS) })
+    // IOS 사용자의 /signup 페이지 평균 방문 시간
+    assertEquals(8.0, log.averageDurationFor { it.os == OS.IOS && it.path == "/signup" })
+}
+```
