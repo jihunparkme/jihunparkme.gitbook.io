@@ -174,6 +174,206 @@ fun `test lazy property`() {
 ```
 </details>
 
+<details>
+<summary>📕 고차 함수 요약</summary>
+
+- 함수 타입을 사용해 함수에 대한 참조를 담는 변수, 파라미터, 반환 값을 만들 수 있다.
+
+```kotlin
+// 함수 타입을 사용한 변수
+val add: (Int, Int) -> Int = { a, b -> a + b }
+
+// 함수 타입을 파라미터로 받는 함수
+fun operate(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b)
+}
+
+// 함수 타입을 반환 값으로 사용하는 함수
+fun getOperation(type: String): (Int, Int) -> Int {
+    return when (type) {
+        "add" -> { a, b -> a + b }
+        "multiply" -> { a, b -> a * b }
+        else -> { _, _ -> 0 }
+    }
+}
+
+@Test
+fun `test function type as variable`() {
+    assertEquals(5, add(2, 3))
+}
+
+@Test
+fun `test function type as parameter`() {
+    val result = operate(2, 3, add)
+    assertEquals(5, result)
+}
+
+@Test
+fun `test function type as return value`() {
+    val addOperation = getOperation("add")
+    val multiplyOperation = getOperation("multiply")
+    assertEquals(5, addOperation(2, 3))
+    assertEquals(6, multiplyOperation(2, 3))
+}
+```
+
+- 고차 함수는 다른 함수를 인자로 받거나 함수를 반환한다.
+
+```kotlin
+// 함수를 인자로 받는 고차 함수
+fun applyOperation(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b)
+}
+
+// 함수를 반환하는 고차 함수
+fun getOperation(type: String): (Int, Int) -> Int {
+    return when (type) {
+        "add" -> { a, b -> a + b }
+        "subtract" -> { a, b -> a - b }
+        else -> { _, _ -> 0 }
+    }
+}
+
+@Test
+fun `test applyOperation with add`() {
+    val result = applyOperation(3, 4) { a, b -> a + b }
+    assertEquals(7, result)
+}
+
+@Test
+fun `test applyOperation with subtract`() {
+    val result = applyOperation(10, 4) { a, b -> a - b }
+    assertEquals(6, result)
+}
+
+@Test
+fun `test getOperation with add`() {
+    val addOperation = getOperation("add")
+    val result = addOperation(3, 4)
+    assertEquals(7, result)
+}
+
+@Test
+fun `test getOperation with subtract`() {
+    val subtractOperation = getOperation("subtract")
+    val result = subtractOperation(10, 4)
+    assertEquals(6, result)
+}
+```
+
+- 인라인 함수를 컴파일할 때 컴파일러는 그 함수의 본문과 그 함수에게 전달된 람다의 본문을 컴파일한 바이트 코드를 모든 함수 호출 지점에 삽입해준다.
+
+```kotlin
+inline fun performOperation(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b)
+}
+
+@Test
+fun `test performOperation with add`() {
+    val result = performOperation(3, 4) { x, y -> x + y }
+    assertEquals(7, result)
+}
+
+@Test
+fun `test performOperation with multiply`() {
+    val result = performOperation(3, 4) { x, y -> x * y }
+    assertEquals(12, result)
+}
+```
+
+- 고차 함수를 사용하면 컴포넌트를 이루는 각 부분의 코드를 더 잘 재사용할 수 있다.
+    - 또 고차 함수를 활용해 강력한 제네릭 라이브러리를 만들 수 있다.
+
+```kotlin
+// 고차 함수: 두 리스트를 합치는 함수
+fun <T> combineLists(list1: List<T>, list2: List<T>, combine: (T, T) -> T): List<T> {
+    return list1.zip(list2, combine)
+}
+
+// 고차 함수: 리스트의 모든 요소에 연산을 적용하는 함수
+fun <T, R> mapList(list: List<T>, transform: (T) -> R): List<R> {
+    return list.map(transform)
+}
+
+@Test
+fun `test combineLists with addition`() {
+    val list1 = listOf(1, 2, 3)
+    val list2 = listOf(4, 5, 6)
+    val result = combineLists(list1, list2) { a, b -> a + b }
+    assertEquals(listOf(5, 7, 9), result)
+}
+
+@Test
+fun `test combineLists with string concatenation`() {
+    val list1 = listOf("a", "b", "c")
+    val list2 = listOf("d", "e", "f")
+    val result = combineLists(list1, list2) { a, b -> a + b }
+    assertEquals(listOf("ad", "be", "cf"), result)
+}
+
+@Test
+fun `test mapList with square`() {
+    val list = listOf(1, 2, 3, 4)
+    val result = mapList(list) { it * it }
+    assertEquals(listOf(1, 4, 9, 16), result)
+}
+
+@Test
+fun `test mapList with string length`() {
+    val list = listOf("apple", "banana", "cherry")
+    val result = mapList(list) { it.length }
+    assertEquals(listOf(5, 6, 6), result)
+}
+```
+
+- 인라인 함수에서는 람다 안에 있는 return 문이 바깥쪽 함수를 반환시키는 non-local return을 사용할 수 있다.
+
+```kotlin
+inline fun performOperationWithNonLocalReturn(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b)
+}
+
+@Test
+fun `test non-local return in inline function`() {
+    val result1 = performOperationWithNonLocalReturn(3, 4) { x, y ->
+        if (x > y) return@performOperationWithNonLocalReturn x
+        x + y
+    }
+    assertEquals(7, result1)
+
+    val result2 = performOperationWithNonLocalReturn(3, 1) { x, y ->
+        if (x > y) return@performOperationWithNonLocalReturn x
+        x + y
+    }
+    assertEquals(3, result2)
+}
+```
+
+- 무명 함수는 람다 식을 대신할 수 있으며 return 식을 처리하는 규칙이 일반 람다 식과는 다르다.
+    - 본문 여러 곳에서 return 해야 하는 코드 블록을 만들어야 한다면 람다 대신 무명 함수를 쓸 수 있다.
+
+```kotlin
+fun performOperationWithAnonymousFunction(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b)
+}
+
+@Test
+fun `test anonymous function with multiple returns`() {
+    val result = performOperationWithAnonymousFunction(3, 4, fun(x, y): Int {
+        if (x > y) return x
+        return x + y
+    })
+    assertEquals(7, result)
+
+    val result2 = performOperationWithAnonymousFunction(5, 2, fun(x, y): Int {
+        if (x > y) return x
+        return x + y
+    })
+    assertEquals(5, result2)
+}
+```
+</details>
+
 ---
 
 # **산술 연산자 오버로딩**
