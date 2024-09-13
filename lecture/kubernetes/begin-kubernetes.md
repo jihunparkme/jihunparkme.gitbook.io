@@ -244,7 +244,7 @@ spec:
 
 ## Container
 
-<figure><img src="../../.gitbook/assets/kubernetes/container.png" alt=""><figcaption></figcaption></figure>
+<center><img src="../../.gitbook/assets/kubernetes/container.png" width="60%"></center>
 
 `Pod`
 - Pod 안에는 하나의 독립적인 서비스를 구동할 수 있는 컨터이너들이 존재
@@ -298,7 +298,7 @@ spec:
 
 ## Label
 
-<figure><img src="../../.gitbook/assets/kubernetes/label.png" alt=""><figcaption></figcaption></figure>
+<center><img src="../../.gitbook/assets/kubernetes/label.png" width="60%"></center>
 
 Label은 Pod 뿐 아니라 모든 오브젝트에 달 수 있는데, Pod에서 가장 많이 사용
 - 목적에 따라 오브젝트들을 분류하고, 분류된 오브젝트만 따로 골라서 연결
@@ -343,7 +343,7 @@ spec:
 
 ## Node Schedule
 
-<figure><img src="../../.gitbook/assets/kubernetes/node-schedule.png" alt=""><figcaption></figcaption></figure>
+<center><img src="../../.gitbook/assets/kubernetes/node-schedule.png" width="60%"></center>
 
 Pod는 결국 여러 노드들 중에 한 노드에 올라가야 한다.
 - 이 방법이 대해 직접 노드를 선택하는 방식과 쿠버네티스가 자동으로 지정해주는 방식이 존재
@@ -506,7 +506,7 @@ kubectl exec pod1 -c con1 -it /bin/bash
 
 ## Cluster Ip
 
-<figure><img src="../../.gitbook/assets/kubernetes/cluster-ip.png" alt=""><figcaption></figcaption></figure>
+<center><img src="../../.gitbook/assets/kubernetes/cluster-ip.png" width="60%"></center>
 
 1️⃣ 서비스는 기본적으로 자신의 `클러스터 IP`를 보유
 - 해당 서비스를 Pod에 연결시키면 *서비스의 IP를 통해서도 파트에 접근* 가능
@@ -570,7 +570,7 @@ kubectl get service svc-1
 
 ## Node Port
 
-<figure><img src="../../.gitbook/assets/kubernetes/node-port.png" alt=""><figcaption></figcaption></figure>
+<center><img src="../../.gitbook/assets/kubernetes/node-port.png" width="60%"></center>
 
 1️⃣ NodePort 타입으로 생성해도 서비스에는 기본적으로 `클러스터 IP` 할당
 - 클러스터 IP와 같은 기능이 포함
@@ -604,7 +604,7 @@ spec:
   selector:
     app: pod
   ports:
-  - port: 9000
+  - port: 9000 # 클러스터 IP 접근 포트
     targetPort: 8080
     nodePort: 30000 # 노드 포트 지정(30000~32767 사이로 할당 가능). default. 자동 할당
   type: NodePort # 서비스 타입
@@ -617,7 +617,7 @@ kubectl get service svc-2
 
 ## Load Balancer
 
-<figure><img src="../../.gitbook/assets/kubernetes/load-balancer.png" alt=""><figcaption></figcaption></figure>
+<center><img src="../../.gitbook/assets/kubernetes/load-balancer.png" width="60%"></center>
 
 1️⃣ 기본적으로 NodePort 타입의 기능을 포함
 
@@ -650,4 +650,195 @@ spec:
 
 ```sh
 kubectl get service svc-3
+```
+
+---
+
+# Volume
+
+<figure><img src="../../.gitbook/assets/kubernetes/volume.png" alt=""><figcaption></figcaption></figure>
+
+## emptyDir
+
+<center><img src="../../.gitbook/assets/kubernetes/emptyDir.png" width="50%"></center>
+
+컨테이너들끼리 데이터를 공유하기 위해 `Volume`을 사용
+- 최초 `Volume` 생성 시 해당 `Volume` 안에는 내용이 비어있다보니 `emptyDir` 이라는 명칭
+- 각 컨테이너가 `Volume`을 마운트 해두면, 서버들이 `Volume`을 자신의 로컬에 있는 파일처럼 사용
+
+Pod에 문제가 생겨 Pod가 재생성이 될 경우 `Volume` 데이터도 초기화
+- 일시적인 활용을 위한 목적으로 사용되는 데이터를 넣는 것을 권장
+
+**Pod**
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-volume-1
+spec:
+  containers:
+  - name: container1 # 컨테이터
+    image: kubetm/init
+    volumeMounts: # 볼륨 마운트
+    - name: empty-dir # 볼륨 이름
+      mountPath: /mount1 # 마운트 경로
+  - name: container2 # 컨테이너
+    image: kubetm/init
+    volumeMounts: # 불륨 마운트
+    - name: empty-dir # 볼륨 이름
+      mountPath: /mount2 # 마운트 경로
+  volumes:
+  - name : empty-dir # 두 컨테이너는 동일한 볼륨을 마운트해서 데이터를 공유
+    emptyDir: {} # emptyDir 타입
+```
+
+```sh
+mount | grep mount1 # 마운트 상태 확인
+echo "file context" >> file.txt # 테스트 파일 생성
+```
+
+## hostPath
+
+<center><img src="../../.gitbook/assets/kubernetes/hostPath.png" width="50%"></center>
+
+한 호스트(Pod들이 올라가져 있는 노드)의 경로를 볼륨으로 사용
+- 자신의 Pod가 올라가져있는 노드의 불륨만 사용 가능
+- emptyDir과 다른 점은
+  - 이 경로를 각 Pod가 마운트해서 사용하므로, Pod가 죽어도 해당 노드에 있는 데이터는 사라지지 않음
+- 좋아보일 수 있지만, Pod 입장에서 한 가지 큰 문제를 보유
+  - Pod가 죽은 후 재생성될 때 같은 노드에 재생성될 것이라는 보장은 없음
+  - 재생성되는 순간에 스케줄러가 자원 상황에 따라 다른 노드에 Pod를 생성할 수 있음
+  - 또는, 노드 장애로 다른 노드로 Pod가 옮겨질 수도 있음
+- 대안으로 노드가 추가될 때마다 동일한 이름의 Volumne 경로를 만들어서 노드에 있는 경로끼리 마운트를 시켜줄 수 있다.
+  - 하지만, 쿠버네티스의 역할은 아니고 운영자가 직접 리눅스 별도 마운트 기술로 구성 필요
+
+각 노드에는 기본적으로 노드를 위한 파일들(시스템 파일, 여러 설정 파일..)이 존재하는데, 
+- Pod 자신이 할당되어 있는 **호스트(노드)의 데이터를 읽거나 사용해야 할 때 활용**
+- Pod의 데이터를 저장하는 용도가 아닌 **노드에 있는 데이터들을 Pod에서 사용하기 위한 용도**
+
+**Pod**
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-volume-3
+spec:
+  nodeSelector: # 노드 지정
+    kubernetes.io/hostname: k8s-node1 # node1에 생성
+  containers:
+  - name: container
+    image: kubetm/init
+    volumeMounts: # 볼륨 마운트
+    - name: host-path # 마운트 볼륨 이름
+      mountPath: /mount1 # 마운트 경로
+  volumes:
+  - name : host-path # hostPath 속성
+    hostPath:
+      path: /node-v # 볼륨 경로
+      type: DirectoryOrCreate # path가 해당 경로에 없으면 생성
+```
+
+## PVC / PV
+
+<center><img src="../../.gitbook/assets/kubernetes/pvc-pv.png" width="80%"></center>
+
+> Pod에 영속성있는 `Volume`을 제공하기 위한 개념
+
+다양한 형태의 볼륨(git, AWS, NFS ..)을 각 `PV`(Persistent Volume)을 정의하고 연결
+- Pod는 PV에 바로 연결하지 않고 `PVC`(Persistent Volume Claim)를 통해 `PV`와 연결
+  - 한 번 바인딩 된 `PV`는 다른 `PVC`에서 사용 불가
+  - 요구된 스펙과 적합한 볼륨이 없다면 Pending 상태
+- 볼륨의 종류는 많고 각 볼륨들과 연결하기 위한 설정들도 다르기 때문
+  
+  ```sh
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: pv-01
+  spec: # 각 볼륨 연결을 위한 설정의 차이
+    nfs:
+      server: 192.168.0.xxx
+      path: /sda/data
+    iscsi:
+      targetPortal: 163.180.11
+      iqn: iqn.200.qnap:...
+      lun: 0
+      fsType: ext4
+      readOnly: no
+      chapAuthSession: true
+    gitRepo:
+      repository: github.com...
+      revision: master
+      directory: .
+  ``` 
+
+볼륨 사용에 User 영역과 Admin 영역으로 분리
+- User: Pod의 서비스를 만들고 배포를 관리하는 서비스 담당자
+- Admin: 쿠버네티스를 담당하는 운영자
+
+전체 흐름
+- (1) 최초 Admin이 PV 생성
+- (2) User가 PVC를 생성
+- (3) 쿠버네티스가 PVC 내용에 맞는 적절한 PV에 연결
+- (3) 이후 Pod 생성 시 해당 PVC 마운팅
+
+.
+
+**`PV`(Persistent Volume) 정의**
+
+```sh
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-01
+spec: # PVC가 PV 연결 시 해당 내용을 기반으로 쿠버네티스가 자동으로 연결
+  capacity:
+    storage: 2G
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: /node-v # 호스트의 로컬 경로
+  nodeAffinity:
+    required:
+      nodeSelectorTerms: # 해당 PV에 연결되는 Pod 들은 
+      - matchExpressions: # node1으로 라벨링된 노드에만 생성
+        - {key: kubernetes.io/hostname, operator: In, values: [k8s-node1]}
+```
+
+**`PVC`(Persistent Volume Claim) 생성**
+
+```sh
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-01
+spec: # 요구하는 PV 정보
+  accessModes:
+  - ReadWriteOnce # 읽기 쓰기 모드
+  resources:
+    requests:
+      storage: 2G # 용량이 1G인 볼륨 할당
+  storageClassName: ""
+```
+
+**Pod**
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-volume-3
+spec:
+  containers:
+  - name: container
+    image: kubetm/init
+    volumeMounts: # 컨테이너에서 pvc 볼륨 사용
+    - name: pvc-pv
+      mountPath: /mount3 # 컨테이너에서 접근 시 경로
+  volumes:
+  - name : pvc-pv
+    persistentVolumeClaim: # PVC 사용 설정
+      claimName: pvc-01 # pvc-01 사용
 ```
