@@ -1160,3 +1160,62 @@ spec:
 
 Pod, Service 생성 시 속한 `Namespace` 지정 가능
 - 두 오브젝트는 `Namespace`가 서로 다르므로 selector 값과 label 값이 일치하더라도 연결되지 않는다.
+
+## ResourceQuota
+
+<center><img src="../../.gitbook/assets/kubernetes/resourceQuota.png" width="50%"></center>
+
+> Namespace에 자원 한계를 설정하는 오브젝트
+
+Namespace에 제한하고 싶은 자원을 명시
+- `ResourceQuota`가 지정되어 있는 Namespace에 Pod 생성 시, Pod는 무조건 해당 스펙을 명시해야 한다.
+- Pod에 스펙이 없으면 해당 Namespace에 만들어지지 않음
+
+**Namespace**
+
+```sh
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nm-3
+```
+
+**ResourceQuota**
+- Compute Resource: memory, cpu, storage
+- Objects count: Pod, Service, ConfigMap, PVC, ...
+
+```sh
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: rq-1 # ResourceQuota의 이름
+  namespace: nm-3 # ResourceQuota를 적용할 네임스페이스의 이름
+spec: # ResourceQuota의 세부 설정
+  hard: # 네임스페이스 내에서 사용할 수 있는 리소스의 상한선을 정의
+    requests.memory: 1Gi # 네임스페이스 내의 모든 파드가 요청할 수 있는 메모리의 총합을 1Gi로 제한
+    limits.memory: 1Gi # 네임스페이스 내의 모든 파드가 사용할 수 있는 메모리의 총합을 1Gi로 제한
+```
+
+**ResourceQuota Check Command**
+
+```sh
+kubectl describe resourcequotas --namespace=nm-3
+```
+
+**Pod**
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-3
+spec:
+  containers:
+  - name: container
+    image: kubetm/app
+    resources:
+      requests:
+        memory: 0.5Gi
+      limits:
+        memory: 0.5Gih
+```
