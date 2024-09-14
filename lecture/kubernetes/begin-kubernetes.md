@@ -1028,3 +1028,32 @@ spec: # Pod 구성
     configMap: # 이 볼륨이 ConfigMap을 기반으로 생성
       name: cm-file # ConfigMap의 이름
 ```
+
+---
+
+# Namespace, ResourceQuota, LimitRange
+
+<center><img src="../../.gitbook/assets/kubernetes/kubernetes-cluster.png" width="100%"></center>
+
+Kubernetes Cluster에는 전체 사용할 수 있는 자원이 존재
+- 일반적으로 메모리, CPU..
+- 클러스터 안에는 여러 `namespace`들을 생성할 수 있고,
+- `namespace` 안에는 여러 Pod들을 생성 가능
+
+여기서 각 Pod는 필요한 자원을 클러스터 자원을 공유해서 사용하는데
+- 만일 한 `namespace` 안에 있는 Pod가 이 클러스터에 남은 자원을 모두 사용해 버리면
+- 다른 Pod 입장에서는 더 이상 쓸 자원이 없어서 자원이 필요할 때 문제가 발생
+
+이런 문제를 해결하기 위해 `ResourceQuota`가 존재
+- `namespace` 마다 설정하면 최대 한계를 설정해서
+- Pod 자원이 설정한 한계를 넘을 수 없다.
+- Pod 입장에서 자원이 부족해서 문제가 되더라도 다른 `namespace`에 있는 Pod들에는 영향을 끼치지 않음
+
+한 Pod가 자원 사용량을 너무 크게 해버리면 다른 파드들이 해당 `namespace`에 더 이상 들어올 수 없게 되는 문제는
+- `Limit Range`를 통해 `namespace`에 들어오는 Pod 크기를 제한
+- 한 Pod의 자원 사용량이 `Limit Range` 설정값보다 낮아야 해당 `namespace`에 들어올 수 있고
+- 이보다 클 경우에는 해당 Pod가 namespace 안에 들어갈 수 없다.
+
+`ResourceQuota`, `LimitRange` 는 `namespace` 뿐만 아니라 클러스터에도 달아서 전체 자원에 대한 제한을 걸 수도 있다.
+
+.
