@@ -259,15 +259,15 @@ spec:
   
   ```sh
   apiVersion: v1
-  kind: Pod # Pod 생성
+  kind: Pod # 생성하려는 리소스 종류
   metadata:
-   name: pod-1 # Pod 이름
-  spec:
-  containers: # 두 개의 컨테이너 생성
+   name: pod-1 # 파드 이름 지정
+  spec: # 파드 세부 구성
+  containers: # 파드에 포함될 컨테이너 목록
    - name: container1 # 컨테이너 이름
-     image: tmkube/p8000 # 이미지 이름
+     image: tmkube/p8000 # 컨테이너에서 실행할 도커 이미지
      ports:
-     - containerPort: 8000 # 컨테이너 포트
+     - containerPort: 8000 # 컨테이너가 외부로 노출할 포트
    - name: container2
      image: tmkube/p8080
      ports:
@@ -278,22 +278,22 @@ spec:
 
   ```sh
   apiVersion: v1
-  kind: ReplicationController
+  kind: ReplicationController # 생성하려는 쿠버네티스 리소스의 종류
   metadata:
-    name: replication-1
-  spec:
-    replicas: 1
-    selector:
-      app: rc
-    template:
-      metadata:
-        name: pod-1
-        labels:
+    name: replication-1 # ReplicationController의 이름
+  spec: # ReplicationController의 세부 구성을 정의
+    replicas: 1 # 원하는 파드의 복제 수
+    selector: # 어떤 파드를 ReplicationController가 관리할지를 정의
+      app: rc # 이 레이블을 가진 파드를 대상으로 관리
+    template: # 파드의 템플릿을 정의(ReplicationController가 관리하는 파드의 스펙)
+      metadata: # 새로 생성될 파드의 메타데이터
+        name: pod-1 # 생성될 파드의 이름
+        labels: # 파드에 적용될 레이블
           app: rc
-      spec:
-        containers:
-        - name: container
-          image: kubetm/init
+      spec: # 파드의 세부 구성
+        containers: # 파드에 포함될 컨테이너
+        - name: container # 컨테이너의 이름
+          image: kubetm/init # 컨테이너에서 실행할 도커 이미지
   ```
 
 ## Label
@@ -315,30 +315,30 @@ Label 활용 스크립트
 
 ```sh
 apiVersion: v1
-kind: Pod
+kind: Pod # 쿠버네티스 리소스의 유형
 metadata:
-  name: pod-2
-  labels:
-    type: web # key
-    lo: dev # value
-spec:
+  name: pod-2 # 파드의 이름
+  labels: # 파드에 레이블을 추가
+    type: web # key (파드의 용도)
+    lo: dev # value (파드의 배포 환경)
+spec: # 파드의 스펙
   containers:
-  - name: container
-    image: tmkube/init
+  - name: container # 컨테이너의 이름
+    image: tmkube/init # 컨테이너에서 실행할 도커 이미지
 ```
 
 - Service 생성 시 특정 라벨이 붙어있는 Pod 연결
 
 ```sh
 apiVersion: v1
-kind: Service
+kind: Service # 쿠버네티스 리소스의 유형
 metadata:
-  name: svc-1
-spec:
-  selector:
-    type: web # key:value
+  name: svc-1 # 서비스의 이름
+spec: # 서비스의 스펙
+  selector: # 대상 파드를 선택하는 기준
+    type: web # 레이블이 type: web인 파드를 선택
   ports:
-  - port: 8080
+  - port: 8080 # 서비스가 노출할 포트
 ```
 
 ## Node Schedule
@@ -353,15 +353,15 @@ Pod는 결국 여러 노드들 중에 한 노드에 올라가야 한다.
 
 ```sh
 apiVersion: v1
-kind: Pod
+kind: Pod # 쿠버네티스 리소스의 유형
 metadata:
-  name: pod-3
-spec:
-  nodeSelector:
-    kubernetes.io/hostname: k8s-node1 # 노드 라벨과 매칭되는 key: value
-  containers:
-  - name: container
-    image: kubetm/init
+  name: pod-3 # 파드의 이름
+spec: # 파드의 스펙
+  nodeSelector: # 파드가 배치될 노드를 선택하기 위한 조건
+    kubernetes.io/hostname: k8s-node1 # 노드에 설정된 레이블과 매칭
+  containers: # 파드 내에 포함될 컨테이너
+  - name: container # 컨테이너의 이름
+    image: kubetm/init # 컨테이너에서 실행할 도커 이미지
 ```
 
 2️⃣ 쿠버네티스의 스케줄러가 판단해서 지정하는 방식
@@ -376,13 +376,13 @@ spec:
   containers:
   - name: container
     image: kubetm/init
-    resources:
-      requests:
-        memory: 2Gi # 2G 메모리 요구
-      limits: # 자원의 성격에 따라 다르게 판단
+    resources: # 컨테이너에 할당할 리소스 요청 및 제한을 정의
+      requests: # 컨테이너가 실행되기 위해 필요한 최소한의 리소스
+        memory: 2Gi # 컨테이너가 요청하는 최소 메모리 양을 2GiB로 설정
+      limits: # 컨테이너가 사용할 수 있는 최대 리소스 양
         # memory: 초과 시 Pod 종료.
-        # cpu: 초과 시 request 수치로 낮추고, 종료되진 않음
-        memory: 3Gi # 최대 허용 메모리
+        # cpu: 초과 시 request 수치로 낮추고, 종료되진 않음.
+        memory: 3Gi # 컨테이너가 사용할 수 있는 최대 메모리 양을 3GiB로 설정
 ```
 
 ...
@@ -393,23 +393,24 @@ Controller + Label + Node Schedule 스크립트
 apiVersion: v1
 kind: Pod
 metadata:
-  name: pod-4                           # Pod 이름
-  labels:                               # Label 
+  name: pod-4
+  labels:
     type: web                           
     lo: dev  
 spec:
-  nodeSelector:                         # Node 직접 지정
-    kubernetes.io/hostname: k8s-node1   
+  nodeSelector: # 파드를 특정 노드에 배치하기 위한 조건
+    # 노드에 설정된 레이블과 매칭되어 파드를 특정 노드에 배치
+    kubernetes.io/hostname: k8s-node1 
   containers:
-  - name: container                     # 컨테이너 이름
-    image: kubetm/init                  # 이미지 선택
+  - name: container
+    image: kubetm/init
     ports:
-    - containerPort: 8080               
-    resources:                          # 자원 사용량 설정
-      requests:
-        memory: 1Gi
-      limits:
-        memory: 1Gi
+    - containerPort: 8080 # 컨테이너가 외부에 노출할 포트
+    resources: # 컨테이너에 할당할 자원 사용량
+      requests: # 컨테이너가 실행되기 위해 필요한 최소 자원
+        memory: 1Gi # 컨테이너가 요청하는 최소 메모리 양을 1GiB로 설정
+      limits: # 컨테이너가 사용할 수 있는 최대 자원 양
+        memory: 1Gi # 컨테이너가 사용할 수 있는 최대 메모리 양을 1GiB로 설정
 ```
 
 <details>
@@ -537,12 +538,12 @@ metadata:
   labels:
      app: pod
 spec:
-  nodeSelector:
-    kubernetes.io/hostname: k8s-node1
+  nodeSelector: # 파드를 특정 노드에 배치하기 위한 조건
+    kubernetes.io/hostname: k8s-node1 # 노드의 레이블과 매칭
   containers:
   - name: container
     image: kubetm/app
-    ports:
+    ports: # 컨테이너에서 노출할 포트
     - containerPort: 8080
 ```
 
@@ -554,11 +555,14 @@ kind: Service
 metadata:
   name: svc-1
 spec:
-  selector:
-    app: pod # Pod와 연결
+  selector: # 서비스가 트래픽을 전달할 파드를 선택하는 기준
+    app: pod # app 레이블의 값이 pod인 모든 파드를 대상으로 지정
   ports:
+      # 클라이언트가 이 서비스에 접근할 때 사용할 포트
     - port: 9000 # 9000 포트로 서비스에 접근하면
+      # 서비스가 선택한 파드에 트래픽을 전달할 때 사용할 포트
       targetPort: 8080 # 타겟이 되는 Pod에 8080 포트로 연결
+  # 서비스의 종류를 지정(클러스터 내부에서만 접근 가능한 IP 주소를 제공)
   type: ClusterIP # 서비스 타입. default: ClusterIP
 ```
 
@@ -601,13 +605,14 @@ kind: Service
 metadata:
   name: svc-2
 spec:
-  selector:
-    app: pod
+  selector: # 서비스가 트래픽을 전달할 파드를 선택하는 기준
+    app: pod # 레이블이 app: pod인 모든 파드를 대상으로 지정
   ports:
-  - port: 9000 # 클러스터 IP 접근 포트
-    targetPort: 8080
+  - port: 9000 # 클러스터 내에서 노출할 포트
+    targetPort: 8080 # 서비스가 선택한 파드의 컨테이너에 전달할 포트
+    # 노드에서 외부로 노출할 포트
     nodePort: 30000 # 노드 포트 지정(30000~32767 사이로 할당 가능). default. 자동 할당
-  type: NodePort # 서비스 타입
+  type: NodePort # 서비스의 종류를 지정
   externalTrafficPolicy: Local # 요청을 받은 노드의 Pod로 트래픽을 전달
 ```
 
@@ -643,9 +648,9 @@ spec:
   selector:
     app: pod
   ports:
-  - port: 9000
-    targetPort: 8080
-  type: LoadBalancer # 서비스 타입
+  - port: 9000 # 외부에 노출할 포트
+    targetPort: 8080 # 서비스가 선택한 파드의 컨테이너에 전달할 포트
+  type: LoadBalancer # 외부 로드 밸런서를 자동으로 생성
 ```
 
 ```sh
@@ -678,19 +683,19 @@ metadata:
   name: pod-volume-1
 spec:
   containers:
-  - name: container1 # 컨테이터
+  - name: container1
     image: kubetm/init
-    volumeMounts: # 볼륨 마운트
-    - name: empty-dir # 볼륨 이름
-      mountPath: /mount1 # 마운트 경로
-  - name: container2 # 컨테이너
+    volumeMounts: # 컨테이너에 볼륨을 마운트하는 경로 지정
+    - name: empty-dir # 마운트할 볼륨의 이름
+      mountPath: /mount1 # 볼륨을 마운트할 경로
+  - name: container2
     image: kubetm/init
-    volumeMounts: # 불륨 마운트
-    - name: empty-dir # 볼륨 이름
-      mountPath: /mount2 # 마운트 경로
-  volumes:
-  - name : empty-dir # 두 컨테이너는 동일한 볼륨을 마운트해서 데이터를 공유
-    emptyDir: {} # emptyDir 타입
+    volumeMounts: # 컨테이너에 볼륨을 마운트하는 경로 지정
+    - name: empty-dir # 마운트할 볼륨의 이름
+      mountPath: /mount2 # 볼륨을 마운트할 경로
+  volumes: # 파드에 사용될 볼륨을 정의
+  - name : empty-dir # 볼륨의 이름(두 컨테이너는 동일한 볼륨을 마운트해서 데이터를 공유)
+    emptyDir: {} # 볼륨 타입(파드가 생성될 때 빈 디렉토리로 시작)
 ```
 
 ```sh
@@ -730,14 +735,14 @@ spec:
   containers:
   - name: container
     image: kubetm/init
-    volumeMounts: # 볼륨 마운트
-    - name: host-path # 마운트 볼륨 이름
-      mountPath: /mount1 # 마운트 경로
-  volumes:
-  - name : host-path # hostPath 속성
-    hostPath:
-      path: /node-v # 볼륨 경로
-      type: DirectoryOrCreate # path가 해당 경로에 없으면 생성
+    volumeMounts: # 볼륨을 마운트할 경로를 지정
+    - name: host-path # 마운트할 볼륨의 이름
+      mountPath: /mount1 # 볼륨이 마운트될 경로
+  volumes: # 파드에 사용될 볼륨을 정의
+  - name : host-path # 볼륨의 이름
+    hostPath: # 노드의 파일 시스템을 볼륨으로 마운트할 때 사용되는 속성
+      path: /node-v # 마운트할 디렉토리의 경로
+      type: DirectoryOrCreate # 지정한 경로가 존재하지 않을 경우, 해당 경로를 자동으로 생성
 ```
 
 ## PVC / PV
@@ -795,16 +800,19 @@ metadata:
   name: pv-01
 spec: # PVC가 PV 연결 시 해당 내용을 기반으로 쿠버네티스가 자동으로 연결
   capacity:
-    storage: 2G
-  accessModes:
-    - ReadWriteOnce
+    storage: 2G # 스토리지 용량
+  accessModes: # 접근할 수 있는 모드
+    - ReadWriteOnce # 볼륨이 단일 노드에서 읽기 및 쓰기로 마운트될 수 있음
   local:
-    path: /node-v # 호스트의 로컬 경로
-  nodeAffinity:
-    required:
-      nodeSelectorTerms: # 해당 PV에 연결되는 Pod 들은 
-      - matchExpressions: # node1으로 라벨링된 노드에만 생성
+    path: /node-v # 호스트의 로컬 볼륨 경로
+  nodeAffinity: # 특정 노드에만 연결할 수 있도록 제약을 설정
+    required: # 노드 셀렉터 조건을 지정
+      nodeSelectorTerms: # 노드 선택 조건을 지정
+      - matchExpressions: # 노드를 선택하는 데 사용되는 표현식의 목록
         - {key: kubernetes.io/hostname, operator: In, values: [k8s-node1]}
+        # key: 노드의 레이블을 기준으로 선택
+        # operator: 지정된 키의 값이 목록에 포함되어 있는지 확인
+        # values: 노드의 레이블 값이 k8s-node1인 경우에만 이 PV를 사용
 ```
 
 **`PVC`(Persistent Volume Claim) 생성**
@@ -815,12 +823,13 @@ kind: PersistentVolumeClaim
 metadata:
   name: pvc-01
 spec: # 요구하는 PV 정보
-  accessModes:
-  - ReadWriteOnce # 읽기 쓰기 모드
-  resources:
+  accessModes: # PVC가 요청하는 스토리지를 어떤 방식으로 액세스할 수 있는지
+  - ReadWriteOnce # 읽기 및 쓰기로 마운트
+  resources: # PVC에 요청되는 스토리지 용량
     requests:
-      storage: 2G # 용량이 1G인 볼륨 할당
-  storageClassName: ""
+      storage: 2G # 최소 2GB의 스토리지
+  storageClassName: "" # PVC가 특정 스토리지 클래스를 사용할지 여부
+  # 빈 문자열일 경우 스토리지 클래스를 사용하지 않는 PV와 연결
 ```
 
 **Pod**
@@ -834,13 +843,13 @@ spec:
   containers:
   - name: container
     image: kubetm/init
-    volumeMounts: # 컨테이너에서 pvc 볼륨 사용
-    - name: pvc-pv
-      mountPath: /mount3 # 컨테이너에서 접근 시 경로
-  volumes:
-  - name : pvc-pv
-    persistentVolumeClaim: # PVC 사용 설정
-      claimName: pvc-01 # pvc-01 사용
+    volumeMounts: # 컨테이너에 볼륨을 마운트하는 경로를 지정
+    - name: pvc-pv # 마운트할 볼륨의 이름
+      mountPath: /mount3 # 컨테이너 내에서 볼륨을 마운트할 경로
+  volumes: # 파드에서 사용할 볼륨을 정의
+  - name : pvc-pv # 볼륨의 이름을 지정
+    persistentVolumeClaim: # PVC를 통해 파드에 영구 스토리지를 연결할 때 사용
+      claimName: pvc-01 # 연결할 PVC의 이름
 ```
 
 ---
@@ -890,8 +899,8 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cm-dev # 이름 지정
-data: # key: value 형태의 상수
+  name: cm-dev
+data: # ConfigMap에 포함될 데이터의 키-값 쌍을 정의
   SSH: 'false'
   User: dev
 ```
@@ -905,7 +914,7 @@ data: # key: value 형태의 상수
 apiVersion: v1
 kind: Secret
 metadata:
-  name: sec-dev # 이름 지정
+  name: sec-dev
 data: # key: value(Base64 Encoded) 형태의 상수
   Key: MTIzNA==
 ```
