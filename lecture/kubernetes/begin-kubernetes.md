@@ -153,11 +153,11 @@ docker push kubetm/hello
 
 ```sh
 apiVersion: v1
-kind: Pod
+kind: Pod # 생성할 리소스의 종류
 metadata:
-  name: hello-pod # 파드 종류
+  name: hello-pod # 파드 이름
   labels:
-    app: hello # 파드 이름
+    app: hello # 라벨
 spec:
   containers:
   - name: hello-container # 컨테이너 이름
@@ -170,9 +170,9 @@ spec:
 
 ```sh
 apiVersion: v1
-kind: Service
+kind: Service # 생성할 리소스의 종류
 metadata:
-  name: hello-svc
+  name: hello-svc # 서비스 이름
 spec:
   selector:
     app: hello # pod metadata.name.labels.app과 매칭하여 pod에 연결
@@ -841,4 +841,181 @@ spec:
   - name : pvc-pv
     persistentVolumeClaim: # PVC 사용 설정
       claimName: pvc-01 # pvc-01 사용
+```
+
+---
+
+# ConfigMap, Secret
+
+### 두 오브젝트를 사용해야 하는 상황
+
+<center><img src="../../.gitbook/assets/kubernetes/configMap.png" width="100%"></center>
+
+개발/상용 환경이 존재
+- A라는 서비스는 일반 접근과 보안 접근을 지원
+  - 개발 환경에서는 일반 접근 (SSH: false, User: Dev, Key: xxx 세팅 ..) 
+  - 상용 환경으로 배포 시 보안 접근으로 수정 (SSH: true, User: Prod, Key: yyy 세팅 ..)
+- 컨테이너 안에 있는 서비스 이미지 내부 값을 변경하기 위해서는 이미지를 별도로 관리해야 하는 큰 작업 발생
+- 이때 `ConfigMap`, `Secret` 적용이 필요
+
+**ConfigMap & Secret**
+
+> 환경에 따라 변하는 값들을 외부에서 결정할 수 있도록 지원
+
+분리해야하는 상수들을 모아서 `configMap`을 만들고, 키와 같이 보안적인 관리가 필요한 값을 모아서 `secret`을 생성
+- `Pod` 생성 시 `configMap`, `secret` 오브젝트를 연결하게 되면 환경변수에 해당 값들이 적용
+  - 환경변수를 불러서 적용하는 이미지를 별도로 생성해서 개발/상용에 모두 활용 가능
+- `configMap`, `secret` 데이터만 변경하여 환경에 맞는 서비스를 실행
+
+### 사용 방법
+
+<center><img src="../../.gitbook/assets/kubernetes/secret.png" width="100%"></center>
+
+`configMap`, `secret` 생성 시 데이터로 상수, 파일을 넣을 수 있다.
+- 파일을 넣을 때는 환경 변수로 세팅하는 것이 아닌 볼륨을 마운팅해서 사용 가능
+
+### Literal
+
+<center><img src="../../.gitbook/assets/kubernetes/literal.png" width="50%"></center>
+
+`configMap`, `secret` 공통
+- `Key`와 `Value`로 고정
+- 필요한 상수 정의 후 Pod 생성 시 ConfigMap을 가져와서 컨테이너 안 환경변수에 세팅
+- 쿠버네티스의 etcd라는 분산 키-값 저장소에 저장
+
+`ConfigMap`
+- Key/Value 리스트를 무한히 선언 가능
+
+```sh
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-dev # 이름 지정
+data: # key: value 형태의 상수
+  SSH: 'false'
+  User: dev
+```
+
+`Secret`
+- 보안적인 요소의 값들을 저장하는 용도로 사용(ex. 패스워드, 인증키 ..)
+- Value를 넣을 시 Base64 Encoding 필요, Pod로 주입 시에는 자동으로 Decoding
+- Key/Value 리스트를 1MB 까지만 선언 가능
+
+```sh
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sec-dev # 이름 지정
+data: # key: value(Base64 Encoded) 형태의 상수
+  Key: MTIzNA==
+```
+
+Pod 생성 시 사용
+
+```sh
+apiVersion: v1
+kind: Pod # 생성할 리소스 유형
+metadata:
+  name: pod-1 # 파드 이름
+spec: # 파드의 세부 구성
+  containers: # 파드에 포함될 컨테이너
+  - name: container # 컨테이너 이름
+    image: kubetm/init # 컨테이너에서 실행할 도커 이미지
+    envFrom: # 외부 소스(ConfigMap)의 모든 키/값 쌍을 환경 변수로 컨테이너에 일괄 설정
+    - configMapRef: # 특정 ConfigMap의 모든 키-값 쌍을 환경 변수로 가져오기
+        name: cm-dev # 가져올 ConfigMap의 이름
+    - secretRef: # 특정 Secret의 모든 키-값 쌍을 환경 변수로 가져오기
+        name: sec-dev # 참조할 Secret의 이름
+```
+
+### File
+
+<center><img src="../../.gitbook/assets/kubernetes/file.png" width="50%"></center>
+
+파일을 `configMap`에 Key/Value 형태로 담을 수 있다.
+- Key(파일 이름):Value(파일 내용)
+- ✅ Pod 생성 후 ConfigMap 내용 변경 시 Pod 환경변수 값에는 영향이 없음
+  - 해당 Pod가 죽어서 재생성되어야 변경된 값을 다시 받아와서 수정
+
+.
+
+**ConfigMap**
+
+```sh
+echo "Content" >> file-c.txt
+kubectl create configmap cm-file --from-file=./file-c.txt 
+                         # 파일 이름            # 넣을 파일
+```
+
+**Secret**
+- secret 명령을 통해 파일 내용이 Base64로 인코딩
+- 파일 내용이 이미 Base64 인코딩된 상태라면, 두 번 인코딩되는 점 주의 
+
+```sh
+echo "Content" >> file-s.txt
+kubectl create secret generic sec-file --from-file=./file-s.txt
+```
+
+**Pod**
+
+```sh
+apiVersion: v1
+kind: Pod # 생성할 리소스 유형
+metadata:
+  name: pod-file # 파드 이름
+spec: # 파드 세부 구성
+  containers:
+  - name: container # 컨테이너 이름
+    image: kubetm/init # 컨테이너에서 실행할 도커 이미지
+    env: # 컨테이너에 전달할 환경변수
+    - name: file-c # 환경변수 이름
+      valueFrom: # 외부 소스로부터 환경 변수의 값을 가져오기
+        configMapKeyRef: # 환경 변수 값을 특정 ConfigMap에서 가져오기
+          name: cm-file # 사용될 ConfigMap의 이름
+          key: file-c.txt # ConfigMap 내의 특정 키를 지정
+    - name: file-s # 두 번째 환경 변수의 이름
+      valueFrom: # 외부 소스로부터 환경 변수의 값을 가져오기
+        secretKeyRef: # 환경 변수 값을 Secret에서 가져오기
+          name: sec-file # 참조할 Secret의 이름
+          key: file-s.txt # Secret 내의 특정 키
+```
+
+{% hint style="info" %}
+
+**secret의 보안적 요소**
+
+secret은 평문으로 쿠버네티스 DB(etcd)에 저장
+
+secret의 보안적 요소는 secret를 pod에 파일로 마운팅해서 사용할 때 Pod 내부에서는 파일이 보이지만 이런 기능을 구현하기 위해서 쿠버네티스 입장에서는 workernode에 secret 파일을 만들어 놓고, Pod에 이 파일을 마운팅
+
+이때, workernode에 secret 파일을 인메모리 파일시스템(tmpfs)영역에 올려놓고 있다가 Pod가 삭제되면 지우는데, 이렇게 민감한 데이터를 디스크에 저장해 놓지 않기 때문에 configmap보다 보안에 유리
+
+{% endhint %}
+
+### File Volume Mount
+
+<center><img src="../../.gitbook/assets/kubernetes/file-volume.png" width="50%"></center>
+
+파일을 `configMap`에 Key/Value 형태로 파일을 마운팅할 수 있다.
+- Key(파일 이름):Value(파일 내용)
+- Pod 생성 시 컨테이너 안에 마운트 경로를 정의하고, 해당 경로 안에 파일을 마운팅
+- ✅ Pod 생성 후 ConfigMap 내용 변경 시 Pod에 마운팅된 내용도 변경
+  - File Env, File Volume Mount 방식의 각 특성을 활용하여 상황에 맞게 적용 가능
+
+```sh
+apiVersion: v1
+kind: Pod # 생성할 리소스 종류
+metadata:
+  name: pod-mount # 파드 이름
+spec: # Pod 구성
+  containers:
+  - name: container # 컨테이너 이름
+    image: kubetm/init # 컨테이너가 실행할 도커 이미지
+    volumeMounts: # 컨테이너 내에 볼륨을 마운트할 경로 지정
+    - name: file-volume # 마운트할 볼륨의 이름
+      mountPath: /mount # ConfigMap이 컨테이너 내에 마운트될 경로
+  volumes: # Pod에서 사용될 볼륨 정의
+  - name: file-volume # 볼륨 이름
+    configMap: # 이 볼륨이 ConfigMap을 기반으로 생성
+      name: cm-file # ConfigMap의 이름
 ```
