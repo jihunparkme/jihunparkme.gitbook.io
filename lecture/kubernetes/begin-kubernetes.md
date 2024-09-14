@@ -876,12 +876,16 @@ spec:
   - 환경변수를 불러서 적용하는 이미지를 별도로 생성해서 개발/상용에 모두 활용 가능
 - `configMap`, `secret` 데이터만 변경하여 환경에 맞는 서비스를 실행
 
+...
+
 ### 사용 방법
 
 <center><img src="../../.gitbook/assets/kubernetes/secret.png" width="100%"></center>
 
 `configMap`, `secret` 생성 시 데이터로 상수, 파일을 넣을 수 있다.
 - 파일을 넣을 때는 환경 변수로 세팅하는 것이 아닌 볼륨을 마운팅해서 사용 가능
+
+...
 
 ### Literal
 
@@ -937,6 +941,20 @@ spec: # 파드의 세부 구성
         name: sec-dev # 참조할 Secret의 이름
 ```
 
+**kubectl**
+
+```sh
+# key1:value1 라는 상수로 cm-file라는 이름의 ConfigMap 생성
+kubectl create configmap cm-file --from-literal=key1=value1
+# 여러 key:value로 cm-file라는 이름의 ConfigMap 생성 
+kubectl create configmap cm-file --from-literal=key1=value1 --from-literal=key2=value2
+
+# key1:value1 라는 상수로 sec-file라는 이름의 Secret 생성
+kubectl create secret generic sec-file --from-literal=key1=value1
+```
+
+...
+
 ### File
 
 <center><img src="../../.gitbook/assets/kubernetes/file.png" width="50%"></center>
@@ -989,6 +1007,16 @@ spec: # 파드 세부 구성
           key: file-s.txt # Secret 내의 특정 키
 ```
 
+**kubectl**
+
+```sh
+# file-c.txt 라는 파일로 cm-file라는 이름의 ConfigMap 생성
+kubectl create configmap cm-file --from-file=./file-c.txt
+
+# file-s.txt 라는 파일로 sec-file라는 이름의 Secret 생성
+kubectl create secret generic sec-file --from-file=./file-s.txt
+```
+
 {% hint style="info" %}
 
 **secret의 보안적 요소**
@@ -1000,6 +1028,8 @@ secret의 보안적 요소는 secret를 pod에 파일로 마운팅해서 사용�
 이때, workernode에 secret 파일을 인메모리 파일시스템(tmpfs)영역에 올려놓고 있다가 Pod가 삭제되면 지우는데, 이렇게 민감한 데이터를 디스크에 저장해 놓지 않기 때문에 configmap보다 보안에 유리
 
 {% endhint %}
+
+...
 
 ### File Volume Mount
 
@@ -1057,3 +1087,76 @@ Kubernetes Cluster에는 전체 사용할 수 있는 자원이 존재
 `ResourceQuota`, `LimitRange` 는 `namespace` 뿐만 아니라 클러스터에도 달아서 전체 자원에 대한 제한을 걸 수도 있다.
 
 .
+
+<center><img src="../../.gitbook/assets/kubernetes/namespace-resourceQuota-limitRange.png" width="100%"></center>
+
+## Namespace
+
+<center><img src="../../.gitbook/assets/kubernetes/namespace.png" width="50%"></center>
+
+한 `Namespace` 안에서 같은 타입의 오브젝트들은 이름이 중복될 수 없다.
+- 같은 Pod의 이름을 중복해서 만들 수 없다.
+- 한 `Namespace` 안에서는 같은 종류의 오브젝트라면 이름 또한 UUID 같이 유일한 키 역할
+
+다른 `Namespace`에 있는 자원과 분리되어 관리가 된다.
+- 서비스 생성 시 다른 `Namespace`에 있는 Pod는 연결되지 않는다.
+- 노드나 PV 같은 모든 `Namespace`에서 공용으로 사용되는 오브젝트는 제외
+
+`Namespace`를 지우게 되면 그 안에 있는 자원들도 모두 지워진다.
+- `Namespace`를 지울 때는 유의가 필요
+
+타 `Namespace` 간의 Pod를 통한 IP 접근은 Network Policies 오브젝트를 통해 제한 가능
+
+**Namespace**
+- `Namespace` 생성은 이름 외에 특별한 설정이 없으
+
+```sh
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nm-1
+
+...
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nm-2
+```
+
+**Pod**
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-1
+  namespace: nm-1 # 파드가 생성될 네임스페이스
+  labels: # 라벨 설정
+    app: pod1
+spec:
+  containers:
+  - name: container
+    image: kubetm/app
+    ports:
+    - containerPort: 8080 # 컨테이너에서 노출할 포트
+```
+
+**Service**
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-1
+  namespace: nm-2 # 파드가 생성될 네임스페이스
+spec:
+  selector: # 대상 파드를 선택하는 기준
+    app: pod1 # 라벨이 app: pod1인 파드 선택
+  ports:
+  - port: 9000 # 클러스터 내에서 노출할 포트
+    targetPort: 8080 # 노드에서 외부로 노출할 포트
+```
+
+Pod, Service 생성 시 속한 `Namespace` 지정 가능
+- 두 오브젝트는 `Namespace`가 서로 다르므로 selector 값과 label 값이 일치하더라도 연결되지 않는다.
