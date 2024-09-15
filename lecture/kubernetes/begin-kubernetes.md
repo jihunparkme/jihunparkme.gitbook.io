@@ -236,17 +236,13 @@ spec:
 
 ## Pod
 
-> Container
-> 
-> Label
-> 
-> NodeSchedule
-
 <figure><img src="../../.gitbook/assets/kubernetes/object-pod.png" alt=""><figcaption></figcaption></figure>
+
+...
 
 ### Container
 
-<center><img src="../../.gitbook/assets/kubernetes/container.png" width="60%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/container.png" width="80%"></center>
 
 `Pod`
 - Pod 안에는 하나의 독립적인 서비스를 구동할 수 있는 컨터이너들이 존재
@@ -298,9 +294,11 @@ spec:
           image: kubetm/init # 컨테이너에서 실행할 도커 이미지
   ```
 
+...
+
 ### Label
 
-<center><img src="../../.gitbook/assets/kubernetes/label.png" width="60%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/label.png" width="80%"></center>
 
 Label은 Pod 뿐 아니라 모든 오브젝트에 달 수 있는데, Pod에서 가장 많이 사용
 - 목적에 따라 오브젝트들을 분류하고, 분류된 오브젝트만 따로 골라서 연결
@@ -343,9 +341,11 @@ spec: # 서비스의 스펙
   - port: 8080 # 서비스가 노출할 포트
 ```
 
+...
+
 ### Node Schedule
 
-<center><img src="../../.gitbook/assets/kubernetes/node-schedule.png" width="60%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/node-schedule.png" width="80%"></center>
 
 Pod는 결국 여러 노드들 중에 한 노드에 올라가야 한다.
 - 이 방법이 대해 직접 노드를 선택하는 방식과 쿠버네티스가 자동으로 지정해주는 방식이 존재
@@ -507,9 +507,11 @@ kubectl exec pod1 -c con1 -it /bin/bash
 
 <figure><img src="../../.gitbook/assets/kubernetes/service.png" alt=""><figcaption></figcaption></figure>
 
+...
+
 ### Cluster Ip
 
-<center><img src="../../.gitbook/assets/kubernetes/cluster-ip.png" width="60%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/cluster-ip.png" width="80%"></center>
 
 1️⃣ 서비스는 기본적으로 자신의 `클러스터 IP`를 보유
 - 해당 서비스를 Pod에 연결시키면 *서비스의 IP를 통해서도 파트에 접근* 가능
@@ -574,9 +576,11 @@ curl 10.104.103.107:9000/hostname
 kubectl get service svc-1
 ```
 
+...
+
 ### Node Port
 
-<center><img src="../../.gitbook/assets/kubernetes/node-port.png" width="60%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/node-port.png" width="80%"></center>
 
 1️⃣ NodePort 타입으로 생성해도 서비스에는 기본적으로 `클러스터 IP` 할당
 - 클러스터 IP와 같은 기능이 포함
@@ -622,9 +626,11 @@ spec:
 kubectl get service svc-2
 ```
 
+...
+
 ### Load Balancer
 
-<center><img src="../../.gitbook/assets/kubernetes/load-balancer.png" width="60%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/load-balancer.png" width="80%"></center>
 
 1️⃣ 기본적으로 NodePort 타입의 기능을 포함
 
@@ -665,9 +671,11 @@ kubectl get service svc-3
 
 <figure><img src="../../.gitbook/assets/kubernetes/volume.png" alt=""><figcaption></figcaption></figure>
 
+...
+
 ### emptyDir
 
-<center><img src="../../.gitbook/assets/kubernetes/emptyDir.png" width="50%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/emptyDir.png" width="80%"></center>
 
 컨테이너들끼리 데이터를 공유하기 위해 `Volume`을 사용
 - 최초 `Volume` 생성 시 해당 `Volume` 안에는 내용이 비어있다보니 `emptyDir` 이라는 명칭
@@ -705,9 +713,11 @@ mount | grep mount1 # 마운트 상태 확인
 echo "file context" >> file.txt # 테스트 파일 생성
 ```
 
+...
+
 ### hostPath
 
-<center><img src="../../.gitbook/assets/kubernetes/hostPath.png" width="50%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/hostPath.png" width="80%"></center>
 
 한 호스트(Pod들이 올라가져 있는 노드)의 경로를 볼륨으로 사용
 - 자신의 Pod가 올라가져있는 노드의 불륨만 사용 가능
@@ -746,6 +756,8 @@ spec:
       path: /node-v # 마운트할 디렉토리의 경로
       type: DirectoryOrCreate # 지정한 경로가 존재하지 않을 경우, 해당 경로를 자동으로 생성
 ```
+
+...
 
 ### PVC / PV
 
@@ -860,7 +872,7 @@ spec:
 
 ### 두 오브젝트를 사용해야 하는 상황
 
-<center><img src="../../.gitbook/assets/kubernetes/configMap.png" width="100%"></center>
+<figure><img src="../../.gitbook/assets/kubernetes/configMap.png" alt=""><figcaption></figcaption></figure>
 
 개발/상용 환경이 존재
 - A라는 서비스는 일반 접근과 보안 접근을 지원
@@ -882,7 +894,7 @@ spec:
 
 ### 사용 방법
 
-<center><img src="../../.gitbook/assets/kubernetes/secret.png" width="100%"></center>
+<figure><img src="../../.gitbook/assets/kubernetes/secret.png" alt=""><figcaption></figcaption></figure>
 
 `configMap`, `secret` 생성 시 데이터로 상수, 파일을 넣을 수 있다.
 - 파일을 넣을 때는 환경 변수로 세팅하는 것이 아닌 볼륨을 마운팅해서 사용 가능
@@ -891,7 +903,7 @@ spec:
 
 ### Literal
 
-<center><img src="../../.gitbook/assets/kubernetes/literal.png" width="50%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/literal.png" width="80%"></center>
 
 `configMap`, `secret` 공통
 - `Key`와 `Value`로 고정
@@ -959,7 +971,7 @@ kubectl create secret generic sec-file --from-literal=key1=value1
 
 ### File
 
-<center><img src="../../.gitbook/assets/kubernetes/file.png" width="50%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/file.png" width="80%"></center>
 
 파일을 `configMap`에 Key/Value 형태로 담을 수 있다.
 - Key(파일 이름):Value(파일 내용)
@@ -1035,7 +1047,7 @@ secret의 보안적 요소는 secret를 pod에 파일로 마운팅해서 사용�
 
 ### File Volume Mount
 
-<center><img src="../../.gitbook/assets/kubernetes/file-volume.png" width="50%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/file-volume.png" width="80%"></center>
 
 파일을 `configMap`에 Key/Value 형태로 파일을 마운팅할 수 있다.
 - Key(파일 이름):Value(파일 내용)
@@ -1065,7 +1077,7 @@ spec: # Pod 구성
 
 ## Namespace, ResourceQuota, LimitRange
 
-<center><img src="../../.gitbook/assets/kubernetes/kubernetes-cluster.png" width="100%"></center>
+<figure><img src="../../.gitbook/assets/kubernetes/kubernetes-cluster.png" alt=""><figcaption></figcaption></figure>
 
 Kubernetes Cluster에는 전체 사용할 수 있는 자원이 존재
 - 일반적으로 메모리, CPU..
@@ -1090,11 +1102,13 @@ Kubernetes Cluster에는 전체 사용할 수 있는 자원이 존재
 
 .
 
-<center><img src="../../.gitbook/assets/kubernetes/namespace-resourceQuota-limitRange.png" width="100%"></center>
+<figure><img src="../../.gitbook/assets/kubernetes/namespace-resourceQuota-limitRange.png" alt=""><figcaption></figcaption></figure>
+
+...
 
 ### Namespace
 
-<center><img src="../../.gitbook/assets/kubernetes/namespace.png" width="50%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/namespace.png" width="80%"></center>
 
 1️⃣ 한 `Namespace` 안에서 같은 타입의 오브젝트들은 이름이 중복될 수 없다.
 - 같은 Pod의 이름을 중복해서 만들 수 없다.
@@ -1177,9 +1191,11 @@ Pod, Service 생성 시 할당할 `Namespace` 지정 가능
 - 두 오브젝트의 `Namespace`가 서로 다를 경우
 - 서비스의 *spec.selector* 값과, Pod의 *labels.app* 값이 일치하더라도 연결되지 않는다.
 
+...
+
 ### ResourceQuota
 
-<center><img src="../../.gitbook/assets/kubernetes/resourceQuota.png" width="50%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/resourceQuota.png" width="80%"></center>
 
 > Namespace에 자원 한계를 설정하는 오브젝트
 
@@ -1243,9 +1259,11 @@ spec:
         memory: 0.5Gih
 ```
 
+...
+
 ### LimitRange
 
-<center><img src="../../.gitbook/assets/kubernetes/limitRange.png" width="50%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/limitRange.png" width="80%"></center>
 
 > 각 Pod마다 Namespace에 들어올 수 있는지 자원을 확인
 
