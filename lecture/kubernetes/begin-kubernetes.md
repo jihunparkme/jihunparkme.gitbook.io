@@ -1219,3 +1219,75 @@ spec:
       limits:
         memory: 0.5Gih
 ```
+
+## LimitRange
+
+<center><img src="../../.gitbook/assets/kubernetes/limitRange.png" width="50%"></center>
+
+> 각 Pod마다 Namespace에 들어올 수 있는지 자원을 확인
+
+```sh
+min: 
+  memory: 1Gi
+max: 
+  memory: 4Gi
+maxLimitRequestRatio: 
+  memory: 3
+
+...
+
+# Pod1 (max.memory를 초과하여 할당 불가)
+limits.memory: 5G
+
+# Pod2 (maxLimitRequestRatio 설정값인 3배를 초과하여 할당 불가)
+requests.memory: 1Gi
+limits.memory: 4Gi
+```
+
+- `min.memory`: Pod에서 설정되는 메모리의 limit 값이 1Gi가 넘어야 한다.
+- `max.memory`: Pod에서 설정되는 메모리의 limit 값이 4Gi를 초과할 수 없다.
+- `maxLimitRequestRatio`: request, limit 값 비율이 최대 3배를 넘으면 안 된다.
+
+Pod에 스펙 설정을 하지 않았을 경우 자동으로 명시되도록 디폴트 설정도 가능
+  - `defaultRequest.memory`
+  - `default.memory`
+
+**Namespace**
+
+```sh
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nm-1
+```
+
+**LimitRange**
+- limits.type 에는 Pod, PVC 등의 단위에 대한 설정이 있다.
+- 각 타입마다 지원되는 옵션의 종류가 다르므로 확인이 필요
+
+```sh
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: lr-1 # LimitRange의 이름
+  namespace: nm-1 # LimitRange를 적용할 네임스페이스
+spec:
+  limits: # 리소스 제한을 정의
+  - type: Container # 컨테이너 수준에서 적용
+    min:
+      memory: 1Gi # 컨테이너는 최소 1Gi의 메모리를 요청
+    max:
+      memory: 4Gi # 컨테이너는 최대 4Gi의 메모리를 사용
+    defaultRequest:
+      memory: 1Gi # 컨테이너가 명시적으로 메모리 요청(requests.memory)을 지정하지 않았을 경우 기본적으로 1Gi로 설정
+    default:
+      memory: 2Gi # 컨테이너가 명시적으로 메모리 제한(limits.memory)을 지정하지 않았을 경우 기본적으로 2Gi로 설정
+    maxLimitRequestRatio:
+      memory: 3 # 컨테이너의 메모리 제한(limits.memory)이 요청(requests.memory)의 3배를 초과할 수 없음을 지정
+```
+
+**LimitRange Check Command**
+
+```sh
+kubectl describe limitranges --namespace=nm-1
+```
