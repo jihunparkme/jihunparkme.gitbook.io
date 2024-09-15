@@ -232,7 +232,9 @@ spec:
 
 ---
 
-# Pod
+# Object
+
+## Pod
 
 > Container
 > 
@@ -242,7 +244,7 @@ spec:
 
 <figure><img src="../../.gitbook/assets/kubernetes/object-pod.png" alt=""><figcaption></figcaption></figure>
 
-## Container
+### Container
 
 <center><img src="../../.gitbook/assets/kubernetes/container.png" width="60%"></center>
 
@@ -296,7 +298,7 @@ spec:
           image: kubetm/init # 컨테이너에서 실행할 도커 이미지
   ```
 
-## Label
+### Label
 
 <center><img src="../../.gitbook/assets/kubernetes/label.png" width="60%"></center>
 
@@ -341,7 +343,7 @@ spec: # 서비스의 스펙
   - port: 8080 # 서비스가 노출할 포트
 ```
 
-## Node Schedule
+### Node Schedule
 
 <center><img src="../../.gitbook/assets/kubernetes/node-schedule.png" width="60%"></center>
 
@@ -501,11 +503,11 @@ kubectl exec pod1 -c con1 -it /bin/bash
 
 ---
 
-# Service
+## Service
 
 <figure><img src="../../.gitbook/assets/kubernetes/service.png" alt=""><figcaption></figcaption></figure>
 
-## Cluster Ip
+### Cluster Ip
 
 <center><img src="../../.gitbook/assets/kubernetes/cluster-ip.png" width="60%"></center>
 
@@ -572,7 +574,7 @@ curl 10.104.103.107:9000/hostname
 kubectl get service svc-1
 ```
 
-## Node Port
+### Node Port
 
 <center><img src="../../.gitbook/assets/kubernetes/node-port.png" width="60%"></center>
 
@@ -620,7 +622,7 @@ spec:
 kubectl get service svc-2
 ```
 
-## Load Balancer
+### Load Balancer
 
 <center><img src="../../.gitbook/assets/kubernetes/load-balancer.png" width="60%"></center>
 
@@ -659,11 +661,11 @@ kubectl get service svc-3
 
 ---
 
-# Volume
+## Volume
 
 <figure><img src="../../.gitbook/assets/kubernetes/volume.png" alt=""><figcaption></figcaption></figure>
 
-## emptyDir
+### emptyDir
 
 <center><img src="../../.gitbook/assets/kubernetes/emptyDir.png" width="50%"></center>
 
@@ -703,7 +705,7 @@ mount | grep mount1 # 마운트 상태 확인
 echo "file context" >> file.txt # 테스트 파일 생성
 ```
 
-## hostPath
+### hostPath
 
 <center><img src="../../.gitbook/assets/kubernetes/hostPath.png" width="50%"></center>
 
@@ -745,7 +747,7 @@ spec:
       type: DirectoryOrCreate # 지정한 경로가 존재하지 않을 경우, 해당 경로를 자동으로 생성
 ```
 
-## PVC / PV
+### PVC / PV
 
 <center><img src="../../.gitbook/assets/kubernetes/pvc-pv.png" width="80%"></center>
 
@@ -854,7 +856,7 @@ spec:
 
 ---
 
-# ConfigMap, Secret
+## ConfigMap, Secret
 
 ### 두 오브젝트를 사용해야 하는 상황
 
@@ -1061,7 +1063,7 @@ spec: # Pod 구성
 
 ---
 
-# Namespace, ResourceQuota, LimitRange
+## Namespace, ResourceQuota, LimitRange
 
 <center><img src="../../.gitbook/assets/kubernetes/kubernetes-cluster.png" width="100%"></center>
 
@@ -1090,7 +1092,7 @@ Kubernetes Cluster에는 전체 사용할 수 있는 자원이 존재
 
 <center><img src="../../.gitbook/assets/kubernetes/namespace-resourceQuota-limitRange.png" width="100%"></center>
 
-## Namespace
+### Namespace
 
 <center><img src="../../.gitbook/assets/kubernetes/namespace.png" width="50%"></center>
 
@@ -1175,7 +1177,7 @@ Pod, Service 생성 시 할당할 `Namespace` 지정 가능
 - 두 오브젝트의 `Namespace`가 서로 다를 경우
 - 서비스의 *spec.selector* 값과, Pod의 *labels.app* 값이 일치하더라도 연결되지 않는다.
 
-## ResourceQuota
+### ResourceQuota
 
 <center><img src="../../.gitbook/assets/kubernetes/resourceQuota.png" width="50%"></center>
 
@@ -1241,7 +1243,7 @@ spec:
         memory: 0.5Gih
 ```
 
-## LimitRange
+### LimitRange
 
 <center><img src="../../.gitbook/assets/kubernetes/limitRange.png" width="50%"></center>
 
