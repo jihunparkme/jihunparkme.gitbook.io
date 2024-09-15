@@ -1094,18 +1094,31 @@ Kubernetes Cluster에는 전체 사용할 수 있는 자원이 존재
 
 <center><img src="../../.gitbook/assets/kubernetes/namespace.png" width="50%"></center>
 
-한 `Namespace` 안에서 같은 타입의 오브젝트들은 이름이 중복될 수 없다.
+1️⃣ 한 `Namespace` 안에서 같은 타입의 오브젝트들은 이름이 중복될 수 없다.
 - 같은 Pod의 이름을 중복해서 만들 수 없다.
 - 한 `Namespace` 안에서는 같은 종류의 오브젝트라면 이름 또한 UUID 같이 유일한 키 역할
 
-다른 `Namespace`에 있는 자원과 분리되어 관리가 된다.
-- 서비스 생성 시 다른 `Namespace`에 있는 Pod는 연결되지 않는다.
-- 노드나 PV 같은 모든 `Namespace`에서 공용으로 사용되는 오브젝트는 제외
+2️⃣ 다른 `Namespace`에 있는 자원과 분리되어 관리가 된다.
+- 오브젝트들끼리의 연결은 같은 `Namespace` 안에서만 가능
+  - 서비스 생성 시 다른 `Namespace`에 있는 Pod는 연결되지 않는다.
+- ⚠️ 기본적으로 제공되는 `Namespace` 분리 기능이 있는 반면, 제공하지 못하는 분리 기능이 존재
+  - 이는, 추가적인 오브젝트를 통해 직접 분리 설정이 필요
+- ⭕️ 기본적으로 제공되는 분리 기능
+  - 노드나 PV 같은 모든 `Namespace`에서 공용으로 사용되는 오브젝트는 제외
+- ❌ 제공되지 않는 분리 기능
+  - Service를 **NodePort** 타입으로 생성 시 `Namespace` 별로 나눌 수 없다.
+  - Pod를 **hostPath**로 생성 시 다른 `Namespace`의 파일을 공유
+    - 기본적으로 Pod 권한이 root로 사용하므로 
+    - Pod Security Admission 기능을 통해 유저 권한 제한이 필요
 
-`Namespace`를 지우게 되면 그 안에 있는 자원들도 모두 지워진다.
+3️⃣ `Namespace`를 지우게 되면 그 안에 있는 자원들도 모두 지워진다.
 - `Namespace`를 지울 때는 유의가 필요
 
-타 `Namespace` 간의 Pod를 통한 IP 접근은 Network Policies 오브젝트를 통해 제한 가능
+4️⃣ `Namespace`가 기본적으로 IP 트래픽을 막아주지 않는다.
+- 다른 `Namespace` 간의 Pod를 통한 IP 접근이 가능
+- Network Policies 오브젝트를 통해 제한 가능
+
+.
 
 **Namespace**
 - `Namespace` 생성은 이름 외에 특별한 설정이 없으
@@ -1158,8 +1171,9 @@ spec:
     targetPort: 8080 # 노드에서 외부로 노출할 포트
 ```
 
-Pod, Service 생성 시 속한 `Namespace` 지정 가능
-- 두 오브젝트는 `Namespace`가 서로 다르므로 selector 값과 label 값이 일치하더라도 연결되지 않는다.
+Pod, Service 생성 시 할당할 `Namespace` 지정 가능
+- 두 오브젝트의 `Namespace`가 서로 다를 경우
+- 서비스의 *spec.selector* 값과, Pod의 *labels.app* 값이 일치하더라도 연결되지 않는다.
 
 ## ResourceQuota
 
@@ -1167,9 +1181,15 @@ Pod, Service 생성 시 속한 `Namespace` 지정 가능
 
 > Namespace에 자원 한계를 설정하는 오브젝트
 
-Namespace에 제한하고 싶은 자원을 명시
+1️⃣ Namespace에 제한하고 싶은 자원을 명시
 - `ResourceQuota`가 지정되어 있는 Namespace에 Pod 생성 시, Pod는 무조건 해당 스펙을 명시해야 한다.
+  - *must specify limits.memory, requests.memory*
 - Pod에 스펙이 없으면 해당 Namespace에 만들어지지 않음
+
+⚠️ `ResourceQuota` 생성 전 해당 Namespace에 Pod가 존재하지 않도록 해야 한다.
+- Pod가 이미 존재하는 상태에서 `ResourceQuota` 생성 시 제한이 제대로 적용되지 않을 수 있다.
+
+.
 
 **Namespace**
 
@@ -1194,6 +1214,7 @@ spec: # ResourceQuota의 세부 설정
   hard: # 네임스페이스 내에서 사용할 수 있는 리소스의 상한선을 정의
     requests.memory: 1Gi # 네임스페이스 내의 모든 파드가 요청할 수 있는 메모리의 총합을 1Gi로 제한
     limits.memory: 1Gi # 네임스페이스 내의 모든 파드가 사용할 수 있는 메모리의 총합을 1Gi로 제한
+    pods: 2 # Pod 개수 제한
 ```
 
 **ResourceQuota Check Command**
@@ -1251,6 +1272,10 @@ limits.memory: 4Gi
 Pod에 스펙 설정을 하지 않았을 경우 자동으로 명시되도록 디폴트 설정도 가능
   - `defaultRequest.memory`
   - `default.memory`
+
+⚠️ 한 Namespace에 여러개의 `LimitRange`를 지정하게 되면 애매한 정의로, 예상치 못한 동작이 발생하이 Pod 생성이 실패
+
+.
 
 **Namespace**
 
