@@ -1368,3 +1368,57 @@ kubectl describe limitranges --namespace=nm-1
 > ReplicaSet is replaced
 
 <figure><img src="../../.gitbook/assets/kubernetes/replicaSet.png" alt=""><figcaption></figcaption></figure>
+
+### Template
+
+> 컨트롤러와 Pod는 서비스와 Pod처럼 라벨과 셀렉터로 연결
+
+<center><img src="../../.gitbook/assets/kubernetes/template.png" width="80%"></center>
+
+라벨이 붙어있는 Pod와 매핑되는 셀렉터를 컨트롤러에 생성
+- 컨트롤러 생성 시 템플릿으로 Pod의 내용을 넣게 되는데, 컨트롤러는 Pod가 죽으면 재생성
+- Pod가 다운되면 안에 있는 템플릿으로 Pod를 새로 생성
+
+템플릿의 특성으로 버전 업그레이드에 활용 가능
+- 버전 업그레이드 후 기존에 연결되어 있는 Pod를 다운시키면, 컨트롤러는 템플릿으로 Pod를 재생성
+- 새로 업그레이드된 Pod가 생성되어 버전 업그레이드를 수동으로 가능
+
+.
+
+**Pod**
+
+```sh
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-1
+  labels: # Pod의 라벨 설정
+    type: web
+spec:
+  containers:
+  - name: container
+    image:
+        tmkube/app:v1
+```
+
+**ReplicationController**
+
+```sh
+apiVersion: v1
+kind: ReplicationController
+metadata:
+ name: replication-1
+spec:
+ replicas: 1 # ReplicationController가 관리할 파드의 복제본 수
+ selector: # ReplicationController가 관리할 파드를 선택
+   type: web # 레이블이 type: web인 파드를 관리 대상으로 지정
+ template: # 새로운 파드를 생성할 때 사용할 파드 템플릿을 정의
+   metadata:
+     name: pod-1 # 생성될 파드의 이름
+     labels: # 파드에 레이블을 지정
+       type: web
+   spec:
+     containers: # 파드에 포함될 컨테이너
+     - name: container
+       image: tmkube/app:v2
+```
