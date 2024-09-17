@@ -1422,3 +1422,44 @@ spec:
      - name: container
        image: tmkube/app:v2
 ```
+
+...
+
+### Replicas
+
+> `spec.replicas` 설정값만큼 Pod의 개수 관리
+
+<center><img src="../../.gitbook/assets/kubernetes/replicas.png" width="80%"></center>
+
+scale in/out
+- `spec.replicas` 값을 증가시키면 그 수만큼 Pod가 생성
+  - Pod를 삭제하더라도 `spec.replicas` 값만큼 Pod를 재생성
+- 반대로 수치를 내리면 스케일인
+
+Template, Replicas 기능을 통해 Controller, Pod를 한 번에 생성 가능
+- replicas, template 정보를 담아서 컨트롤러 생성 시
+- template 정보로 Pod를 replicas 값만큼 생성
+
+.
+
+**ReplicationController**
+
+```sh
+apiVersion: v1
+kind: ReplicationController
+metadata:
+ name: replication-1
+spec:
+ replicas: 1 # ReplicationController가 관리할 파드의 복제본 수
+ selector: # ReplicationController가 관리할 파드를 선택
+   type: web # 레이블이 type: web인 파드를 관리 대상으로 지정
+ template: # 새로운 파드를 생성할 때 사용할 파드 템플릿을 정의
+   metadata:
+     name: pod-1 # 생성될 파드의 이름
+     labels: # 파드에 레이블을 지정
+       type: web
+   spec:
+     containers: # 파드에 포함될 컨테이너
+     - name: container
+       image: tmkube/app:v2
+```
