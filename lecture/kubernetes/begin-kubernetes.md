@@ -1336,3 +1336,27 @@ spec:
 ```sh
 kubectl describe limitranges --namespace=nm-1
 ```
+
+---
+
+# Controller
+
+> 서비스를 관리하고 운영하는 데 도움을 주는 역할
+
+<figure><img src="../../.gitbook/assets/kubernetes/controller-intro.png" alt=""><figcaption></figcaption></figure>
+
+**Auto Healing**
+- Pod가 갑자기 다운되거나, 스케줄링되어있는 노드가 다운되면 
+- 해당 Pod에서 돌아가던 서비스가 장애가 발생하지 않도록, 컨트롤러는 즉각적으로 인지하고 Pod를 다른 노드에 새로 생성
+
+**Auto Scaling**
+- Pod의 리소스가 limit 상태가 되었을 때, 컨트롤러는 이 상태를 파악하고 Pod를 하나 더 생성하여 부하를 분산
+- Pod가 죽지 않도록 하여 서비스 성능에 장애 없이 안정적인 서비스 운영
+
+**Software Update**
+- 여러 Pod에 대한 업그레이드가 필요할 경우 컨트롤러를 통해 한 번에 쉽게 처리
+- 업그레이드 도중 문제가 생기면 롤백 기능 제공
+
+**Job**
+- 일시적인 작업이 필용할 경우 컨트롤러가 필요한 순간에만 Pod를 만들어서 해당 작업을 이행하고 삭제
+- 필요 시에만 자원이 사용되고 작업 후에 다시 반환하여 효율적인 자원 활용 가능
