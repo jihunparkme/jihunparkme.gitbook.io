@@ -1360,3 +1360,11 @@ kubectl describe limitranges --namespace=nm-1
 **Job**
 - 일시적인 작업이 필용할 경우 컨트롤러가 필요한 순간에만 Pod를 만들어서 해당 작업을 이행하고 삭제
 - 필요 시에만 자원이 사용되고 작업 후에 다시 반환하여 효율적인 자원 활용 가능
+
+## Replication Controller, ReplicaSet
+
+> Replication Controller is Deprecated
+>
+> ReplicaSet is replaced
+
+<figure><img src="../../.gitbook/assets/kubernetes/replicaSet.png" alt=""><figcaption></figcaption></figure>
