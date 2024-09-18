@@ -1377,11 +1377,19 @@ kubectl describe limitranges --namespace=nm-1
 
 라벨이 붙어있는 Pod와 매핑되는 셀렉터를 컨트롤러에 생성
 - 컨트롤러 생성 시 템플릿으로 Pod의 내용을 넣게 되는데, 컨트롤러는 Pod가 죽으면 재생성
-- Pod가 다운되면 안에 있는 템플릿으로 Pod를 새로 생성
+  - Pod가 다운되면 안에 있는 템플릿 정보로 Pod를 새로 생성
 
 템플릿의 특성으로 버전 업그레이드에 활용 가능
-- 버전 업그레이드 후 기존에 연결되어 있는 Pod를 다운시키면, 컨트롤러는 템플릿으로 Pod를 재생성
-- 새로 업그레이드된 Pod가 생성되어 버전 업그레이드를 수동으로 가능
+- 버전 업그레이드 후 기존에 연결되어 있는 Pod를 다운시키면, 컨트롤러는 템플릿 정보로 Pod를 재생성
+  - 새로 업그레이드된 Pod가 생성되어 버전 업그레이드를 수동으로 가능
+
+컨트롤러 삭제 시 연결된 Pod들도 모두 삭제
+- Pod들은 유지시키고 컨트롤러만 삭제하려면 아래 명령어를 실행
+
+```sh
+               # 컨트롤러 종류           # 컨트롤러 이름
+kubectl delete replicationcontrollers replication1 --cascade=false
+```
 
 .
 
@@ -1421,6 +1429,29 @@ spec:
      containers: # 파드에 포함될 컨테이너
      - name: container
        image: tmkube/app:v2
+```
+
+**ReplicaSet**
+
+```sh
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replica1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      type: web
+  template:
+    metadata:
+      name: pod1
+      labels:
+        type: web
+    spec:
+      containers:
+      - name: container
+        image: kubetm/app:v1
 ```
 
 ...
@@ -1480,6 +1511,7 @@ spec:
 - `matchExpression`: label의 key/value 를 좀 더 디테일하게 컨트롤
   - key:ver 이고, operator:Exists 로 할 경우, 
   - value는 다르지만 해당 label key가 동일한 모든 Pod를 선택
+  - 일반적으로 잘 사용되지는 않고, 명시적으로 matchLabels을 주로 사용
   - `matchExpression` 의 옵션들
     - **Exists**: Key를 정하고 그에 맞는 Key를 가진 Pod들을 연결
     - **DoesNotExist**: Key를 정하고 해당 Key를 가지지 않는 Pod들을 연결
@@ -1496,17 +1528,31 @@ spec:
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
- name: replica-1
+  name: replica1
 spec:
- replicas: 3 # ReplicaSet이 관리할 파드의 복제본 수
- selector: # ReplicaSet이 관리할 파드를 선택하는 기준
-   matchLabels: # 지정된 키-값 쌍을 가진 파드를 선택
-     type: web # 레이블이 type: web인 파드를 관리 대상으로 지정
-   matchExpressions: # 보다 유연한 셀렉터 표현을 사용하여 파드를 선택
-   # 레이블 키 ver이 존재하는 모든 파드를 관리 대상으로 지정
-   - {key: ver, operator: Exists} 
- template: # 새로운 파드를 생성할 때 사용할 파드 템플릿
-   metadata:
-     name: pod
-...
+  replicas: 1 # ReplicaSet이 관리할 파드의 복제본 수
+  selector: # ReplicaSet이 관리할 파드를 선택하는 기준
+    matchLabels: # 지정된 키-값 쌍의 레이블을 가진 파드를 선택
+      type: web
+      ver: v1
+    matchExpressions: # 보다 유연한 셀렉터 표현을 사용하여 파드를 선택
+    - {key: type, operator: In, values: [web]}
+    - {key: ver, operator: Exists}
+  template:
+    metadata:
+      labels:
+        type: web
+        ver: v1
+        location: dev
+    spec:
+      containers:
+      - name: container
+        image: kubetm/app:v1
+      terminationGracePeriodSeconds: 0
 ```
+
+⚠️ `selector`에 있는 내용이 `template.metadata.labels` 내용에 포함되어야 한다.
+- 일치하지 않을 경우 selector does not match template labels error
+
+⚠️ `selector.matchLabels`, `selector.matchExpressions` 동시 사용이 가능하지만, 이 모든 조건이 `template.metadata.labels` 내용에 포함되어야 한다.
+- 일치하지 않을 경우 selector does not match template labels error
