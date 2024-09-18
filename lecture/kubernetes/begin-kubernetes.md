@@ -1463,3 +1463,50 @@ spec:
      - name: container
        image: tmkube/app:v2
 ```
+
+...
+
+### Selector 
+
+<center><img src="../../.gitbook/assets/kubernetes/selector.png" width="80%"></center>
+
+**Replication Controller's** Selector
+- label이 같은 Pod들과 연결
+- key/value 중 하나라도 다르면 연결을 하지 않음
+
+**ReplicaSet's** Selector
+- 두 가지 추가적인 속성이 존재
+- `matchLabels`: label의 key/value 가 모두 같은 Pod만 연결
+- `matchExpression`: label의 key/value 를 좀 더 디테일하게 컨트롤
+  - key:ver 이고, operator:Exists 로 할 경우, 
+  - value는 다르지만 해당 label key가 동일한 모든 Pod를 선택
+  - `matchExpression` 의 옵션들
+    - **Exists**: Key를 정하고 그에 맞는 Key를 가진 Pod들을 연결
+    - **DoesNotExist**: Key를 정하고 해당 Key를 가지지 않는 Pod들을 연결
+    - **In**: key/value를 지정해서 해당 Key의 value에 해당하는 Pod만 선택
+    - **NotIn**: key/value를 지정해서 해당 Key의 value에 해당하지 않는 Pod만 선택
+
+<center><img src="../../.gitbook/assets/kubernetes/matchExpression.png" width="80%"></center>
+
+.
+
+**ReplicaSet**
+
+```sh
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+ name: replica-1
+spec:
+ replicas: 3 # ReplicaSet이 관리할 파드의 복제본 수
+ selector: # ReplicaSet이 관리할 파드를 선택하는 기준
+   matchLabels: # 지정된 키-값 쌍을 가진 파드를 선택
+     type: web # 레이블이 type: web인 파드를 관리 대상으로 지정
+   matchExpressions: # 보다 유연한 셀렉터 표현을 사용하여 파드를 선택
+   # 레이블 키 ver이 존재하는 모든 파드를 관리 대상으로 지정
+   - {key: ver, operator: Exists} 
+ template: # 새로운 파드를 생성할 때 사용할 파드 템플릿
+   metadata:
+     name: pod
+...
+```
