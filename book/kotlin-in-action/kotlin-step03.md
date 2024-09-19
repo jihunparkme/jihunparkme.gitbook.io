@@ -243,3 +243,24 @@ assertThrows<IllegalArgumentException> {
 - 타입 파라미터 클래스의 동반 객체 메소드 호출하기
 - 실체화한 타입 파라미터를 요구하는 함수를 호출하면서 실체화하지 않은 타입 파라미터로 받은 타입을 타입 인자로 넘기기
 - 클래스, 프로퍼티, 인라인 함수가 아닌 함수의 타입 파라미터를 refied로 지정하기
+
+# **변성: 제네릭과 하위 타입**
+
+> `List<String>`와 `List<Any>`와 같이 기저 타입이 같고 타입 인자가 다른 여러 타입이 
+> 
+> 서로 어떤 관계가 있는지 설명하는 개념
+
+✅ 변성을 잘 활용하면 사용에 불편하지 않으면서 타입 안전성을 보장하는 API를 만들 수 있다.
+
+## **변성이 있는 이유: 인자를 함수에 넘기기**
+
+`List<Any>` 타입의 파라미터를 받는 함수에 `List<String>`을 넘기면 안전할까❓
+
+- String 클래스는 Any를 확장하므로, Any 타입 값을 파라미터로 받는 함수에 String 값을 넘겨도 안전
+- 하지만 Any와 String이 List 인터페이스의 타입 인자로 들어가는 경우 자신 있게 안전성을 말할 수 없음
+
+```kotlin
+val strings = mutableListOf(1, 2.0, "abc", "bac")
+strings.add("asbc")
+println(strings.maxBy { it.length }) // Type mismatch 에러
+```
