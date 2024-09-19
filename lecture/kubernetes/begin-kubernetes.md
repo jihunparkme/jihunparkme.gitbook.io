@@ -1556,3 +1556,84 @@ spec:
 
 ⚠️ `selector.matchLabels`, `selector.matchExpressions` 동시 사용이 가능하지만, 이 모든 조건이 `template.metadata.labels` 내용에 포함되어야 한다.
 - 일치하지 않을 경우 selector does not match template labels error
+
+## Deployment
+
+> 운영중인 서비스를 업데이트해서 재배포할 때 사용되는 컨트롤러
+
+### Version Upgrade Method
+
+**쿠버네티스에서 사용되는 일반적인 업그레이드 방식**
+
+<figure><img src="../../.gitbook/assets/kubernetes/deployment.png" alt=""><figcaption></figcaption></figure>
+
+**ReCreate**
+
+> 다운 타임이 발생하므로 일시적인 정지가 가능한 서비스일 경우에만 사용 가능한 방식
+
+<center><img src="../../.gitbook/assets/kubernetes/re-create.png" width="50%"></center>
+
+- (1) Deployment는 먼저 **v1 Pod들을 삭제**
+  - 서비스에 대한 다운 타입이 발생하고, 자원 사용량도 없어짐
+- (2) 업데이트된 버전의 **v2 Pod를 생성**
+
+**Rolling Update**
+
+> 배포 중간에 추가적인 자원을 요구하지만, 다운 타임이 없는 장점
+
+<center><img src="../../.gitbook/assets/kubernetes/rolling-update.png" width="50%"></center>
+
+- (1) Deployment는 먼저 v2 Pod 하나를 생성
+  - 추가로 생성하는 Pod에 대한 자원 사용량을 요구
+  - v1, v2 Pod가 모두 서비스 중인 상태
+- (2) v1 Pod 하나를 삭제하고, 남은 v2 Pod 생성
+- (3) 마지막으로 남은 v1 Pod 삭제
+
+**Blue/Green**
+
+> 많이 사용되는 안정적인 배포 방식이지만, 자원이 두 배 필요한 단점 존재
+
+<center><img src="../../.gitbook/assets/kubernetes/blue-green.png" width="50%"></center>
+
+Deployment 자체 제공 기능은 아니고, ReplicaSet과 같은 replicas를 관리하는 모든 컨트롤러를 이용해서 적용 가능
+
+- (1) 컨트롤러를 만들어서 v1 Pod가 생성되면 Pod의 라벨(ver:v1)에 대한 서비스의 셀렉터에 연결
+- (2) 운영 상태에서 컨트롤러를 새로 생성하고, v2 Pod를 생성(labels ver:v2)
+  - 이때 자원 사용량은 기존의 두 배
+- (3) 서비스에 있는 라벨만 변경해 주면 기존 Pod와의 관계는 끊어내고, 새로운 버전의 Pod와 바로 연결
+  - 라벨은 순간적으로 변경되므로 서비스에 대한 다운 타임은 없음
+  - 롤백 필요 시 라벨만 이전 버전으로 변경해주면 되므로 쉬운 롤백 지원
+  - 문제가 없을 시 기존 버전은 삭제
+
+**Canary**
+
+> 다운 타운이 없지만, 자원 사용량은 테스트할 Pod 개수와
+> 
+> v2 Pod를 얼마나 생성하고 v1 Pod를 다운시킬 것인지에 따라 필요한 자원량이 증가
+
+실험체를 통해 위험을 검증하고, 위험이 없다는게 확인되면 정식으로 배포하는 방식
+
+<p align="center" width="100%">
+    <img src="../../.gitbook/assets/kubernetes/canary-1.png" width="40%">
+    <img src="../../.gitbook/assets/kubernetes/canary-2.png" width="40%">
+</p>
+
+**불특정 다수에 대한 테스트 진행 시**
+- (1) 라벨(ty:app)을 가진 v1 Pod를 서비스에 연결
+- (2) 운영중인 상태에서 replicas:1인 테스트용 컨트롤러를 통해 라벨(ty:app)을 가진 v2 Pod가 하나 더 생성되면 이전 버전과 동일한 서비스에 연결
+  - 해당 서비스로 들어오는 트래픽 중 일부는 v2 버전의 Pod로 접근이 되어 새로운 버전에 대한 테스트 가능
+  - 문제 발생 시 v2 버전의 컨트롤러의 replicas를 0으로 수정
+
+**특정 타겟에 대한 테스트 진행 시**
+- (1) v1, v2 각 서비스를 생성하고 Ingress Controller를 통해 유입되는 트래픽을 URL Path에 따라 서비스를 분기
+  - 경로에 v2를 붙인 사용자는 새 버전에 대한 서비스를 사용
+- (2) 테스트 기간 종료 후 문제가 없을 경우 v2 Pod 추가 후, Ingress Controller 설정 변경 및 v1 Pod 삭제
+
+
+
+
+
+
+<center><img src="../../.gitbook/assets/kubernetes/ReCreate.png" width="80%"></center>
+
+<center><img src="../../.gitbook/assets/kubernetes/RollingUpdate.png" width="80%"></center>
