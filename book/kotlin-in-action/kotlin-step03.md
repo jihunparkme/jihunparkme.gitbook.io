@@ -264,3 +264,76 @@ val strings = mutableListOf(1, 2.0, "abc", "bac")
 strings.add("asbc")
 println(strings.maxBy { it.length }) // Type mismatch 에러
 ```
+
+---
+
+## **공변성: 하위 타입 관계를 유지**
+
+A가 B의 하위 타입일 때 Producer<A>가 Producer<B>의 하위 타입이면 Peoducer는 공변적
+
+- 이를 하위 타입 관계가 유지된다고 설명
+- 예를 들어 Cat가 Animal의 하위 타입이기 때문에 Producer<Cat>은 Producer<Animal>의 하위 타입
+
+코틀린에서 제네릭 클래스가 타입 파라미터에 대해 공변적임을 표시하려면 타입 파라미터 이름 앞에 `out`을 명시
+
+```kotlin
+interface Producer<out T> {  // 클래스가 T에 대해 공변적이라고 선언
+    fun produce(): T
+}
+```
+
+클래스의 타입 파라미터를 공변적으로 만들면 함수 정의에 사용한 파라미터 타입과 타입 인자의 타입이 정확히 일치하지 않더라도 그 클래스의 인스턴스를 함수 인자나 반환값으로 사용할 수 있다.
+
+```kotlin
+open class Animal {
+    fun feed() { ... }
+}
+// T 타입 파라미터에 대해 아무 변성도 지정하지 않았기 때문에(무공변성)
+// 고양이 무리는 동물 무리의 하위 클래스가 아니다.
+class Herd<T : Animal> {
+    val size: Int get() = ...
+    operator fun get(i: Int): T { ... }
+}
+// 고양이 무리를 넘기면 타입 불일치(type mismatch) 오류 발생
+fun feedAll(animals: Herd<Animal>) {
+    for (i in 0 until animals.size) {
+        animals[i].feed()
+    }
+}
+
+class Cat : Animal() {   
+    fun cleanLitter() { ... }
+}
+fun takeCareOfCats(cats: Herd<Cat>) {
+    for (i in 0 until cats.size) {
+        cats[i].cleanLitter()
+        // feedAll(cats) // type mismatch        
+    }
+}
+
+---
+
+// TOBE
+// Herd를 공변적인 클래스로 만들고
+class Herd<out T : Animal> {  
+   ...
+}
+// 호출 코드를 적절히 변경
+fun takeCareOfCats(cats: Herd<Cat>) {
+    for (i in 0 until cats.size) {
+        cats[i].cleanLitter()
+    }
+    feedAll(cats)  
+}
+```
+
+클래스 멤버를 선언할 때 타입 파라미터를 사용할 수 있는 지점은 모두 인(`in`)과 아웃(`out`)위치로 나뉜다. 
+
+- T라는 타입 파라미터를 선언하고 T를 사용하는 함수가 멤버로 있는 클래스를 생각해보자.
+- T가 함수의 `반환 타입`에 쓰인다면 T는 `아웃` 위치 → T 타입의 값을 생산
+- T가 함수의 `파라미터 타입`에 쓰인다면 T는 `인` 위치 → T 타입의 값을 소비
+
+<center><img src="../../.gitbook/assets/kotlin/position.png" width="50%"></center>
+
+
+https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
