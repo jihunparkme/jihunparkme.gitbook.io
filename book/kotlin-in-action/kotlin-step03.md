@@ -116,3 +116,30 @@ fun `제네릭 함수`() {
     assertEquals(listOf('k', 'l', 'm', 'n'),  letters.slice(10..13)) // 컴파일러는 T가 Char라는 사실을 추론
 }
 ```
+
+---
+
+## **타입 파라미터 제약**
+
+> 어떤 타입을 제네릭 타입의 타입 파라미터에 대한 상한(upper bound)으로 지정하면 
+> 
+> 그 제네릭 타입을 인스턴스화할 때 사용하는 타입 인자는 반드시 그 상한 타입이거나,
+> 
+> 그 상한 타입의 하위 타입이어야 한다.
+
+<center><img src="../../.gitbook/assets/kotlin/type-parameter.png" width="50%"></center>
+
+https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
+
+타입 파라미터 `T`에 대한 상한을 정하고 나면 `T 타입`의 값을 그 상한 타입의 값으로 취급 가능
+
+```kotlin
+@Test
+fun `타입 파라미터 제약`() {
+    fun <T : Number> oneHalf(value: T): Double { // Number를 타입 파라미터 상한으로 지정
+        return value.toDouble() / 2.0 // Number 클래스에 정의된 메소드를 호출
+    }
+
+    assertEquals(1.5, oneHalf(3))
+}
+```
