@@ -1639,14 +1639,14 @@ Deployment 자체 제공 기능은 아니고, ReplicaSet과 같은 replicas를 �
 </p>
 
 - (1) Deployment 생성 시 ReplicaSet 설정 값(selector, replicas, template)을 지정
-- (2) ReplicaSet은 설정에 맞는 Pod 생성
+- (2) Deployment는 설정에 맞는 ReplicaSet 및 Pod 자동 생성
 - (3) 서비스를 생성하여 라벨에 매칭되는 Pod를 연결하고, 해당 서비스를 통해 Pod에 접근
 
 ReCreate Upgrade
 - (1) Deployment template 버전 수정(v2)
 - (2) Deployment는 ReplicaSet의 replicas를 0으로 변경하고, ReplicaSet는 Pod들을 제거
   - 서비스의 연결 대상(Pod)이 없어지므로 Downtime 발생
-- (3) 이후 v2 버전을 템플릿으로 갖는 ReplicaSet 생성 및 v2 Pod 생성
+- (3) 이후 Deployment는 v2 버전을 템플릿으로 갖는 ReplicaSet 및 v2 Pod 생성
 - (4) 서비스는 생성된 Pod들의 라벨을 보고 자동으로 연결
 
 **Deployment**
@@ -1696,10 +1696,14 @@ spec:
 ```
 
 **Kubectl**
+- 이전 버전으로 롤백 시 사용하는 명령어
 
 ```sh
-kubectl rollout undo deployment deployment-1 --to-revision=2
+# revision history
 kubectl rollout history deployment deployment-1
+# rollback
+kubectl rollout undo deployment deployment-1 --to-revision=2
+                                # 롤백 대상    # revision=2 ReplicaSet으로 롤백
 ```
 
 ...
@@ -1711,7 +1715,7 @@ kubectl rollout history deployment deployment-1
     <img src="../../.gitbook/assets/kubernetes/rolling-update-2.png" width="40%">
 </p>
 
-- (1) 새로운 버전으로 템플릿을 교체하면서 롤링 업데이트가 시작
+- (1) 새로운 버전으로 Deployment template 버전(v2)을 교체하면서 롤링 업데이트가 시작
 - (2) replicas:1 인 ReplicaSet 생성되고 서비스와 연결되어 v1, v2 트래픽이 분사
 - (3) v1 ReplicaSet의 replicas를 1로 변경하여 Pod 한 개 삭제처리
 - (4) v2 ReplicaSet의 replicas를 2로 변경하여 Pod 한 개 추가
