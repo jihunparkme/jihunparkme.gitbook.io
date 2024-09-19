@@ -143,3 +143,27 @@ fun `타입 파라미터 제약`() {
     assertEquals(1.5, oneHalf(3))
 }
 ```
+
+---
+
+## **타입 파라미터를 널이 될 수 없는 타입으로 한정**
+
+아무런 상한을 정하지 않은 타입 파라미터는 결과적으로 `Any?`를 상한으로 정한 파라미터와 동일
+
+```kotlin
+class Processor<T> {
+		fun process(value: T) {
+				value?.hashCode() // 안전한 호출 필요
+		}
+}
+```
+
+`<T : Any>`라는 제약은 `T 타입`이 항상 널이 될 수 없는 타입이 되도록 보장
+
+```kotlin
+class Processor<T : Any> {
+		fun process(value: T) {
+				value.hashCode()
+		}
+}
+```
