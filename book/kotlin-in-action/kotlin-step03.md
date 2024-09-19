@@ -356,3 +356,39 @@ https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
 | 타입 인자의 하위 타입 관계가 제네릭 타입에서도 유지 | 타입 인자의 하위 타입 관계가 제네릭 타입에서 역전 | 하위 타입 관계가 성립 X       |
 | `Producer<Cat>`은 `Producer<Animal>`의 하위 타입    | `Consumer<Animal>`은 `Consumer<Cat>`의 하위 유형  |                               |
 | T를 out 위치에서만 사용 가능                        | T를 in 위치에서만 사용 가능                       | T를 아무 위치에서나 사용 가능 |
+
+---
+
+## **스타 프로젝션: 타입 인자 대신 * 사용**
+
+*MutableList<>는 MutableList<Any?>와 같지 않다.*
+
+- `MutableList<Any?>`는 모든 타입의 원소를 담을 수 있다는 사실을 알 수 있는 리스트
+- 반면 `MutableList<>`는 어떤 정해진 구체적인 타입의 원소만을 담는 리스트지만 그 원소의 타입을 정확히 모른다는 사실을 표현
+
+```kotlin
+@Test
+fun `타입 인자 대신 * 사용`() {
+    val anyList: MutableList<Any?> = mutableListOf('a', 1, "qwe")
+    anyList.add(42) // Any 타입의 원소 추가 가능
+    assertEquals<MutableList<Any?>>(mutableListOf('a', 1, "qwe", 42), anyList)
+
+    val chars = mutableListOf('a', 'b', 'c')
+    // 어떤 구체적인 타입의 원소를 담는 리스트이지만 그 타입을 모름
+    val unknownElements: MutableList<*> = chars 
+    // unknownElements.add(42) // 컴파일러는 이 메소드 호출을 금지(The integer literal does not conform to the expected type Nothing)
+    assertEquals('a', unknownElements.first()) // 원소를 가져오는 것은 안전
+}
+```
+
+타입 파라미터를 시그니처에서 전혀 언급하지 않거나 데이터를 읽기는 하지만 그 타입에는 관심이 없는 경우와 같이 타입 인자 정보가 중요하지 않을 때도 스타 프로젝션 구문을 사용
+
+```kotlin
+fun printFirst(list: List<*>): Any? { // 모든 리스트를 인자로
+    if (list.isNotEmpty()) { // isNotEmpty()에서는 제네릭 타입 파라미터를 사용하지 않음
+        return list.first() // first()는 Any?를 반환하지만 여기서는 그 타입만으로 충분
+    }
+    throw IllegalArgumentException("list is empty")
+}
+assertEquals("Svetlana", printFirst(listOf("Svetlana", "Dmitry")))
+```
