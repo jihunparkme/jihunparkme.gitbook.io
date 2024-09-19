@@ -96,3 +96,23 @@ annotation class MyAnnotation(val name: String, val value: Int)
 
 ---
 
+# **제네릭 타입 파라미터**
+
+## **제네릭 함수와 프로퍼티**
+
+> 어떤 특정 타입을 저장하는 리스트 뿐 아니라, 모든 리스트를 다룰 수 있는 함수를 원할 때 제네릭 함수를 작성
+
+<center><img src="../../.gitbook/assets/kotlin/generic.png" width="50%"></center>
+
+https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
+
+이런 함수를 구체적인 리스트에 대해 호출할 때 타입 인자를 명시적으로 지정할 수 있지만 실제로는 대부분 컴파일러가 타입 인자를 추론할 수 있으므로 그럴 필요가 없다.
+
+```kotlin
+@Test
+fun `제네릭 함수`() {
+    val letters = ('a'..'z').toList()
+    assertEquals(listOf('a', 'b', 'c'),  letters.slice<Char>(0..2)) // 타입 인자를 명시적으로 지정
+    assertEquals(listOf('k', 'l', 'm', 'n'),  letters.slice(10..13)) // 컴파일러는 T가 Char라는 사실을 추론
+}
+```
