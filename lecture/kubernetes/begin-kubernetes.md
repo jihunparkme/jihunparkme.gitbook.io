@@ -1629,11 +1629,61 @@ Deployment 자체 제공 기능은 아니고, ReplicaSet과 같은 replicas를 �
   - 경로에 v2를 붙인 사용자는 새 버전에 대한 서비스를 사용
 - (2) 테스트 기간 종료 후 문제가 없을 경우 v2 Pod 추가 후, Ingress Controller 설정 변경 및 v1 Pod 삭제
 
+...
+
+### ReCreate
+
+<p align="center" width="100%">
+    <img src="../../.gitbook/assets/kubernetes/recreate-1.png" width="40%">
+    <img src="../../.gitbook/assets/kubernetes/recreate-2.png" width="40%">
+</p>
+
+- (1) Deployment 생성 시 ReplicaSet 설정 값(selector, replicas, template)을 지정
+- (2) ReplicaSet은 설정에 맞는 Pod 생성
+- (3) 서비스를 생성하여 라벨에 매칭되는 Pod를 연결하고, 해당 서비스를 통해 Pod에 접근
+
+ReCreate Upgrade
+- (1) Deployment template 버전 수정(v2)
+- (2) Deployment는 ReplicaSet의 replicas를 0으로 변경하고, ReplicaSet는 Pod들을 제거
+  - 서비스의 연결 대상(Pod)이 없어지므로 Downtime 발생
+- (3) 이후 v2 버전을 템플릿으로 갖는 ReplicaSet 생성 및 v2 Pod 생성
+- (4) 서비스는 생성된 Pod들의 라벨을 보고 자동으로 연결
+
+**Deployment**
+
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-1
+spec:
+  selector: # 관리할 파드를 선택하는 기준을 정의합니다
+    matchLabels: # 레이블이 type: app인 파드를 관리 대상으로 지정
+      type: app
+  replicas: 2 # Deployment가 유지할 파드의 복제본 수
+  strategy: # 파드를 업데이트할 때 사용할 전략
+    type: Recreate
+  revisionHistoryLimit: 1 # Deployment가 유지할 이전 파드 설정(리비전)의 개수
+  template:
+    metadata:
+      labels:
+        type: app
+    spec:
+      containers:
+      - name: container
+        image: kubetm/app:v1
+```
+
+- revisionHistoryLimit:1 (default = 10)
+  - 업그레이드 시 새로운 ReplicaSet이 생성되면서 기존 replicas는 0으로 변경
+  - 1일 경우, replicas가 0인 ReplicaSet을 하나만 유지
+    - 이전 버전으로 되돌아가고 싶을 경우 사용
 
 
 
 
 
-<center><img src="../../.gitbook/assets/kubernetes/ReCreate.png" width="80%"></center>
+
+
 
 <center><img src="../../.gitbook/assets/kubernetes/RollingUpdate.png" width="80%"></center>
