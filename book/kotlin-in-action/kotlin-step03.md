@@ -514,3 +514,20 @@ private fun StringBuilder.serializeObject(obj: Any) {
     }
 }
 ```
+
+---
+
+## **애노테이션을 활용한 직렬화 제어**
+
+> JSON 직렬화 과정에서 `@JsonExclude`를 사용하여 특정 필드들을 제외할 수 있다.
+
+```kotlin
+private fun StringBuilder.serializeObject(obj: Any) {
+    obj.javaClass.kotlin.memberProperties
+				    // @JsonExclude로 애노테이션한 프로퍼티 제외
+            .filter { it.findAnnotation<JsonExclude>() == null }
+            .joinToStringBuilder(this, prefix = "{", postfix = "}") {
+                serializeProperty(it, obj)
+            }
+}
+```
