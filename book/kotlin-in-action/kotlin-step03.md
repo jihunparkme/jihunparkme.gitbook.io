@@ -335,5 +335,24 @@ fun takeCareOfCats(cats: Herd<Cat>) {
 
 <center><img src="../../.gitbook/assets/kotlin/position.png" width="50%"></center>
 
+https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
+
+---
+
+## **반공변성: 뒤집힌 하위 타입 관계**
+
+반공변 클래스의 하위 타입 관계는 공변 클래스의 경우와 반대
+
+- 타입 B가 타입 A의 하위 타입인 경우 Consumer<A>가 Consumer<B>의 하위 타입인 관계가 성립하면
+- 제네릭 클래스 Consumer<T>는 타입 인자 T에 대해 반공변
+
+<center><img src="../../.gitbook/assets/kotlin/position-1.png" width="50%"></center>
 
 https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
+
+| 공변성                                              | 반공변성                                          | 무공변                        |
+| --------------------------------------------------- | ------------------------------------------------- | ----------------------------- |
+| Producer<out T>                                     | Consumer<in T>                                    | MutableList<T>                |
+| 타입 인자의 하위 타입 관계가 제네릭 타입에서도 유지 | 타입 인자의 하위 타입 관계가 제네릭 타입에서 역전 | 하위 타입 관계가 성립 X       |
+| `Producer<Cat>`은 `Producer<Animal>`의 하위 타입    | `Consumer<Animal>`은 `Consumer<Cat>`의 하위 유형  |                               |
+| T를 out 위치에서만 사용 가능                        | T를 in 위치에서만 사용 가능                       | T를 아무 위치에서나 사용 가능 |
