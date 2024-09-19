@@ -461,3 +461,37 @@ annotation class JsonExclude
 - 두 번째 API는 코틀린이 `kotlin.reflect` 패키지를 통해 제공하는 `코틀린 리플렉션 API`
     - 자바에는 없는 프로퍼티나 널이 될 수 있는 타입과 같은 코틀린 고유 개념에 대한 리플렉션을 제공
     - 하지만 현재 코틀린 리플렉션 API는 자바 리플렉션 API를 완전히 대체할 수 있는 복잡한 기능을 제공하지는 않음
+
+---
+
+## **코틀린 리플렉션 API: KClass, KCallable, KFunction, KProperty**
+
+> 코틀린 리플렉션 API를 사용할 때 처음 접하게 되는 것은 클래스를 표현하는 `KClass`
+
+```groovy
+implementation "org.jetbrains.kotlin:kotlin-reflect:{kotlin_version}"
+```
+
+```kotlin
+@Test
+fun `Kclass`() {
+    class Person(val name: String, val age: Int)
+    val person = Person("Alice", 29)
+    val kClass = person.javaClass.kotlin
+    assertEquals("Person", kClass.simpleName) // 클래스 이름
+    kClass.memberProperties.forEach { println(it.name) } // 클래스에 들어있는 프로퍼티 이름
+}
+```
+
+`KClass`는 클래스 내부를 볼 때 사용할 수 있는 다양한 메소드를 제공
+
+```kotlin
+interface KClass<T : Any> {
+    val simpleName: String?
+    val qualifiedName: String?
+    val members: Collection<KCallable<*>>
+    val constructors: Collection<KFunction<T>>
+    val nestedClasses: Collection<KClass<*>>
+    ...
+}
+```
