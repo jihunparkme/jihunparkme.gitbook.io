@@ -1579,7 +1579,7 @@ spec:
 
 **Rolling Update**
 
-> 배포 중간에 추가적인 자원을 요구하지만, 다운 타임이 없는 장점
+> 배포 중간에 추가적인 자원을 요구하지만, 다운 타임이 없는 장점 (Default)
 
 <center><img src="../../.gitbook/assets/kubernetes/rolling-update.png" width="50%"></center>
 
@@ -1679,11 +1679,81 @@ spec:
   - 1일 경우, replicas가 0인 ReplicaSet을 하나만 유지
     - 이전 버전으로 되돌아가고 싶을 경우 사용
 
+**Service**
 
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-1
+spec:
+  selector:
+    type: app
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+```
 
+**Kubectl**
 
+```sh
+kubectl rollout undo deployment deployment-1 --to-revision=2
+kubectl rollout history deployment deployment-1
+```
 
+...
 
+### Rolling Update
 
+<p align="center" width="100%">
+    <img src="../../.gitbook/assets/kubernetes/rolling-update-1.png" width="40%">
+    <img src="../../.gitbook/assets/kubernetes/rolling-update-2.png" width="40%">
+</p>
 
-<center><img src="../../.gitbook/assets/kubernetes/RollingUpdate.png" width="80%"></center>
+- (1) 새로운 버전으로 템플릿을 교체하면서 롤링 업데이트가 시작
+- (2) replicas:1 인 ReplicaSet 생성되고 서비스와 연결되어 v1, v2 트래픽이 분사
+- (3) v1 ReplicaSet의 replicas를 1로 변경하여 Pod 한 개 삭제처리
+- (4) v2 ReplicaSet의 replicas를 2로 변경하여 Pod 한 개 추가
+- (5) v1 ReplicaSet의 replicas를 0로 변경하여 남은 Pod 삭제
+
+**Deployment**
+
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-2
+spec:
+  selector:
+    matchLabels: # type: app2인 파드를 관리 대상으로 지정
+      type: app2
+  replicas: 2 # Deployment가 유지할 파드의 복제본 수
+  strategy: # 파드를 업데이트할 때 사용할 전략
+    type: RollingUpdate
+  minReadySeconds: 10 # 새로 생성된 파드가 준비 상태에 도달한 후, 최소 10초 동안 대기
+  template:
+    metadata:
+      labels:
+        type: app2
+    spec:
+      containers:
+      - name: container
+        image: kubetm/app:v1
+```
+
+**Service**
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-2
+spec:
+  selector:
+    type: app2
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+```
