@@ -392,3 +392,35 @@ fun printFirst(list: List<*>): Any? { // 모든 리스트를 인자로
 }
 assertEquals("Svetlana", printFirst(listOf("Svetlana", "Dmitry")))
 ```
+
+# **애노테이션 선언과 적용**
+
+## **애노테이션 적용**
+
+애노테이션의 인자로는 아래 항목들이 들어갈 수 있다.
+
+- 원시 타입의 값
+- 문자열
+- enum
+- 클래스 참조
+- 다른 애노테이션 클래스
+- 그리고 지금까지 말한 요소들로 이뤄진 배열
+
+애노테이션 인자를 지정하는 문법은 자바와 약간 다르다.
+
+- 클래스를 애노테이션 인자로 지정할 때는 @MyAnnotation(MyClass::class)처럼 `::class`를 클래스 이름 뒤에 뒤에 넣어야 한다.
+- 다른 애노테이션을 인자로 지정할 때는 인자로 들어가는 애노테이션의 이름 앞에 `@`를 넣지 않아야 한다.
+- 배열을 인자로 지정하려면 @RequestMapping(path = arrayOf("/foo", "/bar"))처럼 `arrayOf` 함수를 사용한다.
+    - 자바에서 선언한 애노테이션 클래스를 사용한다면 value라는 이름의 파라미터가 필요에 따라 자동으로 가변 길이 인자로 변환된다.
+    - 따라서 그런 경우에는 @JavaAnnotationWithArrayValue("abc", "foo", "bar")처럼 arrayOf 함수를 쓰지 않아도 된다.
+
+애노테이션 인자를 컴파일 시점에 알 수 있어야 한다. 
+
+- 따라서 임의의 프로퍼티를 인자로 지정할 수는 없다.
+- 프로퍼티를 애노테이션 인자로 사용하려면 그 앞에 const 변경자를 붙여야 한다.
+
+```kotlin
+const val TEST_TIMEOUT = 100L
+
+@Test(timeout = TEST_TIMEOUT) fun testMethod() { ... }
+```
