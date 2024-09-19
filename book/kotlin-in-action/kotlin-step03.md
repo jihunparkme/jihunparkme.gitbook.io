@@ -495,3 +495,22 @@ interface KClass<T : Any> {
     ...
 }
 ```
+
+---
+
+## **리플렉션을 사용한 객체 직렬화 구현**
+
+> 기본적으로 직렬화 함수는 객체의 모든 프로퍼티를 직렬화
+
+```kotlin
+private fun StringBuilder.serializeObject(obj: Any) {
+    val kClass = obj.javaClass.kotlin // 객체의 KClass를 얻는다.                  
+    val properties = kClass.memberProperties // 클래스의 모든 프로퍼티를 얻는다.         
+    properties.joinToStringBuilder(
+            this, prefix = "{", postfix = "}") { prop ->
+        serializeString(prop.name) // 프로퍼티 이름을 얻는다.                     
+        append(": ")
+        serializePropertyValue(prop.get(obj)) // 프로퍼티 값을 얻는다.         
+    }
+}
+```
