@@ -167,3 +167,63 @@ class Processor<T : Any> {
 		}
 }
 ```
+
+# **실행 시 제네릭스의 동작**
+
+## **실행 시점의 제네릭: 타입 검사와 캐스트**
+
+> 자바와 마찬가지로 코틀린 제네릭 타입 인자 정보는 런타임에 지워진다. 
+> 
+> 이는 제네릭 클래스 인스턴스가 그 인스턴스를 생성할 때 쓰인 타입 인자에 대한 정보를 유지하지 않는다는 의미
+
+```kotlin
+val list1: List<String> = listOf("a", "b")
+val list2: List<Int> = listOf(1, 2, 3)
+```
+
+<center><img src="../../.gitbook/assets/kotlin/type.png" width="50%"></center>
+
+https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
+
+컴파일러는 두 리스트를 서로 다른 타입으로 인식하지만 실행 시점에 그 둘은 완전히 같은 타입의 객체
+
+- 타입 파라미터가 2개 이상이라면 모든 타입 파라미터에 `*`를 포함
+
+```kotlin
+@Test
+fun `실행 시점의 제네릭`() {
+    fun printSum(c: Collection<*>): Int {
+        val intList = c as? List<Int>
+            ?: throw IllegalArgumentException("List is expected")
+        return intList.sum()
+    }
+
+    val actual = listOf(1, 2, 3)
+    assertEquals(6, printSum(actual))
+    
+    // 실행 시점에는 제네릭 타입의 타입 인자를 알 수 없으므로 캐스팅은 항상 성공
+    assertThrows<IllegalArgumentException> {
+        printSum(setOf(1, 2, 3))
+    }
+    // 잘못된 타입의 원소가 들어있는 리스트를 전달하면 실행 시점에 ClassCaseException 발생
+    assertThrows<ClassCastException> {
+        printSum(listOf('a', 'b', 'c'))
+    }
+}
+```
+
+코틀린 컴파일러는 컴파일 시점에 타입 정보가 주어진 경우에는 is 검사를 수행하게 허용
+
+```kotlin
+fun printSum(c: Collection<Int>): Int {
+    if (c is List<Int>) {
+        return c.sum()
+    }
+    throw IllegalArgumentException("is not list")
+}
+
+assertEquals(6, printSum(listOf(1, 2, 3)))
+assertThrows<IllegalArgumentException> {
+    printSum(setOf(1, 2, 3))
+}
+```
