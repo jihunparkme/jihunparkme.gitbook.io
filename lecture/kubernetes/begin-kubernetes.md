@@ -1761,3 +1761,55 @@ spec:
     protocol: TCP
     targetPort: 8080
 ```
+
+### Blue/Green
+
+<center><img src="../../.gitbook/assets/kubernetes/blue-green.png" width="50%"></center>
+
+- (1) ReplicaSet Controller 생성
+  - `selector.matchLabels`과 `metadata.labels`는 버전 정보를 가짐
+- (2) 서비스를 생성하여 Pod들을 연결
+  - `selector.ver`에 버전 정보를 가짐
+- (3) v2 버전의 ReplicaSet Controller 생성
+- (4) 서비스 selector의 버전 정보를 v2로 변경
+  - 다운 타임 없이 v2로 바로 호출
+- (5) v2 버전에 문제가 없으면 기존 ReplicaSet을 삭제하거나 replicas를 0으로 설정
+
+**ReplicaSet**
+
+```sh
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replica1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      ver: v1 # version 변경
+  template:
+    metadata:
+      name: pod1
+      labels:
+        ver: v1 # version 변경
+    spec:
+      containers:
+      - name: container
+        image: kubetm/app:v1 # version 변경
+```
+
+**Service**
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-3
+spec:
+  selector:
+    ver: v1 # version 변경
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+```
