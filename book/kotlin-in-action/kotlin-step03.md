@@ -269,10 +269,10 @@ println(strings.maxBy { it.length }) // Type mismatch 에러
 
 ## **공변성: 하위 타입 관계를 유지**
 
-A가 B의 하위 타입일 때 Producer<A>가 Producer<B>의 하위 타입이면 Peoducer는 공변적
+A가 B의 하위 타입일 때 Producer\<A\>가 Producer\<B\>의 하위 타입이면 Peoducer는 공변적
 
 - 이를 하위 타입 관계가 유지된다고 설명
-- 예를 들어 Cat가 Animal의 하위 타입이기 때문에 Producer<Cat>은 Producer<Animal>의 하위 타입
+- 예를 들어 Cat가 Animal의 하위 타입이기 때문에 Producer\<Cat\>은 Producer\<Animal\>의 하위 타입
 
 코틀린에서 제네릭 클래스가 타입 파라미터에 대해 공변적임을 표시하려면 타입 파라미터 이름 앞에 `out`을 명시
 
@@ -343,8 +343,8 @@ https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
 
 반공변 클래스의 하위 타입 관계는 공변 클래스의 경우와 반대
 
-- 타입 B가 타입 A의 하위 타입인 경우 Consumer<A>가 Consumer<B>의 하위 타입인 관계가 성립하면
-- 제네릭 클래스 Consumer<T>는 타입 인자 T에 대해 반공변
+- 타입 B가 타입 A의 하위 타입인 경우 Consumer\<A\>가 Consumer\<B\>의 하위 타입인 관계가 성립하면
+- 제네릭 클래스 Consumer\<T\>는 타입 인자 T에 대해 반공변
 
 <center><img src="../../.gitbook/assets/kotlin/position-1.png" width="50%"></center>
 
@@ -361,7 +361,7 @@ https://livebook.manning.com/book/kotlin-in-action/chapter-9/17
 
 ## **스타 프로젝션: 타입 인자 대신 * 사용**
 
-*MutableList<>는 MutableList<Any?>와 같지 않다.*
+*MutableList<>는 MutableList\<Any?\>와 같지 않다.*
 
 - `MutableList<Any?>`는 모든 타입의 원소를 담을 수 있다는 사실을 알 수 있는 리스트
 - 반면 `MutableList<>`는 어떤 정해진 구체적인 타입의 원소만을 담는 리스트지만 그 원소의 타입을 정확히 모른다는 사실을 표현
