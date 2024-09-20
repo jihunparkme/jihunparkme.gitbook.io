@@ -1813,3 +1813,32 @@ spec:
     protocol: TCP
     targetPort: 8080
 ```
+
+---
+
+## DaemonSet
+
+<center><img src="../../.gitbook/assets/kubernetes/deamonset.png" width="80%"></center>
+
+각 노드에 자원이 다르게 남아있는 상태에서
+- `ReplicaSet`:
+  - 스케줄러에 의존해서 Pod를 노드에 배치할 때 노드에 남아있는 자원량에 따라 많이 배치하거나 배치하지 않음
+- `DaemonSet`:
+  - 노드 자원 상태와 상관없이 모든 노드에 Pod가 하나씩 생김
+
+각 노드마다 설치해서 사용해야 하는 서비스는
+- 성능수집을 위한 `Prometheus`
+- 로그 수집을 위한 `fluentd`
+- 스토리지를 위한 `GlusterFS`
+
+{% hint style="info" %} 
+
+**참고로.**
+
+쿠버네티스 자체도 네트워킹 관리를 위해 각 노드에 DaemonSet으로 프록시 역할을 하는 Pod를 생성
+
+{% endhint %}
+
+## Job & CronJob
+
+<center><img src="../../.gitbook/assets/kubernetes/job-cronjob.png" width="80%"></center>
