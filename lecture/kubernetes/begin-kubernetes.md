@@ -1818,7 +1818,7 @@ spec:
 
 ## DaemonSet
 
-<center><img src="../../.gitbook/assets/kubernetes/deamonset.png" width="80%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/deamonset.png" width="70%"></center>
 
 각 노드에 자원이 다르게 남아있는 상태에서
 - `ReplicaSet`:
@@ -1841,4 +1841,29 @@ spec:
 
 ## Job & CronJob
 
-<center><img src="../../.gitbook/assets/kubernetes/job-cronjob.png" width="80%"></center>
+<center><img src="../../.gitbook/assets/kubernetes/job-cronjob.png" width="70%"></center>
+
+`Pod`가 어떻게 만들어졌는지에 따라 노드가 다운되었을 때 동작이 다르다.
+
+(1) `Pod`로 생성
+- 노드가 다운되면 Pod도 장애가 발생하여 해당 서비스도 다운
+
+(2) `ReplicaSet`로 생성
+- 노드가 다운되면 컨트롤러에 의해 장애가 감지되고, 다른 노드에 Recreate되어 서비스가 유지
+- replicas에서 만들어진 Pod는 일을 하지 않으면 다시 Pod를 Restart
+  - Recreate: Pod를 다시 만드므로 Pod 이름, IP가 변경
+  - Restart: Pod는 그대로 있고, Pod 안에 컨테이너만 재기동
+- 무슨 일이 있어도 서비스가 유지되어야 하는 목적으로 사용
+
+(3) `Job`으로 생성
+- 일을 하지 않으면 Pod는 종료(자원을 사용하지 않는 상태로 정지)
+  - Pod안에 들어가서 로그 확인 가능
+  - 이후 불필요 시 삭제
+
+**CronJob**
+- CronJob은 Job들을 주기적인 시간에 따라서 생성하는 역할
+- 대체로 Job을 하나 단위로 사용하지 않고 CronJob을 만들어서 특정 시간에 반복적으로 실행할 목적으로 사용
+- 사용 사례
+  - 매일 새벽 정기적인 백업
+  - 주기적인 업데이트 확인
+  - 예약 메일, SMS 발송
