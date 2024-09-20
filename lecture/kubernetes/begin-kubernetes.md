@@ -1851,7 +1851,7 @@ spec:
 
 호스트 포트를 설정하면 노드에 있는 포트로 Pod와 연결이 가능
 
-**DaemonSet**
+**DaemonSet - HostPort**
 
 ```sh
 apiVersion: apps/v1
@@ -1864,12 +1864,10 @@ spec:
       type: app
   template: # 각 노드에서 생성될 파드의 템플릿
     metadata:
-      labels: # 파드에 적용할 라벨
+      labels:  # 파드에 적용할 라벨
         type: app
     spec: # 파드의 스펙
-      nodeSelector: # 라벨이 os: centos인 노드에만 파드를 생성
-       os: centos
-      containers:
+      containers: 
       - name: container
         image: kubetm/app
         ports: # 18080번 포트로 들어온 트래픽은 해당 파드에 8080 컨테이너 포트로 연결
@@ -1877,6 +1875,41 @@ spec:
           hostPort: 18080 # 호스트(노드)에서 18080번 포트로 노출
 ```
 
+**DaemonSet - NodeSelector**
+
+```sh
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset-2
+spec:
+  selector:
+    matchLabels:
+      type: app
+  template:
+    metadata:
+      labels:
+        type: app
+    spec:
+      nodeSelector:  # 라벨이 os: centos인 노드에만 파드를 생성
+        os: centos
+      containers:
+      - name: container
+        image: kubetm/app
+        ports:
+        - containerPort: 8080
+```
+
+**kubectl**
+
+```sh
+# Label Add
+kubectl label nodes k8s-node1 os=centos
+kubectl label nodes k8s-node2 os=ubuntu
+
+# Label Remove
+kubectl label nodes k8s-node2 os-
+```
 
 ## Job & CronJob
 
@@ -1906,3 +1939,41 @@ spec:
   - 매일 새벽 정기적인 백업
   - 주기적인 업데이트 확인
   - 예약 메일, SMS 발송
+
+### Job Feature
+
+<center><img src="../../.gitbook/assets/kubernetes/job-feature.png" width="50%"></center>
+
+`Job`도 마찬가지로 `template`, `selector`가 있고, 이 `template`에는 특정 작업만 하고 종료되는 일을 하는 Pod들을 담게 된다.
+- `selector`는 직접 만들지 않아도 Job이 알아서 생성
+- 일반적으로 `template`으로 하나의 Pod를 생성하고, 해당 Pod가 일을 다 하면 Job도 종료
+- `completions`:6 으로 설정하면 6개의 Pod를 하나씩 순차적으로 실행시키고, 모든 작업이 끝나야 Job도 종료
+- `parallelism`:2 으로 설정하면 두 개의 Pod가 생성
+- `activeDeadlineSeconds`:30 으로 설졍하면 해당 Job은 30초 후에 기능이 정지되고, 실행되고 있는 모든 Pod들은 삭제
+  - ex. 10초가 걸리는 Job을 생성했는데, 30초가 되도록 작업이 끝나지 않는다면 행이 걸렸을 확률이 크고, 이 경우 Pod들을 삭제해서 자원을 릴리즈하고 더 이상 작업을 진행하지 않도록 하는 경우..
+
+**Job**
+
+```sh
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-2
+spec:
+  completions: 6 # 총 6번의 작업이 완료되면 Job이 종료
+  parallelism: 2 # 동시에 병렬로 실행될 파드의 수
+  activeDeadlineSeconds: 30 # Job이 시작된 후 30초 이내에 작업이 완료되지 않으면, 시간 초과로 작업이 실패
+  template:
+    spec:
+      restartPolicy: Never # 파드가 실패해도 다시 시작되지 않도록 설정
+      containers:
+      - name: container
+        image: kubetm/init
+        # 이 컨테이너가 실행할 커맨드
+        command: ["sh", "-c", "echo 'job start';sleep 20; echo 'job end'"]
+        # 파드가 시작될 때 job start라는 메시지를 출력하고, 
+        # 20초 동안 대기한 후 job end라는 메시지를 출력한 후 종료
+```
+
+### CronJob Feature
+
