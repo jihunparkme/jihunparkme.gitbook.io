@@ -1816,6 +1816,8 @@ spec:
 
 ---
 
+<figure><img src="../../.gitbook/assets/kubernetes/deamonset-job-cronjob.png" alt=""><figcaption></figcaption></figure>
+
 ## DaemonSet
 
 <center><img src="../../.gitbook/assets/kubernetes/deamonset.png" width="70%"></center>
