@@ -1841,6 +1841,43 @@ spec:
 
 {% endhint %}
 
+### DaemonSet Feature
+
+<center><img src="../../.gitbook/assets/kubernetes/daemonset-1.png" width="50%"></center>
+
+`DaemonSet`은 `selector`와 `template`이 있어서 모든 노드에 `template`으로 `Pod`를 생성하고, `Pod`는 `selector`와 `label`로 `DaemonSet`과 연결
+- 만일 노드들이 OS 종류가 달라서 특정 노드에는 Pod를 생성하지 않고 싶다면, `nodeSelector`를 지정하여 특정 라벨이 없는 노드에는 Pod가 생성되지 않도록 가능
+- `DaemonSet`는 노드에 추가적인 Pod는 만들 수 없지만, 안 만들 수는 있다.
+
+호스트 포트를 설정하면 노드에 있는 포트로 Pod와 연결이 가능
+
+**DaemonSet**
+
+```sh
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset-1
+spec:
+  selector: # 관리할 파드를 선택하는 기준
+    matchLabels: # 라벨이 type: app인 파드를 관리 대상으로 지정
+      type: app
+  template: # 각 노드에서 생성될 파드의 템플릿
+    metadata:
+      labels: # 파드에 적용할 라벨
+        type: app
+    spec: # 파드의 스펙
+      nodeSelector: # 라벨이 os: centos인 노드에만 파드를 생성
+       os: centos
+      containers:
+      - name: container
+        image: kubetm/app
+        ports: # 18080번 포트로 들어온 트래픽은 해당 파드에 8080 컨테이너 포트로 연결
+        - containerPort: 8080 # 컨테이너 내부에서 8080번 포트를 사용
+          hostPort: 18080 # 호스트(노드)에서 18080번 포트로 노출
+```
+
+
 ## Job & CronJob
 
 <center><img src="../../.gitbook/assets/kubernetes/job-cronjob.png" width="70%"></center>
