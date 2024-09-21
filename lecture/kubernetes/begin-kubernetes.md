@@ -1977,3 +1977,47 @@ spec:
 
 ### CronJob Feature
 
+<center><img src="../../.gitbook/assets/kubernetes/cron-job.png" width="50%"></center>
+
+`CronJob`은 `Job` 템플릿 내용을 통해 `Job`을 생성하고, 스케줄을 통해 특정 시간 주기로 `Job`을 생성
+- schedule: `*/1 * * * *` 은 1분에 하나의 `Job`을 생성
+- `Job`은 자신의 역할인 `Pod`를 생성
+
+**CronJob 동시성 정책의 세 가지 옵션**
+
+<center><img src="../../.gitbook/assets/kubernetes/concurencyPolicy.png" width="50%"></center>
+
+`Allow`(default)
+- 1분 간격으로 스케줄할 경우
+- 1분이 되었을 때 Job이 만들어지고, Pod가 생성
+- 2분이 되었을 때 이전에 만들어진 Pod 실행/종료 여부에 상관없이 자신의 스케줄 타임이 되면 새로운 Job을 만들고 Pod를 생성
+- 3분이 되었을 때도 마찬가지
+
+`Forbid`
+- 1분이 되었을 때 Job이 생성되지만,
+- 2분이 되었을 때 이전에 생성된 Pod가 종료되지 않고 계속 실행중이라면, 2분째 생겨야 하는 Job은 Skip
+- 위 Pod가 종료되는 즉시 다음 스케줄 타임에 있는 Job이 만들어지고 Pod 생성
+
+`Replace`
+- 1분에 Job이 만들어지고
+- 2분 스케줄에 이전 Pod가 계속 실행중이라면, 새로운 Pod를 만들면서 해당 Job의 연결을 새로운 Pod로 교체
+  - 2분이 되었을 때는 새로운 Job은 생기지 않지만, 새로운 Pod가 생기면서 이전 스케줄에 만들어진 Job에 연결
+- 위 Pod가 자신의 스케줄 타임에 종료되면 3분 스케줄 때 새로운 Job이 만들어지고 Pod 생성
+
+```sh
+apiVersion: batch/v1 # CronJob 리소스를 정의할 때 사용되는 API 버전
+kind: CronJob
+metadata:
+  name: cron-job
+spec: # CronJob의 동작을 정의하는 스펙
+  schedule: "*/1 * * * *" #  작업을 언제 실행할지 지정(매 1분마다 작업 실행)
+  concurrencyPolicy: Allow # 여러 작업이 동시에 실행될 수 있는지를 결정
+  jobTemplate:
+    spec: # Job의 스펙을 정의
+      template:
+        spec: # 파드의 스펙
+          restartPolicy: Never # 파드가 실패해도 자동으로 다시 시작되지 않도록 설정
+          containers:
+          - name: container
+            image: tmkube/app
+```
