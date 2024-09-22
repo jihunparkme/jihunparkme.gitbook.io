@@ -176,3 +176,212 @@ plugins {
 ```
 
 ---
+
+# Spring Boot
+
+## **final 클래스**
+
+- `@SpringBootApplication`은 `@Configuration`을 포함하고, 스프링은 기본적으로 CGLIB을 사용해서 `@Configuration` 클래스에 대한 프록시를 생성
+- 하지만, final 클래스는 상속이나 오버라이드가 불가하므로 프록시 생성이 불가
+- 상속을 허용하고 오버라이드를 허용하려면 `open` 변경자 추가 필요
+- Spring Framework 5.2 부터는 `@Configuration` 의 proxyBeanMethod 옵션을 통해 프록시 생성 비활성화 가능
+
+## **All-open 컴파일러 플러그인**
+
+- 코틀린은 다양한 컴파일러 플러그인을 제공
+- `all-open` 컴파일러 플러그인은 지정한 애너테이션이 있는 클래스와 모든 멤버에 open 변경자를 추가
+- 스프링을 사용할 경우 `all-open` 컴파일러 플러그인을 래핑한 `kotlin-spring` 컴파일러 플러그인을 사용 가능
+    - `@Component`, `@Transactional`, `@Async` 등이 기본적으로 지정
+- File > Project Structure > Project Settings > Modules > Kotlin > Compiler Plugins 에서 지정된 애너테이션 확인 가능
+
+```groovy
+plugins {
+    kotlin('plugins.spring') version "1.5.21"
+}
+
+allOpen {
+    annotation("com.my.Annotation")
+}
+```
+
+---
+
+## **Item 4. 지연 초기화**
+
+필드 주입이 필요하면 지연 초기화를 사용하자
+
+> 코틀린에서 `lateinit` 변경자를 붙이면 프로퍼티를 나중에 초기화할 수 있다.
+나중에 초기화하는 프로퍼티는 항상 var
+> 
+
+```kotlin
+@Autowired
+private lateinit var objectMapper: ObjectMapper
+```
+
+---
+
+## jackson-module-kotlin
+
+- **jackson은 기본적으로 역직렬화 과정을 위해 매개변수가 없는 생성자가 필요하지만**
+    - 코틀린에서 매개변수가 없는 생성자를 만들기 위해 모든 매개변수에 기본 인자가 필요
+- `jackson-module-kotlin`은 매개변수가 없는 생성자가 없더라도 직렬화와 역직렬화를 지원
+    - 코틀린은 매개변수가 없는 생성자를 만들기 위해 생성자의 모든 매개변수에 기본 인자가 필요
+        
+        ```kotlin
+        // Unit Test의 경우 ObjectMapper 직접 호출 필요
+        val mapper1 = jacksonObjectMapper()
+        val mapper2 = ObjectMapper().registerKotlinModule()
+        ```
+        
+        ```
+        dependencies {
+            implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        }
+        ```
+        
+
+---
+
+## Kotlin Annotation
+
+<figure><img src="../../.gitbook/assets/kotlin/annotation.png" alt=""><figcaption></figcaption></figure>
+
+데이터 클래스에 property를 선언하는 순간 `field`, `Getter`, `Setter`, `생성자 파라미터` 역할 수행
+
+- `@param.JsonProperty` : parameter에 사용될 이름
+- `@get.JsonProperty` : getter에 사용될 이름
+
+---
+
+## **Item 5. 변경 가능성 제한**
+
+변경 가능성을 제한하자
+
+> 코틀린 클래스와 멤버가 final인 것처럼 일단 val로 선언하고 필요 시 var로 변경하자.
+> 
+- 생성자 바인딩을 사용하려면 `@EnableConfigurationProperties`
+    - 또는 `@ConfigurationPropertiesScan`  사용
+    
+    ```kotlin
+    @ConfigurationProperties("application")
+    @ConstructorBinding
+    data class ApplicationProperties(val url: String)
+    
+    @ConfigurationPropertiesScan
+    @SpringBootApplication
+    class Application
+    ```
+    
+- private property and backing property
+    - 공개 API 와 구현 세부 사항 프로퍼티로 나눌 경우
+    - private 프로퍼티 이름의 접두사로 밑줄을 사용(backing property)
+- JVM에서는 기본 getter, setter가 있는 private 프로퍼티에 대해 함수 호출 오버헤드를 방지하도록 최적화
+    
+    ```kotlin
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
+    @JoinColumn(name = "session_id", nullable = false)
+    private val _students: MutableSet<Student> = students.toMutableSet() //backing property
+    val student: Set<Student> // public
+        get() = _students
+    ```
+    
+
+---
+
+# Persistence
+
+## No-arg 컴파일러 플러그인
+
+- JPA에서 엔티티 클래스를 생성하려면 ***매개변수가 없는 생성자가 필요***
+- `no-arg` 컴파일러 플러그인은 지정한 애너테이션이 있는 클래스에 ***매개변수가 없는 생성자를 추가***
+    - JPA, Kotlin에서 직접 호출할 수 없지만 리플랙션을 사용하여 호출 가능
+- `kotlin-spring Compiler Plugin`과 마찬가지로 JPA를 사용하는 경우 no-arg 컴파일러 플러그인을 래핑한 `kotlin-jpa Compiler Plugin` 사용 가능
+    - JPA, Kotlin 사용 시 자동으로 `kotlin-jpa Compiler Plugin`  추가
+    - `@Entity`, `@Embeddable`, `@MappedSuperclass` 가 기본적으로 지정
+
+```groovy
+plugins {
+    kotlin('plugins.spring') version "1.5.21"
+    kotlin('plugins.jpa') version "1.5.21"
+}
+
+allOpen { // JPA 지연로딩 적용을 위해 프록시 생성 목적으로 설정
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+}
+```
+
+---
+
+## **Item 6. 엔티티**
+
+엔티티에 데이터 클래스 사용을 피하자.
+
+> 양방향 연관 관계의 경우 `toString()`, `hashcode()` 로 무한 순환 참조가 발생
+> 
+
+---
+
+## **Item 7. 사용자 지정 getter**
+
+사용자 지정 getter를 사용하자.
+
+> JPA 에 의해 인스턴스화 될 때, 초기화 블록이 호출되지 않으므로, 영속화하지 않는 필드는 사용자 지정 getter를 사용하자.
+> 
+
+```kotlin
+/**
+ * AS-IS: 초기화된 프로퍼티
+ * 영속화하지 않을 목적이었지만, JPA 에 의해 인스턴스화 될 때
+ * null을 허용하지 않았음에도 불구하고, 초기화 블록이 호출되지 않으므로 null이 들어가게 된다.
+ */
+@Transient
+val fixed: Boolean = startDate.until(endDate).year < 1
+
+---
+
+/**
+ * TO-BE: 사용자 지정 getter
+ * 따라서, 사용자 지정 getter 를 정의해서 프로퍼티에 접근할 때마다 호출되도록 하자.
+ * 뒷받침하는 필드(backing property)가 존재하지 않으므로 AccessType.FIELD 라도 @Transient 불필요
+ */
+val fixed: Boolean
+  get() = startDate.until(endDate).year < 1 // 일종의 메서드로 생각하자
+```
+
+---
+
+## **Item 8. Null 타입 제거**
+
+Null이 될 수 있는 타입은 빠르게 제거하자.
+
+> Null이 될 수 있는 타입을 사용하면 Null 검사나 !! 연산자가 필요하다.
+> 
+- 엔티티 클래스의 id를 0 또는 빈 문자열로 초기화해서 Null이 될 수 있는 타입을 제거하자.
+- Optional 보다 Nullable 한 타입을 사용해서 불필요한 java import 를 줄이자.
+    
+    ```kotlin
+    interface ArticleRepository : CrudRepository<Article, Long> {
+        fun findBySlug(slug: String): Article? // nullable Article
+        fun findAllByOrderByAddedAtDesc(): Iterable<Atricle>
+    }
+    
+    interface UserRepository : CrudRepository<User, Long> {
+        fun findByLogin(login: String): User?
+    }
+    ```
+    
+- 확장 함수를 사용해 반복되는 Null 검사를 제거할 수 있다.
+    
+    ```kotlin
+    fun MemberRepository.getById(id: Long): Member {
+        if (id == 0L) {
+            return Member.SINGLE
+        }
+        return findByIdOrNull(id) ?: throw NoSuchElementException("존재하지 않는 아이디 입니다. id: $id")
+    }
+    
+    interface MemberRepository : JpaRepository<Member, Long>
+    ```
+    
