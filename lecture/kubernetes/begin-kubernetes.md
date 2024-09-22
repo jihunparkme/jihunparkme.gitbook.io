@@ -1848,10 +1848,12 @@ spec:
 `DaemonSet`은 `selector`와 `template`이 있어서 모든 노드에 `template`으로 `Pod`를 생성하고, `Pod`는 `selector`와 `label`로 `DaemonSet`과 연결
 - 만일 노드들이 OS 종류가 달라서 특정 노드에는 Pod를 생성하지 않고 싶다면, `nodeSelector`를 지정하여 특정 라벨이 없는 노드에는 Pod가 생성되지 않도록 가능
 - `DaemonSet`는 노드에 추가적인 Pod는 만들 수 없지만, 안 만들 수는 있다.
+- `DaemonSet` 삭제 시 `DaemonSet`이 만든 Pod들은 같이 삭제
 
 호스트 포트를 설정하면 노드에 있는 포트로 Pod와 연결이 가능
 
 **DaemonSet - HostPort**
+- `DaemonSet`에 `HostPort` 설정 시 각 노드의 IP로 접근했을 때, 해당 노드에 올려져 있는 Pod에 접속
 
 ```sh
 apiVersion: apps/v1
@@ -1876,6 +1878,7 @@ spec:
 ```
 
 **DaemonSet - NodeSelector**
+- `nodeSelector`로 특정 라벨이 있는 노드에만 Pod 생성
 
 ```sh
 apiVersion: apps/v1
@@ -1903,11 +1906,11 @@ spec:
 **kubectl**
 
 ```sh
-# Label Add
+# 특정 노드에 라벨 추가
 kubectl label nodes k8s-node1 os=centos
 kubectl label nodes k8s-node2 os=ubuntu
 
-# Label Remove
+# 특정 노드에 라벨 제거
 kubectl label nodes k8s-node2 os-
 ```
 
@@ -1935,6 +1938,7 @@ kubectl label nodes k8s-node2 os-
 **CronJob**
 - CronJob은 Job들을 주기적인 시간에 따라서 생성하는 역할
 - 대체로 Job을 하나 단위로 사용하지 않고 CronJob을 만들어서 특정 시간에 반복적으로 실행할 목적으로 사용
+- CronJob 삭제 시 생성된 Job들도 삭제
 - 사용 사례
   - 매일 새벽 정기적인 백업
   - 주기적인 업데이트 확인
@@ -1947,9 +1951,12 @@ kubectl label nodes k8s-node2 os-
 `Job`도 마찬가지로 `template`, `selector`가 있고, 이 `template`에는 특정 작업만 하고 종료되는 일을 하는 Pod들을 담게 된다.
 - `selector`는 직접 만들지 않아도 Job이 알아서 생성
 - 일반적으로 `template`으로 하나의 Pod를 생성하고, 해당 Pod가 일을 다 하면 Job도 종료
-- `completions`:6 으로 설정하면 6개의 Pod를 하나씩 순차적으로 실행시키고, 모든 작업이 끝나야 Job도 종료
-- `parallelism`:2 으로 설정하면 두 개의 Pod가 생성
-- `activeDeadlineSeconds`:30 으로 설졍하면 해당 Job은 30초 후에 기능이 정지되고, 실행되고 있는 모든 Pod들은 삭제
+- Job이 삭제되면 Pod도 같이 삭제
+
+`Job`의 옵션들
+- `completions:6` 으로 설정하면 6개의 Pod를 하나씩 순차적으로 실행시키고, 모든 작업이 끝나야 Job도 종료
+- `parallelism:2` 으로 설정하면 두 개의 Pod가 생성
+- `activeDeadlineSeconds:30` 으로 설졍하면 해당 Job은 30초 후에 기능이 정지되고, 실행되고 있는 모든 Pod들은 삭제
   - ex. 10초가 걸리는 Job을 생성했는데, 30초가 되도록 작업이 끝나지 않는다면 행이 걸렸을 확률이 크고, 이 경우 Pod들을 삭제해서 자원을 릴리즈하고 더 이상 작업을 진행하지 않도록 하는 경우..
 
 **Job**
@@ -1960,9 +1967,9 @@ kind: Job
 metadata:
   name: job-2
 spec:
-  completions: 6 # 총 6번의 작업이 완료되면 Job이 종료
-  parallelism: 2 # 동시에 병렬로 실행될 파드의 수
-  activeDeadlineSeconds: 30 # Job이 시작된 후 30초 이내에 작업이 완료되지 않으면, 시간 초과로 작업이 실패
+  completions: 6 # 하나의 잡에 N개의 Pod를 준비
+  parallelism: 2 # 한 번에 실행 시 N개의 파드씩 병렬로 실행
+  activeDeadlineSeconds: 30 # Job이 30초 이내에 완료되지 않으면, 시간 초과로 작업이 중지되고 동작중이던 파드는 삭제
   template:
     spec:
       restartPolicy: Never # 파드가 실패해도 다시 시작되지 않도록 설정
@@ -2000,9 +2007,11 @@ spec:
 
 `Replace`
 - 1분에 Job이 만들어지고
-- 2분 스케줄에 이전 Pod가 계속 실행중이라면, 새로운 Pod를 만들면서 해당 Job의 연결을 새로운 Pod로 교체
-  - 2분이 되었을 때는 새로운 Job은 생기지 않지만, 새로운 Pod가 생기면서 이전 스케줄에 만들어진 Job에 연결
+- 2분 스케줄에 이전 Pod가 계속 실행중이라면
+  - 기존 Job(Pod도)은 삭제되고, 새 Job이(pod도) 생성
 - 위 Pod가 자신의 스케줄 타임에 종료되면 3분 스케줄 때 새로운 Job이 만들어지고 Pod 생성
+
+**CronJob**
 
 ```sh
 apiVersion: batch/v1 # CronJob 리소스를 정의할 때 사용되는 API 버전
@@ -2020,4 +2029,39 @@ spec: # CronJob의 동작을 정의하는 스펙
           containers:
           - name: container
             image: tmkube/app
+```
+
+**kubectl**
+
+```sh
+# Manual
+# --from 
+#   cronjob: Job 생성 시 cronjob을 통해 생성
+#   cron-job: cronjob이 name
+#   cron-job-manual-001: Job name
+kubectl create job --from=cronjob/cron-job cron-job-manual-001
+
+# Suspend
+kubectl patch cronjobs cron-job -p '{"spec" : {"suspend" : false }}'
+```
+
+**CronJob - ConcurrencyPolicy**
+
+```sh
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-job-2
+spec:
+  schedule: "20,21,22 * * * *"
+  concurrencyPolicy: Replace # Allow, Forbid, Replace
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: container
+            image: kubetm/init
+            command: ["sh", "-c", "echo 'job start';sleep 140; echo 'job end'"]
 ```
