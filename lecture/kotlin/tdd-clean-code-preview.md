@@ -244,3 +244,191 @@ loop@for (i in 1..10) {
     }
 }
 ```
+
+## 클래스
+
+```kotlin
+fun main() {
+	var a = Person("박보영", 1990)
+    var b = Person("전정국", 1997)
+    var c = Person("장원영", 2004)
+    
+    println("안녕하세요. ${a.birthYear}년생 ${a.name}입니다.")
+    
+    b.introduce()
+    c.introduce()
+    
+    var d = Person("이루다")
+    var e = Person("차은우")
+    var f = Person("류수정")
+}
+
+class Person(var name:String, val birthYear:Int) { // 클래스의 속성들을 선언함과 동시에 생성자를 선언하는 방법
+    /** init
+     * 생성자를 통해 인스턴스가 만들어질 때 호출되는 함수
+     */
+    init {
+        println("[init] ${this.birthYear}년생 ${this.name}님의 인스턴스가 생성되었습니다.")        
+    }
+    
+    /** 보조 생성자
+     * 보조 생성자를 만들 경우 반드시 기본 생성자를 통해 속성을 초기화
+     */
+    constructor(name:String) : this(name, 1997) {
+        println("[constructor] 보조 생성자가 사용되었습니다.")
+        
+    }
+    
+    fun introduce() {
+        println("[introduce] 안녕하세요. ${birthYear}년생 ${name}입니다.")
+    }
+}
+```
+
+```bash
+[init] 1990년생 박보영님의 인스턴스가 생성되었습니다.
+[init] 1997년생 전정국님의 인스턴스가 생성되었습니다.
+[init] 2004년생 장원영님의 인스턴스가 생성되었습니다.
+안녕하세요. 1990년생 박보영입니다.
+[introduce] 안녕하세요. 1997년생 전정국입니다.
+[introduce] 안녕하세요. 2004년생 장원영입니다.
+[init] 1997년생 이루다님의 인스턴스가 생성되었습니다.
+[constructor] 보조 생성자가 사용되었습니다.
+[init] 1997년생 차은우님의 인스턴스가 생성되었습니다.
+[constructor] 보조 생성자가 사용되었습니다.
+[init] 1997년생 류수정님의 인스턴스가 생성되었습니다.
+[constructor] 보조 생성자가 사용되었습니다.
+```
+
+### 상속
+
+```kotlin
+fun main() {
+	var a = Animal("별이", 5, "개")
+    var b = Dog("별이", 5)
+    
+    a.introduce()
+    b.introduce()
+    
+    b.bark()
+    
+    var c = Cat("루이", 1)
+    
+    c.introduce()
+    c.meow()
+}
+
+/** open
+ * 클래스가 상속될 수 있도록 허용하는 키워드
+ */
+open class Animal (var name:String, var age:Int, var type:String) {
+    fun introduce() {
+        println("저는 ${type} ${name}이고, ${age}살 입니다.")
+    }
+}
+
+/** 상속 규칙
+ * 1. 서브 클래스는 수퍼 클래스에 존재하는 속성과 같은 이름의 속성을 가질 수 없다.
+ * 2. 서브 클래스가 생성될 때 반드시 수퍼클래스의 생성자까지 호출되어야 한다.
+ */
+ class Dog (name:String, age:Int) : Animal (name, age, "개") {
+     fun bark() {
+         println("멍멍")
+     }
+ }
+ 
+class Cat (name:String, age:Int) : Animal (name, age, "고양이") {
+     fun meow() {
+         println("야옹야옹")
+     }
+}
+```
+
+### 오버라이딩
+
+```kotlin
+fun main() {
+    var t = Tiger()
+    t.eat()
+}
+
+/** 
+ * 상속이 가능하도록 open 된 클래스
+ */
+open class Animal () {
+    // 수퍼 클래스에서 open 된 함수는 서브 클래스에서 override 가능
+    open fun eat() {
+        println("음식을 먹습니다")
+    }
+}
+
+class Tiger : Animal() {
+    override fun eat() {
+        println("고기를 먹습니다")
+    }
+}
+```
+
+### 추상화
+
+추상 클래스: 추상 함수를 포함하는 클래스
+
+```kotlin
+fun main() {
+    var r = Rabbit()
+    r.eat()
+    r.sniff()
+}
+
+// 추상 클래스
+abstract class Animal () {
+    abstract fun eat() // 추상 함수
+    fun sniff() {
+        println("킁킁")
+    }
+}
+
+class Rabbit : Animal() {
+    override fun eat() {
+        println("당근을 먹습니다")
+    }
+}
+```
+
+인터페이스: 속성, 추상함수, 일반함수 포함
+
+- 구현부가 있는 함수 → open 함수로 간주
+- 구현부가 없는 함수 → abstract 함수로 간주
+- ⚠️ 여러개의 인터페이스나 클래스에서 같은 이름과 형태를 가진 함수를 구현하고 있다면,
+    - 서브클래스에서는 혼선이 일어나지 않도록 반드시 오버라이딩하여 재구현 필요
+
+```kotlin
+fun main() {
+    var d = Dog()
+    
+    d.run()
+    d.eat()
+}
+
+interface Runner {
+    fun run()
+}
+
+interface Eater {
+    fun eat() {
+        println("음식을 먹습니다")
+    }
+}
+
+class Dog : Runner, Eater {
+    override fun run() {
+        println("우다다다 뜁니다")
+    }
+    
+    override fun eat() {
+        println("허겁지겁 먹습니다")
+    }
+}
+```
+
+## 프로젝트 구조
