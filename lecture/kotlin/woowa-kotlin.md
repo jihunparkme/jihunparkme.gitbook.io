@@ -25,3 +25,32 @@ Kopring Sample Repository
 **커밋 메세지**
 
 - [Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)
+
+## ktlint
+
+코드의 컨벤션 규약
+
+- ktlint는 `Kotlin Coding Convention`과 `Android Kotlin Style Guide`를 기본으로 따르고 있다.
+
+```kotlin
+plugins {
+    ...
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0" // Kotlin 코드 스타일을 자동으로 검사하고 포맷팅하는 도구   
+}
+```
+
+ktlint: 코틀린 style, convention 가이드 적용
+
+- ⭐️ IntelliJ IDEA formatter를 ktlint에 맞게 설정(해당 프로젝트만):
+    - `$ ./gradlew ktlintApplyToIdea`
+- IntelliJ 사용 모든 프로젝트에 formatter 적용(모든 IDEA 프로젝트에):
+    - `$ ./gradlew ktlintApplyToIdeaGlobally`
+- 수동으로 ktlint를 이용하여 스타일 체크: `$ ./gradlew clean ktlintCheck`
+    - ktlInt Check: `Tasks  → verification → ktlintCheck`
+- ⭐️ Git hook을 통해 ktlint 설정: 커밋 전에 ktlintCheck 테스트 실행
+    
+    ```bash
+    $ mkdir .git/hooks
+    $ ./gradlew addKtlintCheckGitPreCommitHook
+    ```
+    
