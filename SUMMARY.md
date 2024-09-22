@@ -10,6 +10,7 @@
 * [Kafka](lecture/kafka/README.md)
   * [Begin Kafka](lecture/kafka/begin-kafka.md)
 * [Kotlin](lecture/kotlin/README.md)
+  * [TDD, Clean Code Preview](lecture/kotlin/tdd-clean-code-preview.md)
   * [woowa Kotlin](lecture/kotlin/woowa-kotlin.md)
 * [Java](lecture/java/README.md)
   * [Multithread Concurrency](lecture/java/multithread-concurrency.md)
