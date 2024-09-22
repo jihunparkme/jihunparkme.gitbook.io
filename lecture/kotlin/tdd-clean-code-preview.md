@@ -80,3 +80,37 @@ fun main() {
 지원되는 특수문자
 
 <center><img src="../../.gitbook/assets/kotlin/datatype.png" width="50%"></center>
+
+## 형변환과 배열
+
+**✅ 형변환**
+
+> 코틀린은 형변환 시 발생할 수 있는 오류를 막기 위해 ***암시적 형변환은 미지원***
+> 
+
+```kotlin
+fun main() {
+    // 명시적 형변환
+    var a: Int = 54321
+    var b: Long = a.toLong()
+}
+```
+
+**✅ 배열**
+
+> `arrayOf`, `arrayOfNulls`
+> 
+
+```kotlin
+fun main() {
+    // 값이 있는 배열 생성
+    var intArr = arrayOf(1, 2, 3, 4, 5)
+    
+    // 특정 크기를 가진 비어있는 배열 생성
+    var nullArr = arrayOfNulls<Int>(5)
+    
+    intArr[2] = 8
+    println(intArr[4])
+}
+```
+
