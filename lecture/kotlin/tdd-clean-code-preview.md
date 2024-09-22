@@ -199,3 +199,48 @@ fun doWhenReturn (a: Any) {
     a is Int
     ```
     
+
+## 반복문
+
+다른 언어에서의 반복문과는 약간의 차이가 있다.
+
+```kotlin
+fun main() {
+	for (i in 0..9) {
+        print(i)
+    } // 0123456789
+    
+    println()
+    for (i in 0..9 step 3) {
+        print(i)
+    } // 0369
+    
+    println()
+    for (i in 9 downTo 0) {
+        print(i)
+    } // 9876543210
+    
+    println()
+    for (i in 9 downTo 0 step 3) {
+        print(i)
+    } // 9630
+    
+    println()
+    for (i in 'a'..'e') {
+        print(i)
+    } // abcde
+}
+```
+
+레이블이 달린 반복문 기준으로 반복문을 종료시켜주는 기능
+
+- 레이블 이름과 @기호로 즉시 반복문 종료
+
+```kotlin
+loop@for (i in 1..10) {
+    for (j in 1..10) {
+        if (i == 1 && j == 2) break@loop
+        println("i : $i, j : $j")
+    }
+}
+```
