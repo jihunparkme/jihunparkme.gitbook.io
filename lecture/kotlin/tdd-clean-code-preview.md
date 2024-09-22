@@ -142,3 +142,60 @@ fun add(a: Int, b: Int, c: Int): Int {
 // 단일표현식(반환형 타입 추론)
 fun add2(a: Int, b: Int, c: Int) = a + b + c
 ```
+
+## 조건문과 비교연산자
+
+**✅ 조건문**
+
+`if`
+
+```kotlin
+fun main() {
+    var a = 11
+    if (a < 10) {
+        println("a is greater than 10")
+    } else {
+        println("a is less than or equal to 10")
+    }
+}
+
+```
+
+`when`
+
+- 등호나 부등호는 사용 불가
+
+```kotlin
+fun doWhen (a: Any) {
+    when(a) {
+        1 -> println("this is number")
+        "Hello" -> println("this is string")
+        is Long -> println("this is long type")
+        !is String -> println("this is not String type")
+        else -> println("this is else area")
+    }
+}
+
+fun doWhenReturn (a: Any) {
+    var result = when(a) {
+        1 -> "this is number"
+        "Hello" -> "this is string"
+        is Long -> "this is long type"
+        !is String -> "this is not String type"
+        else -> "this is else area"
+    }
+    println(result)
+}
+```
+
+**✅ 비교연산자**
+
+- 부등호: <, ≤, >, ≥, ≠
+- 등호: ==
+- 자료형 확인: is, !is
+    - 호환 여부를 체크하고 형변환까지 한번에 진행
+    
+    ```kotlin
+    a is Int
+    ```
+    
