@@ -502,3 +502,55 @@ import com.google.aaron.A
 | private          | 클래스 내부에서만 접근 가능                 |
 | protected        | 클래스 자신과 상속받은 클래스에서 접근 가능 |
 | internal         | 미사용                                      |
+
+## 고차함수와 람다함수
+
+✅ 고차함수
+
+> 함수를 마치 클래스에서 만들어낸 `인스턴스처럼` 취급하는 방법
+> 
+- 함수를 `파라미터`로 넘겨줄 수도 있고, `결과값`으로 반환받을 수도 있는 방법
+
+코틀린에서는 모든 함수를 고차함수로 사용 가능
+
+- `::` → 일반 함수를 고차 함수로 변경해 주는 연산자
+- 함수를 파라미터로 받을 경우 타입은 함수의 `(파라미터 자료형) -> 반환형 자료형`
+
+```kotlin
+fun main() {
+    b(::a) // 일반 함수를 고차 함수로 변경
+}
+
+fun a (str: String) {
+    println("$str 함수 a")
+}
+
+// 함수를 파라미터로 받기. (파라미터 자료형) -> 반환형 자료형
+fun b (function: (String)->Unit) {
+    function("b가 호출한")
+}
+```
+
+✅ 람다함수
+
+> 람다함수는 일반함수와 달리 그 자체가 고차함수이므로 별도의 연산자 없이 변수에 담을 수 있다.
+> 
+
+```kotlin
+fun main() {
+    /** 자료형 자동 추론으로 축약 사용
+     * var c: (String) -> Unit = { str:String -> println("$str 함수 a")}
+     * var c: (String) -> Unit = { str -> println("$str 함수 a")}
+     */
+    var c = { str:String -> println("$str 함수 a")}
+    b(c)
+}
+
+fun b (function: (String)->Unit) {
+    function("b가 호출한")
+}
+```
+
+ℹ️ 고차함수와 람다함수를 사용하여 함수를 일종의 변수로 사용 가능한 편의성
+
+- 컬렉션 조작이나 스코프 함수에도 도움
