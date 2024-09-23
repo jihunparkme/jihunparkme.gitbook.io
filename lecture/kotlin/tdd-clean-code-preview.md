@@ -480,12 +480,12 @@ import com.google.aaron.A
 ✅ 접근 제한자
 
 > 변수, 함수, 클래스 선언 시 맨 앞에 붙여 사용
-> 
-- 스코프 외부에서 스코프 내부에 접근할 때 그 권한을 `개발자가 제어`할 수 있는 기능
-    - public
-    - internal
-    - private
-    - protected
+
+스코프 외부에서 스코프 내부에 접근할 때 그 권한을 `개발자가 제어`할 수 있는 기능
+- public
+- internal
+- private
+- protected
 
 **Package Scope**
 
@@ -508,7 +508,6 @@ import com.google.aaron.A
 ✅ 고차함수
 
 > 함수를 마치 클래스에서 만들어낸 `인스턴스처럼` 취급하는 방법
-> 
 - 함수를 `파라미터`로 넘겨줄 수도 있고, `결과값`으로 반환받을 수도 있는 방법
 
 코틀린에서는 모든 함수를 고차함수로 사용 가능
@@ -534,7 +533,6 @@ fun b (function: (String)->Unit) {
 ✅ 람다함수
 
 > 람다함수는 일반함수와 달리 그 자체가 고차함수이므로 별도의 연산자 없이 변수에 담을 수 있다.
-> 
 
 ```kotlin
 fun main() {
