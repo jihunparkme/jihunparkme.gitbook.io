@@ -1121,3 +1121,76 @@ class Product(val name: String, val price: Int) {
     }
 }
 ```
+
+## **함수의 argument를 다루는 방법과 infix 함수**
+
+**✅ default arguments**
+
+> 파라미터를 받아야 하는 함수이지만 파라미터가 없더라도 기본값으로 동작해야 할 경우 사용
+
+```kotlin
+fun main() {
+    deliveryItem("짬뽕") // 짬뽕, 1개를 집에 배달하였습니다.
+    deliveryItem("책", 3) // 책, 3개를 집에 배달하였습니다.
+    deliveryItem("노트북", 30, "학교") // 노트북, 30개를 학교에 배달하였습니다.
+}
+
+fun deliveryItem(name: String, count: Int = 1, destination: String = "집") {
+    println("${name}, ${count}개를 ${destination}에 배달하였습니다.")
+}
+```
+
+단, 파라미터의 중간을 비우면 동작하지 않는다.
+
+- 이 경우에는 **`named arguments` 사용**
+- 파라미터의 순서와 관계없이 파라미터 이름을 사용하여 직접 파라미터 값을 할당
+
+```kotlin
+deliveryItem("노트북", destination = "학교")
+```
+
+✅ variable number of arguments (`vararg`)
+
+> 같은 자료형을 개수에 상관없이 파라미터로 받고 싶을 경우 사용
+
+```kotlin
+fun main() {
+	sum(1, 2, 3, 4)
+}
+
+fun sum(vararg numbers: Int) {
+    var sum = 0
+    
+    for (n in numbers) {
+        sum += n
+    }
+    
+    print(sum)
+}
+```
+
+개수가 지정되지 않은 파라미터라는 특징이 있으므로 다른 파라미터와 같이 사용할 경우에는 맨 마지막에 선언
+
+- fun sample(text: String, vararg x: Int)
+
+✅ **infix 함수**
+
+- 함수 정의 시 앞에 `infix` 를 붙인 후, 함수 이름을 infix 함수가 적용될 `자료형.이름`으로 지정
+
+```kotlin
+fun main() {
+    /**
+     * 6: infix 함수가 적용되는 객체 자신(this)
+     * 4: 파라미터인 x
+     */
+	println(6 multiply 4)
+    // 동일하게 동작
+    println(6 multiply(4))
+}
+
+infix fun Int.multiply(x: Int): Int = this * x
+```
+
+참고로, 클래스 안에서 infix 함수 선언 시 적용 클래스가 자기 자신이므로 클래스 이름은 생략 가능
+
+- infix fun multiply(x: Int): Int = this * x
