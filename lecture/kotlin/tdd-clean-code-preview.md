@@ -1244,3 +1244,116 @@ class Outer {
     }
 }
 ```
+
+## Data Class & Enum Class
+
+✅ **Data Class**
+
+> 데이터를 다루는데 최적화된 클래스
+
+5가지 기능을 내부적으로 자동 생성
+
+- equals(): 내용의 동일성 판단
+- hashcode(): 객체 내용에서 고유한 코드를 생성
+- toString(): 포함된 속성을 보기 쉽게 표현
+- copy()
+    
+    ```kotlin
+    // 파라미터가 없는 경우 똑같은 내용으로 생성
+    val a = Data("A", 7)
+    val b = a.copy()
+    
+    // 파라미터가 있으면 해당 파라미터로 교체하여 생성
+    val a = Data("A", 7)
+    val b = a.copy("B")
+    ```
+    
+
+Example
+
+```kotlin
+fun main() {
+  	val a = General("보영", 212)
+    
+    println(a == General("보영", 212)) // false
+    println(a.hashCode()) // 20132171
+    println(a) // General@133314b
+    
+    val b = Data("루다", 306)
+
+    println(b == Data("루다", 306)) // true
+    println(b.hashCode()) // 46909878
+    println(b) // Data(name=루다, id=306)
+    
+    println(b.copy()) // Data(name=루다, id=306)
+    println(b.copy("아린")) // Data(name=아린, id=306)
+    println(b.copy(id = 618)) // Data(name=루다, id=618)
+}
+
+class General(val name: String, val id: Int)
+
+data class Data(val name: String, val id: Int)
+```
+
+**✅ componentX(): 속성을 순서대로 반환**
+
+```kotlin
+Data("A", 7)
+component1() -> "A"
+component2() -> 7
+
+listOf(Data("A", 7), Data("B", 1))
+component1() -> Data("A", 7)
+component2() -> Data("B", 1)
+```
+
+Example
+
+```kotlin
+fun main() {
+	val list = listOf(Data("보영", 212),
+                     Data("루다", 306),
+                     Data("아린", 618))
+    
+    for ((a, b) in list) {
+        // 내부적으로 component1(), component2() 함수 사용
+        println("${a}, ${b}")
+    }
+}
+
+class General(val name: String, val id: Int)
+
+data class Data(val name: String, val id: Int)
+
+```
+
+**✅ Enum Class**
+
+> enumerated type (열거형)
+
+enum 클래스 안의 객체들은 관행적으로 상수를 나타낼 때 사용하는 대문자로 기술
+
+- enum의 객체들은 고유한 속성을 가질 수 있음
+
+```kotlin
+fun main() {
+	var state = State.SING
+    println(state) // SING (toString을 통해 상태 객체의 이름이 출력)
+    
+    state = State.SLEEP
+    println(state.isSleeping()) // true
+    
+    state = State.EAT
+    println(state.message) // 밥을 먹습니다
+}
+
+enum class State(val message: String) {
+    SING("노래를 부릅니다"),
+    EAT("밥을 먹습니다"),
+    SLEEP("잠을 잡니다");
+    
+   fun isSleeping() = this == State.SLEEP
+}
+```
+
+## Set & Map
