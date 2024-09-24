@@ -669,3 +669,74 @@ fun main() {
     }
 }
 ```
+
+## **Object**
+
+> 단 하나의 객체만으로 공통적인 속성과 함수를 사용해야 하는 경우
+> 
+> `생성자 없이` 객체를 직접 생성
+
+`object`로 선언된 객체는 최초 사용 시 자동으로 생성되고, 이후에는 코드 전체에서 공용으로 사용될 수 있다.
+
+```kotlin
+fun main() {
+    // 인스턴스를 생성하지 않고 그 자체로 객체
+	  println(Counter.count)
+    
+    Counter.countUp()
+    Counter.countUp()
+    
+    println(Counter.count)
+    
+    Counter.clear()
+    
+  	println(Counter.count)
+}
+
+object Counter {
+    var count = 0
+    
+    fun countUp() {
+        count++
+    }
+    
+    fun clear() {
+        count = 0
+    }
+}
+```
+
+### **Companion Object**
+
+- 기존 클래스 안에 있는 오브젝트(static 멤버와 유사)
+
+```kotlin
+fun main() {
+    var a = FoodPoll("짜장")
+    var b = FoodPoll("짬뽕")
+    
+    a.vote()
+    a.vote()
+
+    b.vote()
+    b.vote()
+    b.vote()
+    
+    println("${a.name} : ${a.count}")  // 짜장 : 2
+    println("${b.name} : ${b.count}") // 짬뽕 : 3
+    println("총계 : ${FoodPoll.total}") // 총계 : 5
+}
+
+class FoodPoll (val name: String) {
+    companion object {
+        var total = 0 // 다른 인스턴스에서 공유하는 자원
+    }
+    
+    var count = 0
+    
+    fun vote() {
+        total++
+        count++
+    }
+}
+```
