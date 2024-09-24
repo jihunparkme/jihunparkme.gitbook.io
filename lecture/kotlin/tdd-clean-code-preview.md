@@ -1194,3 +1194,53 @@ infix fun Int.multiply(x: Int): Int = this * x
 참고로, 클래스 안에서 infix 함수 선언 시 적용 클래스가 자기 자신이므로 클래스 이름은 생략 가능
 
 - infix fun multiply(x: Int): Int = this * x
+
+## 중첩 클래스와 내부 클래스
+
+`Nested Class`(중첩 클래스)
+
+> 형태만 내부에 존재할 뿐, 외부 클래스의 내용을 공유할 수 없는 ***별개의 클래스***
+
+`Inner Class` (내부 클래스)
+
+> 외부 클래스 객체 안에서 사용되는 클래스로 외부 클래스의 속성과 함수 사용 가능
+- 혼자서 객체를 만들 수는 없고, 외부 클래스의 객체가 있어야만 생성과 사용이 가능
+
+```kotlin
+fun main() {
+  	Outer.Nested().introduce() // Nested Class
+    val nested = Outer.Nested() // Nested Class 
+    nested.introduce()
+    
+    val outer = Outer()
+    val inner = outer.Inner()
+    
+    inner.introduceInner() // Inner Class
+    inner.introduceOuter() // Outer Class
+    
+    outer.text = "Changed Outer Class"
+    inner.introduceOuter() // Changed Outer Class
+}
+
+class Outer {
+    var text = "Outer Class"
+    
+    class Nested {
+        fun introduce() {
+            println("Nested Class")
+        }
+    }
+    
+    inner class Inner {
+        var text = "Inner Class"
+        
+        fun introduceInner() {
+            println(text)
+        }
+        
+        fun introduceOuter() {
+            println(this@Outer.text)
+        }
+    }
+}
+```
