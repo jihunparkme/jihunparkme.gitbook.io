@@ -867,3 +867,107 @@ class Cola: Drink() {
     }
 }
 ```
+
+## 제너릭
+
+> 클래스나 함수에서 사용하는 자료형을 외부에서 지정할 수 있는 기능
+
+함수나 클래스를 선언할 때 고정적인 자료형 대신 실제 자료형으로 대체되는 타입 파라미터를 받아 사용
+
+- 제네릭을 사용할 경우 자료형을 대체하게 되어 캐스팅을 방지할 수 있고, 성능을 높일 수 있다.
+
+**클래스에 적용**
+
+```kotlin
+fun main() {
+	UsingGeneric(A()).doShouting()
+    UsingGeneric(B()).doShouting()
+    UsingGeneric(C()).doShouting()
+}
+
+open class A {
+    open fun shout() {
+        println("A가 소리칩니다")
+    }
+}
+
+class B: A() {
+    override fun shout() {
+        println("B가 소리칩니다")
+    }
+}
+
+class C: A() {
+    override fun shout() {
+        println("C가 소리칩니다")
+    }
+}
+
+class UsingGeneric<T: A> (val t: T) {
+    fun doShouting() {
+        t.shout()
+    }
+}
+```
+
+**함수에 적용**
+
+```kotlin
+fun main() {
+		...
+		
+    doShouting(B())
+}
+
+fun <T: A> doShouting(t: T) {
+    t.shout()
+}
+```
+
+## 리스트
+
+> 여러 개의 데이터를 원하는 순서로 넣어 관리
+
+리스트에는 두 가지의 종료가 존재
+
+`List<out T>`
+
+- 생성 시 넣은 객체를 대체/추가/삭제 불가
+- 전용 함수: listOf(1, 2, 3)
+
+`MutableList<T>`
+
+- 생성 시 넣은 객체를 대체/추가/삭제 가능
+- 전용 함수: mutableListOf(1, 2, 3)
+- 요소 추가(add), 삭제(remove, removeAt) 기능 외에도
+    - 무작위 섞기(shuffle), 정렬(sort) 기능도 제공
+
+```kotlin
+fun main() {
+  	val a = listOf("사과", "딸기", "배")
+    println(a[1]) // 딸기
+    
+    for (fruit in a) {
+        print("${fruit}:")
+    }
+    println() // 사과:딸기:배:
+    
+    var b = mutableListOf(6, 3, 1)
+    println(b) // [6, 3, 1]
+    
+    b.add(4)
+    println(b) // [6, 3, 1, 4]
+    
+    b.add(2, 8) // [6, 3, 8, 1, 4]
+    println(b)
+    
+    b.removeAt(1)
+    println(b) // [6, 8, 1, 4]
+    
+    b.shuffle()
+    println(b) // [6, 1, 4, 8]
+    
+    b.sort()
+    println(b) // [1, 4, 6, 8]
+}
+```
