@@ -740,3 +740,61 @@ class FoodPoll (val name: String) {
     }
 }
 ```
+
+## **익명객체와 옵저버 패턴**
+
+> 이벤트가 발생할 때마다 `즉각적으로 처리`할 수 있도록 만드는 패턴
+
+이벤트를 수신하는 클래스와 이벤트의 발생 및 전달을 담당하는 클래스와 통신을 위해 사용되는 인터페이스를 `Observer`, 코틀린에서는 `listener` 라고 부른다.
+
+- 이벤트를 넘겨주는 행위는 `callback`
+
+```kotlin
+fun main() {
+    EventPrinter().start()
+}
+
+interface EventListener {
+    fun onEvent(count: Int)
+}
+
+class Counter(var listener: EventListener) {
+    fun count() {
+        for (i in 1..100) {
+            if (i % 5 == 0) listener.onEvent(i)
+        }
+    }
+}
+
+class EventPrinter: EventListener {
+    override fun onEvent(count: Int) {
+        print("${count}-")
+    }
+    
+    fun start() {
+        val counter = Counter(this)
+        counter.count()
+    }
+}
+```
+
+익명클래스 활용
+
+- object와 형태는 비슷하지만 이름이 없다는 차이
+
+```kotlin
+EventPrinter().start()
+
+...
+
+class EventPrinter {
+    fun start() {
+        val counter = Counter(object: EventListener {
+            override fun onEvent(count: Int) {
+                print("${count}-")
+            }
+        })
+        counter.count()
+    }
+}
+```
