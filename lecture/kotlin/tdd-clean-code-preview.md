@@ -798,3 +798,72 @@ class EventPrinter {
     }
 }
 ```
+
+## 클래스의 다형성
+
+`Up-casting`: 상위 자료형인 수퍼클래스를 변환
+
+```kotlin
+var a: Drink = Cola()
+```
+
+`Down-casting`: Up-casting된 인스턴스를 다시 하위 자료형으로 변환
+
+- `as`: 변수를 호환되는 자료형으로 변환해주는 캐스팅 연산자
+    - 반환값뿐만 아니라 변수 자체도 다운캐스팅
+
+```kotlin
+var a: Drink = Cola()
+
+a as Cola // 이후 a는 Cola로 동작
+var b = a as Cola // 변환 결과를 반환받아 변수에 초기화
+```
+
+- `is`: 변수가 자료형에 호환되는지 체크한 후 변환해주는 캐스팅 연산자 (조건문 내에서 사용)
+
+```kotlin
+var a: Drink = Cola()
+if (a is Cola) {
+    // 해당 영역 안에서만 a가 Cola로 사용
+}
+```
+
+Example
+
+```kotlin
+fun main() {
+	var a = Drink()
+    a.drink() // 음료를 마십니다.
+    
+    var b: Drink = Cola()
+    b.drink() // 음료중에 콜라를 마십니다.
+    
+    if (b is Cola) {
+        b.washDished() // 콜라로 설거지를 합니다.
+    }
+    
+    var c = b as Cola
+    c.washDished() // 콜라로 설거지를 합니다.
+    b.washDished()  // 반환값뿐만 아니라 변수 자체도 다운캐스팅
+}
+
+open class Drink {
+    var name = "음료"
+    
+    open fun drink() {
+        println("${name}를 마십니다.")
+    }
+}
+
+class Cola: Drink() {
+    var type = "콜라"
+    
+    override fun drink() {
+        println("${name}중에 ${type}를 마십니다.")
+    }
+    
+    fun washDished() {
+        println("${type}로 설거지를 합니다.")
+    }
+}
+```
