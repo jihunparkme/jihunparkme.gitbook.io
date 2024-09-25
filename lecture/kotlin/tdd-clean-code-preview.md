@@ -1357,3 +1357,49 @@ enum class State(val message: String) {
 ```
 
 ## Set & Map
+
+**✅ Set**
+
+> 순서가 정렬되지 않으며, 중복이 허용되지 않는 컬렉션
+
+```kotlin
+fun main() {
+	  val a = mutableSetOf("귤", "바나나", "키위")
+    
+    for (item in a) {
+        println("${item}") // 귤 바나나 키위
+    }
+    
+    a.add("자몽")
+    println(a) // [귤, 바나나, 키위, 자몽]
+    
+    a.remove("바나나")
+    println(a) // [귤, 키위, 자몽]
+    
+    println(a.contains("귤")) // true
+}
+```
+
+**✅ Map**
+
+> 객체를 넣을 때 그 객체를 찾아낼 수 있는 Key를 쌍으로 넣어주는 컬렉션
+
+```kotlin
+fun main() {
+	val a = mutableMapOf("레드벨벳" to "음파음파",
+                         "트와이스" to "FANCY",
+                         "ITZY" to "ICY")
+    
+    for (entry in a) {
+        println("${entry.key} : ${entry.value}") // 레드벨벳 : 음파음파, 트와이스 : FANCY, ITZY : ICY
+    }
+    
+    a.put("오마이걸", "번지")
+    println(a) // {레드벨벳=음파음파, 트와이스=FANCY, ITZY=ICY, 오마이걸=번지}
+    
+    a.remove("ITZY")
+    println(a) // {레드벨벳=음파음파, 트와이스=FANCY, 오마이걸=번지}
+    
+    println(a["레드벨벳"]) // 음파음파
+}
+```
