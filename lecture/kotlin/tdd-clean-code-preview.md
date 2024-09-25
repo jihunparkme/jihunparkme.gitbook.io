@@ -15,6 +15,8 @@
 
 <https://play.kotlinlang.org/>
 
+---
+
 ## 변수와 자료형
 
 **✅ 변수의 선언**
@@ -81,6 +83,8 @@ fun main() {
 
 <center><img src="../../.gitbook/assets/kotlin/datatype.png" width="50%"></center>
 
+---
+
 ## 형변환과 배열
 
 **✅ 형변환**
@@ -114,6 +118,8 @@ fun main() {
 }
 ```
 
+---
+
 ## 타입추론과 함수
 
 **✅ 타입추론**
@@ -142,6 +148,8 @@ fun add(a: Int, b: Int, c: Int): Int {
 // 단일표현식(반환형 타입 추론)
 fun add2(a: Int, b: Int, c: Int) = a + b + c
 ```
+
+---
 
 ## 조건문과 비교연산자
 
@@ -199,6 +207,7 @@ fun doWhenReturn (a: Any) {
     a is Int
     ```
     
+---
 
 ## 반복문
 
@@ -244,6 +253,8 @@ loop@for (i in 1..10) {
     }
 }
 ```
+
+---
 
 ## 클래스
 
@@ -431,6 +442,8 @@ class Dog : Runner, Eater {
 }
 ```
 
+---
+
 ## 프로젝트 구조
 
 - `Project`
@@ -453,6 +466,8 @@ class Dog : Runner, Eater {
 > 
 > 하나의 파일에 여러개의 클래스를 넣어도 알아서 컴파일 가능
 - 파일이나 폴더 기준으로 구분하지 않고 파일내에 있는 `package` 키워드 기준으로 구분
+
+---
 
 ## 스코프와 접근 제한자
 
@@ -503,6 +518,8 @@ import com.google.aaron.A
 | protected        | 클래스 자신과 상속받은 클래스에서 접근 가능 |
 | internal         | 미사용                                      |
 
+---
+
 ## 고차함수와 람다함수
 
 ✅ 고차함수
@@ -552,6 +569,8 @@ fun b (function: (String)->Unit) {
 ℹ️ 고차함수와 람다함수를 사용하여 함수를 일종의 변수로 사용 가능한 편의성
 
 - 컬렉션 조작이나 스코프 함수에도 도움
+
+---
 
 ## 스코프 함수
 
@@ -670,6 +689,8 @@ fun main() {
 }
 ```
 
+---
+
 ## **Object**
 
 > 단 하나의 객체만으로 공통적인 속성과 함수를 사용해야 하는 경우
@@ -741,6 +762,8 @@ class FoodPoll (val name: String) {
 }
 ```
 
+---
+
 ## **익명객체와 옵저버 패턴**
 
 > 이벤트가 발생할 때마다 `즉각적으로 처리`할 수 있도록 만드는 패턴
@@ -798,6 +821,8 @@ class EventPrinter {
     }
 }
 ```
+
+---
 
 ## 클래스의 다형성
 
@@ -868,6 +893,8 @@ class Cola: Drink() {
 }
 ```
 
+---
+
 ## 제너릭
 
 > 클래스나 함수에서 사용하는 자료형을 외부에서 지정할 수 있는 기능
@@ -924,6 +951,8 @@ fun <T: A> doShouting(t: T) {
 }
 ```
 
+---
+
 ## 리스트
 
 > 여러 개의 데이터를 원하는 순서로 넣어 관리
@@ -971,6 +1000,8 @@ fun main() {
     println(b) // [1, 4, 6, 8]
 }
 ```
+
+---
 
 ## 문자열 다루기
 
@@ -1030,6 +1061,8 @@ fun main() {
     println(test4.contains("lin")) // false
 }
 ```
+
+---
 
 ## Null 처리와 동일성확인
 
@@ -1122,6 +1155,8 @@ class Product(val name: String, val price: Int) {
 }
 ```
 
+---
+
 ## **함수의 argument를 다루는 방법과 infix 함수**
 
 **✅ default arguments**
@@ -1195,6 +1230,8 @@ infix fun Int.multiply(x: Int): Int = this * x
 
 - infix fun multiply(x: Int): Int = this * x
 
+---
+
 ## 중첩 클래스와 내부 클래스
 
 `Nested Class`(중첩 클래스)
@@ -1244,6 +1281,8 @@ class Outer {
     }
 }
 ```
+
+---
 
 ## Data Class & Enum Class
 
@@ -1356,6 +1395,8 @@ enum class State(val message: String) {
 }
 ```
 
+---
+
 ## Set & Map
 
 **✅ Set**
@@ -1403,6 +1444,8 @@ fun main() {
     println(a["레드벨벳"]) // 음파음파
 }
 ```
+
+---
 
 ## 컬렉션 함수
 
@@ -1541,6 +1584,8 @@ fun main() {
 }
 ```
 
+---
+
 ## 변수의 고급 기술
 
 **✅ 상수**
@@ -1662,6 +1707,8 @@ fun main() {
      */
 }
 ```
+
+---
 
 ## 코루틴을 통한 비동기 처리
 
