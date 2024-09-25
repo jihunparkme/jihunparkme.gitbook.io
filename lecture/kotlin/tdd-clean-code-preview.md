@@ -1662,3 +1662,184 @@ fun main() {
      */
 }
 ```
+
+## 코루틴을 통한 비동기 처리
+
+✅ 코루틴의 Scope
+
+> 코루틴은 제어범위 및 실행범위 지정 가능
+- GlobalScope
+    - 프로그램 어디서나 제어, 동작이 가능한 기본 범위
+- CoroutineScope
+    - 특정한 목적의 Dispatcher를 지정하여 제어 및 동작이 가능한 범위
+
+✅ CoroutineScope Dispatcher
+
+- `Dispatchers.Default`: 기본적인 백그라운드 동작
+- `Dispatchers.IO`: I/O에 최적화 된 동작
+- `Dispatchers.Main` : 메인(UI) 스레드에서 동작
+
+모든 플랫폼에서 지원되지는 않으니 지원되는 플랫폼에 따라 사용
+
+코루틴은 이러한 Scope에서 제어되도록 생성될 수 있음
+
+```kotlin
+// 생성된 스코프에서
+val scope = CoroutineScope(Dispatcher.Defaunt)
+// 새로운 코루틴 생성
+val coroutineA = scope.launch {}
+val coroutineB = scope.async {}
+```
+
+- launch vs. async : 반환값이 있는지의 여부
+    - `launch`: 반환값이 없는 Job 객체
+        
+        ```kotlin
+        import kotlinx.coroutines.*
+        
+        fun main() {
+        	
+            val scope = GlobalScope
+        
+            runBlocking { // 코루틴이 종료될 때까지 메인 루틴을 잠시 대기
+                // Job 객체의 코루틴 생성
+                scope.launch {
+                    for (i in 1..5) {
+                        println(i)
+                    }
+                }
+                
+                // launch를 직접 생성
+                launch {
+                    for (i in 6..10) {
+                        println(i)
+                    }
+                }
+        	}
+        }
+        ```
+        
+    - `async`: 반환값이 있는 Deffered 객체
+        
+        ```kotlin
+        async {
+            var sum = 0
+            for (i in 1..10) {
+                sum++
+            }
+            sum // 이 값이 반환
+        }
+        ```
+        
+
+✅ 루틴의 대기를 위한 추가적인 함수들
+
+> 코루틴 내부 또는 runBlocking 같은 루틴의 대기가 간으한 구문 안에서만 동작 가능
+- `delay`(milisecond: Long): ms 단위로 루틴을 잠시 대기시키는 함수
+- Job.`join`(): Job의 실행이 끝날때까지 대기하는 함수
+- Deferred.`await`(): Deferred의 실행이 끝날때까지 대기하는 함수
+    - Deferred 결과도 반환
+
+```kotlin
+import kotlinx.coroutines.*
+
+fun main() {
+    
+    runBlocking {
+        val a = launch {
+            for (i in 1..5) {
+                println(i)
+                delay(10)
+            }
+        }
+        
+        val b = async {
+            "async 종료"
+        }
+        
+        println("async 대기")
+        println(b.await()) // Deferred의 실행이 끝날때까지 대기
+        
+				println("launch 대기")
+        a.join() // Job의 실행이 끝날때까지 대기
+        println("launch 종료")
+	}
+    /**
+     * async 대기
+     * 1
+     * async 종료
+     * launch 대기
+     * 2
+     * 3
+     * 4
+     * 5
+     * launch 종료
+     */
+}
+```
+
+✅ 코루틴 실행 도중 중단하기
+
+> 코루틴에 `cancel`()을 걸어주면 다음 두 가지 조건이 발생하며 코루틴을 중단 가능
+- 코루틴 내부의 delay() 함수 또는 yield() 함수가 사용된 위치까지 수행된 뒤 종료
+- cancel()로 인해 속성인 isActive가 false 되므로 이를 확인하여 수동으로 종료
+
+```kotlin
+import kotlinx.coroutines.*
+
+fun main() {
+    
+    runBlocking {
+        val a = launch {
+            for (i in 1..5) {
+                println(i)
+                delay(10)
+            }
+        }
+        
+        val b = async {
+            "async 종료"
+        }
+        
+        println("async 대기")
+        println(b.await())
+        
+		println("launch 취소")
+        a.cancel()
+        println("launch 종료")
+	}
+    /**
+     * async 대기
+     * 1
+     * async 종료
+     * launch 취소
+     * launch 종료
+     */
+}
+```
+
+✅ 제한시간 내에 수행되면 결과값을 아닌 경우 null 반환하는 `withTimeoutOrNull()`
+
+```kotlin
+import kotlinx.coroutines.*
+
+fun main() {
+    
+    runBlocking {
+        var result = withTimeoutOrNull(50) {
+            for (i in 1..10) {
+                println(i)
+                delay(10)
+            }
+            "Finish"
+        }
+        println(result)
+        /*
+         * 1
+         * 2
+         * 3
+         * null
+         */
+	}
+}
+```
