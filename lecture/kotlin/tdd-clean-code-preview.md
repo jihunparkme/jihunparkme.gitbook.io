@@ -1403,3 +1403,140 @@ fun main() {
     println(a["레드벨벳"]) // 음파음파
 }
 ```
+
+## 컬렉션 함수
+
+`forEach`
+
+- 컬렉션 안에서 모든 원소를 it 을 통해 참조
+- collection.forEach { println(it) }
+
+`filter`
+
+- 컬렉션 안에서 조건에 맞는 원소를 모아서 다시 컬렉션으로 반환
+- collection.filter { it < 4 }
+
+`map`
+
+- 수식을 통해 연산된 결과를 컬렉션으로 반환
+- collection.map { it * 2 }
+
+`any`
+
+- 하나라도 조건에 맞으면 true
+- collection.any { it == 0 }
+
+`all`
+
+- 모두 조건에 맞으면 true
+- collection.all { it == 0 }
+
+`none`
+
+- 하나라도 조건에 맞지 않으면 true
+- collection.none { it == 0 }
+
+`first`
+
+- collection.first(): 컬렉션의 첫 번째 아이템 반환
+- collection.first{ it > 3 } : 조건에 맞는 첫번째 아이템 반환
+- `find` 함수로 대체 가능
+
+`last`
+
+- collection.last{ it > 3 } : 조건에 맞는 마지막 아이템 반환
+- `findLast` 함수로 대체 가능
+
+⚠️ first, last 함수는 조건에 맞는 객체가 없는 경우 NoSuchElementException 발생
+
+- 이 경우 firstOrNull, lastOrNull 활용
+
+`count`
+
+- collection.count() : 컬렉션의 모든 아이템 개수 반환
+- collection.count { it > 7 } : 조건에 맞는 아이템 개수 반환
+
+```kotlin
+fun main() {
+	val nameList = listOf("박수영", "김지수", "김다현", "신유나", "김지우")
+    
+    nameList.forEach { print(it + " ") } // 박수영 김지수 김다현 신유나 김지우 
+    println()
+    
+    println(nameList.filter { it.startsWith("김") }) // [김지수, 김다현, 김지우]
+    println(nameList.map { "이름 : " + it }) // [이름 : 박수영, 이름 : 김지수, 이름 : 김다현, 이름 : 신유나, 이름 : 김지우]
+
+    println(nameList.any { it == "김지연" } ) // false
+    println(nameList.all { it.length == 3 } ) // true
+    println(nameList.none { it.startsWith("이") }) // true
+    
+    println(nameList.first { it.startsWith("김") }) // 김지수
+    println(nameList.last { it.startsWith("김") }) // 김지우
+    println(nameList.count { it.contains("지") }) // 2
+}
+```
+
+`associateBy`
+
+- list의 아이템에서 key를 추출하여 map 으로 변환하는 함수
+- collection.associateBy { it.name }
+
+`groupBy`
+
+- key가 같은 아이템끼리 배열로 묶어 map으로 만드는 함수
+- collection.groupBy { it.birthYear }
+
+`partition`
+
+- 아이템에 조건을 걸어 두 개의 컬렉션으로 나누는 함수
+- collection.partition { it.birthYear > 2002 }
+- val (over2002, under2002) = collection.partition { it.birthYear > 2002 }
+
+```kotlin
+fun main() {
+  	data class Person(val name: String, val birthYear: Int)
+    
+    val personList = listOf(Person("유나", 1992),
+                            Person("조이", 1996),
+                            Person("츄", 1999),
+                            Person("유나", 2003))
+    
+    // {1992=Person(name=유나, birthYear=1992), 1996=Person(name=조이, birthYear=1996), 1999=Person(name=츄, birthYear=1999), 2003=Person(name=유나, birthYear=2003)}
+    println(personList.associateBy{ it.birthYear })
+    // {유나=[Person(name=유나, birthYear=1992), Person(name=유나, birthYear=2003)], 조이=[Person(name=조이, birthYear=1996)], 츄=[Person(name=츄, birthYear=1999)]}
+    println(personList.groupBy{ it.name })
+    
+    val (over98, under98) = personList.partition { it.birthYear > 1998 }
+    println(over98) // [Person(name=츄, birthYear=1999), Person(name=유나, birthYear=2003)]
+    println(under98) // [Person(name=유나, birthYear=1992), Person(name=조이, birthYear=1996)]
+}
+```
+
+`flatMap`
+
+- 아이템마다 만들어진 컬렉션을 합쳐서 반환하는
+- collection.flatMap { listOf(it * 3, it * 3 }
+
+`getOrElse`
+
+- 인덱스 위치에 아이템이 있으면 아이템을 반환하고, 아닌 경우 지정한 기본값을 반환
+- collection.getOrElse(1) { 50 }
+
+`zip`
+
+- 컬렉션 두 개의 아이템을 1:1로 매칭하여 새 컬렉션으로 생성
+- 결과 리스트의 아이템 개수는 더 작은 컬렉션을 따라감
+
+```kotlin
+fun main() {
+	val numbers = listOf(-3, 7, 2, -10, 1)
+    
+    println(numbers.flatMap { listOf(it * 10, it + 10) }) // [-30, 7, 70, 17, 20, 12, -100, 0, 10, 11]
+    
+    println(numbers.getOrElse(1) { 50 }) // 7
+    println(numbers.getOrElse(10) { 50 }) // 50
+    
+    val names = listOf("A", "B", "C", "D")
+    println(names zip numbers) // [(A, -3), (B, 7), (C, 2), (D, -10)]
+}
+```
