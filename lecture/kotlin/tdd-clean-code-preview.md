@@ -1540,3 +1540,125 @@ fun main() {
     println(names zip numbers) // [(A, -3), (B, 7), (C, 2), (D, -10)]
 }
 ```
+
+## 변수의 고급 기술
+
+**✅ 상수**
+
+> 컴파일 시점에 결정되어 바꿀 수 없는 값
+
+```kotlin
+const val CONST_A = 1234
+```
+
+상수로 선언될 수 있는 값은 기본 자료형만 가능
+
+- 런타임에 생성될 수 있는 일반적인 다른 클래스의 객체들은 담을 수 없다.
+- 클래스의 속성이나 지역변수로는 사용 불가
+
+반드시 `companion object` 안에 선언하여 객체의 생성과 관계없이 클래스와 관계된 고정적인 값으로만 사용 가능
+
+- 변수의 경우 런타임 시 객체 생성에 시간이 더 소요되어 성능 하락이 있어 이를 막고자 상수를 사용
+
+Example
+
+```kotlin
+fun main() {
+	val foodCourt = FoodCourt()
+    
+    foodCourt.searchPrice(FoodCourt.FOOD_CREAM_PASTA) // 크림파스타의 가격은 13000원 입니다.
+    foodCourt.searchPrice(FoodCourt.FOOD_STEAK) // 스테이크의 가격은 25000원 입니다.
+    foodCourt.searchPrice(FoodCourt.FOOD_PIZZA) // 피자의 가격은 15000원 입니다.
+}
+
+class FoodCourt {
+    fun searchPrice(foodName: String) {
+        val price = when(foodName) {
+            FOOD_CREAM_PASTA -> 13000
+            FOOD_STEAK -> 25000
+            FOOD_PIZZA -> 15000
+            else -> 0
+        }
+        
+        println("${foodName}의 가격은 ${price}원 입니다.")
+    }
+    
+    companion object {
+        const val FOOD_CREAM_PASTA = "크림파스타"
+        const val FOOD_STEAK = "스테이크"
+        const val FOOD_PIZZA = "피자"
+    }
+}
+```
+
+**✅ lateinit**
+
+> 일반 변수만 선언하고 초기값의 할당은 나중에 할 수 있도록 하는 키워드
+- 초기값 할당 전까지 변수를 사용할 수 없음(에러 발생)
+- 기본 자료형에는 사용 불가
+
+```kotlin
+lateinit var a: Int
+```
+
+lateinit 변수의 초기화 여부 확인
+
+```kotlin
+::a.isInitialized
+```
+
+Example
+
+```kotlin
+fun main() {
+	val a = LateInitSample()
+    
+    println(a.getLateInitText()) // 기본값
+    a.text = "새로 할당한 값"
+    println(a.getLateInitText()) // 새로 할당한 값
+}
+
+class LateInitSample {
+    lateinit var text: String
+    
+    fun getLateInitText(): String {
+        if (::text.isInitialized) {
+            return text
+        }
+        return "기본값"
+    }
+}
+```
+
+**✅ lazy delegate properties**
+
+> 변수를 사용하는 시점까지 초기화를 자동으로 늦춰주는 지연 대리자 속성
+- 코드상으로는 즉시 객체를 생성 및 할당하여 변수를 초기화하는 형태를 갖지만
+- 실제 실행시에는 val 변수 사용 시점에 초기화
+
+```kotlin
+val a: Int by lazy { 7 }
+...
+println(a) // 이 시점에 7로 초기화
+```
+
+Example
+
+```kotlin
+fun main() {
+	val number: Int by lazy {
+        println("초기화 진행")
+        7
+    }	
+    
+    println("코드 시작")
+    println(number)
+    println(number)
+    /**
+     * 코드 시작
+     * 초기화 진행
+     * 7
+     * 7
+     */
+}
+```
