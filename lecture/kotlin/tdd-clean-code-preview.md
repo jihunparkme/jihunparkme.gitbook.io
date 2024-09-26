@@ -2109,3 +2109,36 @@ class NameTest : BehaviorSpec({
     }
 })
 ```
+
+### Assertion
+
+https://kotest.io/docs/assertions/assertions.html
+
+검증 라이브러리에서 제공하는 여러 검증 함수
+
+```kotlin
+class MatcherTest : StringSpec() {
+    init {
+        -----------------------String Matchers -------------------------
+        // 'shouldBe'는 동일함을 체크하는 Matcher
+        "hello world" shouldBe haveLength(11) // length가 11이어야 함을 체크
+        "hello" should include("ll") // 파라미터가 포함되어 있는지 체크
+        "hello" should endWith("lo") // 파라미터가 끝의 포함되는지 체크
+        "hello" should match("he...") // 파라미터가 매칭되는지 체크
+        "hello".shouldBeLowerCase() // 소문자로 작성되었는지 체크
+
+        -----------------------Collection Matchers -------------------------
+        val list = emptyList<String>()
+        val list2 = listOf("a", "b", "c")
+        val map = mapOf<String, String>(Pair("a", "1"))
+
+        list should beEmpty() // 원소가 비었는지 체크 합니다.
+        list2 shouldBe sorted<String>() // 해당 자료형이 정렬 되었는지 체크
+        map should contain("a", "1") // 해당 원소가 포함되었는지 체크
+        map should haveKey("a") // 해당 key가 포함되었는지 체크
+        map should haveValue("1") // 해당 value가 포함되었는지 체크
+
+				
+    }
+}
+```
