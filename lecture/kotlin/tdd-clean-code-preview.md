@@ -1950,3 +1950,41 @@ testImplementation 'io.kotest:kotest-property:$version'
 IntelliJ 플러그인
 
 - Preference → Plugins → Kotest
+
+### Kotest 장점들
+
+**✅ 유연성**
+
+- 다양한 테스트 스타일을 지원
+- 행위 주도 테스트(BDD)뿐 아니라 `WordSpec`, `FunSpec`, `AnnotationSpec`, `FreeSpec` 등 다양한 스타일 지원
+
+**✅ 강력하고 다양한 검증 라이브러리**
+
+- 복잡한 표현식이나, 컬렉션, 예외 등을 검증하는데 사용할 수 있는 검증 라이브러리(assertion) 제공
+
+**✅ 프로퍼티 기반 테스트**
+
+- 프로퍼티 기반 테스트를 지원
+- 임의의 입력값을 만들어 코드의 유효성을 검사하는 방식으로 다양한 경우의 수를 체계적으로 테스트
+
+```kotlin
+class MyTests : PropertySpec({
+  forAll { a: Int, b: Int ->
+    (a + b) should beGreaterThan(a)
+    (a + b) should beGreaterThan(b)
+  }
+})
+```
+
+**✅ 반복 및 중첩 테스트**
+
+- 반복 및 중첩 테스트를 지원하여 여러 복잡한 테스트 케이스를 더 쉽고 간결하게 관리
+
+```kotlin
+class MyTests : FunSpec({
+  context("Some context") {
+    test("Test 1") { /*...*/ }
+    test("Test 2") { /*...*/ }
+  }
+})
+```
