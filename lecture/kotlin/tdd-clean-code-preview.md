@@ -1988,3 +1988,124 @@ class MyTests : FunSpec({
   }
 })
 ```
+
+### Testing Style
+
+https://kotest.io/docs/framework/testing-styles.html
+
+✅ **StringSpec**
+
+```kotlin
+class StringTest: StringSpec({
+		// 문자열은 JUnit의 @DisplayName을 대체
+		"strings.length should return size of string" {
+	            "hello".length shouldBe 5
+	  }
+})
+```
+
+✅ **FunSpec**
+
+```kotlin
+class FunSpecTest: FunSpec ({
+    test("문자열 길이 테스트") {
+        val actual = "abcdefg   "
+      
+        actual.length shouldBe 10
+    }
+})
+```
+
+✅ **AnnotationSpec**
+
+- JUnit 테스트 방식과 유사
+
+```kotlin
+class AnnotationSpecTest: AnnotationSpec () {
+    @BeforeEach
+    fun beforeEach() {
+        println("start beforeEach")
+    }
+
+    @Test
+    fun stringTest() {
+        val actual = "abcdefg   "
+
+        actual.length shouldBe 10
+    }
+}
+```
+
+✅ **DescribeSpec**
+
+- `describe`가 테스트 대상을 지칭
+- 내부적으로 조건이나 상황을 설명할 때는 `context` 사용
+- 테스트 본체에는 `it` 을 사용해서 테스트 스토리텔링
+
+```kotlin
+class MyTests : DescribeSpec({
+    describe("score") { // 테스트 대상
+        it("start as zero") {
+            // test here
+        }
+        describe("with a strike") { // 내부 조건이나 상황
+            it("adds ten") {
+                // test here
+            }
+            it("carries strike to the next frame") {
+                // test here
+            }
+        }
+
+        describe("for the opposite team") {
+            it("Should negate one score") {
+                // test here
+            }
+        }
+    }
+})
+```
+
+- 만일 테스트 대상 `disabled`를 적용하고 싶을 경우 `xdescribe` 사용
+
+```kotlin
+class MyTests : DescribeSpec({
+    describe("this outer block is enabled") {
+        xit("this test is disabled") {
+            // test here
+        }
+    }
+    xdescribe("this block is disabled") {
+        it("disabled by inheritance from the parent") {
+            // test here
+        }
+    }
+})
+```
+
+✅ **BehaviorSpec**
+
+- 행위 주도 테스트 방식
+- JUnit Nested 애노테이션을 활용한 계층 구조 테스트 방식과 유사하지만 더 편하게 사용 가능
+
+```kotlin
+class NameTest : BehaviorSpec({
+    Given("Name 객체를 생성할 때") {
+        When("5글자 이내의 문자열을 전달하면") {
+            val actual = Name("12345")
+
+            Then("정상적으로 생성된다") {
+                actual shouldBe Name("12345")
+            }
+        }
+
+        When("5글자 이상의 문자열을 전달하면") {
+            Then("예외를 던진다") {
+                assertThrows<IllegalArgumentException> {
+                    Name("123456")
+                }
+            }
+        }
+    }
+})
+```
