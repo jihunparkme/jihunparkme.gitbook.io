@@ -1890,3 +1890,63 @@ fun main() {
 	}
 }
 ```
+
+---
+
+## **Kotest**
+
+[코틀린의 테스트도구 Kotest](https://catsbi.oopy.io/c670a8b6-019d-4640-bdb0-9c80321722d0)
+
+> Junit과 Kotest의 차이점 중 가장 큰 부분은 `간결함`
+
+[JUnit 5 vs Kotest. Part 1: Is it the new way we test?](https://test-architect.dev/junit-5-vs-kotest-part-1/)
+
+```kotlin
+class RacingServiceTest : BehaviorSpec({
+    Given("유효한 횟수와 자동차 참가자가 제공된다.") {
+        val info = RacingGameRequest(numberOfRound = 5, carNames = listOf("a", "b", "c", "d", "e"))
+
+        And("전진 전략이 항상 전진을 반환한다.") {
+            val racingService = RacingService { DirectionType.STRAIGHT }
+
+            When("경주를 진행 했을 경우") {
+                val actual = racingService.racing(info)
+
+                Then("전달받은 자동차 대수만큼 자동차를 생성하고 결과를 반환한다.") {
+                    actual.racingHistories shouldHaveSize 5
+                    actual.racingHistories.mapIndexed { idx, info ->
+                        info.records.forEach {
+                            it.value shouldBe Distance(idx + 1L)
+                        }
+                    }
+                    actual.winners shouldBe arrayOf(Name("a"), Name("b"), Name("c"), Name("d"), Name("e"))
+                }
+            }
+        }
+    }
+})
+```
+
+### Get Start
+
+build.gradle.kts
+
+```kotlin
+tasks.withType<Test>().configureEach {
+   useJUnitPlatform()
+}
+
+...
+
+val version = "5.4.0"
+
+testImplementation 'io.kotest:kotest-runner-junit5:$version'
+
+// 검증 라이브러리
+testImplementation 'io.kotest:kotest-assertions-core:$version'
+testImplementation 'io.kotest:kotest-property:$version'
+```
+
+IntelliJ 플러그인
+
+- Preference → Plugins → Kotest
