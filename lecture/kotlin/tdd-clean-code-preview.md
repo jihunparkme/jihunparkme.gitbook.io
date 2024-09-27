@@ -1932,7 +1932,207 @@ class Board(
 }
 ```
 
+### Example
 
+<details>
+<summary> Entity</summary>
+    
+**PrimaryKeyEntity.kt**
+
+```kotlin
+@MappedSuperclass
+abstract class PrimaryKeyEntity : Persistable<UUID> {
+    @Id
+    @Column(columnDefinition = "uuid")
+    private val id: UUID = UlidCreator.getMonotonicUlid().toUuid()
+
+    @Transient
+    private var _isNew = true
+
+    override fun getId(): UUID = id
+        
+        /**
+            * Persistable 인터페이스를 구현한 Entity를 영속화 하려하면, 
+            * JpaPersistableEntityInformation.isNew 함수가 호출되며 
+            * 내부적으로 Persistable.isNew 함수를 호출
+            */
+    override fun isNew(): Boolean = _isNew
+        
+        // PrimaryKeyEntity 상속받은 엔티티들이 공통으로 사용할 수 있는 
+        // equals, hashCode 재정의
+    override fun equals(other: Any?): Boolean {
+        if (other == null) {
+            return false
+        }
+                
+                // 지연 조회로 인해 Entity가 실행되기 전까지는 Proxy 객체를 미리 생성하므로 
+                // 프록시 타입까지 같이 고려
+        if (other !is HibernateProxy && 
+                        this::class != other::class) {
+            return false
+        }
+
+        return id == getIdentifier(other)
+    } 
+
+    private fun getIdentifier(obj: Any): Serializable {
+        return if (obj is HibernateProxy) {
+            // 프록시 객체일 경우 식별자 정보가 존재하는 곳에서 식별자를 가져옴
+            obj.hibernateLazyInitializer.identifier
+        } else {
+            (obj as PrimaryKeyEntity).id
+        }
+    }
+
+    override fun hashCode() = Objects.hashCode(id)
+
+    /**
+        * JPA delete 메서드에서는 새로운 엔티티라면 return 처리하다 보니
+        * 엔티티가 영속화 이후에는 isNew가 false를 반환하도록 설정
+        */
+    @PostPersist // 영속화 이후 실행 애노테이션
+    @PostLoad // 영속화한 데이터 조회 이후 실행 애노테이션
+    protected fun load() {
+        _isNew = false
+    }
+}
+```
+
+**User.kt**
+
+```kotlin
+@Entity
+@Table(name = "`user`")
+class User(
+    name: String,
+) : PrimaryKeyEntity() {
+    @Column(nullable = false, unique = true)
+    var name: String = name
+        protected set // User Entity 자신이나 상속 Entity에서만 이름 변경 가능
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "writer")
+    protected val mutableBoards: MutableList<Board> = mutableListOf()
+    val boards: List<Board> get() = mutableBoards.toList()
+
+    fun writeBoard(board: Board) {
+        mutableBoards.add(board)
+    }
+}
+```
+
+Tag.kt
+
+```kotlin
+@Entity
+@Table(uniqueConstraints = [UniqueConstraint(name = "tag_key_value_uk", columnNames = ["`key`", "`value`"])])
+class Tag(
+    key: String,
+    value: String,
+) : PrimaryKeyEntity() {
+    @Column(name = "`key`", nullable = false)
+    var key: String = key
+        protected set
+
+    @Column(name = "`value`", nullable = false)
+    var value: String = value
+        protected set
+}
+```
+
+**Board.kt**
+
+```kotlin
+@Entity
+class Board(
+    title: String,
+    content: String,
+    information: BoardInformation,
+    writer: User,
+    tags: Set<Tag>,
+) : PrimaryKeyEntity() {
+    @Column(nullable = false)
+    var createdAt: LocalDateTime = LocalDateTime.now()
+        protected set
+
+    @Column(nullable = false)
+    var title: String = title
+        protected set
+
+    @Column(nullable = false, length = 3000)
+    var content: String = content
+        protected set
+
+    @Embedded
+    var information: BoardInformation = information
+        protected set
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
+    var writer: User = writer
+        protected set
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @JoinTable(
+        name = "board_tag_assoc",
+        joinColumns = [JoinColumn(name = "board_id")],
+        inverseJoinColumns = [JoinColumn(name = "tag_id")],
+    )
+    protected val mutableTags: MutableSet<Tag> = tags.toMutableSet()
+    val tags: Set<Tag> get() = mutableTags.toSet()
+
+    @ElementCollection
+    @CollectionTable(name = "board_comment")
+    private val mutableComments: MutableList<Comment> = mutableListOf()
+    val comments: List<Comment> get() = mutableComments.toList()
+
+    fun update(data: BoardUpdateData) {
+        title = data.title
+        content = data.content
+        information = data.information
+    }
+
+    fun addTag(tag: Tag) {
+        mutableTags.add(tag)
+    }
+
+    fun removeTag(tagId: UUID) {
+        mutableTags.removeIf { it.id == tagId }
+    }
+
+    fun addComment(comment: Comment) {
+        mutableComments.add(comment)
+    }
+
+    init {
+        writer.writeBoard(this)
+    }
+}
+
+@Embeddable
+data class BoardInformation(
+    @Column
+    val link: String?,
+
+    @Column(nullable = false)
+    val rank: Int,
+)
+
+@Embeddable
+data class Comment(
+    @Column(length = 3000)
+    val content: String,
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
+    val writer: User,
+)
+```
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/4a8a57ee-1284-4ca2-8f10-745d755c8a7c/44a7471c-8518-4759-aeda-b32cfa959849/image.png)
+
+</details>
+    
+Tip
 
 ---
 
