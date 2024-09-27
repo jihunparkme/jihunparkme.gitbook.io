@@ -1893,6 +1893,49 @@ fun main() {
 
 ---
 
+## **JPA Entity 코틀린스럽게 사용하기**
+
+[Kotlin에서 JPA Entity 설계하기](https://catsbi.oopy.io/ecfb2d3a-4095-41a9-ae21-0d36a93f552c)
+
+**🤷🏻‍♂️ Data Calss 활용?**
+
+> Entity의 동등성 체크는 모든 프로퍼티를 비교하는게 아니라 식별자를 통해서만 비교
+- `equals`와 `hashCode`를 따로 재정의를 하지 않으면 참조 비교를 통해 동일성 확인을 하므로
+    - 식별자를 통한 동등성 판단을 제공하려면 `equals`와 `hashCode` 재정의 필요
+
+**🤷🏻‍♂️ lateinit 을 사용한 초기화 미루기?**
+
+> 초기화를 최대한 뒤로 늦춰서 성능 및 효율성을 높히려는 용도로 사용
+- 일반적으로 연관관계 없이 Column만 존재하는 경우 `lateinit`**를 사용하지 않음**
+- 하지만, 연관관계를 정의하는 경우 `lateinit` 정의가 필요한데
+    - 영속화된 엔티티를 조회할 때는 JPA가 lateinit 필드를 초기화해 주지만
+    - 이제 막 생성한 Entity는 JPA가 lateinit 필드를 초기화 해주지 않았으므로 엔티티 그래프 탐색 시점에 오류가 발생
+
+🙆🏻‍♂️ **lateinit을 사용하지 않고 Java처럼 연관관계를 정의하려면?**
+
+**엔티티 자체를 넣어주기**
+
+```kotlin
+@Entity
+class Board(
+  title: String,
+  writer: User, // 생성 시점에 생성자 파라미터로 작성자를 받아서 초기화
+) {
+  @Id
+  var id: UUID = UUID.randomUUID()
+
+  @Column
+  var title: String = title
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  var writer: User = writer
+}
+```
+
+
+
+---
+
 ## **Kotest**
 
 [코틀린의 테스트도구 Kotest](https://catsbi.oopy.io/c670a8b6-019d-4640-bdb0-9c80321722d0)
