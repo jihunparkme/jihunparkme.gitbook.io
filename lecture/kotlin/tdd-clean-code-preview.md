@@ -2128,11 +2128,9 @@ data class Comment(
 )
 ```
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/4a8a57ee-1284-4ca2-8f10-745d755c8a7c/44a7471c-8518-4759-aeda-b32cfa959849/image.png)
+<center><img src="../../.gitbook/assets/kotlin/jpa-erd.png" width="80%"></center>
 
 </details>
-    
-Tip
 
 ---
 
