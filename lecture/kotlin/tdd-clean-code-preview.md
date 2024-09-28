@@ -2207,6 +2207,50 @@ allOpen {
     - Persistable 인터페이스를 구현한 Entity를 영속화 하려하면
     - JpaPersistableEntityInformation.isNew 함수가 호출되며 내부적으로 Persistable.isNew 함수 호출
 
+### (4) **Property 접근 제어**
+
+**✅ 프로퍼티의 변경을 최소화**
+
+> `protected set`을 통한 setter의 접근 제한
+
+Entity 자신이나 상속 Entity에서만 이름 변경 가능
+
+- *Entity에 대해 allOpen 옵션을 추가*했기 때문에, *open property*의 경우 *private setter* 미허용
+
+```kotlin
+@Entity
+@Table(name = "`user`")
+class User(
+    name: String,
+) : PrimaryKeyEntity() {
+    @Column(nullable = false, unique = true)
+    var name: String = name
+        protected set
+}
+```
+
+**✅ 생성일, 수정일과 같이 변경이 필요 없는 프로퍼티**
+
+- 다른 프로퍼티처럼 setter의 접근제어를 protected로 선언
+- 내부적으로만 변경을 열어뒀기에 직접 객체 내부에서 변경을 하지 않는 한 안전
+- 객체 자체에서 변경을 시도할 수 있지만, 불변 프로퍼티(immutable)도 개발자가 변경 프로퍼티(mutable)로 바꿀 수 있는 것은 동일하다고 판단
+
+```kotlin
+@Entity
+@Table(name = "`user`")
+class User(
+    name: String,
+) : PrimaryKeyEntity() {
+    @Column(nullable = false, unique = true)
+    var name: String = name
+        protected set
+    
+    @Column(nullable = false)
+    var createdAt: LocalDateTime = LocalDateTime.now()
+        protected set
+}
+```
+
 
 </details>
 
