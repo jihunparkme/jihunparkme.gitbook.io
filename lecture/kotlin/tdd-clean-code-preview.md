@@ -2251,6 +2251,20 @@ class User(
 }
 ```
 
+### (5) **nullable**
+
+데이터베이스와 Entity의 스키마가 불일치 하는 경우 타입이 다른건 JPA에서 잡아서 빌드 시점에 알려줄 수 있지만,  
+
+- nullable한 Column을 Entity에 non-nullable하게 선언한 경우 Column에 값이 null이라면 런타임 오류가 발생
+
+이 경우 `@Column` 애노테이션의 `nullable` 속성을 명시하여 프로퍼티의 속성 타입을 알려주면, 위와 같은 런타임 오류를 막아주고, 파악하기 쉬워질 수 있다
+
+```kotlin
+@Column(nullable = false)
+var title: String = title
+    protected set
+```
+
 
 </details>
 
