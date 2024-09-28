@@ -2132,6 +2132,37 @@ data class Comment(
 
 </details>
 
+<details>
+<summary> Tip</summary> 
+
+### (1) allopen
+
+> 코틀린에서는 JPA Entity 설계시 `allopen`, `no-args constructor` 옵션 필요
+
+`JPA`에서는 클래스 확장 및 프록시를 만들기 위해 클래스를 상속하려 하는데 클래스가 final class라면 확장이 불가능하기 때문에 문제가 발생
+
+- JPA 플러그인은 JPA 관련 클래스 생성에 문제가 없도록 생성자 매개변수가 없는 No-arg plugin도 포함되는데, 이는 JPA에서 엔티티 매핑 방식이 리플렉션을 이용한 프로퍼티 주입이기 때문
+- 그래서 보통 코틀린으로 JPA 프로젝트를 설정할 때, 플러그인을 추가해서 클래스들이 자동으로 `open`될 수 있도록 설정 필요
+
+```kotlin
+kotlin("plugin.spring") version "1.7.0"
+kotlin("plugin.jpa") version "1.7.0"
+```
+
+⚠️ 하지만, 플러그인을 추가하더라도 Entity Decompile을 해보면 final 키워드가 있다.
+
+- 그래서 Hibernate 사용을 위해 Entity, Entity의 인스턴스 변수는 final이 아니어야 하므로 추가 설정이 필요
+
+```kotlin
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+```
+
+</details>
+
 ---
 
 ## **Kotest**
