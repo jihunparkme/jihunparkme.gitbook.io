@@ -2161,6 +2161,34 @@ allOpen {
 }
 ```
 
+### (2) **PrimaryKeyEntity**
+
+**✅ 엔티티 공통 식별자**
+
+> 모든 Entity가 `PrimaryKeyEntity`를 상속받아 사용하도록 하면 공통된 PrimaryKey 를 사용
+- Integer, Long 타입은 Entity 간에도 키 값이 중복될 수 있고 MAX_VALUE의 차이도 있어서 `UUID`를 많이 선택하는 추세
+- 하지만, `UUID` 또한 정렬불가능하다는 단점과 Long보다 크기나 생성비용도 크다는 단점 존재
+    - 정렬은 `ULID`를 사용해서 해결할 수 있고
+    - 크기는 고려할 정도의 시스템이라면 ORM 사용 자체를 고려해 보아야 할 것이다.
+
+`ULID`는 UUID와 호환성을 가지며 시간순으로 정렬할 수 있다는 특징
+
+- `ULID` 구현 라이브러리는 [ULID Creator](https://github.com/f4b6a3/ulid-creator)를 주로 사용
+    - Monotinic 함수를 제공해줘서 기존 ULID가 밀리초까지만 제공되는데, 동일한 밀리초가 있을 경우 다음 생성 ULID의 밀리초를 1증가시켜 생성
+
+✅ **Nullable 타입을 방지**
+
+> 기존 자바에서는 JPA 엔티티의 New 여부를 식별자(null or 0)로 판단하지만
+> 
+> PrimaryKeyEntity는 `Persistable` 인터페이스를 구현하여 `Persistable.isNew` 함수 활용
+
+✅ 공통 동일성 보장
+
+> Entity는 같은 식별자를 가질 경우 동일한 객체로 판단해야 하기므로 `equals`, `hashCode` 재정의가 필요한데 
+> 
+> PrimaryKeyEntity 에서 `equals`, `hashCode`를 재정의 한 뒤 공통으로 사용한다면 이런 불편함을 없앨 수 있다.
+
+
 </details>
 
 ---
