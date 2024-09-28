@@ -2265,6 +2265,36 @@ var title: String = title
     protected set
 ```
 
+### (6) 외부에 노출하는 연관관계는 **Immutable Collection을 노출**
+
+> JPA에서 연관관계의 요소 변경은 데이터베이스의 변경을 유발하여 프로퍼티를 불변(val)으로 선언해도 위/변조가 가능
+
+```kotlin
+// 위변가 가능한 MutableList
+@OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "writer")
+val mutableBoards: MutableList<Board> = mutableListOf()
+```
+
+하지만, 연관관계를 변경하는것은 Entity의 특성상 필요하기 때문에 MutableList를 List로 바꿀 순 없다.  그렇기에 내부 조작용 프로퍼티와 외부 노출용 프로퍼티를 별도로 두어 관리할 수 있다. 
+
+```kotlin
+@OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "writer")
+protected val mutableBoards: MutableList<Board> = mutableListOf()
+val boards: List<Board> get() = mutableBoards // 외부 노출용 프로퍼티
+```
+
+boards를 조회하는 시점에 참조 주소값을 가지고 있으므로 이후 게시판을 추가했을때 내용이 연동
+
+```kotlin
+@OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "writer")
+protected val mutableBoards: MutableList<Board> = mutableListOf()
+val boards: List<Board> get() = mutableBoards.toList()
+
+// boards에 영향을 끼치지 않도록 추가
+fun writeBoard(board: Board) {
+    mutableBoards.add(board)
+}
+```
 
 </details>
 
