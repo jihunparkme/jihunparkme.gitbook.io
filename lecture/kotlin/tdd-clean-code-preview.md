@@ -2558,9 +2558,12 @@ class MatcherTest : StringSpec() {
 >
 > 그리고 정적 타입 지정 언어
 
-**Person Java class**
+**Person class**
 
 ```java
+/**
+ *  Java
+ */
 public class Person {
     private final String name;
     private final int age;
@@ -2588,10 +2591,55 @@ public class Person {
         this.nickname = nickname;
     }
 }
+
+/**
+ *  Kotlin
+ */
+class Person(val name: String, val age: Int, var nickname: String)
 ```
 
-**Person Kotlin class**
+.
+
+**Person Test**
 
 ```kotlin
-class Person(val name: String, val age: Int, var nickname: String)
+@Test
+fun `이름 붙인 인자`() {
+    // 클래스의 속성들을 선언함과 동시에 생성자를 선언
+    class Person(val name: String, val age: Int, var nickname: String)
+
+    val person = Person("aaron", 30, "park")
+    assertEquals("aaron", person.name)
+    assertEquals(30, person.age)
+    assertEquals("park", person.nickname)
+
+    person.nickname = "new nickname"
+    assertEquals("new nickname", person.nickname)
+}
+
+@Test
+fun `널 타입`() {
+    // nickname 필드는 nallable
+    class Person(val name: String, val age: Int, var nickname: String?)
+
+    val person = Person("aaron", 30, null)
+    assertEquals("aaron", person.name)
+    assertEquals(30, person.age)
+    assertEquals(null, person.nickname)
+}
+
+@Test
+fun `데이터 클래스`() {
+    // 데이터 클래스는 equals, hashcode, toString, copy 기능을 제공
+    data class Person(val name: String, val age: Int, var nickname: String)
+
+    val person1 = Person("aaron", 30, "park")
+    val person2 = Person("aaron", 30, "park")
+    assertEquals(person1, person2)
+
+    val person3 = person1.copy(nickname = "kim")
+    assertEquals("aaron", person3.name)
+    assertEquals(30, person3.age)
+    assertEquals("kim", person3.nickname)
+}
 ```
