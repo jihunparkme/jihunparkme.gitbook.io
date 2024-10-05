@@ -1891,7 +1891,7 @@ fun main() {
 }
 ```
 
----
+# Kotlin Steps
 
 ## **JPA Entity 코틀린스럽게 사용하기**
 
@@ -2548,4 +2548,50 @@ class MatcherTest : StringSpec() {
 				
     }
 }
+```
+
+---
+
+## 코틀린 기초, 단위 테스트
+
+> 코틀린은 자바 플랫폼에서 동작하는 새로운 프로그래밍 언어.
+>
+> 그리고 정적 타입 지정 언어
+
+**Person Java class**
+
+```java
+public class Person {
+    private final String name;
+    private final int age;
+    private String nickname;
+
+    public Person(final String name, final int age, final String nickname) {
+        this.name = name;
+        this.age = age;
+        this.nickname = nickname;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(final String nickname) {
+        this.nickname = nickname;
+    }
+}
+```
+
+**Person Kotlin class**
+
+```kotlin
+class Person(val name: String, val age: Int, var nickname: String)
 ```
