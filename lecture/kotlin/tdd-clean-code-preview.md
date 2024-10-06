@@ -2709,3 +2709,42 @@ fun `데이터 클래스`() {
 
 **단순함**
 - 함수형 프로그래밍 방식을 통해 프로그래밍 스타일을 개선해 더 깔끔한 코드로 구현
+
+### 명령형 프로그래밍 vs 선언형 프로그래밍
+
+**명령형 프로그래밍**
+- 프로그래밍의 상태와 상태를 변경시키는 구문의 관점으로 접근하는 프로그래밍 방식.
+- 컴퓨터가 실행할 명령들을 실행 순서대로 구현
+  - 대부분의 객체 지향 프로그래밍 언어가 명령형 프로그래밍 언어
+  - 알고리즘 처리 작업에 적합한 언어
+
+**선언형 프로그래밍**
+- 선언으로만 프로그램을 동작시키는 방식
+- 프로그램을 실행하기 위해 구체적인 작동 순서를 나열하지 않음
+- 완전하지 않지만 함수형 프로그래밍을 활용해 일정 수준의 선언형 프로그래밍 가능
+  - 함수형 프로그래밍은 선언형 프로그래밍의 한 종류
+
+```kotlin
+/**
+ * 명령형 프로그래밍 스타일
+ */
+fun getPoint(customer:Customer): Int {
+    for (i in 0..customers.size) {
+        val c = customers[i]
+        if (customer == c) {
+            return c.point
+        }
+    }
+    return NO_DATA
+}
+
+/**
+ * 선언형 프로그래밍 스타일
+ */
+fun getPoint(customer:Customer): Int {
+    if (isRegisteredCustomer(customer)) {
+        return findCustomer(customer).point
+    }
+    return NO_DATA
+}
+```
