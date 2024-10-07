@@ -2868,3 +2868,68 @@ fun 정지() {
     assertEquals(Car("jason", 0), actual)
 }
 ```
+
+**람다를 활용해 중복 제거하기**
+
+```kotlin
+/**
+ * AS-IS
+ */
+val numbers: List<Int> = listOf(1, 2, 3, 4, 5, 6)
+
+fun sumAll(numbers:List<Int>): Int {
+    var total = 0
+    for (number in numbers) {
+        total += number
+    }
+    return total
+}
+
+fun sumAllEven(numbers:List<Int>): Int {
+    var total = 0
+    for (number in numbers) {
+        if (number % 2 == 0) {
+            total += number
+        }
+    }
+    return total
+}
+
+fun sumAllOverThree(numbers:List<Int>): Int {
+    var total = 0
+    for (number in numbers) {
+        if (number > 3) {
+            total += number
+        }
+    }
+    return total
+}
+
+/**
+ * TO-BE
+ */
+ val numbers: List<Int> = listOf(1, 2, 3, 4, 5, 6)
+
+fun sumByCondition(
+    numbers: List<Int>, condition: (Int) -> Boolean): Int {
+    var total = 0
+    for (number in numbers) {
+        if (condition(number)) {
+            total += number
+        }
+    }
+    return total
+}
+
+fun sumAll(numbers: List<Int>): Int {
+    return sumByCondition(numbers) { true }
+}
+
+fun sumAllEven(numbers: List<Int>): Int {
+    return sumByCondition(numbers) { it % 2 == 0 }
+}
+
+fun sumAllOverThree(numbers: List<Int>): Int {
+    return sumByCondition(numbers) { it > 3 }
+}
+```
