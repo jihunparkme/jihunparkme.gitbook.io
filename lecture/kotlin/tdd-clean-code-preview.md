@@ -2797,3 +2797,74 @@ people.asSequence()
 💡 큰 컬렉션에 대해서 연산을 연쇄시킬 때는 `시퀀스`를 사용하는 것을 규칙으로 삼자.
 
 💡 시퀀스 원소를` 인덱스`를 사용해 접근하는 등의 다른 API 메서드가 필요하다면 시퀀스를 `리스트로 반환`하자.
+
+**Example**
+
+**익명 클래스를 람다로 전환하기**
+
+```kotlin
+/**
+ * AS-IS
+ */
+interface MoveStrategy {
+    val isMovable: Boolean
+}
+
+data class Car(val name: String, val position: Int) {
+    fun move(moveStrategy:MoveStrategy): Car {
+        if (moveStrategy.isMovable) {
+            return copy(position = position + 1)
+        }
+        return this
+    }
+}
+
+@Test
+fun 이동() {
+    val car = Car("jason", 0)
+    val actual: Car = car.move(object : MoveStrategy {
+        override val isMovable: Boolean = true
+    })
+    assertEquals(Car("jason", 1), actual)
+}
+
+@Test
+fun 정지() {
+    val car = Car("jason", 0)
+    val actual: Car = car.move(object : MoveStrategy {
+        override val isMovable: Boolean = false
+    })
+    assertEquals(Car("jason", 0), actual)
+}
+
+/**
+ * TO-BE
+ */
+ // 람다 적용을 위해 함수형 인터페이스로 변경
+fun interface MoveStrategy {
+    fun isMovable(): Boolean
+}
+
+data class Car(val name: String, val position: Int) {
+    fun move(moveStrategy: MoveStrategy): Car {
+        if (moveStrategy.isMovable()) {
+            return copy(position = position + 1)
+        }
+        return this
+    }
+}
+
+@Test
+fun 이동() {
+    val car = Car("jason", 0)
+    val actual: Car = car.move { true }
+    assertEquals(Car("jason", 1), actual)
+}
+
+@Test
+fun 정지() {
+    val car = Car("jason", 0)
+    val actual: Car = car.move { false }
+    assertEquals(Car("jason", 0), actual)
+}
+```
