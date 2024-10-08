@@ -2944,7 +2944,7 @@ fun sumAllOverThree(numbers: List<Int>): Int {
 - 코틀린 코드를 원하는 대로 사용 가능
 
 **코틀린은 간결한 구문을 지원**
-- 확장 함수
+- 확장 함수(Extension functions)
 
     ```kotlin
     /**
@@ -2976,7 +2976,7 @@ fun sumAllOverThree(numbers: List<Int>): Int {
     }
     ```
 
-- 중위 호출
+- 중위 호출(Infix notation)
 
     ```kotlin
     @Test
@@ -2993,10 +2993,24 @@ fun sumAllOverThree(numbers: List<Int>): Int {
     }
     ```
 
-- 연산자 오버로딩
+- 연산자 오버로딩(Operator overloading)
 
-- get 메서드에 대한 관례
+    ```kotlin
+    @Test
+    fun `before`() {
+        data class Point(val x: Int, val y: Int) {
+            fun plus(other:Point): Point = Point(x + other.x, y + other.y)
+        }
 
-- 람다를 괄호 밖으로 빼내는 관례
+        assertEquals(Point(1, 3), Point(0, 1).plus(Point(1, 2)))
+    }
 
-- 수신 객체 지정 람다
+    @Test
+    fun `after`() {
+        data class Point(val x: Int, val y: Int) {
+            operator fun plus(other:Point): Point = Point(x + other.x, y + other.y)
+        }
+
+        assertEquals(Point(1, 3), Point(0, 1) + Point(1, 2))
+    }
+    ```
