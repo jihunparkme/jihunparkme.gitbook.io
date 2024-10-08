@@ -2978,6 +2978,21 @@ fun sumAllOverThree(numbers: List<Int>): Int {
 
 - 중위 호출
 
+    ```kotlin
+    @Test
+    fun `before`() {
+        fun Any.to(other:Any) = Pair(this, other)
+        assertEquals(Pair(1, "one"), 1.to("one"))
+    }
+
+    @Test
+    fun `after`() {
+        infix fun Any.to(other:Any) = Pair(this, other)
+        assertEquals(Pair(1, "one"), 1 to "one")
+
+    }
+    ```
+
 - 연산자 오버로딩
 
 - get 메서드에 대한 관례
