@@ -2943,3 +2943,45 @@ fun sumAllOverThree(numbers: List<Int>): Int {
 - 타입 안전성을 보장
 - 코틀린 코드를 원하는 대로 사용 가능
 
+**코틀린은 간결한 구문을 지원**
+- 확장 함수
+
+    ```kotlin
+    /**
+     * AS-IS
+     */
+    object StringUtils {
+        fun lastChar(s:String): Char {
+            return s.get(s.length - 1)
+        }
+    }
+
+    @Test
+    fun `before`() {
+        assertEquals('n', StringUtils.lastChar("Kotlin"))
+    }
+
+    ...
+    
+    /**
+     * TO-BE
+     */
+    @Test
+    fun `after`() {
+        // fun String.lastChar(): Char = this.get(this.length - 1)
+        fun String.lastChar(): Char {
+            return this.get(this.length - 1)
+        }
+        assertEquals('n', "Kotlin".lastChar())
+    }
+    ```
+
+- 중위 호출
+
+- 연산자 오버로딩
+
+- get 메서드에 대한 관례
+
+- 람다를 괄호 밖으로 빼내는 관례
+
+- 수신 객체 지정 람다
