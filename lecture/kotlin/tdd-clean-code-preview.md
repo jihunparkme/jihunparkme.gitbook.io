@@ -3041,4 +3041,24 @@ fun sumAllOverThree(numbers: List<Int>): Int {
     }
     ```
 
-- 수신 객체 지정 람다
+- 수신 객체 지정 람다(Lambda with receiver)
+
+    ```kotlin
+    @Test
+    fun `before`() {
+        val sb = StringBuilder()
+        sb.append("Yes")
+        sb.append("No")
+        assertEquals("YesNo", sb.toString())
+    }
+
+    @Test
+    fun `after`() {
+        val sb = StringBuilder()
+        sb.apply {
+            this.append("Yes")
+            append("No")
+        }
+        assertEquals("YesNo", sb.toString())
+    }
+    ```
