@@ -3014,3 +3014,15 @@ fun sumAllOverThree(numbers: List<Int>): Int {
         assertEquals(Point(1, 3), Point(0, 1) + Point(1, 2))
     }
     ```
+
+- get 메서드에 대한 관례(Indexed access operator)
+
+    ```kotlin
+    val names = listOf("Aaron", "Park")
+    assertEquals("Aaron", names.get(0))
+    assertEquals("Aaron", names[0])
+    ```
+
+- 람다를 괄호 밖으로 빼내는 관례(Passing a lambda to the last parameter)
+
+- 수신 객체 지정 람다
