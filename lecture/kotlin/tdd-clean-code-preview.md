@@ -3025,4 +3025,20 @@ fun sumAllOverThree(numbers: List<Int>): Int {
 
 - 람다를 괄호 밖으로 빼내는 관례(Passing a lambda to the last parameter)
 
+    ```kotlin
+    @Test
+    fun `before`() {
+        assertThrows<IllegalStateException> {
+            check(false, { -> "Check failed." })
+        }
+    }
+
+    @Test
+    fun `after`() {
+        assertThrows<IllegalStateException> {
+            check(false) { "Check failed." }
+        }
+    }
+    ```
+
 - 수신 객체 지정 람다
