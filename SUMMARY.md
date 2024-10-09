@@ -55,10 +55,10 @@
 ## Book
 
 * [Kotlin in Action](book/kotlin-in-action/README.md)
-  * [Begin Kotlin](book/kotlin-in-action/begin-kotlin.md)
-  * [Kotlin Step01](book/kotlin-in-action/kotlin-step01.md)
-  * [Kotlin Step02](book/kotlin-in-action/kotlin-step02.md)
-  * [Kotlin Step03](book/kotlin-in-action/kotlin-step03.md)
+  * [함수/클래스/객체/인터페이스](book/kotlin-in-action/begin-kotlin.md)
+  * [람다와 타입](book/kotlin-in-action/kotlin-step01.md)
+  * [오버로딩과 고차 함수](book/kotlin-in-action/kotlin-step02.md)
+  * [제네릭스, 애노테이션, 리플렉션](book/kotlin-in-action/kotlin-step03.md)
 * [Kent Beck Tidy First?](book/kent-beck-tidy-first.md)
 * [대규모 시스템 설계 기초](book/system-design-interview/README.md)
   * [01.사용자 수에 따른 규모 확장성](book/system-design-interview/01.md)
