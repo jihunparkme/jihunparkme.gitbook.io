@@ -3062,3 +3062,125 @@ fun sumAllOverThree(numbers: List<Int>): Int {
         assertEquals("YesNo", sb.toString())
     }
     ```
+
+**코틀린 DSL 실습**
+
+```kotlin
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class DslTest {
+
+    /**
+     * block : PersonBuilder 내부의 함수들을 호출하여 Person 객체의 속성을 설정하는 데 사용
+     * apply : 수신 객체(PersonBuilder)에 대해 block 에서 정의된 설정을 적용
+     *   - 즉, block 은 PersonBuilder 의 컨텍스트에서 실행
+     */
+    fun introduce(block:PersonBuilder.() ->Unit): Person {
+        return PersonBuilder().apply(block).build()
+    }
+
+    class PersonBuilder {
+        private lateinit var name: String
+        private var company: String? = null
+        private var skills = mutableListOf<Skill>()
+        private var languages = mutableMapOf<String, Int>()
+
+        fun name(value:String) {
+            name = value
+        }
+
+        fun company(value:String) {
+            company = value
+        }
+
+        fun skills(block: Skills.() -> Unit) {
+            skills.addAll(Skills().apply(block).skills)
+        }
+
+        fun languages(block: Languages.() -> Unit) {
+            languages.putAll(Languages().apply(block).languages)
+        }
+
+        fun build(): Person {
+            return Person(name, company, skills, languages)
+        }
+    }
+
+    data class Person(val name: String, var company: String?, var skills: List<Skill>, var languages: Map<String, Int>)
+
+    class Skills {
+        val skills = mutableListOf<Skill>()
+
+        fun soft(description: String) {
+            skills.add(Skill("Soft", description))
+        }
+
+        fun hard(description: String) {
+            skills.add(Skill("Hard", description))
+        }
+    }
+
+    class Skill(val type: String, val description: String)
+
+    class Languages {
+        val languages = mutableMapOf<String, Int>()
+
+        infix fun String.level(level: Int) {
+            languages[this] = level
+        }
+    }
+
+    @ValueSource(strings = ["aaron", "kko"])
+    @ParameterizedTest
+    fun introduce(value:String) {
+        val person = introduce {
+            name(value)
+        }
+        assertEquals(person.name, value)
+        assertEquals(person.company, null)
+    }
+
+    @Test
+    fun company() {
+        val person = introduce {
+            name("aaron")
+            company("kko")
+        }
+        assertEquals(person.name, "aaron")
+        assertEquals(person.company, "kko")
+    }
+
+    @Test
+    fun dslTest() {
+        val introduction = introduce {
+            name("aaron")
+            company("kko")
+            skills {
+                soft("A passion for problem solving")
+                soft("Good communication skills")
+                hard("Kotlin")
+            }
+            languages {
+                "Korean" level 5
+                "English" level 3
+            }
+        }
+
+        assertEquals("aaron", introduction.name)
+        assertEquals("kko", introduction.company)
+
+        assertEquals(3, introduction.skills.size)
+        assertEquals("Soft", introduction.skills[0].type)
+        assertEquals("A passion for problem solving", introduction.skills[0].description)
+        assertEquals("Hard", introduction.skills[2].type)
+        assertEquals("Kotlin", introduction.skills[2].description)
+
+        assertEquals(2, introduction.languages.size)
+        assertEquals(5, introduction.languages["Korean"])
+        assertEquals(3, introduction.languages["English"])
+    }
+}
+```
