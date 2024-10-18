@@ -252,5 +252,52 @@ class Task(val name: String, _priority: Int = DEFAULT_PRIORITY) {
     private fun validPriority(p: Int) =
         p.coerceIn(MIN_PRIORITY, MAX_PRIORITY)
 }
+
+...
+
+@Test
+fun `test task creation with default priority`() {
+    val task = Task("Default Task")
+    assertEquals(3, task.priority)
+}
+
+@Test
+fun `test task creation with valid priority`() {
+    val task = Task("Priority Task", 4)
+    assertEquals(4, task.priority)
+}
+
+@Test
+fun `test task creation with priority below minimum`() {
+    val task = Task("Low Priority Task", 0)
+    assertEquals(1, task.priority)
+}
+
+@Test
+fun `test task creation with priority above maximum`() {
+    val task = Task("High Priority Task", 6)
+    assertEquals(5, task.priority)
+}
+
+@Test
+fun `test priority update within range`() {
+    val task = Task("Update Priority Task", 2)
+    task.priority = 5
+    assertEquals(5, task.priority)
+}
+
+@Test
+fun `test priority update above maximum`() {
+    val task = Task("Update Priority Task", 2)
+    task.priority = 10
+    assertEquals(5, task.priority)
+}
+
+@Test
+fun `test priority update below minimum`() {
+    val task = Task("Update Priority Task", 4)
+    task.priority = -1
+    assertEquals(1, task.priority)
+}
 ```
 
