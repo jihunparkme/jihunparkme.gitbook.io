@@ -221,3 +221,36 @@ fun `destructuring a Pair`() {
 세 개의 값을 나타내는 Triple이라는 이름의 클래스도 코틀린 표준 라이브러리에 들어 있다.
 
 {% endhint %}
+
+## const와 val의 차이
+
+> 런타임보다 컴파일 타임에 변수가 상수임을 나타내야 한다
+
+컴파일 타임 상수에 const 변경자를 사용하자.
+- val 키워드는 변수에 한 번 할당되면 변경이 불가능함을 나타내지만 이러한 할당은 실행 시간에 일어난다.
+
+👉🏻 **컴파일 타임 상수 정의하기**
+- const가 val 키워드를 대체하는 것이 아니라 **반드시 같이 쓰여야 한다.**
+
+```kotlin
+class Task(val name: String, _priority: Int = DEFAULT_PRIORITY) {
+
+    companion object {
+        // 컴파일 타임 상수
+        const val MIN_PRIORITY = 1
+        const val MAX_PRIORITY = 5
+        const val DEFAULT_PRIORITY = 3
+    }
+
+    // 사용자 정의 설정자(setter)를 사용하는 속성
+    var priority = validPriority(_priority)
+        set(value) {
+            field = validPriority(value)
+        }
+
+    // private 검증 함수
+    private fun validPriority(p: Int) =
+        p.coerceIn(MIN_PRIORITY, MAX_PRIORITY)
+}
+```
+
