@@ -256,48 +256,101 @@ class Task(val name: String, _priority: Int = DEFAULT_PRIORITY) {
 ...
 
 @Test
-fun `test task creation with default priority`() {
-    val task = Task("Default Task")
+fun `priority range`() {
+    var task = Task("Default Task")
     assertEquals(3, task.priority)
-}
 
-@Test
-fun `test task creation with valid priority`() {
-    val task = Task("Priority Task", 4)
+    task = Task("Priority Task", 4)
     assertEquals(4, task.priority)
-}
 
-@Test
-fun `test task creation with priority below minimum`() {
-    val task = Task("Low Priority Task", 0)
+    task = Task("Low Priority Task", 0)
     assertEquals(1, task.priority)
-}
 
-@Test
-fun `test task creation with priority above maximum`() {
-    val task = Task("High Priority Task", 6)
+    task = Task("High Priority Task", 6)
     assertEquals(5, task.priority)
-}
 
-@Test
-fun `test priority update within range`() {
-    val task = Task("Update Priority Task", 2)
+    task = Task("Update Priority Task", 2)
     task.priority = 5
     assertEquals(5, task.priority)
-}
 
-@Test
-fun `test priority update above maximum`() {
-    val task = Task("Update Priority Task", 2)
+    task = Task("Update Priority Task", 2)
     task.priority = 10
     assertEquals(5, task.priority)
-}
 
-@Test
-fun `test priority update below minimum`() {
-    val task = Task("Update Priority Task", 4)
+    task = Task("Update Priority Task", 4)
     task.priority = -1
     assertEquals(1, task.priority)
 }
 ```
 
+## 사용자 정의 획득자와 설정자 생성하기
+
+> 코틀린은 모든 것이 기본적으로 public 이다.
+>
+> 데이터 은닉 원칙을 침해하는 딜레마를 클래스에서 필드는 직접 선언할 수 없도록 하는 방법으로 해결하였다.
+
+👉🏻 **사용자 정의 획득자와 설정자**
+
+속성 정의 문법
+
+```kotlin
+var <propertyName>[: <PropertyType> [= <property_initializer>]
+    [<getter>]
+    [<setter>]
+```
+
+```kotlin
+class Task(val name: String) {
+    // 사용자 정의 설정자
+    var priority = 3
+        set(value) {
+            field = value.coerceIn(1..5)
+        }
+
+    // 파생 속성을 위한 사용자 정의 획득자
+    val lowPriority
+        get() = priority < 3
+}
+
+...
+
+class Task(val name: String) {
+    // 사용자 정의 설정자
+    var priority = 3
+        set(value) {
+            field = value.coerceIn(1..5)
+        }
+
+    // 파생 속성을 위한 사용자 정의 획득자
+    val lowPriority
+        get() = priority < 3
+}
+
+@Test
+fun `create task instance using apply`() {
+    val task = Task("Default Task").apply { priority = 4 }
+    assertEquals(4, task.priority)
+}
+
+@Test
+fun `create task instance using setter`() {
+    val task = Task("Valid Priority Task")
+    task.priority = 4
+    assertEquals(4, task.priority)
+}
+
+@Test
+fun `priority range`() {
+    val task = Task("Default Task").apply { priority = 2 }
+    assertEquals(2, task.priority)
+    assertTrue(task.lowPriority)
+
+    task.priority = 6
+    assertEquals(5, task.priority)
+    assertFalse(task.lowPriority)
+
+    task.priority = 0
+    assertEquals(1, task.priority)
+    assertTrue(task.lowPriority)
+}
+```
