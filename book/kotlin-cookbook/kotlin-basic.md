@@ -59,6 +59,8 @@ val middleNameLength = p.middle?.length ?: 0
 val p1 = p as? Person
 ```
 
+---
+
 ## 명시적 타입 변환
 
 > 코틀린은 자동으로 기본 타입을 더 넓은 타입으로 승격하지 않는다. Int -> Long (X)
@@ -84,6 +86,8 @@ val longSum = 3L + intVar
 - toLong(): Long
 - toFloat(): Float
 - toDouble(): Double
+
+---
 
 ## 중위(infix) 함수
 
@@ -146,6 +150,8 @@ fun `raise to pwoer`() {
     )
 }
 ```
+
+---
 
 ## Pair 인스턴스
 
@@ -222,6 +228,8 @@ fun `destructuring a Pair`() {
 
 {% endhint %}
 
+---
+
 ## const와 val의 차이
 
 > 런타임보다 컴파일 타임에 변수가 상수임을 나타내야 한다
@@ -282,6 +290,8 @@ fun `priority range`() {
     assertEquals(1, task.priority)
 }
 ```
+
+---
 
 ## 사용자 정의 획득자와 설정자 생성하기
 
@@ -354,6 +364,8 @@ fun `priority range`() {
     assertTrue(task.lowPriority)
 }
 ```
+
+---
 
 ## 데이터 클래스 정의하기
 
@@ -457,3 +469,6 @@ fun `destructure using component functions`() {
 - 코틀린 표준 라이브러리에는 2-3개의 제네릭 타입 속성을 담는 Pair, Triple 이라는 데이터 클래스가 존재
 
 {% endhint %}
+
+---
+
