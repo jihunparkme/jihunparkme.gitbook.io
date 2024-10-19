@@ -472,3 +472,59 @@ fun `destructure using component functions`() {
 
 ---
 
+## 지원 속성 기법
+
+> 클래스의 속성을 클라이언트에게 노출하고 싶지만, 해당 속성을 초기화하거나 읽는 방법을 제어하고 싶다면
+>
+> 같은 타입의 속성을 하나 더 정의하고 사용자 정의 획득자와 설정자를 이용해 원하는 속성에 접근하자.
+
+👉🏻 **생성 즉시 초기화되지 않도록 message 속성과 같은 타입의 널 허용 _message 속성을 추가**
+
+```kotlin
+class Customer(val name: String) {
+    private var _messages: List<String>? = null // null 허용 private 속성 초기화
+
+    val messages: List<String> // 불러올 속성
+        get() { // private 함수
+            if (_messages == null) {
+                _messages = loadMessages()
+            }
+            return _messages!!
+        }
+
+    private fun loadMessages(): MutableList<String> =
+        mutableListOf(
+            "Initial contact",
+            "Convinced them to use Kotlin",
+            "Sold training class. Sweet."
+        ).also { println("Loaded messages") }
+}
+
+@Test
+fun `지연 로딩의 어려운 버전`() {
+    // messages 를 처음 로딩(messages 를 바로 불러오려면 apply 함수를 사용)
+    val customer = Customer("Fred").apply { messages }
+    assertEquals(3, customer.messages.size) // messages 에 다시 접근
+}
+```
+
+👉🏻 **lazy 대리자 함수로 쉽게 지연로딩을 구현**
+
+```kotlin
+class Customer(val name: String) {
+    val messages: List<String> by lazy { loadMessages() }
+
+    private fun loadMessages(): MutableList<String> =
+        mutableListOf(
+            "Initial contact",
+            "Convinced them to use Kotlin",
+            "Sold training class. Sweet."
+        ).also { println("Loaded messages") }
+}
+
+@Test
+fun `lazy 대리자를 사용한 지연 로딩`() {
+    val customer = Customer("Fred")
+    assertEquals(3, customer.messages.size)
+}
+```
