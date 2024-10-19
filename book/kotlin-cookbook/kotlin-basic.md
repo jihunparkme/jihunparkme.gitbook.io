@@ -354,3 +354,106 @@ fun `priority range`() {
     assertTrue(task.lowPriority)
 }
 ```
+
+## 데이터 클래스 정의하기
+
+> 클래스를 정의할 때 data 키워드로 `equals`, `hashCode`, `toString` 등을 갖춘 엔티티를 나타낼 수 있다.
+
+코틀린은 데이터를 담는 특정 클래스의 용도로 나타내기 위해 `data` 키워드를 제공한다.
+
+```kotlin
+data class Product(
+    val name: String,
+    var price: Double,
+    var onSale: Boolean = false
+)
+```
+
+.
+
+data 키워드로 생성되는 함수들..
+
+👉🏻 **주 생성자에 선언된 속성 바탕으로 생성되는 `equals`, `hashCode` 함수**
+  
+    ```kotlin
+    @Test
+    fun `check equivalence`() {
+        val p1 = Product("baseball", 10.0)
+        val p2 = Product("baseball", 10.0, false)
+
+        assertEquals(p1, p2)
+        assertEquals(p1.hashCode(), p2.hashCode())
+    }
+
+    @Test
+    fun `create set to check equals and hashcode`() {
+        val p1 = Product("baseball", 10.0)
+        val p2 = Product(price = 10.0, onSale = false, name = "baseball")
+
+        val products = setOf(p1, p2)
+        assertEquals(1, products.size)
+    }
+    ```
+
+👉🏻 **클래스의 속성 값을 보여주는 `toString` 함수**
+
+👉🏻 **`copy` 함수**
+- 원본과 같은 속성 값으로 시작해서 copy 함수에 제공된 **속성 값만을 변경해 새로운 객체를 생성**하는 인스턴스 메소드
+
+```kotlin
+@Test
+fun `change price using copy`() {
+    val p1 = Product("baseball", 10.0)
+    val p2 = p1.copy(price = 12.0)
+    assertAll(
+        { assertEquals("baseball", p2.name) },
+        { assertEquals(p2.price, 12.0) },
+        { assertFalse(p2.onSale) },
+    )
+}
+```
+
+- copy 함수는 **얕은 복사를 수행**
+
+```kotlin
+data class OrderItem(val product: Product, val quantity: Int)
+
+@Test
+fun `data copy function is shallow`() {
+    val item1 = OrderItem(Product("baseball", 10.0), 5)
+    val item2 = item1.copy()
+
+    assertAll(
+        { assertTrue(item1 == item2) }, // OrderItem 인스턴스는 동등
+        { assertFalse(item1 === item2) }, // copy 함수로 생성한 OrderItem 은 다른 객체
+        { assertTrue(item1.product == item2.product) }, // 같은 내부 Product 인스턴스를 공유
+        { assertTrue(item1.product === item2.product) } // 두 OrderItem 인스턴스에 있는 Product 는 같은 객체
+    )
+}
+```
+
+**👉🏻 구조 분해를 위한 `component` 함수**
+
+```kotlin
+@Test
+fun `destructure using component functions`() {
+    val p = Product("baseball", 10.0)
+
+    val (name, price, sale) = p // product 구조 분해
+    assertAll(
+        { assertEquals(p.name, name) },
+        { assertEquals(p.price, price) },
+        { assertFalse(sale) }
+    )
+}
+```
+
+{% hint style="info" %}
+
+**참고**
+
+- 원할 경우 equals, hashCode, toString, copy, \_componentN\_ 함수를 자유롭게 재정의 가능
+- 데이터 클래스는 기본적으로 데이터가 담긴 클래스를 손쉽게 표현
+- 코틀린 표준 라이브러리에는 2-3개의 제네릭 타입 속성을 담는 Pair, Triple 이라는 데이터 클래스가 존재
+
+{% endhint %}
