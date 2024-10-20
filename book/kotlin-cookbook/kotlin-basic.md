@@ -1,5 +1,12 @@
 # Kotlin Basic 
 
+사용 라이브러리
+
+```groovy
+testImplementation("org.assertj:assertj-core:3.26.3")
+testImplementation("org.hamcrest:hamcrest:2.2")
+```
+
 ## Null 허용 타입
 
 > 변수가 null 값을 갖지 못하게 하려면
@@ -549,5 +556,63 @@ operator fun Point.unaryMinus() = Point(-x, -y)
 fun `Point의 unaryMinus 연산자 재정의`() {
     val point = Point(10, 20)
     assertEquals(Point(-10, -20), -point)
+}
+```
+
+.
+
+👉🏻 **확장 함수**
+
+자신이 작성하지 않은 클래스에 연산과 관련 함수를 추가하고 싶다면 확장 함수를 사용할 수 있다.
+- Complex 클래스의 이와 같은 기존 함수에 연산을 위임하는 확장 함수
+
+```kotlin
+implementation("org.apache.commons:commons-math3:3.6.1")
+```
+
+```kotlin
+import org.apache.commons.math3.complex.Complex
+
+internal class ComplexOverloadOperatorsKtTest {
+
+    operator fun Complex.plus(c: Complex) = this.add(c)
+    operator fun Complex.plus(d: Double) = this.add(d)
+    operator fun Complex.minus(c: Complex) = this.subtract(c)
+    operator fun Complex.minus(d: Double) = this.subtract(d)
+    operator fun Complex.div(c: Complex) = this.divide(c)
+    operator fun Complex.div(d: Double) = this.divide(d)
+    operator fun Complex.times(c: Complex) = this.multiply(c)
+    operator fun Complex.times(d: Double) = this.multiply(d)
+    operator fun Complex.times(i: Int) = this.multiply(i)
+    operator fun Double.times(c: Complex) = c.multiply(this)
+    operator fun Complex.unaryMinus() = this.negate()
+
+    private val first  = Complex(1.0, 3.0)
+    private val second = Complex(2.0, 5.0)
+
+    @Test
+    internal fun plus() {
+        val sum = first + second
+        assertEquals(sum, Complex(3.0, 8.0))
+    }
+
+    @Test
+    internal fun minus() {
+        val diff = second - first
+        assertEquals(diff, Complex(1.0, 2.0))
+    }
+
+    @Test
+    internal fun negate() {
+        val minus1 = -Complex.ONE
+        assertThat(minus1.real).isCloseTo(-1.0, offset(0.000001))
+        assertThat(minus1.imaginary).isCloseTo(0.0, offset(0.000001))
+    }
+
+    @Test
+    internal fun `Euler's formula`() {
+        val iPI = Complex.I * FastMath.PI
+        assertTrue(Complex.equals(iPI.exp(), -Complex.ONE, 0.00001))
+    }
 }
 ```
