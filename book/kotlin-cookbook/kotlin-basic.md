@@ -616,3 +616,97 @@ internal class ComplexOverloadOperatorsKtTest {
     }
 }
 ```
+
+## 지연 초기화 lateinit
+
+> 널 비허용으로 선언된 클래스 속성은 생성자에서 초기화되어야 하지만, 속성에 할당할 값의 정보가 충분하지 않다면
+>
+> 나중 초기화를 위해 `lateinit`을 사용할 수 있다.
+>
+> 단, 의존성 주입의 경우 유용하지만, 일반적으로는 지연 평가 같은 대안을 권장
+
+👉🏻 **스프링 컨트롤러 테스트**
+
+```kotlin
+@SpringBootTest(WebEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class OfficerControllerTests {
+    @Autowired // autowiring 에 의한 초기화
+    lateinit var client: WebTestClient 
+
+    @Autowired // autowiring 에 의한 초기화
+    lateinit var repository: OfficerRepository
+
+    @Before
+    fun setUp() {
+        repository.addTestData()
+    }
+
+    @Test
+    fun `GET to route returns all offices in db`() {
+        client.get().uri("route")
+            ...
+    }
+    
+    ...
+}
+```
+
+.
+
+`lateinit` 변경자는 클래스 몸체에서만 선언되고 사용자 정의 획득자와 설정자가 없는 var 속성에서만 사용할 수 있다.
+- lateinit 사용 가능한 속성 타입은 널 할당이 불가능한 타입
+  - 기본 타입에는 lateinit 사용 불가
+- lateinit 추가 시 해당 변수가 처음 사용되기 전에 초기화 가능
+  - 사용 전 초기화에 실패하면 예외 발생
+
+👉🏻 **lateinit 속성 동작 방식**
+
+```kotlin
+class LateInitDemo {
+    lateinit var name: String
+
+    fun initializeName() {
+        println("Before assignment: ${::name.isInitialized}")
+        name = "World"
+        println("After assignment: ${::name.isInitialized}")
+    }
+}
+
+...
+
+internal class LateInitDemoTest {
+
+    @Test
+    internal fun `초기화 전에 속성 접근 시 예외 발생`() {
+        assertThrows<UninitializedPropertyAccessException> {
+            LateInitDemo().name
+        }
+    }
+
+    @Test
+    internal fun `초기화 후 속성 접근`() {
+        assertDoesNotThrow { LateInitDemo().apply { name = "Dolly" } }
+    }
+
+    @Test
+    fun `속성 레퍼런스에 isInitialized 사용`() {
+        // Before assignment: false
+        // After assignment: true
+        LateInitDemo().initializeName()
+    }
+}
+```
+
+{% hint style="info" %}
+
+**lateinit, lazy 차이**
+
+`lateinit` 변경자는 var 속성에 사용되고, `lazy` 대리자는 속성에 처음 접근할 때 평가되는 람다를 받는다.
+
+초기화 비용은 높은데 lazy를 사용한다면 초기화는 반드시 실패한다.
+- 또한, `lazy`는 val 속성에 사용할 수 있는 반면, `lateinit`은 var 속성에만 적용 가능
+
+`lateinit` 속성은 속성에 접근할 수 있는 모든 곳에서 초기화 가능
+- 객체 바깥쪽에서도 초기화 가능
+
+{% endhint %}
