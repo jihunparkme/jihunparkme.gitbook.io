@@ -528,3 +528,26 @@ fun `lazy 대리자를 사용한 지연 로딩`() {
     assertEquals(3, customer.messages.size)
 }
 ```
+
+---
+
+## 연산자 중복(Overloading)
+
+> 코틀린의 연산자 중복(overloading) 매커니즘을 사용해서 +, * 등의 연산자와 연관된 함수를 구현할 수 있다.
+
+👉🏻 **함수 재정의**
+
+많은 연산자가 코틀린에서 함수로 구현되어 있고, 기호를 사용하면 해당 연산자와 연관된 함수에 처리를 위임
+- 모든 연산자 함수 재정의 시 `operator` 키워드는 필수(equals 제외)
+
+```kotlin
+data class Point(val x: Int, val y: Int)
+
+operator fun Point.unaryMinus() = Point(-x, -y)
+
+@Test
+fun `Point의 unaryMinus 연산자 재정의`() {
+    val point = Point(10, 20)
+    assertEquals(Point(-10, -20), -point)
+}
+```
