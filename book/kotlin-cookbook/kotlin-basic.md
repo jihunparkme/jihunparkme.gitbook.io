@@ -754,3 +754,20 @@ override fun equals(other: Any?): Boolean {
 // 완벽한 동작을 위한 hashCode 구현
 override fun hashCode(): Int = version
 ```
+
+.
+
+👉🏻 **equals, hashCode 구현해 보기**
+
+```kotlin
+class Customer(val name: String) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        val otherCustomer = (other as? Customer) ?: return false
+        return this.name == otherCustomer.name
+    }
+
+    override fun hashCode(): Int = name.hashCode()
+}
+```
