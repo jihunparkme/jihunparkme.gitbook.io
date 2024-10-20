@@ -515,6 +515,8 @@ fun `지연 로딩의 어려운 버전`() {
 }
 ```
 
+.
+
 👉🏻 **lazy 대리자 함수로 쉽게 지연로딩을 구현**
 
 ```kotlin
@@ -617,6 +619,8 @@ internal class ComplexOverloadOperatorsKtTest {
 }
 ```
 
+---
+
 ## 지연 초기화 lateinit
 
 > 널 비허용으로 선언된 클래스 속성은 생성자에서 초기화되어야 하지만, 속성에 할당할 값의 정보가 충분하지 않다면
@@ -710,3 +714,43 @@ internal class LateInitDemoTest {
 - 객체 바깥쪽에서도 초기화 가능
 
 {% endhint %}
+
+---
+
+## equals 메소드 구현
+
+> 논리적으로 동등한 인스턴스인지 확인 가능한 equals 재정의를 위해 
+>
+> 레퍼런스 동등 연산자(`==`), 안전 타입 변환 함수(`as?`), 엘비스 연산자(`?:`)를 다 같이 사용
+
+👉🏻 **Any class**
+
+```kotlin
+open class Any {
+    open operator fun equals(other: Any?): Boolean
+    open fun hashCode(): Int
+    open fun toString(): String
+}
+```
+
+equals 문법에서 equalsa 구현은 반사성(reflexive), 대칭성(symmetirc), 추이성(transitive), 일관성(consistent)이 있어야 하고, 널도 적절하게 처리할 수 있어야 한다.
+
+.
+
+👉🏻 **equals 구현의 좋은 예 (KotlinVersion 클래스의 equals)**
+- equals 함수가 재정의되면 hashCode 함수도 재정의
+
+```kotlin
+override fun equals(other: Any?): Boolean {
+    // 레퍼런스 동등성 확인
+    if (this === other) return true
+    // 인자를 변환하거나 널을 리턴하는 안전 타입 변환 연산자(as?) 사용
+    // 엘비스 연산자(?:)로 널 체크 및 동등성 확인
+    val otherVersion = (other as? KotlinVersion) ?: return false
+    // 인스턴스의 속성 비교
+    return this.version == otherVersion.version
+}
+
+// 완벽한 동작을 위한 hashCode 구현
+override fun hashCode(): Int = version
+```
