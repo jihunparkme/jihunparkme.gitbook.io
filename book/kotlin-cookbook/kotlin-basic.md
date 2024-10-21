@@ -771,3 +771,71 @@ class Customer(val name: String) {
     override fun hashCode(): Int = name.hashCode()
 }
 ```
+
+---
+
+## 싱글톤 생성하기
+
+> 클래스 하나당 인스턴스를 하나만 만드려면 class 대신 object 키워드를 사용하자.
+
+싱글톤 디자인 패턴은 특정 클래스의 인스턴스를 오직 하나만 존재하도록 메커니즘을 정의
+- 클래스의 모든 생성자를 private 로 정의
+- 필요하다면 해당 클래스를 인스턴스화하고 그 인스턴스 레퍼런스를 리턴하는 정적 팩토리 메소드를 제공
+
+👉🏻 **코틀린에서 싱글톤 선언**
+
+```kotlin
+object MySingleton {
+    val myProperty = 3
+
+    fun myFunction() = "Hello"
+}
+```
+
+👉🏻 **싱글톤을 위해 object를 디컴파일한 코드**
+
+```kotlin
+public final class MySingleton {
+   @NotNull
+   public static final MySingleton INSTANCE = new MySingleton(); // INSTANCE 속성 생성
+   private static final int myProperty = 3;
+
+   private MySingleton() { // private 생성자
+   }
+
+   public final int getMyProperty() {
+      return myProperty;
+   }
+
+   @NotNull
+   public final String myFunction() {
+      return "Hello";
+   }
+
+   static {
+
+   }
+}
+
+...
+
+@Test
+fun `코틀린에서 싱글톤 멤버에 접근하기`() {
+    MySingleton.myFunction()
+    MySingleton.myProperty
+}
+
+@Test
+fun `자바에서 싱글톤 멤버에 접근하기`() {
+    MySingleton.INSTANCE.myFunction();
+    KParameter.Kind.INSTANCE.myProperty();
+}
+```
+
+{% hint style="info" %}
+
+**코틀린 object와 인자 전달**
+
+코틀린 object는 생성자를 가질 수 없기 때문에 쉽게 인자를 전달할 수 있는 방법이 없다.
+
+{% endhint %}
