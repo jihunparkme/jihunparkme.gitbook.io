@@ -839,3 +839,36 @@ fun `자바에서 싱글톤 멤버에 접근하기`() {
 코틀린 object는 생성자를 가질 수 없기 때문에 쉽게 인자를 전달할 수 있는 방법이 없다.
 
 {% endhint %}
+
+---
+
+## Nothing에 관한 야단법석
+
+> 코틀린의 Nothing 클래스
+
+```kotlin
+public class Nothing private constructor()
+```
+- Nothing의 인스턴스는 존재하지 않는다.
+- 결코 존재할 수 없는 값을 나타내기 위해 Nothing을 사용할 수 있다.
+
+.
+
+Nothing 클래스는 아래 두 가지 상황에서 사용될 수 있다
+
+👉🏻 **코틀린에서 예외 던지기**
+
+```kotlin
+fun doNothing(): Nothing = throw Exception("Nothing at all")
+```
+
+- 리턴 타입을 반드시 명시해야 하지만 리턴하지 않으므로 리턴 타입은 Nothing
+
+👉🏻 **변수에 널을 할당할 때 구체적인 타입을 명시하지 않는 경우**
+
+```kotlin
+val x = null
+```
+
+- x에 대한 다른 정보가 없으므로 추론된 x의 타입은 `Nothing?`
+- 코틀린에서 Nothing 클래스는 실제로 다른 모든 타입의 하위 타입
