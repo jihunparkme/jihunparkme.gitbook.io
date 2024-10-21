@@ -872,3 +872,77 @@ val x = null
 
 - x에 대한 다른 정보가 없으므로 추론된 x의 타입은 `Nothing?`
 - 코틀린에서 Nothing 클래스는 실제로 다른 모든 타입의 하위 타입
+
+# 함수형 프로그래밍
+
+## 알고리즘에서 fold 사용하기
+
+> fold 함수를 사용해 시퀀스나 컬렉션을 하나의 값으로 축약할 수 있다.
+
+fold 함수는 배열 또는 반복 가능한 컬렉션에 적용할 수 있는 `축약 연산`
+
+```kotlin
+inline fun <R> Iterable<T>.fold(
+    initial: R,
+    operation: (acc: R, T) -> R
+): R
+```
+
+- fold는 두 개의 인자를 받는다.
+  - 첫 번째는 누적자의 초기값
+  - 두 번째는 두 개의 인자를 받아 누적자를 위해 새로운 값을 리턴하는 함수
+
+👉🏻 **fold를 사용해 정수의 합 계산하기**
+
+```kotlin
+@Test
+fun `sum`() {
+    // 초기값은 0이고, 2개의 인자를 받는 람다 함수를 제공
+    fun sum(vararg nums: Int) =
+            nums.fold(0) { acc, n ->
+                println("acc = $acc, n = $n")
+                acc + n
+            }
+
+    /**
+     * acc = 0, n = 3
+     * acc = 3, n = 1
+     * acc = 4, n = 4
+     * acc = 8, n = 1
+     * acc = 9, n = 5
+     * acc = 14, n = 9
+     */
+    val numbers = intArrayOf(3, 1, 4, 1,5 , 9)
+    assertEquals(numbers.sum(), sum(*numbers))
+}
+```
+
+👉🏻 **fold를 사용해 팩토리얼 구현하기**
+
+```kotlin
+@Test
+fun `factorial`() {
+    fun factorialFold(n: Long): BigInteger =
+        when(n) {
+            0L, 1L -> BigInteger.ONE // n이 0 or 1 일 경우
+            else -> (2..n).fold(BigInteger.ONE) { acc, i ->
+                acc * BigInteger.valueOf(i)
+            }
+        }
+
+    assertEquals(BigInteger.valueOf(24), factorialFold(4))
+}
+```
+
+👉🏻 **fold를 사용해 피보나치 수 계산하기**
+
+```Kotlin
+@Test
+fun `fibonacci`() {
+    fun fibonacci(n: Long) =
+        (2 until n).fold(1 to 1) { (prev, curr), _ ->
+            curr to (prev + curr) }.second
+
+    assertEquals(55, fibonacci(10))
+}
+```
