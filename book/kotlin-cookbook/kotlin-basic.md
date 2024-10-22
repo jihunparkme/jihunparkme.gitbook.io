@@ -235,7 +235,7 @@ fun `destructuring a Pair`() {
 
 {% endhint %}
 
----
+# 객체 지향 프로그래밍
 
 ## const와 val의 차이
 
