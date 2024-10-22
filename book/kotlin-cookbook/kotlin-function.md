@@ -68,3 +68,32 @@ fun `valid indices`() {
 
 .
 
+일반적으로 배열을 순회할 때 표준 `for-in` 루프를 사용하지만 배열의 인덱스 값도 같이 사용하고 싶다면, `withIndex` 함수를 사용하자
+
+```kotlin
+fun <T> Array<out T>.withIndex(): Iterable<IndexedValue<T>>
+
+data class IndexedValue<out T>(public val index: Int, public val value: T)
+```
+
+👉🏻 **withindex를 사용해 배열 값이 접근하기**
+
+```kotlin
+@Test
+fun `withIndex returns IndexValues`() {
+    val strings = arrayOf("this", "is", "an", "array", "of", "strings")
+    /**
+        * Index 0 maps to this
+        * Index 1 maps to is
+        * Index 2 maps to an
+        * Index 3 maps to array
+        * Index 4 maps to of
+        * Index 5 maps to strings
+        *
+        */
+    for ((index, value ) in strings.withIndex()) {
+        println("Index $index maps to $value") // withIndex 호출
+        assertTrue(index in 0..5) // 각각의 인덱스와 값에 접근
+    }
+}
+```
