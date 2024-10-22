@@ -943,6 +943,51 @@ fun `fibonacci`() {
         (2 until n).fold(1 to 1) { (prev, curr), _ ->
             curr to (prev + curr) }.second
 
+    // 1, 1, 2, 3, 5, 8 ,13, 21, 34, 55
     assertEquals(55, fibonacci(10))
 }
 ```
+
+## reduce 함수를 사용해 축약하기
+
+> 비어 있지 않는 컬렉션의 값을 축약하고 싶지만 누적자의 초기값을 설정하고 싶지 안다면,
+>
+> fold 대신 reduce 연산을 사용
+
+reduce 함수는 fold 함수와 사용 목적도 같고 비슷하다.
+- 큰 차이점은 reduce 함수에는 누적자의 초기값 인자가 없는 것
+- 따라서 누적자의 초기값은 컬렉션의 첫 번째 값으로 초기화
+
+```kotlin
+inline fun <S, T : S> Iterable<T>.reduce(
+    operation: (acc: S, T) -> S
+): S
+```
+
+reduce 함수는 누적자를 컬렉션의 첫 번째 값으로 초기화할 수 있는 경우에만 사용 가능
+- 인자와 함께 함수가 호출되면 첫 번째 인자가 누적자로 초기화되며 다른 값들은 한 번에 하나씩 누적자에 더해진다.
+- 인자 없이 호출될 경우 예외를 던진다.
+
+```kotlin
+@Test
+fun `sum using reduce`() {
+    fun sumReduce(vararg nums: Int) =
+        nums.reduce {acc, i -> acc + i }
+
+    val numbers = intArrayOf(3, 1, 4, 1, 5 ,9)
+    assertAll(
+        { assertEquals(numbers.sum(), sumReduce(*numbers)) }, // Int 배열 검증
+        { assertThrows<UnsupportedOperationException> { // 인자가 없어서 예외 발생
+            sumReduce()
+        }
+    })
+}
+```
+
+{% hint style="info" %}
+
+**reduce 사용**
+
+컬렉션의 첫 번째 값으로 누적자를 초기화하고 컬렉션의 다른 값에 추가 연산을 필요로 하지 않는 경우에만 reduce를 사용하자.
+
+{% endhint %}
