@@ -285,3 +285,36 @@ fun productsNotOnSale() {
 코틀린도 Optional\<T\>를 지원하지만 ifEmpty 함수를 사용해 특정한 값을 리턴하는 방법이 더 사용하기 쉽다.
 
 {% endhint %}
+
+## 주어진 범위로 값 제한하기
+
+> 값이 주어졌을 때, 주어진 값이 특정 번위 안에 들면 해당 값을 리턴하고, 
+> 
+> 그렇지 않다면 범위의 최솟값 또는 최댓값을 리턴하려면
+>
+> kotlin.ranges의 `coerceIn` 함수를 범위 인자 또는 구체적인 최솟값, 최댓값과 함께 사용하자.
+
+👉🏻 **coerceIn 함수는 값이 범위 안에 있으면 해당 값을 리턴하고 그렇지 않다면 범위의 경계 값을 리턴**
+
+```kotlin
+@Test
+fun `coerceIn given a range`() {
+    val range = 3..8
+    assertEquals(5, 5.coerceIn(range))
+    assertEquals(range.start, 1.coerceIn(range))
+    assertEquals(range.endInclusive, 9.coerceIn(range))
+}
+```
+
+👉🏻 **원하는 최대/최솟값이 있다면 범위를 생성하지 않아도 된다.**
+
+```kotlin
+@Test
+fun `coerceIn given a range`() {
+    val min = 2
+    val max = 6
+    assertEquals(5, 5.coerceIn(min, max))
+    assertEquals(min, 1.coerceIn(min, max))
+    assertEquals(max, 9.coerceIn(min, max))
+}
+```
