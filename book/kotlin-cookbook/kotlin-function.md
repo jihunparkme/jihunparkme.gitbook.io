@@ -218,3 +218,70 @@ fun `associateWith`() {
     // {a=Aaaaa, b=Bbbbb, c=Ccccc, d=Ddddd, e=Eeeee, f=Fffff}
 }
 ```
+
+## 컬렉션이 빈 경우 기본값 리턴하기
+
+> 컬렉션이나 문자열이 비어 있는 경우 ifEmpty, ifBlank 함수를 사용해 기본값을 리턴하자.
+
+👉🏻 **기본값 테스트**
+
+```kotlin
+data class Product(
+    val name: String,
+    var price: Double,
+    var onSale: Boolean = false,
+)
+
+// 판매 중인 상품 이름 얻기
+fun sameOfProductsOnSale(products: List<Product>) =
+    products.filter { it.onSale }
+        .map { it.name }
+        .joinToString(separator = ", ")
+
+// 빈 컬렉션에 기본 리스트 제공
+fun onSaleProductsIfEmptyCollection(products: List<Product>) =
+    products.filter { it.onSale }
+        .map { it.name }
+        .ifEmpty { listOf("none") }
+        .joinToString(separator = ", ")
+
+// 빈 문자열에 기본 문자열 제공
+fun onSaleProductsIfEmptyString(products: List<Product>) =
+    products.filter { it.onSale }
+        .joinToString(separator = ", ") { it.name }
+        .ifEmpty { "none" }
+
+private val overthruster = Product("Oscillation Overthruster", 1_000_000.0)
+private val fluxcapacitor = Product("Flux Capacitor", 299_999.95, onSale = true)
+private val tpsReportCoverSheet = Product("TPS Report Cover Sheet", 0.25)
+
+@Test
+fun `asis_productsNotOnSale`() {
+    val sameOfProductsOnSale = sameOfProductsOnSale(listOf(overthruster, tpsReportCoverSheet))
+    assertEquals("", sameOfProductsOnSale) // 판매 중인 상품이 없는 경우 빈 컬렉션을 리턴하고 빈 문자열로 반환
+}
+
+@Test
+fun productsOnSale() {
+    val products = listOf(overthruster, fluxcapacitor, tpsReportCoverSheet)
+
+    assertAll("On sale products",
+        { assertEquals("Flux Capacitor", onSaleProductsIfEmptyCollection(products)) },
+        { assertEquals("Flux Capacitor", onSaleProductsIfEmptyString(products)) })
+}
+
+@Test
+fun productsNotOnSale() {
+    val products = listOf(overthruster, tpsReportCoverSheet)
+
+    assertAll("No products on sale",
+        { assertEquals("none", onSaleProductsIfEmptyCollection(products)) },
+        { assertEquals("none", onSaleProductsIfEmptyString(products)) })
+}
+```
+
+{% hint style="info" %}
+
+코틀린도 Optional\<T\>를 지원하지만 ifEmpty 함수를 사용해 특정한 값을 리턴하는 방법이 더 사용하기 쉽다.
+
+{% endhint %}
