@@ -200,3 +200,21 @@ fun `read-only view of a mutable list`() {
     assertSame(mutableNums, readOnlySameList) // 여전히 같은 기저 객체
 }
 ```
+
+## 컬렉션에서 맵 만들기
+
+> 키 리스트가 있을 때 각각의 키와 생성한 값을 연관시켜 맵을 만들려면
+>
+> `associateWith` 함수에 각 키에 대해 실행되는 람다를 제공해 사용하자.
+
+👉🏻 **associateWith로 값 생성하기**
+
+```kotlin
+@Test
+fun `associateWith`() {
+    val keys = 'a'..'f'
+    val map = keys.associateWith { it.toString().repeat(5).capitalize() }
+    println(map)
+    // {a=Aaaaa, b=Bbbbb, c=Ccccc, d=Ddddd, e=Eeeee, f=Fffff}
+}
+```
