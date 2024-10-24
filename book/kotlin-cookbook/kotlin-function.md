@@ -97,3 +97,58 @@ fun `withIndex returns IndexValues`() {
     }
 }
 ```
+
+## 컬렉션 생성하기
+
+> List, Set, Map은
+>
+> listOf, setOf, mapOf 처럼 **변경 불가능한 컬렉션**을 생성하기 위해 만들어진 함수나
+>
+> mutableListOf, mutableSetOf, mutableMapOf 처럼 **변경 가능한 컬렉션**을 생성하기 위해 고안된 함수 중 하나를 사용
+
+{% hint style="info" %}
+
+**asList 구현**
+
+asList 구현은 읽기 전용 리스트를 리턴하는 자바의 Arrays.asList에 위임
+
+{% endhint %}
+
+👉🏻 **불변 List, Set, Map 생성하기**
+
+```kotlin
+val numList = listOf(3, 1, 4, 1, 5, 9) // 불변 리스트 생성
+val numSet = setOf(3, 1, 4, 1, 5, 9) // 불변 세트 생성(중복 포함 X)
+val map = mapOf(1 to "one", 2 to "two", 3 to "three") // 불변 맵 생성
+```
+
+기본적으로 코틀린 컬렉션은 불변이다.
+- 컬렉션은 원소를 추가하거나 제거하는 메소드를 지원하지 않는다.
+- 컬렉션을 변경하는 메소드는 팩토리 메소드에서 제공하는 가변 인터페이스에 들어 있다.
+  - mutableListOf
+  - mutableSetOf
+  - mutableMapOf
+
+👉🏻 **가변 List, Set, Map 생성하기**
+
+```kotlin
+val numList = mutableListOf(3, 1, 4, 1, 5, 9)
+val numSet = mutableSetOf(3, 1, 4, 1, 5, 9)
+val map = mutableMapOf(1 to "one", 2 to "two", 3 to "three")
+```
+
+👉🏻 **List, Set, Map 인터페이스를 직접 구현한 클래스의 인스턴스 생성**
+
+```kotlin
+@Test
+fun `instantiating a linked list`() {
+    val list = LinkedList<Int>()
+    list.add(3) // addLast 의 별칭
+    list.add(1)
+    list.addLast(999)
+    list[2] = 4 // 배열 타입 접근은 get or set 호출
+    list.addAll(listOf(1, 5, 9, 2, 6, 5))
+    
+    assertThat(list, contains(3, 1, 4, 1, 5, 9, 2, 6, 5))
+}
+```
