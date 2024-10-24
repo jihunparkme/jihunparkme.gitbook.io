@@ -152,3 +152,51 @@ fun `instantiating a linked list`() {
     assertThat(list, contains(3, 1, 4, 1, 5, 9, 2, 6, 5))
 }
 ```
+
+## 컬렉션에서 읽기 전용 뷰 생성하기
+
+> toList, toSet, toMap 메소드를 사용해 새로운 읽기 전용 컬렉션을 생헝하자
+
+👉🏻 **List 타입의 레퍼런스를 리턴하는 toList 메소드 호출**
+
+```kotlin
+@Test
+fun `toList on mutableList makes a readOnly new list`() {
+    val mutableNums = mutableListOf(3, 1, 4, 1, 5, 9)
+    val readOnlyNumList: List<Int> = mutableNums.toList()
+    
+    assertEquals(mutableNums, readOnlyNumList)
+    assertNotSame(mutableNums, readOnlyNumList)
+}
+```
+
+👉🏻 **독립된 객체를 생성하는데 독립된 객체의 내용은 원본과 같지만 더 이상 같은 객체를 나타내지는 않는다.**
+
+```kotlin
+@Test
+fun `modify mutable list does not change read-only list`() {
+    val mutableNums = mutableListOf(3, 1, 4, 1, 5, 9)
+    val readOnly: List<Int> = mutableNums.toList()
+    mutableNums.add(2)
+
+    assertThat(readOnly, not(contains(2)))
+}
+```
+
+👉🏻 **내용이 같은 읽기 전용 뷰를 생성하고 싶다면, List 타입의 레퍼런스에 가변 리스트를 할당하자.**
+
+
+```kotlin
+@Test
+fun `read-only view of a mutable list`() {
+    val mutableNums = mutableListOf(3, 1, 4, 1, 5, 9)
+    // List 타입의 레퍼런스에 가변 리스트 할당
+    val readOnlySameList: List<Int> = mutableNums
+    assertEquals(mutableNums, readOnlySameList)
+    assertSame(mutableNums, readOnlySameList)
+
+    mutableNums.add(2)
+    assertEquals(mutableNums, readOnlySameList)
+    assertSame(mutableNums, readOnlySameList) // 여전히 같은 기저 객체
+}
+```
