@@ -318,3 +318,49 @@ fun `coerceIn given a range`() {
     assertEquals(max, 9.coerceIn(min, max))
 }
 ```
+
+## 리스트 구조 분해하기
+
+> 최대 5개의 원소를 가진 그룹에 리스트를 할당하기
+
+👉🏻 **리스트의 원소를 구조 분해하기**
+
+```kotlin
+val list = listOf("a", "b", "c", "d", "e", "f", "g")
+val (a, b, c, d, e) = list
+println("$a $b $c $d $e")
+```
+
+코틀린 표준 라이브러리의 List 클래스에 N이 1부터 5까지인 componentN 이라는 확장 함수가 정의되어 가능한 동작
+
+```kotlin
+package kotlin.collections
+
+@kotlin.internal.InlineOnly
+public inline operator fun <T> List<T>.component1(): T {
+    return get(0)
+}
+
+@kotlin.internal.InlineOnly
+public inline operator fun <T> List<T>.component2(): T {
+    return get(1)
+}
+
+@kotlin.internal.InlineOnly
+public inline operator fun <T> List<T>.component3(): T {
+    return get(2)
+}
+
+@kotlin.internal.InlineOnly
+public inline operator fun <T> List<T>.component4(): T {
+    return get(3)
+}
+
+@kotlin.internal.InlineOnly
+public inline operator fun <T> List<T>.component5(): T {
+    return get(4)
+}
+```
+
+데이터 클래스는 정의된 모든 속성 관련 component 메소드를 자동으로 추가
+- 데이터 클래스가 아닌 클래스를 정의하면 필요한 component 메소드를 직접 정의 가능
