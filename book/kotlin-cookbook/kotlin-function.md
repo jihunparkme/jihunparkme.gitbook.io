@@ -461,3 +461,71 @@ fun `iterator 구현하기`() {
         team.map { it.name }.joinToString())
 }
 ```
+
+## 타입으로 컬렉션을 필터링하기
+
+> `filterIsInstance` or `filterIsInstanceTo` 확장 함수로 
+>
+> 여러 타입이 섞여 있는 컬렉션에서 특정 타입의 원소로만 구성된 새 컬렉션을 생성할 수 있다.
+
+코틀린 컬렉션은 특정 불리언 조건을 만족하는 원소를 필터링하기 위해 사용되는 Predicate를 인자로 받는 `filter` 확장 함수를 포함한다.
+
+```kotlin
+@Test
+fun `타입으로 컬렉션을 필터링하기`() {
+    val list = listOf("a", LocalDate.now(), 3, 1, 4, "b")
+    val strings = list.filter { it is String}
+
+    /**
+        * 필터링은 동작하지만 string 변수의 추론 타입은 List<Any> 이므로
+        * List<Any>의 개별 원소를 string 타입으로 영리한 타입 변환하지 않는다.
+        */
+    for (s in strings) {
+        println(s.length) // 컴파일 에러
+    }
+}
+```
+
+👉🏻 **위와 같은 상황에서 filterIsInstance 함수를 사용**
+- filterIsInstance 함순은 구체적인 타입을 사용
+
+```kotlin
+/**
+ * Returns a list containing all elements that are instances of specified type parameter R.
+ */
+public inline fun <reified R> Iterable<*>.filterIsInstance(): List<@kotlin.internal.NoInfer R> {
+    return filterIsInstanceTo(ArrayList<R>())
+}
+
+...
+
+@Test
+fun `구체적인 타입 사용하기_filterIsInstance`() {
+    val list = listOf("a", LocalDate.now(), 3, 1, 4, "b")
+
+    val all = list.filterIsInstance<Any>()
+    val strings = list.filterIsInstance<String>()
+    val ints = list.filterIsInstance<Int>()
+    val dates = list.filterIsInstance(LocalDate::class.java)
+
+    assertThat(all, `is`(list))
+    assertThat(strings, containsInAnyOrder("a", "b"))
+    assertThat(ints, containsInAnyOrder(1, 3, 4))
+    assertThat(dates, contains(LocalDate.now()))
+}
+
+@Test
+fun `구체적인 타입을 사용해 제공된 리스트 채우기_filterIsInstanceTo`() {
+    val list = listOf("a", LocalDate.now(), 3, 1, 4, "b")
+
+    val all = list.filterIsInstanceTo(mutableListOf<Any>())
+    val strings = list.filterIsInstanceTo(mutableListOf<String>())
+    val ints = list.filterIsInstanceTo(mutableListOf<Int>())
+    val dates = list.filterIsInstanceTo(mutableListOf<LocalDate>())
+
+    assertThat(all, `is`(list))
+    assertThat(strings, containsInAnyOrder("a", "b"))
+    assertThat(ints, containsInAnyOrder(1, 3, 4))
+    assertThat(dates, contains(LocalDate.now()))
+}
+```
