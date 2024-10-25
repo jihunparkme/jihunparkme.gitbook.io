@@ -664,10 +664,58 @@ fun `use LocalDate as a progression with a step`() {
 
 {% endhint %}
 
-
-
-
 ## 시퀀스 생성하기
+
+> - 이미 원소가 있다면 `sequenceOf`
+> - Iterable이 있다면 `asSequence`
+> - 그외의 경우는 시퀀스 생성기를 사용핵서
+>
+> 시퀀스를 생성하자
+
+👉🏻 **원소나, Iterable이 존재하는 경우 시퀀스 생성**
+
+```kotlin
+// Sequence<Int> 생성
+val numSequence1 = sequenceOf(3, 1, 4, 1, 5, 9)
+val numSequence2 = listOf(3, 1, 4, 1, 5, 9).asSequence()
+```
+
+**generateSequence**
+
+```kotlin
+public fun <T : Any> generateSequence(seed: T?, nextFunction: (T) -> T?): Sequence<T> =
+    if (seed == null)
+        EmptySequence
+    else
+        GeneratorSequence({ seed }, nextFunction)
+```
+
+👉🏻 **무한의 원소를 갖는 시퀀스 생성하기**
+- 다음 소수를 찾기 위해 얼마나 많은 수를 확인해야 하는지 알 수 없는 이러한 경우 시퀀스를 사용하기 좋은 이유
+
+```kotlin
+@Test
+fun `test`() {
+    fun Int.isPrime() =
+        // 2인지 확인 후 2가 아니면 2부터 해당 수의 제곱근 값을 반올림한 수까지 범위로 생성
+        this == 2 || (2..ceil(sqrt(this.toDouble())).toInt())
+            // 주어진 수를 이 범위의 각각의 수로 나누어 정확히 떨어지는 수를 범위에서 찾을 수 없다면
+            .none { divisor -> this % divisor == 0 }
+
+    /**
+    * 무한대의 정수를 생성하고 첫 번째 소수를 찾을 때까지 생성한 정수를 하나씩 평가
+    */
+    fun nextPrime(num: Int) =
+        generateSequence(num + 1) { it + 1} // 주어진 수보다 1 큰 수에서 시작하고 1 증가 반복
+            .first(Int::isPrime) // 첫 소수 값을 리턴
+
+    assertEquals(10007, nextPrime(9973))
+}
+```
+
+
+
+
 
 ## 무한 시퀀스 다루기
 
