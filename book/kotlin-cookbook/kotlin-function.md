@@ -529,3 +529,79 @@ fun `구체적인 타입을 사용해 제공된 리스트 채우기_filterIsInst
     assertThat(dates, contains(LocalDate.now()))
 }
 ```
+
+## 범위를 수열로 만들기
+
+> 정수 또는 문자로 구성되어 있지 않는 수열의 범위를 순회하려면 사용자 정의 수열을 생성하자.
+
+사용자 정의 수열은 IntProgression, LongProgression, CharProgression 처럼 Iterable 인터페이스를 구현해야 한다.
+
+👉🏻 **LocalDate Progression**
+
+```kotlin
+class LocalDateProgression(
+    override val start: LocalDate,
+    override val endInclusive: LocalDate,
+    val step: Long = 1
+) : Iterable<LocalDate>, ClosedRange<LocalDate> {
+
+    override fun iterator(): Iterator<LocalDate> =
+        LocalDateProgressionIterator(start, endInclusive, step)
+
+    infix fun step(days: Long) =
+        LocalDateProgression(start, endInclusive, days)
+}
+
+internal class LocalDateProgressionIterator(
+    start: LocalDate,
+    val endInclusive: LocalDate,
+    val step: Long
+) : Iterator<LocalDate> {
+
+    private var current = start
+
+    override fun hasNext() = current <= endInclusive
+
+    override fun next(): LocalDate {
+        val next = current
+        current = current.plusDays(step)
+        return next
+    }
+}
+
+operator fun LocalDate.rangeTo(other: LocalDate) = LocalDateProgression(this, other)
+```
+
+👉🏻 **LocalData 수열 테스트**
+
+```kotlin
+@Test
+fun `use LocalDate as a progression`() {
+    val startDate = LocalDate.now()
+    val endDate = startDate.plusDays(5)
+
+    val dateRange = startDate..endDate // forEachIndexed 범위 생성
+    println(dateRange.joinToString(", ")) // 2024-10-25, 2024-10-26, 2024-10-27, 2024-10-28, 2024-10-29, 2024-10-30
+    dateRange.forEachIndexed { index, locaDate ->
+        assertEquals(locaDate, startDate.plusDays(index.toLong()))
+    }
+
+    val dateList=  dateRange.map { it.toString() }
+    assertEquals(6, dateList.size)
+}
+
+@Test
+fun `use LocalDate as a progression with a step`() {
+    val startDate = LocalDate.now()
+    val endDate = startDate.plusDays(5)
+
+    val dateRange = startDate..endDate step 2  // forEachIndexed 범위 생성
+    println(dateRange.joinToString(", ")) // 2024-10-25, 2024-10-27, 2024-10-29
+    dateRange.forEachIndexed { index, locaDate ->
+        assertEquals(locaDate, startDate.plusDays(index.toLong() * 2))
+    }
+
+    val dateList=  dateRange.map { it.toString() }
+    assertEquals(3, dateList.size)
+}
+```
