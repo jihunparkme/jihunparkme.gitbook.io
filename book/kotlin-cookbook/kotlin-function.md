@@ -754,7 +754,49 @@ fun `처음 N개의 소수 찾기`() {
 }
 ```
 
-
-
-
 ## 시퀀스에서 yield하기
+
+> 구간을 지정해 시퀀스에서 값을 생성하려면
+>
+> yield 중단 함수와 함께 sequence 함수를 사용하자
+
+sequence 함수는 주어진 블록에서 평가되는 시퀀스를 생성
+- 이 블록은 인자 없는 람다 함수이며 void를 리턴하고 평가 후 SequenceScope 타입을 받는다.
+
+**SequenceScope**
+
+```kotlin
+public abstract class SequenceScope<in T> internal constructor() {
+    public abstract suspend fun yield(value: T)
+
+    public abstract suspend fun yieldAll(iterator: Iterator<T>)
+    public suspend fun yieldAll(elements: Iterable<T>)
+    public suspend fun yieldAll(sequence: Sequence<T>)
+}
+```
+
+yield 함수는 이터레이터에 값을 제공하고 다음 값을 요청할 때까지 값 생성을 중단
+
+👉🏻 **시퀀스 연산에서 값 추출하기**
+- yield는 중단 함수이고 코루틴과도 잘 동작
+- 코루틴에 값을 제공한 후 다음 값을 요청할 때까지 해당 코루틴을 중단시킬 수 있다.
+
+```kotlin
+@Test
+fun `first 10 Fibonacci numbers form sequence`() {
+    fun fibonacciSequence() = sequence {
+        var terms = Pair(0, 1)
+
+        while (true) {
+            yield(terms.first)
+            terms = terms.second to terms.first + terms.second
+        }
+    }
+
+    val fibs = fibonacciSequence()
+        .take(10)
+        .toList()
+
+    assertEquals(listOf(0, 1, 1, 2, 3, 5, 8, 13, 21, 34), fibs)
+}
+```
