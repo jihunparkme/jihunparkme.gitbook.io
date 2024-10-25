@@ -800,3 +800,29 @@ fun `first 10 Fibonacci numbers form sequence`() {
     assertEquals(listOf(0, 1, 1, 2, 3, 5, 8, 13, 21, 34), fibs)
 }
 ```
+
+# 영역 함수
+
+> let, run, apply, also
+
+## apply로 객체 생성 후 초기화
+
+## 부수 효과를 위한 also
+
+## let 함수와 엘비스 연산자
+
+## 임시 변수로 let
+
+# 코틀린 대리자
+
+## 대리자를 사용해서 합성 구현하기
+
+## lazy 대리자 사용하기
+
+## 값이 널이 될 수 없게 만들기
+
+## observable, vetoable 대리자
+
+## 대리자로서 Map 제공
+
+## 사용자 정의 대리자 만들기
