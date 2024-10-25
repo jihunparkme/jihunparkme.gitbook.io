@@ -364,3 +364,48 @@ public inline operator fun <T> List<T>.component5(): T {
 
 데이터 클래스는 정의된 모든 속성 관련 component 메소드를 자동으로 추가
 - 데이터 클래스가 아닌 클래스를 정의하면 필요한 component 메소드를 직접 정의 가능
+
+## 다수의 속성으로 정렬하기
+
+> `sortedWith`, `comparedBy` 함수로 다수 속성으로 정렬을 해보자.
+
+👉🏻 **연이은 속성으로 골프 선수 정렬하기**
+- `compareBy` 함수는 Comparator 를 생성하고,
+  - Comparator 속성을 추출하는 선택자 목록을 제공
+  - 차례차례 정렬에 사용되는 Comparator 생성
+- `sortedWith` 함수는 Comparator 를 인자로 받는다.
+
+```kotlin
+val sorted = golfers.sortedWith(
+    compareBy({ it.score }, { it.last }, { it.first })
+)
+sorted.forEach { println(it) }
+/**
+    * Golfer(score=68, first=Bubba, last=Watson)
+    * Golfer(score=68, first=Tom, last=Watson)
+    * Golfer(score=68, first=Ty, last=Webb)
+    * Golfer(score=70, first=Jack, last=Nicklaus)
+    * Golfer(score=70, first=Tiger, last=Woods)
+    */
+```
+
+{% hint style="info" %}
+
+sortBy, sortWith 함수는 자신의 원소를 제자리에서 정렬하므로 변경 가능 컬렉션을 요구
+
+{% endhint %}
+
+👉🏻 **비교 후 새로운 비교를 적용하는 thenBy 함수**
+- 위 테스트와 동일한 결과를 보임
+
+```kotlin
+@Test
+fun `comparator 연쇄`() {
+    val comparator = compareBy<Golfer>(Golfer::score)
+        .thenBy(Golfer::last)
+        .thenBy(Golfer::first)
+
+    golfers.sortedWith(comparator)
+        .forEach(::println)
+}
+```
