@@ -409,3 +409,55 @@ fun `comparator 연쇄`() {
         .forEach(::println)
 }
 ```
+
+## 사용자 정의 이터레이터 정의하기
+
+> next, hasNext 함수를 모두 구현한 iterator 를 리턴하는 연산자 함수 정의하기
+
+**kotlin.collections Iterator Interface**
+
+```kotlin
+public interface Iterator<out T> {
+    public operator fun next(): T
+    public operator fun hasNext(): Boolean
+}
+```
+
+👉🏻 **확장 함수로 iterator 정의하기**
+
+```kotlin
+data class Player(val name: String)
+
+class Team(
+    val name: String,
+    val players: MutableList<Player> = mutableListOf(),
+) {
+    fun addPlayers(vararg people: Player) =
+        players.addAll(people)
+    //...
+}
+
+@Test
+fun `확장함수 활용하기`() {
+    val team = Team("Warriors")
+    team.addPlayers(Player("Curry"), Player("Thompson"), Player("Durant"), Player("Green"), Player("Cousins"))
+
+    operator fun Team.iterator() : Iterator<Player> = players.iterator()
+    for (player in team) {
+        println(player)
+    }
+}
+```
+
+👉🏻 **iterator 구현**
+
+```kotlin
+@Test
+fun `iterator 구현하기`() {
+    val team = Team("Warriors")
+    team.addPlayers(Player("Curry"), Player("Thompson"), Player("Durant"), Player("Green"), Player("Cousins"))
+
+    assertEquals("Curry, Thompson, Durant, Green, Cousins",
+        team.map { it.name }.joinToString())
+}
+```
