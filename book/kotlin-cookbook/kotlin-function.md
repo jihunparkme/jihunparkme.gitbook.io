@@ -713,10 +713,48 @@ fun `test`() {
 }
 ```
 
-
-
-
-
 ## 무한 시퀀스 다루기
+
+> 무한대의 원소를 갖는 시퀀스의 일부분이 필요하다면,
+>
+> 널을 리턴하는 시퀀스 생성기를 사용하거나, 시퀀스 확장 함수 중 takeWhile 같은 함수를 사용하자.
+
+```kotlin
+@Test
+fun `처음 N개의 소수 찾기`() {
+    fun Int.isPrime() =
+        this == 2 || (2..ceil(sqrt(this.toDouble())).toInt())
+            .none { divisor -> this % divisor == 0 }
+
+    fun nextPrime(num: Int) =
+        generateSequence(num + 1) { it + 1}
+            .first(Int::isPrime)
+
+    /** 처음 N개의 소수 찾기 */
+    fun firstNPrimes(count: Int) =
+        generateSequence(2, ::nextPrime) // 2부터 시작하는 소수의 무한 시퀀스
+            .take(count) // 요청한 수만큼만 원소를 가져오는 중간 연산
+            .toList() // 최종 연산
+
+    /** 주어진 수보다 작은 모든 소수 Ver.1 (널을 리턴하는 시퀀스 생성기) */
+    fun primesLessThanV1(max: Int): List<Int> =
+        generateSequence(2) { n -> if (n < max) nextPrime(n) else null }
+            .toList()
+            .dropLast(1)
+
+    /** 주어진 수보다 작은 모든 소수 Ver.2 (takeWhile 사용) */
+    fun primesLessThanV2(max: Int): List<Int> =
+        generateSequence(2, ::nextPrime)
+            .takeWhile { it < max }
+            .toList()
+
+    assertEquals(listOf(2, 3, 5, 7, 11), firstNPrimes(5))
+    assertEquals(listOf(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97), primesLessThanV1(100))
+    assertEquals(listOf(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97), primesLessThanV2(100))
+}
+```
+
+
+
 
 ## 시퀀스에서 yield하기
