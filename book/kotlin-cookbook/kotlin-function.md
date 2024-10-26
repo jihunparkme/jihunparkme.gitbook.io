@@ -807,6 +807,49 @@ fun `first 10 Fibonacci numbers form sequence`() {
 
 ## apply로 객체 생성 후 초기화
 
+> 객체 사용 전 생성자 인자만으로 할 수 없는 초기화 작업이 필요할 경우 apply 함수를 사용하자.
+
+`apply` 함수는 this를 인자로 전달하고 this를 리턴하는 확장 함수다.
+- 모든 제네릭 타입 `T`에 존재하는 확장 함수
+- 명시된 블록을 수신자인 `this와` 함께 호출하고 해당 블록이 완료되면 `this` 리턴
+
+```kotlin
+public inline fun <T> T.apply(block: T.() -> Unit): T {
+    contract {
+        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+    }
+    block()
+    return this
+}
+```
+
+👉🏻 **apply를 사용하여 단 하나의 구문으로, 저장해야 할 인스턴스를 받아 새로운 키로 한번에 갱신**
+- apply 블록은 이미 인스턴스화된 객체의 추가 설정을 위해 사용하는 가장 일반적인 방법
+
+```kotlin
+@Repository
+class JdbcOfficerDAO(private val jdbcTemplate: JdbcTemplate) {
+    private val insertOfficer = SimpleJdbcInsert(jdbcTemplate)
+            .withTableName("OFFICERS")
+            .usingGeneratedKeyColumns("id")
+
+    // Officer의 id 속성은 apply 블록 안에서 갱신된 다음
+    // Officer 인스턴스가 리턴
+    fun save(officer: Officer) =
+        officer.apply {
+            // excuteAndReturnKey 메소드는 컬럼 이름과 같으로 이뤄진 맵을 인자로 받아
+            // 데이터베이스에서 생성된 기본 키 값을 리턴
+            id = insertOfficer.excuteAndReturnKey(
+                    mapOf("rank" to rank,
+                            "first_name" to first,
+                            "last_name" to last))
+            // ... 추가적인 초기화
+        }
+        
+    // ...
+}
+```
+
 ## 부수 효과를 위한 also
 
 ## let 함수와 엘비스 연산자
