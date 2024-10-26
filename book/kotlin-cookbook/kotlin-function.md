@@ -1147,6 +1147,42 @@ fun `initialize value then retrieve it`() {
 
 ## observable, vetoable 대리자
 
+> 변경 감지에는 `observable` 함수를
+>
+> 변경 적용 여부를 결정할 때는 `vetoable` 함수와 람다를 사용하자.
+
+```kotlin
+var watched: Int by Delegates.observable(1) { prop, old, new ->
+    // 변수의 값이 변경될 때마다 메시지 출력
+    println("${prop.name} changed from $old to $new")
+}
+
+var checked: Int by Delegates.vetoable(0) { prop, old, new ->
+    // 오직 양수 값으로만 변경 가능
+    println("Trying to change ${prop.name} from $old to $new")
+    new >= 0
+}
+
+@Test
+fun `watched variable prints old and new values`() {
+    assertEquals(1, watched)
+    watched *= 2 // watched changed from 1 to 2
+    assertEquals(2, watched)
+    watched *= 2 // watched changed from 2 to 4
+    assertEquals(4, watched)
+}
+
+@Test
+fun `veto values less than zero`() {
+    assertAll(
+        { assertEquals(0, checked) },
+        { checked = 42; assertEquals(42, checked) }, // Trying to change checked from 0 to 42
+        { checked = -1; assertEquals(42, checked) }, // Trying to change checked from 42 to -1
+        { checked = 17; assertEquals(17, checked) } // Trying to change checked from 42 to 17
+    )
+}
+```
+
 ---
 
 ## 대리자로서 Map 제공
