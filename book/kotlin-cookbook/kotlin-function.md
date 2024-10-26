@@ -1024,6 +1024,54 @@ Gson().formJson(
 
 ## 대리자를 사용해서 합성 구현하기
 
+> **연산을 위임할 메소드가 포함된 인터페이스**를 만들고.
+>
+> **클래스에서 해당 인터페이스를 구현**한 후 `by` 키워드를 사용해 **바깥쪽에 래퍼 클래스**를 만들자
+
+코틀린에서 `by` 키워드는 포함된 객체에 있는 모든 public 함수를 이 객체를 담고 있는 컨테이너를 통해 노출할 수 있다.
+- 컨테이너에 노출하려면 포함된 객체의 public 메소드의 인터페이스를 생성해야 한다.
+- 생성자에서 객체를 인스턴스화하고 모든 public 함수를 위임하도록 정의할 수 있다.
+- 오직 포함된 객체의 public 함수만 노출
+
+```kotlin
+interface Dialable { // 연산을 위임할 메소드가 포함된 인터페이스
+    fun dial(number: String): String
+}
+
+class Phone : Dialable {
+    override fun dial(number: String) = "Dialing $number..."
+}
+
+interface Snappable { // 연산을 위임할 메소드가 포함된 인터페이스
+    fun takePicture(): String
+}
+
+class Camera : Snappable {
+    override fun takePicture() = "Taking picture..."
+}
+
+class SmartPhone(
+    // 생성자에서 객체를 인스턴스화하고 모든 public 함수를 위임하도록 정의
+    private val phone: Dialable = Phone(),
+    private val camera: Snappable = Camera()
+) : Dialable by phone, Snappable by camera 
+// by 키워드를 사용해서 위임
+// 내부적으로 SmartPhone 클래스는 위임된 속성을 인터페이스 타입으로 정의
+
+private val smartPhone: SmartPhone = SmartPhone() // SmartPhone 인스턴스화
+
+@Test
+fun `by keyword test`() {
+    // Dialing delegates to internal phone
+    assertEquals("Dialing 555-1234...",
+        smartPhone.dial("555-1234")) // 위임 함수 호출
+
+    // Taking picture delegates to internal camera
+    assertEquals("Taking picture...",
+        smartPhone.takePicture()) // 위임 함수 호출
+}
+```
+
 ---
 
 ## lazy 대리자 사용하기
