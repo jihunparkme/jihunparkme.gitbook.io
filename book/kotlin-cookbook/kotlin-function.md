@@ -852,6 +852,53 @@ class JdbcOfficerDAO(private val jdbcTemplate: JdbcTemplate) {
 
 ## 부수 효과를 위한 also
 
+> 부수 효과를 생성하는 동작을 수행하려면 `also` 함수를 사용하자.
+
+also 함수는 코틀린 표준 라이브러리에 있는 확장 함수
+- 모든 제네릭 타입 T에 추가되고
+- block 인자 호출 수 자기 자신을 리턴
+
+```kotlin
+@kotlin.internal.InlineOnly
+@SinceKotlin("1.1")
+public inline fun <T> T.also(block: (T) -> Unit): T {
+    contract {
+        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+    }
+    block(this)
+    return this
+}
+```
+
+👉🏻 **also는 일반적으로 객체에 함수 호출을 연쇄시키기 위해 사용**
+
+```kotlin
+val book = createBook()
+    .also { println(it) }
+    .also { Logger.getAnonymousLogger().info(it.toString()) }
+```
+
+👉🏻 **서비스 테스트 작성 시 부수 효과로 로그 기록**
+
+```kotlin
+class Site(
+    val name: String,
+    val latitude: Double,
+    val longitude: Double,
+)
+
+...
+
+@Test
+fun `lat,lng of Boston, MA`() = service.getLatLng("Boston", "MA")
+    .also { logger.info(it.toString())} // 부수 효과로서 로그 기록
+    .run {
+        assertThat(latitude, `is`(closeTo(42.36, 0.01)))
+        assertThat(longgitude, `is`(closeTo(-71.06, 0.01)))
+    }
+```
+
+
 ## let 함수와 엘비스 연산자
 
 ## 임시 변수로 let
