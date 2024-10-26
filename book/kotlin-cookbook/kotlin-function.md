@@ -898,8 +898,58 @@ fun `lat,lng of Boston, MA`() = service.getLatLng("Boston", "MA")
     }
 ```
 
-
 ## let 함수와 엘비스 연산자
+
+> 레퍼런스가 널일경우 기본값을 리턴하도록 하려면
+>
+> 엘비스 연산자를 결합한 안전 호출 연산자와 함께 let 영역 함수를 사용하자.
+
+`let` 함수는 모든 제네릭 타입 T의 확장 함수
+- 컨텍스트 객체가 아닌 블록의 결과를 리턴
+- 객체를 위한 map처럼 마치 컨텍스트 객체의 변형처럼 동작
+
+```kotlin
+@kotlin.internal.InlineOnly
+public inline fun <T, R> T.let(block: (T) -> R): R {
+    contract {
+        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+    }
+    return block(this)
+}
+```
+
+👉🏻 **문자열 대문자 변경과 특수한 입력 처리**
+
+```kotlin
+@Test
+fun `let test`() {
+    fun processString_asis(str: String) =
+        str.let {
+            when {
+                it.isEmpty() -> "Empty"
+                it.isBlank() -> "Blank"
+                else -> it.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            }
+        }
+
+    fun processString_tobe(str: String?) =
+        str?.let { // 안전 호출 연산자와 let 을 같이 사용
+            when {
+                it.isEmpty() -> "Empty"
+                it.isBlank() -> "Blank"
+                else -> it.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            }
+        } ?: "Null" // 널인 경우 처리하는 엘비스 연산자
+
+
+    assertEquals("Abcdef", processString_asis("abcdef"))
+    // assertEquals("", processString_asis(null)) // Null can not be a value of a non-null type String
+
+    assertEquals("Abcdef", processString_tobe("abcdef"))
+    assertEquals("Null", processString_tobe(null))
+}
+```
+
 
 ## 임시 변수로 let
 
