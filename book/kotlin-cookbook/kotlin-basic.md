@@ -11,6 +11,8 @@ testImplementation("org.assertj:assertj-core:3.26.3")
 testImplementation("org.hamcrest:hamcrest:2.2")
 ```
 
+---
+
 ## Null 허용 타입
 
 > 변수가 null 값을 갖지 못하게 하려면
@@ -952,6 +954,8 @@ fun `fibonacci`() {
 }
 ```
 
+---
+
 ## reduce 함수를 사용해 축약하기
 
 > 비어 있지 않는 컬렉션의 값을 축약하고 싶지만 누적자의 초기값을 설정하고 싶지 안다면,
@@ -997,6 +1001,8 @@ fun `sum using reduce`() {
 컬렉션의 첫 번째 값으로 누적자를 초기화하고 컬렉션의 다른 값에 추가 연산을 필요로 하지 않는 경우에만 reduce를 사용하자.
 
 {% endhint %}
+
+---
 
 ## 꼬리 재귀 적용하기
 

@@ -98,6 +98,8 @@ fun `withIndex returns IndexValues`() {
 }
 ```
 
+---
+
 ## 컬렉션 생성하기
 
 > List, Set, Map은
@@ -153,6 +155,8 @@ fun `instantiating a linked list`() {
 }
 ```
 
+---
+
 ## 컬렉션에서 읽기 전용 뷰 생성하기
 
 > toList, toSet, toMap 메소드를 사용해 새로운 읽기 전용 컬렉션을 생헝하자
@@ -201,6 +205,8 @@ fun `read-only view of a mutable list`() {
 }
 ```
 
+---
+
 ## 컬렉션에서 맵 만들기
 
 > 키 리스트가 있을 때 각각의 키와 생성한 값을 연관시켜 맵을 만들려면
@@ -218,6 +224,8 @@ fun `associateWith`() {
     // {a=Aaaaa, b=Bbbbb, c=Ccccc, d=Ddddd, e=Eeeee, f=Fffff}
 }
 ```
+
+---
 
 ## 컬렉션이 빈 경우 기본값 리턴하기
 
@@ -286,6 +294,8 @@ fun productsNotOnSale() {
 
 {% endhint %}
 
+---
+
 ## 주어진 범위로 값 제한하기
 
 > 값이 주어졌을 때, 주어진 값이 특정 번위 안에 들면 해당 값을 리턴하고, 
@@ -318,6 +328,8 @@ fun `coerceIn given a range`() {
     assertEquals(max, 9.coerceIn(min, max))
 }
 ```
+
+---
 
 ## 리스트 구조 분해하기
 
@@ -365,6 +377,8 @@ public inline operator fun <T> List<T>.component5(): T {
 데이터 클래스는 정의된 모든 속성 관련 component 메소드를 자동으로 추가
 - 데이터 클래스가 아닌 클래스를 정의하면 필요한 component 메소드를 직접 정의 가능
 
+---
+
 ## 다수의 속성으로 정렬하기
 
 > `sortedWith`, `comparedBy` 함수로 다수 속성으로 정렬을 해보자.
@@ -409,6 +423,8 @@ fun `comparator 연쇄`() {
         .forEach(::println)
 }
 ```
+
+---
 
 ## 사용자 정의 이터레이터 정의하기
 
@@ -461,6 +477,8 @@ fun `iterator 구현하기`() {
         team.map { it.name }.joinToString())
 }
 ```
+
+---
 
 ## 타입으로 컬렉션을 필터링하기
 
@@ -529,6 +547,8 @@ fun `구체적인 타입을 사용해 제공된 리스트 채우기_filterIsInst
     assertThat(dates, contains(LocalDate.now()))
 }
 ```
+
+---
 
 ## 범위를 수열로 만들기
 
@@ -664,6 +684,8 @@ fun `use LocalDate as a progression with a step`() {
 
 {% endhint %}
 
+---
+
 ## 시퀀스 생성하기
 
 > - 이미 원소가 있다면 `sequenceOf`
@@ -713,6 +735,8 @@ fun `test`() {
 }
 ```
 
+---
+
 ## 무한 시퀀스 다루기
 
 > 무한대의 원소를 갖는 시퀀스의 일부분이 필요하다면,
@@ -753,6 +777,8 @@ fun `처음 N개의 소수 찾기`() {
     assertEquals(listOf(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97), primesLessThanV2(100))
 }
 ```
+
+---
 
 ## 시퀀스에서 yield하기
 
@@ -850,6 +876,8 @@ class JdbcOfficerDAO(private val jdbcTemplate: JdbcTemplate) {
 }
 ```
 
+---
+
 ## 부수 효과를 위한 also
 
 > 부수 효과를 생성하는 동작을 수행하려면 `also` 함수를 사용하자.
@@ -897,6 +925,8 @@ fun `lat,lng of Boston, MA`() = service.getLatLng("Boston", "MA")
         assertThat(longgitude, `is`(closeTo(-71.06, 0.01)))
     }
 ```
+
+---
 
 ## let 함수와 엘비스 연산자
 
@@ -950,6 +980,8 @@ fun `let test`() {
 }
 ```
 
+---
+
 ## 임시 변수로 let
 
 > 연산 결과를 임시 변수에 할당하지 않고 처리하고 싶다면,
@@ -988,17 +1020,26 @@ Gson().formJson(
 ).people.map { it.name }.let(::println)
 ```
 
-
 # 코틀린 대리자
 
 ## 대리자를 사용해서 합성 구현하기
 
+---
+
 ## lazy 대리자 사용하기
+
+---
 
 ## 값이 널이 될 수 없게 만들기
 
+---
+
 ## observable, vetoable 대리자
 
+---
+
 ## 대리자로서 Map 제공
+
+---
 
 ## 사용자 정의 대리자 만들기
