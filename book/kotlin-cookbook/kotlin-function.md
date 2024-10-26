@@ -1121,6 +1121,28 @@ lock 인자가 없을 경우 대리자는 자신 스스로 동기화
 
 ## 값이 널이 될 수 없게 만들기
 
+> notNull 함수를 이용해 값이 설정되지 않았다면 예외를 던지는 대리자를 제공하자.
+
+속성 초기화를 지연시키는 한 가지 방법은 속성에 처음 접근하기 전에 속성이 사용되면 예외를 던지는 대리자를 제공하는 `notNull` 함수를 사용하는 것이다.
+
+👉🏻 **속성에 값이 제공되기 전 접근을 시도하면 IllegalStateException**
+
+```kotlin
+var shouldNotBeBull: String by Delegates.notNull()
+
+@Test
+fun `uninitialized value throws exception`() {
+    assertThrows<IllegalStateException> { shouldNotBeBull }
+}
+
+@Test
+fun `initialize value then retrieve it`() {
+    shouldNotBeBull = "Hello, World!"
+    assertDoesNotThrow { shouldNotBeBull }
+    assertEquals("Hello, World!", shouldNotBeBull)
+}
+```
+
 ---
 
 ## observable, vetoable 대리자
