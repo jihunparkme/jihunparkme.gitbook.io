@@ -1183,6 +1183,42 @@ fun `veto values less than zero`() {
 }
 ```
 
+{% hint style="info" %}
+
+observable, vetoable 함수 구현은 개발자가 대리자를 작성할 때 참고할 만한 좋은 패턴이다.
+
+```kotlin
+package kotlin.properties
+
+public object Delegates {
+    public fun <T : Any> notNull(): ReadWriteProperty<Any?, T> = NotNullVar()
+
+    public inline fun <T> observable(initialValue: T, crossinline onChange: (property: KProperty<*>, oldValue: T, newValue: T) -> Unit):
+            ReadWriteProperty<Any?, T> =
+        object : ObservableProperty<T>(initialValue) {
+            override fun afterChange(property: KProperty<*>, oldValue: T, newValue: T) = onChange(property, oldValue, newValue)
+        }
+
+    public inline fun <T> vetoable(initialValue: T, crossinline onChange: (property: KProperty<*>, oldValue: T, newValue: T) -> Boolean):
+            ReadWriteProperty<Any?, T> =
+        object : ObservableProperty<T>(initialValue) {
+            override fun beforeChange(property: KProperty<*>, oldValue: T, newValue: T): Boolean = onChange(property, oldValue, newValue)
+        }
+
+}
+```
+
+**inline and crossinline**
+
+inline 키워드는 컴파일러가 함수만 호출하는 완전히 새로운 객체를 생성하는 것이 아닌 해당 호출 위치를 실제 소스 코드로 대체하도록 지연시키고
+
+가끔 inline 함수는 지역 객체 또는 중첩 함수 같은 다른 컨텍스트에서 실행되어야 하는 파라미터로서 전달되는 람다.
+- '로컬이 아닌' 제어 흐름은 람다 내에서는 허용되지 않는다.
+
+ObservableProperty 확장 클래스 대신 observable 또는 vetoable 관련해 onChange 람다가 실행되기 떄문에 crossinline 제어자가 필요
+
+{% endhint %}
+
 ---
 
 ## 대리자로서 Map 제공
