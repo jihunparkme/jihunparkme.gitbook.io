@@ -950,8 +950,44 @@ fun `let test`() {
 }
 ```
 
-
 ## 임시 변수로 let
+
+> 연산 결과를 임시 변수에 할당하지 않고 처리하고 싶다면,
+>
+> 연산에 let 호출을 연쇄하고 let에 제공된 람다 또는 함수 레퍼런스 안에서 그 결과를 처리하자
+
+👉🏻 **임시 변수를 사용하지 않고 let 함수로 바로 처리**
+
+```kotlin
+@Test
+fun `let example as-is`() {
+    val numbers = mutableListOf("one", "two", "three", "four", "five")
+    val resultList = numbers.map { it.length }.filter { it > 3 }
+    assertEquals(listOf(5, 4, 4), resultList)
+}
+
+@Test
+fun `let example to-be`() {
+    val numbers = mutableListOf("one", "two", "three", "four", "five")
+    numbers.map { it.length }.filter { it > 3 }.let {
+        assertEquals(listOf(5, 4, 4), it)
+        // ...
+    }
+}
+```
+
+👉🏻 **List 출력을 위해 let(or also) 사용**
+- `let` 함수는 블록의 결과를 리턴
+- `also` 함수는 컨텍스트 객체를 리턴
+  - 출력과 같은 부수적인 효과는 also를 사용하는 것이 더 코틀린다운 사용법
+
+```kotlin
+Gson().formJson(
+    URL("http://api.open-notify.org/astros.json").readText(),
+    AstroResult::class.java
+).people.map { it.name }.let(::println)
+```
+
 
 # 코틀린 대리자
 
