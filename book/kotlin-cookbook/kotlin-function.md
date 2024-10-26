@@ -1076,6 +1076,47 @@ fun `by keyword test`() {
 
 ## lazy 대리자 사용하기
 
+> 어떤 속성이 필요할 때까지 해당 속성의 초기화를 지연시키고 싶다면 `lazy` 대리자를 사용하자
+
+코틀린은 어떤 속성의 **획득자**와 **설정자**가 대리자라고 불리는 다른 객체에서 구현되어 있다는 것을 암시하기 위해 속성에 `by` 키워드를 사용
+- 코틀린 표준 라이브러리에 다수의 대리자 함수가 있는데,
+- 그 중 가장 인기 있는 함수는 `lazy`
+
+👉🏻 **처음 접근까지 속성의 초기화를 대기**
+- 첫 호출은 lazy가 받은 람다를 실행하고 그 다음 변수에 저장될 값을 리턴
+- 내부적으로 이 값을 캐시하는 Lazy 타입의 `ultimateAnswer$delegate`라는 특별한 속성을 생성
+
+```kotlin
+@Test
+fun `lazy test`() {
+    val ultimateAnswer: Int by lazy {
+        println("computing the answer")
+        42
+    }
+
+    assertEquals(42, ultimateAnswer) // 여기서 초기화
+    assertEquals(42, ultimateAnswer)
+}
+```
+
+`lazy`는 `LazyThreadSafetyMode` 타입의 이넘도 인자로 받는다.
+- **SYNCHRONIZED**
+  - 오직 하나의 스레드만 Lazy 인스턴스를 초기화할 수 있게 락 사용
+- **PUBLICATION**
+  - 초기화 함수가 여러 번 호출될 수 있지만 첫 번째 리턴값만 사용
+- **NONE**
+  - 락이 사용되지 않음
+
+{% hint style="info" %}
+
+**LazyThreadSafetyMode**
+
+lazy의 lock 인자를 제공하면 값 계산 시 이 객체가 대리자를 동기화
+
+
+
+{% endhint %}
+
 ---
 
 ## 값이 널이 될 수 없게 만들기
