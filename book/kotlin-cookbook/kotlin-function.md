@@ -1223,6 +1223,52 @@ ObservableProperty 확장 클래스 대신 observable 또는 vetoable 관련해 
 
 ## 대리자로서 Map 제공
 
+> 맵을 제공해 객체를 초기화하고 싶을 경우 getValue, setValue 함수 구현을 사용하자.
+
+👉🏻 **MutableMap을 인자로 받고 해당 맵의 키에 해당하는 값으로 클래스 속성 초기화**
+
+```kotlin
+data class Project(val map: MutableMap<String, Any?>) {
+    val name: String by map
+    val priority: Int by map
+    var completed: Boolean by map
+}
+
+@Test
+fun `use map delegate for Project`() {
+    val project = Project(
+        mutableMapOf(
+            "name" to "Learn Kotlin",
+            "priority" to 5,
+            "completed" to true))
+
+    assertAll(
+        { assertEquals("Learn Kotlin", project.name) },
+        { assertEquals(5, project.priority) },
+        { assertTrue( project.completed) }
+    )
+}
+```
+
+👉🏻 **JSON 문자열로 속성을 파싱할 경우에도 사용되**
+
+```kotlin
+private fun getMapFormJSON() =
+    Gson().fromJson<MutableMap<String, Any?>>(
+        """{ "name": "Learn Kotlin", "priority": 5, "completed": true }""",
+        MutableMap::class.java)
+
+@Test
+fun `create project from map parsed from JSON string`() {
+    val project = Project(getMapFormJSON())
+    assertAll(
+        { assertEquals("Learn Kotlin", project.name) },
+        { assertEquals(5, project.priority) },
+        { assertTrue( project.completed) }
+    )
+}
+```
+
 ---
 
 ## 사용자 정의 대리자 만들기
