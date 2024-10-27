@@ -143,6 +143,58 @@ fun createMultiAuthorBook(
 
 ## 여러 데이터에 JUnit 5 테스트 반복하기
 
+> Junit 5에는 쉼표로 구분된 값(CSV)과 팩토리 메소드가 포함된 옵션과 함께 데이터 소스를 명시할 수 있는 파라미터화된 테스트가 있다.
+
+👉🏻 **CSV 데이터를 사용해 파리미터화된 테스트 수행**
+
+```kotlin
+@ParameterizedTest
+@CsvSource("1, 1", "2, 1", "3, 2",
+    "4, 3", "5, 5", "6, 8", "7, 13",
+    "8, 21", "9, 34", "10, 55")
+fun `first 10 Fibonacci numbers (csv)`(n: Int, fib: Int) =
+    assertThat(fibonacci(n)).isEqualTo(fib)
+```
+
+Junit 5에서는 팩토리 메소드를 사용해 테스트 데이터를 생성할 수 있다.
+
+👉🏻 **파라미터 소스로서 인스턴스 함수에 접근**
+
+```kotlin
+private fun fibnumbers() = listOf(
+    Arguments.of(1, 1), Arguments.of(2, 1),
+    Arguments.of(3, 2), Arguments.of(4, 3),
+    Arguments.of(5, 5), Arguments.of(6, 8),
+    Arguments.of(7, 13), Arguments.of(8, 21),
+    Arguments.of(9, 34), Arguments.of(10, 55))
+    
+@ParameterizedTest(name = "fibonacci({0}) == {1}")
+    @MethodSource("fibnumbers")
+    fun `first 10 Fibonacci numbers (instance method)`(n: Int, fib: Int) =
+        assertThat(fibonacci(n)).isEqualTo(fib)
+```
+
+테스트 수명주기가 기본 옵션인 Lifecycle.PER_METHOD 라면 테스트 데이터 소스 함수를 동반 객체 안에 위치시켜야 한다.
+
+```kotlin
+companion object {
+    // needed if parameterized test done with Lifecycle.PER_METHOD
+    @JvmStatic
+    fun fibs() = listOf(
+        Arguments.of(1, 1), Arguments.of(2, 1),
+        Arguments.of(3, 2), Arguments.of(4, 3),
+        Arguments.of(5, 5), Arguments.of(6, 8),
+        Arguments.of(7, 13), Arguments.of(8, 21),
+        Arguments.of(9, 34), Arguments.of(10, 55))
+}
+
+@ParameterizedTest(name = "fibonacci({0}) == {1}")
+@MethodSource("fibs")
+fun `first 10 Fibonacci numbers (companion method)`(n: Int, fib: Int) =
+    assertThat(fibonacci(n)).isEqualTo(fib)
+```
+
+
 ---
 
 ## 파라미터화된 테스트에 data 클래스 사용하기
