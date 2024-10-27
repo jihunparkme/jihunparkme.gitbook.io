@@ -194,11 +194,49 @@ fun `first 10 Fibonacci numbers (companion method)`(n: Int, fib: Int) =
     assertThat(fibonacci(n)).isEqualTo(fib)
 ```
 
-
 ---
 
 ## 파라미터화된 테스트에 data 클래스 사용하기
 
+> 입력 값과 예상 값을 감싸는 data 클래스를 만들고
+>
+> 만든 data 클래스 기반의 테스트 데이터를 생성하는 함수를 테스트 메소드 소스로서 사용하자.
+
+```kotlin
+@JvmOverloads
+tailrec fun fibonacci(n: Int, a: Int = 0, b: Int = 1): Int =
+when (n) {
+    0 -> a
+    1 -> b
+    else -> fibonacci(n - 1, b, a + b)
+}
+```
+
+👉🏻 **입력과 예상되는 출력을 담는 데이터 클래스 정의**
+- 데이터 클래스는 이미 toString이 재정의되어 있으므로
+- 입력과 출력 쌍을 나타내는 data 클래스를 인스턴스화하는 파라미터화된 테스트를 사용하는 테스트 메소드를 작성할 수 있다.
+
+```kotlin
+data class FibonacciTestData(val number: Int, val expected: Int)
+
+...
+
+@ParameterizedTest
+@MethodSource("fibonacciTestData")
+fun `check fibonacci using data class`(data: FibonacciTestData) {
+    assertThat(fibonacci(data.number)).isEqualTo(data.expected)
+}
+
+private fun fibonacciTestData() = Stream.of(
+    FibonacciTestData(number = 1, expected = 1),
+    FibonacciTestData(number = 2, expected = 1),
+    FibonacciTestData(number = 3, expected = 2),
+    FibonacciTestData(number = 4, expected = 3),
+    FibonacciTestData(number = 5, expected = 5),
+    FibonacciTestData(number = 6, expected = 8),
+    FibonacciTestData(number = 7, expected = 13)
+)
+```
 
 # 입력/출력
 
