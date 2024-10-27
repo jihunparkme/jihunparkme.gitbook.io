@@ -74,6 +74,34 @@ junit.jupiter.testinstance.lifecycle.default = per_class
 
 ## 테스트에 데이터 클래스 사용하기
 
+> 원하는 모든 속성을 캡슐화하는 데이터 클래스 생성하기
+
+`assertAll` 함수의 장점은 Executable 인스턴스의 단언이 1개 이상 실패하더라도 Executable 인스턴스를 모두 실행
+
+코틀린 data 클래스에는 이미 equals 메소드가 올바르게 구현되어 있으므로 테스트 프로세스 간소화
+- 단 하나의 assertion이 모든 속성을 테스트
+
+assertj에서 제공하는 contains 메소드를 이용해 컬렉션의 모든 원소를 확인할 수 있다.
+
+```kotlin
+data class Book(
+    val isbn: String,
+    val title: String,
+    val author: String,
+    val published: LocalDate
+)
+
+...
+
+@Test
+fun `check all elements in list`() {
+    val badBook = books[2].copy(title = "Modern Java Cookbook")
+    val found = arrayOf(books[2], books[0], books[1]) // Add badBook to see the assertion fail
+    val expected = books
+    assertThat(found).contains(*expected)
+}
+```
+
 ---
 
 ## 기본 인자와 함께 도움 함수 사용하기
