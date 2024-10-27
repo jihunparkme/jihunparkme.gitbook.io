@@ -106,6 +106,39 @@ fun `check all elements in list`() {
 
 ## 기본 인자와 함께 도움 함수 사용하기
 
+> 각 인자에 기본값을 제공하도록 클래스를 수정하지 말고
+>
+> 기본값을 생성하는 팩토리 함수를 추가하자.
+
+최상위 레벨의 유틸리티 클래스에 팩토리 함수를 위치시키면 테스트에서 팩토리 함수를 재활용할 수 있다.
+
+```kotlin
+fun createBook(
+    isbn: String = "149197317X",
+    title: String = "Modern Java Recipes",
+    author: String = "Ken Kousen",
+    published: LocalDate = LocalDate.parse("2017-08-26")
+) = Book(isbn, title, author, published)
+
+val mjr = createBook()
+
+...
+
+data class MultiAuthorBook(
+    val isbn: String,
+    val title: String,
+    val authors: List<String>,
+    val published: LocalDate
+)
+
+fun createMultiAuthorBook(
+    isbn: String = "9781617293290",
+    title: String = "Kotlin in Action",
+    authors: List<String> = listOf("Dimitry Jeremov", "Svetlana Isakova"),
+    published: LocalDate = LocalDate.parse("2017-08-26")
+) = MultiAuthorBook(isbn, title, authors, published)
+```
+
 ---
 
 ## 여러 데이터에 JUnit 5 테스트 반복하기
