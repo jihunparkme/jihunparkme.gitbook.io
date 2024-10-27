@@ -1250,7 +1250,7 @@ fun `use map delegate for Project`() {
 }
 ```
 
-👉🏻 **JSON 문자열로 속성을 파싱할 경우에도 사용되**
+👉🏻 **JSON 문자열로 속성을 파싱할 경우에도 사용**
 
 ```kotlin
 private fun getMapFormJSON() =
@@ -1272,3 +1272,48 @@ fun `create project from map parsed from JSON string`() {
 ---
 
 ## 사용자 정의 대리자 만들기
+
+> `ReaOnlyProperty` or `ReadWriteProperty`를 구현하는 클래스를 생성하여 직접 속성 대리자를 작성하자.
+
+값을 획득하거나 설정하는 동작을 다른 객체에 위임할 수 있다.
+- 사용자 정의 속성 대리자를 생성하려면 `ReaOnlyProperty` or `ReadWriteProperty` 인터페이스에 존재하는 함수를 제공해야 한다.
+
+`ReaOnlyProperty`, `ReadWriteProperty` 인터페이스의 시그니처
+- 대리자를 만들려고 위 인터페이스를 구현할 필요가 없다.
+- 아래 코드에 보이는 시그니처와 동일한 getValue, setValue 함수만으로 충분하다.
+
+```kotlin
+public fun interface ReadOnlyProperty<in T, out V> {
+    public operator fun getValue(thisRef: T, property: KProperty<*>): V
+}
+
+public interface ReadWriteProperty<in T, V> : ReadOnlyProperty<T, V> {
+    public override operator fun getValue(thisRef: T, property: KProperty<*>): V
+    public operator fun setValue(thisRef: T, property: KProperty<*>, value: V)
+}
+```
+
+👉🏻 **간단한 대리자 예제**
+
+```kotlin
+class Delegate {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+        return "$thisRef, thank you for delegating '${property.name}' to me!"
+    }
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+        println("$value has been assigned to '${property.name}' in $thisRef.")
+    }
+}
+
+@Test
+fun `delegate test`() {
+    class Example {
+        var p: String by Delegate()
+    }
+
+    val e  = Example()
+    println(e.p) // ScopeFunction$delegate test$Example@710636b0, thank you for delegating 'p' to me!
+    e.p = "NEW" // NEW has been assigned to 'p' in ScopeFunction$delegate test$Example@710636b0.
+}
+```
