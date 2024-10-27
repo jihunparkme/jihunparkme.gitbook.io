@@ -1317,3 +1317,23 @@ fun `delegate test`() {
     e.p = "NEW" // NEW has been assigned to 'p' in ScopeFunction$delegate test$Example@710636b0.
 }
 ```
+
+완전히 다른 예제 집합으로 그레이들 빌드 도구는 위임된 속성을 통해 컨테이너와 상호작용할 수 있게 도와주는 `Kotlin DSL`을 제공한다.
+- 프로젝트 자체(org.gradle.api.Project)와 연관된 속성의 집합
+- 프로젝트 전체에 사용할 수 있는 extra 속성
+
+```groovy
+val myProperty; String by project // project 속성 myProperty를 사용 가능하게 만들기
+val myNullableProperty: String? by project // 널이 될 수 있는 속성을 사용 가능하게 만들기
+
+val myNewProperty by extra("initial value") // extra 속성 myNewProperty를 만들고 초기화
+val myOtherNewProperty by extra { "lazy initial value" } // 처음 접근이 일어날 때 초기화되는 속성 생성
+```
+
+{% hint style="info" %}
+
+**속성 대리자 생성**
+
+속성 대리자 생성 방법은 간단하지만 이미 표준 라이브러리에 들어 있거나 또는 그레이들과 같은 서드파티가 제공하는 대리자를 사용하게 될 가능성이 높다.
+
+{% endhint %}
