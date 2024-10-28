@@ -377,6 +377,30 @@ repeat(5) {
 }
 ```
 
+---
+
+## 완벽한 when 강제하기
+
+👉🏻 **컴파일러에게 else 절을 요구하도록 강요**
+
+```kotlin
+val <T> T.exhaustive: T
+    get() = this
+
+@Test
+fun `test`() {
+    fun printMod3Exhaustive(n: Int) {
+        when (n % 3) {
+            0 -> println("$n % 3 == 0")
+            1 -> println("$n % 3 == 1")
+            2 -> println("$n % 3 == 2")
+            else -> println("Houston, we have a problem...")
+        }.exhaustive
+    }
+
+    (1..10).forEach { printMod3Exhaustive(it) }
+}
+```
 
 
 # 스프링 프레임워크
