@@ -343,6 +343,42 @@ internal fun `current version is at least 1_3`() {
 }
 ```
 
+---
+
+## 반복적으로 람다 실행하기
+
+> 주어진 람다 식을 여러 번 실행하고 싶다면 코틀린 내장 repeat 함수를 사용하자.
+
+```kotlin
+/**
+ * times: 반복할 횟수
+ * action: 실행할 (Int) -> Unit 형식의 함수
+ */
+@kotlin.internal.InlineOnly
+public inline fun repeat(times: Int, action: (Int) -> Unit) {
+    contract { callsInPlace(action) }
+
+    for (index in 0 until times) {
+        action(index)
+    }
+}
+
+...
+
+/*
+ * Counting: 0
+ * Counting: 1
+ * Counting: 2
+ * Counting: 3
+ * Counting: 4
+ */
+repeat(5) {
+    println("Counting: $it")
+}
+```
+
+
+
 # 스프링 프레임워크
 
 # 코루틴과 구조적 동시성
