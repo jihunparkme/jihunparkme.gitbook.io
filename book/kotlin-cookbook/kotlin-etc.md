@@ -313,8 +313,35 @@ File(fileName).printWriter().use { writer ->
     writer.println(data) }
 ```
 
-
 # 그 밖의 코틀린 기능
+
+## 코틀린 버전 알아내기
+
+> 코트를 작성해 현재 사용 중인 코틀린 버전을 알려면,
+>
+> KotlinVersion 클래스 동반 객체의 CURRENT 속성을 사용하자.
+
+👉🏻 **코틀린 버전 비교하기**
+
+```kotlin
+@Test
+internal fun `comparison of KotlinVersion instances work`() {
+    val v12 = KotlinVersion(major = 1, minor = 2)
+    val v1341 = KotlinVersion(1, 3, 41)
+    assertAll(
+        { assertTrue(v12 < KotlinVersion.CURRENT) },
+        { assertTrue(v1341 <= KotlinVersion.CURRENT) },
+        { assertEquals(KotlinVersion(1, 3, 41),
+            KotlinVersion(major = 1, minor = 3, patch = 41)) }
+    )
+}
+
+@Test
+internal fun `current version is at least 1_3`() {
+    assertTrue(KotlinVersion.CURRENT.isAtLeast(major = 1, minor = 3))
+    assertTrue(KotlinVersion.CURRENT.isAtLeast(major = 1, minor = 3, patch = 40))
+}
+```
 
 # 스프링 프레임워크
 
