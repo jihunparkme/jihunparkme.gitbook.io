@@ -402,6 +402,55 @@ fun `test`() {
 }
 ```
 
+---
+
+## 실행 가능한 클래스 만들기
+
+> 클래스에서 단일 함수를 간단하게 호출하고 싶다면,  
+>
+> 함수를 호출할 클래스에서 `invoke` 연산자 함수를 재정의하자.
+
+```kotlin
+data class Assignment(
+    val name: String,
+    val craft: String
+)
+
+data class AstroResult(
+    val message: String,
+    val number: Int,
+    val people: List<Assignment>
+)
+
+...
+
+class AstroRequest {
+    companion object {
+        private const val ASTRO_URL = "http://api.open-notify.org/astros.json"
+    }
+
+    // invoke 연산자 함수를 통해 실행 가능한 클래스로 사용
+    operator fun invoke(): AstroResult =
+        Gson().fromJson(URL(ASTRO_URL).readText(), AstroResult::class.java)
+}
+
+...
+
+@Test
+fun `get people in space`() {
+    // val request = AstroRequest() // AstroRequest 클래스 인스턴스화
+    // val result = request() // 함수처럼 클래스를 호출(invoke 호출)
+    var result = AstroRequest()()
+    assertAll(
+        { assertEquals("success", result.message) },
+        { assertTrue { result.number >= 0 } },
+        { assertEquals(result.number, result.people.size) }
+    )
+    }
+```
+
+`invoke` 연산자 함수를 제공하고 클래스 레퍼런스에 괄호를 추가하면 클래스 인스턴스를 바로 실행할 수 있다.
+- 원한다면 필요한 인자를 추가한 invoke 함수 중복도 추가할 수 있다.
 
 # 스프링 프레임워크
 
