@@ -244,7 +244,7 @@ private fun fibonacciTestData() = Stream.of(
 
 > 확실하게 리소스를 닫고 싶지만 코틀린은 자바의 try-with-resource 구문을 지원하지 않는다.
 >
-> kotlin.io 패키지의 use 또는 java.io.Reader의 useLines 확장 함수를 사용하자.
+> kotlin.io 패키지의 use 또는 java.io.Reader의 `useLines` 확장 함수를 사용하자.
 
 **File.useLines**
 
@@ -285,13 +285,34 @@ internal fun `10 longest words in dictionary`() {
 public inline fun <T : Closeable?, R> T.use(block: (T) -> R): R
 ```
 
-
-
-
-
 ---
 
 ## 파일에 기록하기
+
+> File 클래스의 확장 함수에는 일반적인 **자바 입출력 메소드**뿐만 아니라 **출력 스트림**과 **Writer를 리턴하는 확장 함수**가 있다.
+
+`forEachLine` 함수를 사용해서 파일을 순회할 수 있다.
+- 파일이 매우 크지 않다면 File의 `readLines`를 호출해 모든 줄이 담긴 컬렉션을 획득할 수도 있다.
+- `useLines` 함수를 사용해 파일의 줄마다 호출되는 함수를 제공할 수 있다.
+- 파일의 크기가 작다면 `readText` 또는 `readBytes`를 사용해 전체 내용을 각각 문자열이나 바이트 배열로 읽어올 수 있다.
+
+파일에 존재하는 내용을 모두 교체하고 싶다면 `writeText` 함수를 사용
+
+```kotlin
+File("myfile.txt).writeText("My data")
+```
+
+File 클래스에는 파일에 데이터를 추가하는 `appendText`라는 확장 함수가 있다.
+- `writeText`와 `appendText` 함수는 `writeBytes`와 `appendBytes`에 기록 작업을 위임힌다.
+- `writeBytes`와 `appendBytes`는 기록이 끝나면 `use` 함수를 사용해 파일을 확실히 닫는다.
+
+개발자는 `OutputStreamWriter`와 `BufferedWriter`를 리턴하는 `writer`(printWriter)와 `bufferedWriter` 함수를 사용할 수도 있다.
+
+```kotlin
+File(fileName).printWriter().use { writer ->
+    writer.println(data) }
+```
+
 
 # 그 밖의 코틀린 기능
 
