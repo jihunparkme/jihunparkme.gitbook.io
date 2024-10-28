@@ -242,6 +242,53 @@ private fun fibonacciTestData() = Stream.of(
 
 ## use로 리소스 관리하기
 
+> 확실하게 리소스를 닫고 싶지만 코틀린은 자바의 try-with-resource 구문을 지원하지 않는다.
+>
+> kotlin.io 패키지의 use 또는 java.io.Reader의 useLines 확장 함수를 사용하자.
+
+**File.useLines**
+
+- useLines의 첫 번째 선택적 인자는 문자 집합이며 기본값은 UTF-8
+- 두 번째 인자는 파일의 줄을 나타내는 Sequence를 제네릭 인자 T로 매핑하는 람다
+
+```kotlin
+public inline fun <T> File.useLines(
+    charset: Charset = Charsets.UTF_8, 
+    block: (Sequence<String>) -> T
+): T {
+    contract {
+        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+    }
+    // BufferedReader를 생성하고 BufferedReader의 use 함수에 처리를 위임
+    return bufferedReader(charset).use { block(it.lineSequence()) }
+}
+
+...
+
+fun get10LongestWordsInDictionary() =
+    File("/usr/share/dict/words").useLines { line ->
+        line.filter { it.length > 20 }
+            .sortedByDescending(String::length)
+            .take(10)
+            .toList()
+    }
+
+@Test @EnabledOnOs(OS.MAC)
+internal fun `10 longest words in dictionary`() {
+    get10LongestWordsInDictionary().forEach { word -> println("$word (${word.length})") }
+}
+```
+
+**use 함수의 시그니처**
+
+```kotlin
+public inline fun <T : Closeable?, R> T.use(block: (T) -> R): R
+```
+
+
+
+
+
 ---
 
 ## 파일에 기록하기
