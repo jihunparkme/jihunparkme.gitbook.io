@@ -634,4 +634,32 @@ internal fun `Random function produces a seeded generator`() {
 
 # 스프링 프레임워크
 
+코틀린으로 스프링 애플리케이션을 작성할 때 사용할 수 있는 몇 가지 기술들
+
+## 확장을 위해 스프링 관리 빈 클래스 오픈하기
+
+> 확장을 위해 자동으로 필요한 스프링 관리 클래스를 열어주는 코틀린 스프링 플러그인을 빌드 파일에 추가하자
+
+코틀린은 기본적으로 **정적으로 결합**한다.
+- 클래스가 open 키워드를 사용해 확장을 위한 열림으로 표시되지 않으면 메소드 **재정의 또는 클래스 확장이 불가능**하다.
+- 코틀린은 이 문제를 `all-open` 플러그인으로 해결한다.
+- `all-open` 플러그인은 클래스와 클래스에 포함된 함수에 명시적으로 open 키워드를 추가하지 않고 명시적인 open 애노테이션으로 클래스를 설정한다.
+
+`kotlin-spring` 플러그인은 아래 애노테이션으로 클래스를 열도록 설정되어 있다.
+- @Component
+- @Async
+- @Transactional
+- @Cacheable
+- @SpringBootTest
+
+```groovy
+implementation("org.jetbrains.kotlin.plugin.spring:org.jetbrains.kotlin.plugin.spring.gradle.plugin:2.0.21")
+```
+
+{% hint style="info" %}
+
+`kotlin-spring`이 제공하는 것보다 더 많이 필요하다면 all-open 플러그인도 추가할 수 있지만 거의 필요 없다.
+
+{% endhint %}
+
 # 코루틴과 구조적 동시성
