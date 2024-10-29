@@ -519,6 +519,53 @@ fun main() {
 
 {% endhint %}
 
+---
+
+## 스레드 시작하기
+
+**스레드 확장 함수의 시그니처**
+
+```kotlin
+public fun thread(
+    start: Boolean = true,
+    isDaemon: Boolean = false,
+    contextClassLoader: ClassLoader? = null,
+    name: String? = null,
+    priority: Int = -1,
+    block: () -> Unit
+): Thread 
+```
+
+👉🏻 **다수의 스레드를 임의의 간격으로 시작하기**
+
+```kotlin
+/**
+ * Thread-0 for 0 after 2ms
+ * Thread-1 for 1 after 345ms
+ * Thread-2 for 2 after 370ms
+ * Thread-3 for 3 after 153ms
+ * Thread-4 for 4 after 138ms
+ * Thread-5 for 5 after 879ms
+ */
+(0..5).forEach { n ->
+    val sleepTime = Random.nextLong(range = 0..1000L)
+    thread {
+        Thread.sleep(sleepTime)
+        println("${Thread.currentThread().name} for $n after ${sleepTime}ms")
+    }.join()
+}
+```
+
+Thread 확장 함수는 자신의 본문에서 생성한 스레드를 리턴하므로, 스레드의 join 메소드를 사용해서 모든 스레드를 순차적으로 호출하게 만들 수 있다.
+
+```kotlin
+(0..5).forEach { n ->
+    thread {
+    // ...
+    }.join() // 리턴된 스레드의 invoke 메소드를 사용할 수 있다.
+}
+```
+
 # 스프링 프레임워크
 
 # 코루틴과 구조적 동시성
