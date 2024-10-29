@@ -452,6 +452,73 @@ fun `get people in space`() {
 `invoke` 연산자 함수를 제공하고 클래스 레퍼런스에 괄호를 추가하면 클래스 인스턴스를 바로 실행할 수 있다.
 - 원한다면 필요한 인자를 추가한 invoke 함수 중복도 추가할 수 있다.
 
+---
+
+## 경과 시간 측정하기
+
+> 코드 블록이 실행되는 데 걸린 시간을 알고 싶다면, measureTimeMillis 또는 measureNanoTime 함수를 사용하자.
+
+**measureTimeMillis 함수의 구현**
+
+```kotlin
+public inline fun measureTimeMillis(block: () -> Unit): Long {
+    contract {
+        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+    }
+    val start = System.currentTimeMillis()
+    block()
+    return System.currentTimeMillis() - start
+}
+```
+
+👉🏻 **코드 블록의 경과 시간 측정하기**
+
+```Kotlin
+fun doubleIt(x: Int): Int {
+    Thread.sleep(100L)
+    println("doubling $x with on thread ${Thread.currentThread().name}")
+    return x * 2
+}
+
+/**
+ * This machine has 10 processors
+ * doubling 1 with on thread main
+ * ...
+ * doubling 8 with on thread main
+ * Sequential stream took 845ms
+ * doubling 6 with on thread main
+ * doubling 8 with on thread ForkJoinPool.commonPool-worker-2
+ * ...
+ * doubling 1 with on thread ForkJoinPool.commonPool-worker-6
+ * Parallel stream took 106ms
+ */
+fun main() {
+    println("This machine has ${Runtime.getRuntime().availableProcessors()} processors")
+
+    var time = measureTimeMillis {
+        IntStream.rangeClosed(1, 8)
+            .map { doubleIt(it) }
+            .sum()
+    }
+    println("Sequential stream took ${time}ms")
+
+    time = measureTimeMillis {
+        IntStream.rangeClosed(1, 8)
+            .parallel()
+            .map { doubleIt(it) }
+            .sum()
+    }
+    println("Parallel stream took ${time}ms")
+
+}
+```
+
+{% hint style="info" %}
+
+더 정확한 성능 측정을 원한다면 오픈 JDK의 자바 마이크로벤치마크 도구[JMH, Java Microbenchmark Harness](https://github.com/openjdk/jmh)프로젝트를 사용하자.
+
+{% endhint %}
+
 # 스프링 프레임워크
 
 # 코루틴과 구조적 동시성
