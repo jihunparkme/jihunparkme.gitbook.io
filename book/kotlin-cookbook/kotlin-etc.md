@@ -566,6 +566,24 @@ Thread 확장 함수는 자신의 본문에서 생성한 스레드를 리턴하�
 }
 ```
 
+---
+
+## TODO로 완성 강제하기
+
+👉🏻 **TODO 함수의 구현**
+- 효율성을 이유로 소스는 인라인되어 있고, 함수가 호출될 때 NotImplementedError 발생
+
+```kotlin
+public inline fun TODO(reason: String): Nothing = 
+    throw NotImplementedError("An operation is not implemented: $reason")
+
+...
+
+fun main() {
+    TODO(reason = "none, really")
+}
+```
+
 # 스프링 프레임워크
 
 # 코루틴과 구조적 동시성
