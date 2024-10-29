@@ -662,4 +662,56 @@ implementation("org.jetbrains.kotlin.plugin.spring:org.jetbrains.kotlin.plugin.s
 
 {% endhint %}
 
+---
+
+## 코틀린 data 클래스로 퍼시스턴스 구현하기
+
+> data 클래스로 JPA를 사용하고 싶다면 kotlin-jpa 플러그인을 추가하자.
+
+JPA 관점에서 data 클래스는 두 가지 문제가 있다.
+
+1️⃣ JPA는 모든 속성에 기본값을 제공하지 않는 이상 기본 생성자가 필수지만 data 클래스는 기본 생성자가 없다.
+- no-arg 플러그인은 인자가 없는 생성자를 추가할 클래스를 선택할 수 있고
+- 기본 생성자 추가를 호출하는 애너테이션을 정의할 수도 있다.
+
+kotlin-jpa 플러그인은 no-arg 플러그인을 기반으로 만들어 졌고, 아래 애노테이션으로 자동 표시된 클래스에 기본 생성자를 추가한다.
+- `@Entity`
+- `@Embeddable`
+- `@MappedSuperclass`
+
+```kotlin
+kotlin("plugin.jpa") version "1.2.71"
+```
+
+2️⃣ val 속성과 함께 data 클래스를 생성하면 불변 객체가 생성되는데, JPA는 불변 객체와 더불어 잘 동작하도록 설계되지 않았다.
+- 엔티티로 사용하고 싶은 코틀린 클래스에 (data 클래스 대신) 필드 값을 변경할 수 있게 속성에 var 타입을 사용하는 단순 클래스 사용을 추천
+
+👉🏻 **데이터베이스 테이블로 매핑되는 코틀린 클래스**
+
+```kotlin
+@Entity
+class Article(
+    var title: String,
+    var headline: String,
+    var content: String,
+    @ManyToOne var author: User,
+    var slug: String = title.toSlug(),
+    var addedAt: LocalDateTime = LocalDateTime.now(),
+    @Id @GeneratedValue var id: Long? = null)
+
+@Entity
+class User(
+    var login: String,
+    var firstname: String,
+    var lastname: String,
+    var description: String? = null,
+    @Id @GeneratedValue var id: Long? = null)
+```
+
+ref. [Building web applications with Spring Boot and Kotlin](https://spring.io/guides/tutorials/spring-boot-kotlin)
+
+---
+
+
+
 # 코루틴과 구조적 동시성
