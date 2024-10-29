@@ -584,6 +584,54 @@ fun main() {
 }
 ```
 
+---
+
+## Random의 무작위 동작 이해하기
+
+👉🏻 **nextInt 함수**
+
+```kotlin
+@Test
+internal fun `nextInt with no args gives any Int`() {
+    val value = Random.nextInt()
+    assertTrue(value in Int.MIN_VALUE..Int.MAX_VALUE)
+}
+
+@Test
+internal fun `nextInt with a range gives value between 0 and limit`() {
+    val value = Random.nextInt(10)
+    assertTrue(value in 0..10)
+}
+
+@Test
+internal fun `nextInt with min and max gives value between them`() {
+    val value = Random.nextInt(5, 10)
+    assertTrue(value in 5..10)
+}
+
+@Test
+internal fun `nextInt with range returns value in range`() {
+    val value = Random.nextInt(7..12)
+    assertTrue(value in 7..12)
+}
+```
+
+👉🏻 **시드 값과 함께 난수 생성기 사용하기**
+
+```kotlin
+@Test
+internal fun `Random function produces a seeded generator`() {
+    val r1 = Random(12345)
+    val nums1 = (1..10).map { r1.nextInt() }
+
+    val r2 = Random(12345)
+    val nums2 = (1..10).map { r2.nextInt() }
+
+    // println(nums1)
+    assertEquals(nums1, nums2)
+}
+```
+
 # 스프링 프레임워크
 
 # 코루틴과 구조적 동시성
