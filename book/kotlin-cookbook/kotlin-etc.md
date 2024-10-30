@@ -771,5 +771,3 @@ class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
     // ...
 }
 ```
-
-# 코루틴과 구조적 동시성
