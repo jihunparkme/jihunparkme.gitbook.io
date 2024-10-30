@@ -712,6 +712,64 @@ ref. [Building web applications with Spring Boot and Kotlin](https://spring.io/g
 
 ---
 
+## 의존성 주입하기
 
+> 코틀린 스프링은 생성자 주입을 제공하지만 필드 주입에는 lateinit var 구조를 사용해야 한다.
+>
+> 선택적인 빈은 널 허용 타입으로 선언한다.
+
+클래스에서 생성자가 하나뿐이라면 스프링이 자동으로 클래스의 유일한 생성자에 모든 인자를 자동으로 오토와이어링하기 때문에 @Autowired 애노테이션을 사용할 필요가 없다.
+
+👉🏻 **스프링으로 의존성 오토와이어링하기**
+
+```kotlin
+/** 단일 생성자를 갖는 클래스 */
+@RestController
+class GreetingController(val service: GreetingService) { /* ... */ }
+
+/** 명시적으로 오토와이어링 */
+@RestController
+class GreetingController(@Autowired val service: GreetingService) { /* ... */ }
+
+/** 오토와이어링 생성자 호출. 주로 다수의 의존성을 갖는 클래스 */
+@RestController
+class GreetingController @Autowired constructor(val service: GreetingService) { 
+    // ...
+}
+
+/** 필드 주입(비추천하지만 유용할 수 있다) */
+@RestController
+class GreetingController {
+    @Autowired 
+    lateinit var service: GreetingService
+
+    // ...
+}
+```
+
+클래스의 속성이 필수가 아니라면 해당 속성을 널 허용 타입으로 선언할 수 있다.
+
+👉🏻 **선택 가능한 파라미터를 갖는 컨트롤러 함수**
+
+```kotlin
+@GetMapping("/hello")
+fun greetUser(@RequestParam name: String?) = 
+    Greeting(service.sayHello(name ?: "World"))
+
+...
+
+@DataJpaTest
+class RepositoriesTests @Autowired constructor (
+    val entityManager: TestEntityManager,
+    val userRepository: UserRepository,
+    val articleRepository: ArticleRepository) {
+    // ...
+}
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
+    // ...
+}
+```
 
 # 코루틴과 구조적 동시성
