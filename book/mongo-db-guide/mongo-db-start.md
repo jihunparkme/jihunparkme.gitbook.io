@@ -146,7 +146,7 @@ ISODate('+020109-01-01T00:00:00.000Z')
 
 ### 생성
 
-> `insertOne` 함수는 컬렉션에 도큐먼트를 추가하거나
+> `insertOne`
 
 - 도큐먼트를 나타내는 자바스크립트 객체인 지역 변수를 생성
 
@@ -161,10 +161,21 @@ db.movies.insertOne(movie)
 
 ### 읽기
 
-> `find`, `findOne`은 컬렉션 쿼리에 사용
+> `find`, `findOne`
 
 ```sql
 db.movies.findOne()
 ```
 
+- `find`, `findOne`은 쿼리 도큐먼트 형태로 조건 전달도 가능
+- 쿼리에서 일치하는 도큐먼트로 결과를 제한
 
+### 갱신
+
+> `updateOne`
+
+```sql
+db.movies.updateOne({"title": "Star Wars: Episode IV - A New Hope"},
+    {$set : {reviews:[]}}
+)
+```
