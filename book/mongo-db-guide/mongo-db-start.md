@@ -159,3 +159,12 @@ movie = {
 db.movies.insertOne(movie)
 ```
 
+### 읽기
+
+> `find`, `findOne`은 컬렉션 쿼리에 사용
+
+```sql
+db.movies.findOne()
+```
+
+
