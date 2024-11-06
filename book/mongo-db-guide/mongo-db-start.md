@@ -102,8 +102,40 @@
 
 ```bash
 $ mongod
+```
 
-# docker 실행 시
+## 셸 소개
+
+> 명령행에서 몽고DB 인스턴스와 상호작용하는 자바스크립트 셸을 제공
+
+**셸 실행**
+- 셸은 완전한 자바스크립트 해석기이며 임의의 자바스크립트 프로그램을 실행
+
+```bash
+$ mongo
+
+# docker 사용 시
 $ docker exec -it mongo mongosh
 ```
 
+표준 자바스크립트 라이브러리의 모든 기능을 활용 가능
+
+```bash
+test> Math.sin(Math.PI / 2)
+1
+
+test> new Date("20109/1/1");
+ISODate('+020109-01-01T00:00:00.000Z')
+```
+
+셸은 시작할 때 몽고DB 서버의 test 데이터베이스에 연결하고, 데이터베이스 연결을 전역 변수 db에 할당
+- 셸에서는 주로 이 변수를 통해 몽고DB에 접근
+
+  ```bash
+  # 현재 db에 할당된 데이터베이스 확인
+  test> db
+  test
+
+  # db 변수에서 컬렉션에 접근
+  test> test.movies
+  ```
