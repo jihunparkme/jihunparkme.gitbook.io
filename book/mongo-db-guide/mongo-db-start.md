@@ -139,3 +139,23 @@ ISODate('+020109-01-01T00:00:00.000Z')
   # db 변수에서 컬렉션에 접근
   test> test.movies
   ```
+
+## 셸 기본 작업
+
+> 셸에서 생성, 읽기, 갱신, 삭제의 네 가지 기본적인 작업(CRUD) 제공
+
+### 생성
+
+> `insertOne` 함수는 컬렉션에 도큐먼트를 추가하거나
+
+- 도큐먼트를 나타내는 자바스크립트 객체인 지역 변수를 생성
+
+```sql
+movie = {
+    "title": "Star Wars: Episode IV - A New Hope",
+    "director": "George Lucas",
+    "year": 1977
+}
+db.movies.insertOne(movie)
+```
+
