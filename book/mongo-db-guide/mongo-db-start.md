@@ -236,7 +236,7 @@ db.movies.deleteOne({"title": "Star Wars: Episode IV - A New Hope"})
 - 도큐먼트 내 배열의 장점으로 몽고DB가 배열 구조를 `이해`하고, 배열의 내용에 작업을 수행하기 위해 내부에 도달하는 `방법`을 안다는 점
   - 따라서 배열에 쿼리하거나 배열의 내용을 이용해 인덱스 생성 가능
 
-ℹ️ **G**
+ℹ️ **내장 도큐먼트**
 
 > 내장 도큐먼트를 사용해 데이터를 키/값 쌍의 평면적인 구조보다 자연스러운 방법으로 구성
 
@@ -298,3 +298,53 @@ $ mongo some-host:30000/myDB
 - `db.help`: 데이터베이스 수준의 도움말
 - `db.foo.help()`: 컬렉션 수준의 도움말
 - 함수의 기능을 알고 싶으면 함수명을 괄호 없이 입력
+
+# 도규먼트 생성/갱신/삭제
+
+## 도큐먼트 삽입
+
+> 도큐먼트를 삽입하려면 컬렉션의 `insertOne` 메서드 사용
+
+```sql
+db.movies.insertOne({"title": "Stand by Me",})
+```
+
+> 여러 도큐먼트를 컬렉션에 삽입하려면 `insertMany`로 도큐먼트 배열을 데이터베이스에 전달
+>
+> 도큐먼트를 대량 삽입하므로 효율적
+
+```sql
+db.movies.insertMany([{"title": "Ghostbusters"},
+    {"title": "E.T."},
+    {"title": "Blade Runner"}]);
+```
+
+insertMany 사용으로 대량 삽입 시 배열 중간에 있는 도규먼트에서 특정 유형의 오류가 발생할 경우, 정렬 연산을 선택했는지, 비정렬 연산을 선택했는지에 따라 발생하는 상황이 달라진다.
+- 정렬된 삽입(기본값)
+  - 옵션 도큐먼트 "ordered" 키에 true 지정
+  - 삽입에 전달된 배열이 삽입 순서를 정의
+  - 도큐먼트가 삽입 오류를 생성하면, 배열에서 이후 도큐먼트는 삽입되지 않는다.
+
+- 정렬되지 않은 삽입
+  - 옵션 도큐먼트 "ordered" 키에 false 지정
+  - 몽고DB는 성능을 개선하려고 삽입을 재배열
+  - 몽고DB는 일부 삽입의 오류 발생 여부에 관계없이 모든 도큐먼트 삽입을 시도
+
+```sql
+db.movies.insertMany([
+    {"_id": 3, "title": "Sixteen Candles"},
+    {"_id": 4, "title": "The Terminator"},
+    {"_id": 4, "title": "The Princess Bride"},
+    {"_id": 5, "title": "Scarface"},
+])
+```
+
+{% hint style="info" %}
+
+**대량쓰기 API**
+
+몽고DB는 한 번의 호출로 여러 유형의 작업을 일괄 처리하는 대량 쓰기 API를 지원
+
+[대량쓰기 API](https://www.mongodb.com/ko-kr/docs/languages/java/reactive-streams-driver/current/write/bulk-writes/) 참고
+
+{% endhint %}
