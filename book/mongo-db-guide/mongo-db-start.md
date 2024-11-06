@@ -179,3 +179,14 @@ db.movies.updateOne({"title": "Star Wars: Episode IV - A New Hope"},
     {$set : {reviews:[]}}
 )
 ```
+
+### 삭제
+
+> `deleteOne`, `deleteMany`
+
+도큐먼트를 데이터베이스에서 영구적으로 삭제
+- 필터와 일치하는 모든 도큐먼트 삭제 시 deleteMany 사용
+
+```sql
+db.movies.deleteOne({"title": "Star Wars: Episode IV - A New Hope"})
+```
