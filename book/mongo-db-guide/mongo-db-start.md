@@ -348,3 +348,12 @@ db.movies.insertMany([
 [대량쓰기 API](https://www.mongodb.com/ko-kr/docs/languages/java/reactive-streams-driver/current/write/bulk-writes/) 참고
 
 {% endhint %}
+
+.
+
+**삽입 유효성 검사**
+
+- 몽고DB는 삽입된 데이터에 최소한의 검사를 수행
+  - "_id" 필드가 존재하지 않으면 새로 추가하고, 모든 도큐먼트는 `16MB`보다 작어야 하므로 크기를 검사
+- 대개 나쁜 스키마 설계를 예방하고 일관된 성능을 보장
+  - doc라는 도큐먼트의 BSJON 크기를 보려면 쉘에서 `object.bsonsize(doc)`를 실행
