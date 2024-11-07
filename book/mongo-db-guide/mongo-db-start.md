@@ -501,7 +501,7 @@ db.games.updateOne({"game": "pinball", "user": "joe"},
 
 연산자는 리스트에 대한 인덱스를 지정할 수 있을 뿐 아니라 셋처럼 이중으로 사용 가능
 
-**요소 추가**
+1️⃣ **요소 추가**
 - `$push`는 배열이 이미 존재하면 배열 긑에 요소를 추가하고, 존재하지 않으면 새로운 배열을 생성
 
 ```sql
@@ -565,3 +565,38 @@ db.movies.updateOne({"genre": "horror"},
         }
     })
 ```
+
+2️⃣ 배열을 집합으로 사용하기
+
+- 특정 값이 배열에 존재하지 않을 때 해당 값을 추가하면서, 배열을 집합처럼 처리하려면 쿼리 도큐먼트에 `$ne`를 사용
+
+```sql
+# 인용 목록에 저자가 존재하지 않을 경우에만 해당 저자 추가
+db.papers.updateOne({"authors cited": {"$ne": "Richie"}},
+    {$push: {"authors cited": "Richie"}})
+```
+
+`$addToSet`은 `$ne`가 동작하지 않을 경우 사용 가능하고, 중복을 피할 수 있다.
+
+```sql
+db.users.updateOne({"_id": ObjectId("672ca876ccf8f87e8793c90a")},
+    {"$addToSet": {"emails": "joe@gmail.com"}})
+```
+
+고유한 값을 여러 개 추가하려면 `$addToSet`과 `$each`를 결합하여 사용
+
+```sql
+db.users.updateOne({"_id": ObjectId("672ca876ccf8f87e8793c90a")},
+    {
+        "$addToSet": {
+            "emails": {
+                "$each":
+                    ["joe@gmail.com", "joe@python.org"]
+            }
+        }
+    })
+```
+
+
+
+
