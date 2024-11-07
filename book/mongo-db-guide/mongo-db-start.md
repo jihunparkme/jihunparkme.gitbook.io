@@ -430,6 +430,10 @@ db.users.replaceOne({"name": "joe"}, joe)
 
 ⭐️ 갱신 연산자는 키를 변경, 추가, 제거하고, 배열과 내장 도큐먼트를 조작하는 복잡한 갱신 연산을 지정하는데 사용하는 특수키
 
+.
+
+👉🏻 **"$inc"**
+
 ```sql
 db.analytics.insertOne({
     "url": "www.example.com",
@@ -439,3 +443,32 @@ db.analytics.insertOne({
 db.analytics.updateOne({"url": "www.example.com"},
     {"$inc": {"pageviews": 1}})
 ```
+
+.
+
+👉🏻 **"$set"**
+
+- `$set`은 필드 값을 설정
+- 필드가 존재하지 않으면 새 필드가 생성
+- 스키마를 갱신하거나 사용자 정의 키를 추가할 때 편리
+- `$set`은 key의 데이터형도 변경 가능
+- `$unset`으로 key/value 모두 제거 가능
+
+```sql
+db.users.insertOne({
+    "name": "joe",
+    "age": 30,
+    "sex": "male",
+    "location": "Wisconsin"
+});
+db.users.updateOne({"_id": ObjectId("672c304b07b2c3060aa45bc6")},
+    {"$set": {"favorite book": "War and Pace"}});
+db.users.updateOne({"_id": ObjectId("672c304b07b2c3060aa45bc6")},
+    {"$unset": {"favorite book": 1}})
+```
+
+{% hint style="info" %}
+
+키를 추가, 변경, 삭제할 때는 항상 `$` 제한자를 사용해야 한다.
+
+{% endhint %}
