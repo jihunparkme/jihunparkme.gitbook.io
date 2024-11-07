@@ -115,6 +115,7 @@ $ mongod
 $ mongo
 
 # docker 사용 시
+$ docker run --name mongo -d -p 27017:27017 mongo
 $ docker exec -it mongo mongosh
 ```
 
@@ -301,7 +302,7 @@ $ mongo some-host:30000/myDB
 
 # 도규먼트 생성/갱신/삭제
 
-## 도큐먼트 삽입
+## 삽입
 
 > 도큐먼트를 삽입하려면 컬렉션의 `insertOne` 메서드 사용
 
@@ -357,3 +358,16 @@ db.movies.insertMany([
   - "_id" 필드가 존재하지 않으면 새로 추가하고, 모든 도큐먼트는 `16MB`보다 작어야 하므로 크기를 검사
 - 대개 나쁜 스키마 설계를 예방하고 일관된 성능을 보장
   - doc라는 도큐먼트의 BSJON 크기를 보려면 쉘에서 `object.bsonsize(doc)`를 실행
+
+## 삭제
+
+> 데이터 삭제는 `deleteOne`, `deleteMany` 메서드 사용으로
+
+```sql
+db.movies.deleteOne({"_id": 4})
+db.movies.deleteMany({"year": 1984})
+```
+
+- `deleteOne`은 필터와 일치하는 `첫 번째 도큐먼트`를 삭제
+  - 첫 번쨰의 기준은 삽입 순서, 갱신 상태, 인덱스 등 몇 가지 요인에 따라 달라진다.
+- `deleteMany`는 필터와 일치하는 모든 도큐먼트를 삭제
