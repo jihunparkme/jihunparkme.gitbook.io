@@ -472,3 +472,23 @@ db.users.updateOne({"_id": ObjectId("672c304b07b2c3060aa45bc6")},
 키를 추가, 변경, 삭제할 때는 항상 `$` 제한자를 사용해야 한다.
 
 {% endhint %}
+
+.
+
+👉🏻 **증가와 감소**
+
+> `$inc` 연산자는 이미 존재하는 키의 값을 변경하거나 새 키를 생헝하는 데 사용
+
+⭐️ 분석, 분위기, 투표 등과 같이 자주 변하는 수치 값을 갱신하는 데 유용
+
+```sql
+db.games.insertOne({"game": "pinball", "user": "joe"})
+
+db.games.updateOne({"game": "pinball", "user": "joe"},
+    {"$inc": {"score": 50}})
+```
+
+`$inc`는 `$set`과 비슷하지만 숫자를 증감하기 위해 설계
+- int, long, double, decimal 타입 값에만 사용 가능
+- 또한, `$inc`의 키 값은 무조건 숫자
+- 다른 데이터형을 반환하려면 `$set`이나 배열 연산자 사용
