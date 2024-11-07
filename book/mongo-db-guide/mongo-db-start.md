@@ -1328,3 +1328,38 @@ db.process.findOneAndUpdate({"status": "READY"},
 이외에도 `findOneAndReplace`는 동일한 매개변수를 사용하며, 
 - `returnNewDocument`의 값에 따라 교체 전이나 후에 필터와 일치하는 도큐먼트를 반환
 - `findOneAndDelete`는 삭제된 도큐먼트를 반환
+
+# 쿼리
+
+## find
+
+```sql
+// 컬렉션 내 모든 도큐먼트
+db.c.find()
+
+// age가 27인 모든 도큐먼트
+db.users.find({"age": 27})
+
+// username 키 값이 joe인 도큐먼트
+db.users.find({"username": "joe"})
+
+// 27살이면서 이름이 joe인 모든 사용자
+db.users.find({"username": "joe", "age": 27})
+```
+
+1️⃣ 반환받을 키 지정
+
+> find의 두 번째 매개변수에 원하는 키를 지정
+
+- 네트워크상의 데이터 전송량과 클라이언트 측에서 도큐먼트를 디코딩하는 데 드는 시간과 메모리 단축
+
+```sql
+// username, email 키의 값만 원할 경우
+db.users.find({}, {"username": 1, "email": 1})
+
+// 두 번째 매개변수를 사용해서 특정 키/값 쌍을 제외한 결과
+db.users.find({}, {"fatal_weakness": 0})
+
+// "_id" 반환 제외
+db.users.find({}, {"username": 1, "_id": 0})
+```
