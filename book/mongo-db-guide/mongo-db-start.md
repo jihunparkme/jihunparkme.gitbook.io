@@ -399,7 +399,7 @@ db.movies.drop()
 
 .
 
-✅ **도큐먼트 치환**
+### **도큐먼트 치환**
 
 > `replaceOne`은 도큐먼트를 새로운 것으로 치환
 
@@ -424,13 +424,11 @@ db.users.replaceOne({"name": "joe"}, joe)
 
 .
 
-✅ **갱신 연산자**
+### **갱신 연산자**
 
 > 부분 갱신에는 원자적 갱신 연산자를 사용
 
 ⭐️ 갱신 연산자는 키를 변경, 추가, 제거하고, 배열과 내장 도큐먼트를 조작하는 복잡한 갱신 연산을 지정하는데 사용하는 특수키
-
-.
 
 👉🏻 **"$inc"**
 
@@ -443,8 +441,6 @@ db.analytics.insertOne({
 db.analytics.updateOne({"url": "www.example.com"},
     {"$inc": {"pageviews": 1}})
 ```
-
-.
 
 👉🏻 **"$set"**
 
@@ -473,8 +469,6 @@ db.users.updateOne({"_id": ObjectId("672c304b07b2c3060aa45bc6")},
 
 {% endhint %}
 
-.
-
 👉🏻 **증가와 감소**
 
 > `$inc` 연산자는 이미 존재하는 키의 값을 변경하거나 새 키를 생헝하는 데 사용
@@ -492,8 +486,6 @@ db.games.updateOne({"game": "pinball", "user": "joe"},
 - int, long, double, decimal 타입 값에만 사용 가능
 - 또한, `$inc`의 키 값은 무조건 숫자
 - 다른 데이터형을 반환하려면 `$set`이나 배열 연산자 사용
-
-.
 
 👉🏻 **배열 연산자**
 
@@ -614,3 +606,40 @@ db.users.updateOne({"_id": ObjectId("672ca876ccf8f87e8793c90a")},
 db.blog.updateOne({"comments.author": "John"},
     {"$set": {"comments.$.author": "Jim"}})
 ```
+
+.
+
+### **갱신 입력**
+
+> 갱신 입력은 특수한 형태를 갖는 갱신
+
+- 갱신 조건에 맞는 도큐먼트가 존재하지 않을 때는 쿼리 도큐먼트와 갱신 도큐먼트를 합쳐서 새로운 도큐먼트를 생성
+- `updateOne`과 `updateMany`의 세 번째 매개변수는 옵션 도큐먼트로, 갱신 입력을 지정
+
+```sql
+db.analytics.updateOne({"url": "/blog"}, {"$inc": {"pageviews": 1}}, {"upsert": true})
+```
+
+`$setOnInsert`는 도큐먼트가 삽입될 때 필드 값을 설정하는 데만 사용하는 연산자
+
+```sql
+db.users.updateOne({}, {"$setOnInsert": {"createdAt": new Date()}},
+    {"upsert": true})
+```
+
+{% hint style="info" %}
+
+ObjectId가 도큐먼트가 작성된 때의 타임스탬프를 포함하므로 일반적으로 createdAt가 반드시 필요하지 않음
+
+하지만, `$setOnInsert`는 패딩을 생성하고 카운터를 초기화하는 데 쓰이면, ObjectId를 사용하지 않는 컬렉션에 유용
+
+{% endhint %}
+
+
+.
+
+### **다중 도큐먼트 갱신**
+
+.
+
+### **갱신한 도큐먼트 반환**
