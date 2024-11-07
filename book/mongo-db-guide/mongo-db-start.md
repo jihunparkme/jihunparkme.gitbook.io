@@ -374,7 +374,7 @@ db.movies.deleteMany({"year": 1984})
 
 .
 
-✅  **drop**
+✅ **drop**
 
 `deleteMany`를 사용해 모든 도큐먼트 제거
 
@@ -387,4 +387,37 @@ db.movies.deleteMany({})
 
 ```sql
 db.movies.drop()
+```
+
+## 갱신
+
+> `updateOne`, `updateMany`, `replaceOne` 갱신 메서드
+
+`updateOne`, `updateMany`는 필터 도큐먼트를 첫 번째 매개변수로, 변경 사항을 설명하는 수정자 도큐먼트를 두 번째 매개변수로 사용
+
+`replaceOne`도 첫 번째 매개변수로 필터를 사용하지만, 두 번째 매개변수는 필터와 일치하는 도큐먼트를 교체할 도큐먼트
+
+.
+
+✅ **도큐먼트 치환**
+
+> `replaceOne`은 도큐먼트를 새로운 것으로 치환
+
+⭐️ 대대적인 스키마 마이그레이션에 유용
+
+```sql
+db.users.insertOne({
+    "name": "joe",
+    "friends": 32,
+    "enemies": 2
+})
+
+// friend, enemies 필드를 relationships 라는 서브도큐먼트로 이동
+var joe = db.users.findOne({"_id": ObjectId("672c2c8f07b2c3060aa45bc2")})
+joe.relationships = {"friends": joe.friends, "enemies": joe.enemies};
+joe.username = joe.name;
+delete joe.friends;
+delete joe.enemies;
+delete joe.name;
+db.users.replaceOne({"name": "joe"}, joe)
 ```
