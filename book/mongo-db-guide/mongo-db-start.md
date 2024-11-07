@@ -492,3 +492,76 @@ db.games.updateOne({"game": "pinball", "user": "joe"},
 - int, long, double, decimal 타입 값에만 사용 가능
 - 또한, `$inc`의 키 값은 무조건 숫자
 - 다른 데이터형을 반환하려면 `$set`이나 배열 연산자 사용
+
+.
+
+👉🏻 **배열 연산자**
+
+> 배열을 이루는 데 갱신 연산자 사용 가능
+
+연산자는 리스트에 대한 인덱스를 지정할 수 있을 뿐 아니라 셋처럼 이중으로 사용 가능
+
+**요소 추가**
+- `$push`는 배열이 이미 존재하면 배열 긑에 요소를 추가하고, 존재하지 않으면 새로운 배열을 생성
+
+```sql
+db.blog.posts.insertOne({"title": "A blog post", "content": "..."})
+db.blog.posts.updateOne({"title": "A blog post"},
+    {
+        "$push": {
+            "comments":
+                {
+                    "name": "joe", "email": "joe@example.com",
+                    "comtent": "nice post."
+                }
+        }
+    })
+```
+
+`$push`에 `$each` 제한자를 사용하면 작업 한 번으로 값을 여러 개 추가할 수 있다.
+
+```sql
+// 배열에 새로운 요소 세 개 추가
+db.stock.ticker.updateOne({"id": "GOOG"},
+    {"$push": {"hourly": {"$each": [562.776, 562.790, 559.123]}}})
+```
+
+배열을 특정 길이로 늘이려면 `$slice`를 `$push`와 결합해 사용
+- 배열이 특정 크기 이상으로 늘어나지 않게 하고 효과적으로 'top N' 목룍을 만들 수 있음
+- 아래 예제는 배열에 추가할 수 있는 요소의 개수를 10개로 제한
+  - 10보다 크면 마지막 10개 요소만 유지
+  - `$slice`는 도큐먼트 내에 큐를 생성하는 데 사용
+
+```sql
+db.movies.updateOne({"genre": "horror"},
+    {
+        "$push": {
+            "top10": {
+                "$each": ["Nightmare on Elm Street", "Saw"],
+                "$slice": -10
+            }
+        }
+    })
+```
+
+trimming 하기 전 `$sort` 제한자를 `$push` 작업에 적용 가능
+- rating 필드로 배열의 모든 요소를 정렬한 후 처음 10개의 요소를 유지
+- `$each`를 반드시 포함
+- `$slice`나 `$sort`를 배열상에서 `$push`와 함께 쓰려면 반드시 `$each`도 사용
+
+```sql
+db.movies.updateOne({"genre": "horror"},
+    {
+        "$push": {
+            "top10": {
+                "$each": [{
+                    "name": "Nightmare on Elm Street",
+                    "rating": 6.6
+                },
+                    {"name": "Saw", "rating": 4.3}],
+                "$slice": -10,
+                "$sort": {"rating": -1}
+            }
+        }
+    })
+```
