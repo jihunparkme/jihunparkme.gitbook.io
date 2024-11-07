@@ -421,3 +421,21 @@ delete joe.enemies;
 delete joe.name;
 db.users.replaceOne({"name": "joe"}, joe)
 ```
+
+.
+
+✅ **갱신 연산자**
+
+> 부분 갱신에는 원자적 갱신 연산자를 사용
+
+⭐️ 갱신 연산자는 키를 변경, 추가, 제거하고, 배열과 내장 도큐먼트를 조작하는 복잡한 갱신 연산을 지정하는데 사용하는 특수키
+
+```sql
+db.analytics.insertOne({
+    "url": "www.example.com",
+    "pageviews": 52
+})
+// 페이지 방문 시 URL로 페이지를 찾고, pageviews 증가
+db.analytics.updateOne({"url": "www.example.com"},
+    {"$inc": {"pageviews": 1}})
+```
