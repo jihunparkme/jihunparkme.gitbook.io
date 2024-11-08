@@ -1577,5 +1577,36 @@ cursor 클래스는 자바스크립트 반복자 인터페이스를 구현해서
 > var cursor = db.people.find();
 > cursor.forEach(function(x)) {
     print(x.name);
-  });
+  };
 ```
+
+1️⃣ 제한, 건너뛰기, 정렬
+
+결과 개수를 제한하려면 find 호출에 `limit` 함수를 연결
+- N개의 결과만 반환
+
+```sql
+db.c.find().limit(3)
+```
+
+`skip`은 `limit`와 유사하게 동작
+- 조건에 맞는 결과 중 처음 N개를 건너뛴 나머지를 반환
+
+```sql
+db.c.find().skip(3)
+```
+
+`sort`는 객체를 매개변수로 받는다.
+
+```sql
+// "username"은 오름차순으로, "age"는 내림차순으로 정렬
+db.c.find().sort({username : 1, age : -1})
+
+// 가격을 내림차순으로 정렬해 한 페이지당 50개씩 결과를 보이기
+db.stock.find({"desc": "mp3"}).limit(50).sort({"price": -1})
+
+// 다음 페이지를 클릭하면 더 많은 결과가 보이도록
+db.stock.find({"desc": "mp3"}).limit(50).skip(50).sort({"price": -1})
+```
+
+⚠️ 하지만.. 큰 수를 건너뛰면 비효율적
