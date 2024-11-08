@@ -1457,3 +1457,56 @@ db.users.find({"name": {"$regex": /joe/i}})
 // joe 뿐만 아니라 joey도 
 db.users.find({"name": /joey?/i})
 ```
+
+3️⃣ 배열에 쿼리하기
+
+> 배열 요소 쿼리는 스칼라 쿼리와 같은 방식으로 동작하도록 설계
+
+```sql
+db.food.insertOne({"fruit": ["apple", "banana", "peach"]})
+
+db.food.find({"fruit": "banana"})
+```
+
+.
+
+"`$all`" 연산자
+- 두 개 이상의 배열 요소가 일치하는 배열을 찾으려면 `$all` 사용
+
+```sql
+db.food.find({fruit: {$all: ["apple", "banana"]}})
+
+// 전체 배열과 정확하게 일치하는 도큐먼트 쿼리
+db.food.find({"fruit": ["apple", "banana", "peach"]})
+```
+
+배열 내 특정 요소를 쿼리하려면 `key.index` 구문을 사용해 순서를 지정
+- 세 번째 요소와 "peach" 문자열이 일치하는지 확인
+
+```sql
+db.food.find({"fruit.2": "peach"})
+```
+
+.
+
+"`$size`" 연산자
+- `$size`는 특정 크기의 배열을 쿼리하는 유용한 조건절
+
+```sql
+db.food.find({"find": {"$size": 3}})
+```
+
+`$size`는 다른 $ 조건절과 결합해 사용할 수 없지만, 도큐먼트에 "size" 키를 추가하면 이런 쿼리를 처리 가능
+- 배열에 요소를 추가할 때마다 "size" 값을 증가
+
+```sql
+db.food.updateOne({"push": {"fruit": "strawberry"}, "$inc": {"size": 1}})
+```
+
+값의 증가는 매우 빠르게 이루어지므로 성능은 걱정할 필요가 없다.
+- 도큐먼트를 저장하고 나면 아래 쿼리가 가능
+- eks, "`$addToSet`" 연산자와는 사용 불가
+
+```sql
+db.food.find({"size": {"$gt": 3}})
+```
