@@ -1647,5 +1647,15 @@ db.stock.find({"desc": "mp3"}).limit(50).skip(50).sort({"price": -1})
 var page1 = db.foo.find().sort({"date": -1}).limit(100)
 
 // 마지막 도큐먼트의 "date" 값을 사용해 다음 페이지를 가져온다.
+var latest = null;
 
+// 첫 페이지 보여주기
+while(page1.hasNext()) {
+    latest = page1.next()
+    display(latest);
+}
+
+// 다음 페이지 가져오기
+var page2 = db.foo.find({"date" : {"$lt" : latest.date}});
+page2.sort({"date" : -1}).limit(100)
 ```
