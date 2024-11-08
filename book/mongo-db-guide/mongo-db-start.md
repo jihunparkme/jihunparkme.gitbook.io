@@ -1391,3 +1391,32 @@ db.users.find({"registered": {"$lt": start}})
 db.users.find({"username": {"$ne": "joe"}})
 ```
 
+2️⃣ OR 쿼리
+
+OR 쿼리에는 두 가지 방법이 존재
+- `$in`은 하나의 키를 다양한 값과 비교
+- `$or`은 더 일반적이며, 여러 키를 주어진 값과 비교하는 쿼리에 사용
+
+```sql
+db.reffle.find({"ticket_no": {"$in": [725, 542, 390]}})
+
+// 두 조건 중 하나라도 맞는 도큐먼트를 찾도록 쿼리
+db.users.find({"user_id": {"$in": [12345, "joe"]}})
+
+// 배열 내 조건과 일치하지 않는 도큐먼트 반환
+db.reffle.find({"ticket_no": {"$nin": [725, 542, 390]}})
+
+// "$or"은 다른 조건절도 포함
+db.reffle.find({
+    "$or": [{"ticket_no": {"$in": [725, 542, 390]}},
+        {"winner": true}]
+})
+```
+
+{% hint style="info" %}
+
+"$or" 연산자가 항상 작동하는 동안에는 가능한 한 "$in"을 사용하자.
+
+쿼리 옵티마이저는 "$in"을 더 효율적으로 다룬다.
+
+{% endhint %}
