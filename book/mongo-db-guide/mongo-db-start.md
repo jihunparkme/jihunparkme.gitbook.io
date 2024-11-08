@@ -1421,7 +1421,7 @@ db.reffle.find({
 
 {% endhint %}
 
-2️⃣ `$not`
+3️⃣ `$not`
 
 "`$not`"은 정규 표현식과 함께 사용해 주어진 패턴과 일치하지 않는 도큐먼트를 찾을 때 특히 유용
 
@@ -1431,3 +1431,17 @@ db.users.find({"id_num": {"$not": {"$mod": [5, 1]}}})
 
 ## 형 특정 쿼리
 
+1️⃣ null
+
+null은 '존재하지 않음'과도 일치
+- 키가 null인 값을 쿼리하면 해당 키를 갖지 않는 도큐먼트도 반환
+
+```sql
+db.c.find({"z": null})
+```
+
+값이 null인 키만 찾고 싶다면, 키가 null인 값을 쿼리하고, "`$exists`" 조건절을 사용해 null 존재 여부를 확인
+
+```sql
+db.c.find({"z": {"$eq": null, "$exists": true}})
+```
