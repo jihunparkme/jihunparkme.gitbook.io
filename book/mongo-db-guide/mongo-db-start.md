@@ -1445,3 +1445,15 @@ db.c.find({"z": null})
 ```sql
 db.c.find({"z": {"$eq": null, "$exists": true}})
 ```
+
+2️⃣ 정규 표현식
+
+"`$regex`"는 쿼리에서 패턴 일치 문자열을 위한 정규식 기능을 제공
+
+```sql
+// 이름이 Joe나 joe인 사용자
+db.users.find({"name": {"$regex": /joe/i}})
+
+// joe 뿐만 아니라 joey도 
+db.users.find({"name": /joey?/i})
+```
