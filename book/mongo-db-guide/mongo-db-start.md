@@ -1553,3 +1553,29 @@ db.blog.find({
 - 일반 쿼리보다 훨씬 느리니 반드시 필요한 경우가 아니면 사용하지 말자.
 - 몽고DB 3.6에 쿼리 언어로 집계 표현식을 사용할 수 있는 `$expr`을 사용하자
   - 자바스크립트를 실행하지 않아 더 빠른 쿼리
+
+## 커서
+
+> 데이터베이스는 커서를 사용해 find의 결과를 반환
+
+셸에서 커서를 생성하려면 컬렉션에 도큐먼트를 집어넣고 쿼리한 후 결과를 지역 변수에 할당
+- 결과를 한 번에 하나씩 볼 수 있다는 장점
+- 결과를 얻으려면 커서의 next 메서드를 사용하고, 다른 결과가 있는지 확인하려면 hasNext 사용
+
+```bash
+> var cursor = db.collection.find()
+
+> while (cursor.hasNext()) {
+    obj = cursor.next()
+    // ...
+  }
+```
+
+cursor 클래스는 자바스크립트 반복자 인터페이스를 구현해서 forEach 반복문에 사용 가능
+
+```bash
+> var cursor = db.people.find();
+> cursor.forEach(function(x)) {
+    print(x.name);
+  });
+```
