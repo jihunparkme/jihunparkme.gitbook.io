@@ -1510,3 +1510,14 @@ db.food.updateOne({"push": {"fruit": "strawberry"}, "$inc": {"size": 1}})
 ```sql
 db.food.find({"size": {"$gt": 3}})
 ```
+
+.
+
+"`$slice`" 연산자
+- 배열 요소의 부분집합을 반환
+- 배열 요소의 인덱스를 알고 있다면 유용하지만, 특정 기준과 일치하는 배열 요소를 원할 경우 `$` 연산자 사용
+
+```sql
+// 각 도큐먼트에서 첫 번째로 일치하는 댓글만 반환
+db.blog.posts.find({"comments.name": "bob"}, {"comments.$": 1})
+```
