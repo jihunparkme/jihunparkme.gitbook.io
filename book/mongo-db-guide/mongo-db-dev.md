@@ -82,7 +82,17 @@ db.users.find({"age": {"$gte": 31, "$lte": 30}}).sort({"username": 1})
 db.students.createIndex({class_id:1, student_id:1})
 ```
 
+{% hint style="info" %}
 
+**복합 인덱스 설계 시**
+
+- 동등 필터에 대한 키를 맨 앞에 표시하자.
+- 정렬에 사용되는 키는 다중값 필드 앞에 표시하자.
+- 다중값 필터에 대한 키는 마지막에 표시하자.
+
+지침에 따라 복합 인덱스 설계 후, 인덱스가 지원하는 쿼리 패턴의 범위를 실제 워크로드에서 테스트하자.
+
+{% endhint %}
 
 
 
