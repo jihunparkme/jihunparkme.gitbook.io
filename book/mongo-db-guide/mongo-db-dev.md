@@ -187,6 +187,36 @@ db.blog.createIndex({"comments.date" : 1})
 
 ## explain 출력
 
+> explain은 쿼리에 대한 많은 정보를 제공하며, 느린 쿼리를 위한 중요한 진단 도구
+>
+> 쿼의 explain 출력을 보면 어떤 인덱스가 어떻게 사용되는지 알 수 있다.
+
+쿼리가 "COLLSCAN"을 사용하면 인덱스를 사용하지 않음을 알 수 있다.
+
+```sql
+db.users.find({"age" : 42}).explain('executionStats')
+```
+
+- "totalKeysExamined"는 검색한 인덱스 항목 개수
+- 스캔한 도큐먼트 개수 "nscannedObjects"
+- "executionTimeMillis"는 서버가 요청을 받고 응답을 보낸 시점까지 쿼리가 얼마나 빨리 실행됐는지
+
+중요한 필드
+- `isMultiKey` : 다중키 인덱스 사용 여부(true/false)
+- `nReturned` : 쿼리에 의해 반환된 도큐먼트 개수
+- `totalDocsExamined` : 몽고DB가 디스크 내 실제 도큐먼트를 가리키는 인덱스 포인터를 따라간 횟수
+- `totalKeysExamine` : 인덱스가 사용되었다면 살펴본 인덱스 항목 개수
+- `stage` : 몽고DB가 인덱스를 사용해 쿼리할 수 있었는지 여부
+  - "COLSCAN": 컬렉션 스캔
+  - "IXSCAN": 인덱스 스캔
+- `needYields` : 쓰기 요청을 처리하도록 쿼리가 양보한 횟수
+- `executionTimeMillis` : DB가 쿼리하는 데 걸린 시간
+- `indexBounds` : 인덱스가 어떻게 사용됐는지 설명하며 탐색한 인덱스의 범위를 제공
+
+
+190
+
+
 ## 인덱스를 생성하지 않는 이유
 
 ## 인덱스 종류
