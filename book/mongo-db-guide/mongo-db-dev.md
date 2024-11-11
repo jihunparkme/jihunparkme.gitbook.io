@@ -224,6 +224,16 @@ db.users.find({"age" : 42}).explain('executionStats')
 
 ## 인덱스 종류
 
+**고유 인덱스**
+
+- 고유 인덱스는 각 값이 인덱스에 최대 한 번 나타나도록 보장
+
+**부분 인덱스**
+
+- 부분 인덱스를 만들려면 "partialFilterExpression" 옵션을 포함
+
+
+
 190
 
 ## 인덱스 관리
