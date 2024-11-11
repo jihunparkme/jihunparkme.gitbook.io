@@ -232,11 +232,22 @@ db.users.find({"age" : 42}).explain('executionStats')
 
 - 부분 인덱스를 만들려면 "partialFilterExpression" 옵션을 포함
 
-
-
-190
-
 ## 인덱스 관리
+
+데이터베이스의 인덱스 정보는 모두 `system.indexes` 컬렉션에 저장
+- 특정 컬렉션의 모든 인덱스 정보를 확인하려면 `db.c.getIndexes()`를 실행
+
+```sql
+db.studnts.getIndexes()
+```
+
+- "key"는 힌트에 사용하거나, 인덱스가 명시돼야 하는 위치에 사용할 수 있음
+- 인덱스명("name")은 dropIndexes와 같은 관리적인 인덱스 작업에서 식별자로 사용
+
+**인덱스 식별**
+
+- 인덱스명은 기본적으로 `키명1_방향1_키명2_방향_..._키명N_방향N`
+- `getLastError` 호출은 인덱스 생성의 성공 여부 혹은 실패 원인을 보여준다.
 
 # 특수 인덱스와 컬렉션 유형
 
