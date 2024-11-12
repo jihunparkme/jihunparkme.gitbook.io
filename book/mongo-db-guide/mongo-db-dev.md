@@ -263,6 +263,7 @@ db.studnts.getIndexes()
 
 `aggregate`는 집계 쿼리를 실행할 때 호출하는 메서드
 - "_id" 필드는 제외하고 "name"과 "founded_year"는 포함
+- **필터링을 위한 일치 단계**와 **출력을 도큐먼트당 두 개의 필드로 제한하는 선출 단계**가 존재
 
 ```sql
 db.companies.aggregate([
@@ -276,6 +277,27 @@ db.companies.aggregate([
     }
 ])
 ```
+
+**5단계의 파이프라인**
+- 제한을 선출단계 이전에 수행하도록 구축 limit
+- 파이프라인을 구축할 때 한 단계에서 다른 단계로 전달해야하는 도큐먼트 수를 반드시 제한
+- 순서가 중요하다면 제한 단계 전에 정렬을 수행 sort
+
+```sql
+db.companies.aggregate([
+    {$match: {founded_year: 2004}}, // 컬렉션 필터링 단계
+    {$sort: {name: 1}}, // 정렬
+    {$skip: 10}, // 항목 건너뛰기
+    {$limit: 5} // 도큐먼트 선출
+    { // 도큐먼트 모양
+        $project: {
+            _id: 0,
+            name: 1,
+        }
+    }
+])
+```
+
 
 233
 # 트랜잭션
