@@ -307,7 +307,7 @@ greylock 파트너스가 참여한 펀딩 라운드를 포함하는 모든 회�
 
 ```sql
 db.companies.aggregate([
-    {$match: {"funding_round.investments.financial_org.permalink": "greylock"}},
+    {$match: {"funding_rounds.investments.financial_org.permalink": "greylock"}},
     {
         $project: {
             _id: 0,
@@ -320,10 +320,63 @@ db.companies.aggregate([
 ])
 ```
 
-251
-
 ## $unwind
 
+입력 도큐먼트에서 배열 필드(key3)를 전개하도록 구성될 때 아래와 같은 도큐먼트를 생성
+- 즉 배열 10개의 요소가 있으면 전개 단계에서는 10개의 출력 도큐먼트가 생성
+
+```text
+{ 
+  key1 : "value1",
+  key2 : "value2",
+  key3 : ["elem1", "elem2", "elem3",]}
+}
+
+...
+
+$unwind
+
+{ 
+  key1 : "value1",
+  key2 : "value2",
+  key3 : "elem1"
+}
+{ 
+  key1 : "value1",
+  key2 : "value2",
+  key3 : "elem2"
+}
+{ 
+  key1 : "value1",
+  key2 : "value2",
+  key3 : "elem3"
+}
+```
+
+Example
+- 그레이록이 한 번이라도 펀딩 라운드에 참여한 회사를 먼저 필터링
+- 펀딩 라운드를 전개하고 
+- 다시 필터링해 그레이록이 실제 팜여한 펀딩 라운드를 나타내는 도큐먼트만 선출 단계로 전달
+
+```json
+db.companies.aggregate([
+    {$match: {"funding_rounds.investments.financial_org.permalink": "greylock"}},
+    {$unwind: "$funding_rounds"},
+    {$match: {"funding_rounds.investments.financial_org.permalink": "greylock"}},
+    {
+        $project: {
+            _id: 0,
+            name: 1,
+            individualFunder: "$funding_rounds.investments.person.permalink",
+            fundingOrganizaion: "$funding_rounds.investments.financial_org.permalink",
+            amount: "$funding_rounds.raised_amount",
+            year: "$funding_rounds.funded_year",
+        }
+    }
+])
+```
+
+251
 ## 배열 표현식
 
 ## 눈산기
