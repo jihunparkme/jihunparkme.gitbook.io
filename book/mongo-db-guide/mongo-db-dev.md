@@ -412,7 +412,17 @@ db.companies.aggregate([
 
 {% endhint %}
 
-## 눈산기
+## 누산기
+
+**선출 단계에서 누산기 사용**
+
+254
+
+{% hint style="info" %}
+
+[연산자](https://www.mongodb.com/ko-kr/docs/manual/reference/operator/aggregation/)
+
+{% endhint %}
 
 ## 그룹화
 
