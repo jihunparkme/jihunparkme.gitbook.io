@@ -406,6 +406,12 @@ db.companies.aggregate([
 ])
 ```
 
+{% hint style="info" %}
+
+[집계 참조](https://www.mongodb.com/ko-kr/docs/manual/reference/aggregation/)
+
+{% endhint %}
+
 ## 눈산기
 
 ## 그룹화
