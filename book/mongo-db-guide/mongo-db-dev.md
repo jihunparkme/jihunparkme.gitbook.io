@@ -376,8 +376,35 @@ db.companies.aggregate([
 ])
 ```
 
-251
 ## 배열 표현식
+
+`$filter` 연산자는 배열 필드와 함께 작동하도록 설계되었으며, 우리가 제공하는 옵션을 지정
+- 첫 번째 옵션은(input) : 단순히 배열을 지정
+- 두 번째 옵션(as)은 나머지 필터 표현식 전체에서 funding_rounds 배열에 사용할 이름 지정
+  - 필터 표현식 내에서 변수를 정의
+- 세 번째 옵션은 조건을 지정
+  - `$$`는 작업 중인 표현식 내에서 정의된 변수를 참조하는 데 사용
+
+```sql
+db.companies.aggregate([
+    {$match: {"funding_rounds.investments.financial_org.permalink": "greylock"}},
+    {
+        $project: {
+            _id: 0,
+            name: 1,
+            founded_year: 1,
+            rounds: {
+                $filter: {
+                    input: "$funding_rounds",
+                    as: "round",
+                    cond: {$gte: ["$$round.raised_amount", 100000000]}
+                }
+            }
+        }
+    },
+    {$match: {"rounds.investments.financial_ord.permalink": "greylock"}},
+])
+```
 
 ## 눈산기
 
