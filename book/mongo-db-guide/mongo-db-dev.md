@@ -298,8 +298,38 @@ db.companies.aggregate([
 ])
 ```
 
+## $project
 
-233
+> 중첩 필드nested field()를 승격(promoting)하는 방법
+
+greylock 파트너스가 참여한 펀딩 라운드를 포함하는 모든 회사를 필터링
+- `$` 문자는 선출 단계에서 값 지정에 사용되며, 해당 값이 필드 경로로 해석되고 각 필드에서 선출할 값을 선택하는 데 사용
+
+```sql
+db.companies.aggregate([
+    {$match: {"funding_round.investments.financial_org.permalink": "greylock"}},
+    {
+        $project: {
+            _id: 0,
+            name: 1,
+            ipp: "$ipo.pub_year",
+            valuation: "$ipo.valuation_amount",
+            funders: "$funding_rounds.investments.financial_org.permalink"
+        }
+    }
+])
+```
+
+251
+
+## $unwind
+
+## 배열 표현식
+
+## 눈산기
+
+## 그룹화
+
 # 트랜잭션
 
 # 애플리케이션 설계
