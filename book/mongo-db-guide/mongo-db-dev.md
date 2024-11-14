@@ -440,7 +440,7 @@ db.companies.aggregate([
         $project: {
             _id: 0,
             name: 1,
-            largest_round: { $sum: "$funding_rounds.raised_amount" }
+            largest_round: { $max: "$funding_rounds.raised_amount" }
         }
     }
 ])
@@ -454,6 +454,16 @@ db.companies.aggregate([
 
 ## 그룹화
 
-# 트랜잭션
+> 그룹 단계에서는 여러 도큐먼트의 값을 함께 집계하고, 집계한 값에 평균 계산과 같은 집계 작업을 수행
 
-# 애플리케이션 설계
+```sql
+db.companies.aggregate([
+    {
+        $group: {
+            _id: {foundede_year: "$founded_year"},
+            average_number_of_employees: {$avg: "$number_of_employees"}
+        }
+    },
+    {$sort: {average_number_od_employees: -1}}
+])
+```
