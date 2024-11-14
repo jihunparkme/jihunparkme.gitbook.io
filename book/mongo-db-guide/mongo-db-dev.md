@@ -416,7 +416,35 @@ db.companies.aggregate([
 
 **선출 단계에서 누산기 사용**
 
-254
+"funding_rounds" 필드를 포함하고 funding_rounds 배열이 있지 않은 도큐먼트를 필터링
+
+```sql
+db.companies.aggregate([
+    { $match: {"funding_rounds": { $exists: true, $ne: []}}},
+    {
+        $project: {
+            _id: 0,
+            name: 1,
+            largest_round: { $max: "$funding_rounds.raised_amount" }
+        }
+    }
+])
+```
+
+`$sum` 누산기를 사용해 컬렉션에 있는 각 회사의 총 모금액을 계산
+
+```sql
+db.companies.aggregate([
+    { $match: {"funding_rounds": { $exists: true, $ne: []}}},
+    {
+        $project: {
+            _id: 0,
+            name: 1,
+            largest_round: { $sum: "$funding_rounds.raised_amount" }
+        }
+    }
+])
+```
 
 {% hint style="info" %}
 
