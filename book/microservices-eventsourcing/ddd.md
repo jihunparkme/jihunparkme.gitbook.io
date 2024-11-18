@@ -175,3 +175,7 @@ class Cart {
     - 도메인 객체에 전달할 목적으로 무엇인가를 계산하는 것
 
 👉🏻 **모듈**
+
+인지적 과부화(cognitive overload): 정보를 나누고 분류해 빠르게 찾을 수 있도록 조직화하는것
+
+<center><img src="../../.gitbook/assets/microservices-eventsourcing/1-22.png" width="100%"></center>
