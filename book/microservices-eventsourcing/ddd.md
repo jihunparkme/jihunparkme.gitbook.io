@@ -179,3 +179,46 @@ class Cart {
 인지적 과부화(cognitive overload): 정보를 나누고 분류해 빠르게 찾을 수 있도록 조직화하는것
 
 <center><img src="../../.gitbook/assets/microservices-eventsourcing/1-22.png" width="100%"></center>
+
+.
+
+4️⃣ 라이프사이클
+
+👉🏻 **애그리게이트**
+
+> 도메인 객체들의 연관 관계에서 불변식을 보장해야 하는 단위
+
+- 엔티티와 값 객체로 구성하는데 여러 개의 엔티티와 값 객체를 포함할 수 있으며, 애그리게이트를 대표하는 엔티티를 `애그리게이트 루트`라고 함
+- 애그리게이트 루트를 통해서만 애그리게이트의 상태를 변경
+
+```kotlin
+class CartService {
+    private val productDao: ProductDao? = null
+    private val cartDao: CartDao? = null
+
+    fun addItem(cartId: String?, productNo: String?, quantity: Int) {
+        val foundCart: Cart = cartDao.retrieve(cartId)
+        val product: Product = productDao.retrieve(productNo)
+
+        foundCart.addItem(product, quantity)
+        cartDao.update(foundCart)
+    }
+
+    fun removeltem(cartId: String?, productNo: String?) {
+        val foundCart: Cart = cartDao.retrieve(cartId)
+
+        foundCart.removeItem(productNo)
+        cartDao.update(foundCart)
+    }
+
+    fun changeQuantity(cartId: String?, productNo: String?, quantity: Int) {
+        val foundCart: Cart = cartDao.retrieve(cartId)
+        
+        foundCart.changeQuantity(productNo, quantity)
+        cartDao.update(foundCart)
+    }
+}
+```
+
+- 각 메소드는 인프라스트럭처 서비스를 이용해 요청을 전달할 대상인 애그리게이트(Cart)를 데이터베이스에서 조회
+- 조회 후 애그리게이트(Cart)에 요청을 전달하고, 명령을 처리하면 다시 인프라스트럭처 서비스를 호출해 최종 상태를 저장
