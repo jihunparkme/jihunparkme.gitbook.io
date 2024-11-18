@@ -75,7 +75,7 @@ class Cart {
 
 ## 도메인 주도 설계
 
-- 도메인 주도 설계는 관심사를 바운디드 컨텍스트(BC)로 한정하고 BC 간 관계와 BC 내에서 효과적인 모델링을 위한 실용적인 접근법
+도메인 주도 설계는 관심사를 바운디드 컨텍스트(BC)로 한정하고 BC 간 관계와 BC 내에서 효과적인 모델링을 위한 실용적인 접근법
 
 1️⃣ **유비쿼터스 언어**
 
@@ -176,7 +176,7 @@ class Cart {
 
 6️⃣ **모듈**
 
-인지적 과부화(cognitive overload): 정보를 나누고 분류해 빠르게 찾을 수 있도록 조직화하는것
+> 인지적 과부화(cognitive overload): 정보를 나누고 분류해 빠르게 찾을 수 있도록 조직화하는것
 
 <center><img src="../../.gitbook/assets/microservices-eventsourcing/1-22.png" width="100%"></center>
 
@@ -251,7 +251,7 @@ class CartService {
 
 4️⃣ 팩토리
 
-애그리게이트를 생성하는 방법이 복잡하거나 내부를 너무 많이 드러내는 경우 팩토리를 이용해 캡슐화
+> 애그리게이트를 생성하는 방법이 복잡하거나 내부를 너무 많이 드러내는 경우 팩토리를 이용해 캡슐화
 
 **복잡한 객체와 애그리게이트의 인스턴스를 생성하는 책임을 별도의 객체로 옮겨라.**
 - 이 객체 자체는 도메인 모델에서 아무런 책임도 맡지 않을 수도 있지만 여전히 도메인 설계의 일부를 구성한다.
@@ -274,6 +274,32 @@ class CartFactory {
         val foundUser: User = userDao.select(userId)
         val foundLimit: Limit = limitDao.select(foundUser.getGrade())
         return Cart(userId, foundLimit)
+    }
+}
+```
+
+5️⃣ 리포지토리
+
+> 리포지토리는 마이바티스나 JPA 같은 라이브러리 또는 프레임워크를 이용할 때 애그리게이트 단위로 기능을 제공
+
+리포지토리가 제공하는 메소드는 애그리게이트 단위로 제공하면서 하나의 트랜잭션으로 처리해야 한다.
+
+```kotlin
+class CartRepository {
+    fun create(cart: Cart) {
+        // Cart - Item - Product 연관관계를 한번에 저장
+    }
+    
+    fun retrieve(cartID: String) {
+        // Cart - Items - Product 연관관계를 한번에 조회
+    }
+    
+    fun update(cart: Cart) {
+        // Cart - Items - Product 연관관계를 한번에 변경
+    }
+    
+    fun delete(cartId: String) {
+        // Cart에 포함된 Items, Product도 함께 삭제
     }
 }
 ```
