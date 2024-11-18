@@ -56,6 +56,7 @@
 
 * [이벤트 소싱과 MSA](book/microservices-eventsourcing/README.md)
   * [01.도메인 주도 설계](book/microservices-eventsourcing/ddd.md)
+  * [02.객체지향 설계 원칙](book/microservices-eventsourcing/oop.md)
 * [몽고DB 완벽 가이드](book/mongo-db-guide/README.md)
   * [I. 몽고DB 시작](book/mongo-db-guide/mongo-db-start.md)
   * [II. 몽고DB 개발](book/mongo-db-guide/mongo-db-dev.md)
