@@ -111,3 +111,67 @@ class Cart {
   - 엔티티 객체가 제공하는 메소드를 사용해 값 객체를 변경
 - 도메인 객체에 비즈니스 규칙을 구현하는 것은 중요
   - 코드 중복, 응집도, 유지보수에 도움을 주고 다른 클래스에 의존하지 않고 테스트가 가능
+
+👉🏻 **서비스**
+
+> 에릭 에반스는 도메인 주도 설계에서 서비스를 세 가지로 분류
+
+**인프라스트럭처 서비스**
+
+- 핵사고날 아키텍처에서 정의한 어댑터
+- 어댑터는 데이터베이스, 네트워크를 통해 다른 시스템이 제공하는 API 호출, 메일 보내기, 이벤트 발행처럼 기술적인 문제를 다룸
+
+**애플리케이션 서비스**
+
+- 트랜잭션 관리, 인프라스트럭처와 상호 작용을 포함한 비즈니스 유스케이스의 흐름을 조정하는 두 개의 책임을 가짐
+  - 첫 번째, 클라이언트 요청부터 응답까지를 하나의 트랜잭션으로 처리하는 것
+  - 두 번째, 비즈니스 유스케이스를 수행하는 일련의 흐름 조정
+
+  <center><img src="../../.gitbook/assets/microservices-eventsourcing/1-21.png" width="100%"></center>
+
+  애플리케이션 서비스가 비즈니스 유스케이스 흐름을 조정핳기 위해 엔티티, 도메인 서비스, 인프라스트럭처 서비스간 의존성
+
+**도메인 서비스**
+
+- 에릭 에반스 '엔티티에 부여하기 적합하지 않은 책임을 도메인 서비스에 부여하라'
+- 도메인을 위해 존재하는 객체
+- 도메인 서비스를 사용할 때 고려할 세 가지 휴리스틱
+  - (1) 중요한 비즈니스 프로세스를 수행할 때
+
+    ```kotlin
+    class ProductService {
+        private val productAdaptor: ProductAdaptor? = null
+        private val eventPublishAdapter: EventPublishAdapter? = null
+
+        @Transactional
+        fun createProduct(name: String?) {
+            val product: Product = Product(name)
+            // 도메인 서비스에서 사전 조건을 검사
+            val policy: ProductCreationPolicy = ProductCreationPolicy()
+            if (!policy.isValid(product)) {
+                throw InvalidPRoductPolicyException()
+            }
+
+            productAdaptor.insert(product)
+            eventPublishAdapter.publish(PRoductCreated(product))
+        }
+    }
+
+    ...
+
+    class ProductCreationPolicy {
+        fun isValid(product: Product?): Boolean {
+            // 비즈니스 규칙
+            return true;
+        }
+    }
+    ```
+
+  - (2) 어떤 컴포지션에서 다른 컴포지션으로 도메인 객체를 변환할 때
+    - 특정 도메인 객체를 사용하기 위해 다른 도메인 객체나 데이터 전송 객체로 변환하거나 반대로 데이터 전송 객체를 도메인 객체로 변환하는 데 사용
+    - 도메인 객체에 전달할 목적으로 무엇인가를 계산
+  
+  - (3) 하나 이상의 도메인 객체에서 요구하는 입력 값을 계산할 때
+    - 도메인 객체에 전달할 목적으로 무엇인가를 계산하는 것
+
+👉🏻 **모듈**
