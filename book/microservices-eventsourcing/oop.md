@@ -25,7 +25,26 @@
 단일 책임 원칙을 준수하기 위해 여러 책임을 가진 클래스를 더 작은 클래스로 분할해 새로운 클래스를 추가하거나 연관돼 있는 속성을 하나의 클래스로 통합해야 한다.
 - 아는 것을 여러 객체에 잘 분리하면 하는 것도 자연스럽게 분리돼 단일 책임 원칙을 준수할 수 있다.
 
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/2-5.png" alt=""><figcaption></figcaption></figure>
+
+```kotlin
+class Assign {
+    private lateinit var customer: Customer
+    private lateinit var surveyor: Surveyor
+}
+```
+
 ## 개방/폐쇄 원칙
+
+> 코드가 자유로우면서도 제한적이어야 한다
+
+소프트웨어 엔티티는 확장에 대해서는 개방적이어야 하지만, 수정에 대해서는 폐쇄적이어야 한다.
+- 확장에 대한 개방은 구현 클래스나 상속 클래스에 기능을 추가할 수 있어야 하고
+- 수정에 대해 폐쇄는 인터페이스나 상위 클래스의 변화가 구현 클래스나 상속 클래스에 영향을 주지 않아야 함
+
+인터페이스의 오퍼레이션
+
+
 
 ## 리스코프 치환 원칙
 
