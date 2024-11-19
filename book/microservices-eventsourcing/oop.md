@@ -86,6 +86,48 @@ interface Sortable : Comparator<Customer>
 
 ## 의존성 역전 원칙
 
+> 객체 설계에서 의존성 역전 원칙은 구체적인 클래스를 사용하는 방법을 클라이언트가 직접 알 필요가 없게 분리
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/2-10.png" alt=""><figcaption></figcaption></figure>
+
+```kotlin
+class AssignBundle(
+    private val customers: List<Customer>,
+    private val surveyors: List<Surveyor>,
+    private val filterables: Filterables, 
+    private val sortables: Sortables, 
+    private val distributable: Distributable
+) {
+    fun assign(): List<Assign> {
+        var filteredCustomer: List<Customer> = filterables.filter(customers)
+        filteredCustomer = sortables.sort(filteredCustomer)
+
+        val distributable: Distributable = RoundRobinDistributor()
+        val assigns: List<Assign> = distributable.distribute(filteredCustomer, surveyors)
+        return assigns
+    }
+}
+
+...
+
+class AssignService(
+    private val customerDao: CustomerDao,
+    private val surveyorDao: SurveyorDao,
+    private val assignDao: AssignDao,
+    
+) {
+    fun assign() {
+        // 목록 조회
+        val customers: List<Customer> = customerDao.selectAll()
+        val surveyors: List<Surveyor> = surveyorDao.selectAll()
+
+        val assignBundle = AssignBundle(customers, surveyors)
+        val assigns: List<Assign> = assignBundle.assign()
+        assignDao.insertAll(assigns)
+    }
+}
+```
+
 ## 모듈
 
 ## 요약
