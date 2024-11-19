@@ -51,9 +51,24 @@ interface AssignRule {
 }
 ```
 
-
-
 ## 리스코프 치환 원칙
+
+> 클라이언트가 상속 클래스를 안정적으로 사용할 수 있는 구조를 설계하는데 도움
+
+S가 기반타입 T의 서브타입이면 T 타입의 객체는 프로그램 실행에 문제를 일으키지 않고 S 타입의 객체로 치환이 가능해야 한다.
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/2-8.png" alt=""><figcaption></figcaption></figure>
+
+```kotlin
+interface Distributable {
+    fun distribute(
+        customers: List<Customer>, 
+        surveyors: List<Surveyor>
+    ): List<Assign>
+}
+```
+
+
 
 ## 인터페이스 분리 원칙
 
