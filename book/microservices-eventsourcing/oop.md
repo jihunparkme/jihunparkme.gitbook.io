@@ -42,7 +42,14 @@ class Assign {
 - 확장에 대한 개방은 구현 클래스나 상속 클래스에 기능을 추가할 수 있어야 하고
 - 수정에 대해 폐쇄는 인터페이스나 상위 클래스의 변화가 구현 클래스나 상속 클래스에 영향을 주지 않아야 함
 
-인터페이스의 오퍼레이션
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/2-7.png" alt=""><figcaption></figcaption></figure>
+
+```kotlin
+interface AssignRule {
+    fun isSatisfied(customer: Customer): Boolean
+    fun compare(before: Customer, after: Customer): Int
+}
+```
 
 
 
