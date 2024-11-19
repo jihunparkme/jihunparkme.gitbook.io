@@ -68,9 +68,21 @@ interface Distributable {
 }
 ```
 
-
-
 ## 인터페이스 분리 원칙
+
+> 너무 많거나 관계없는 오퍼레이션을 제공하는 인터페이스를 만들지 않게 제약
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/2-9.png" alt=""><figcaption></figcaption></figure>
+
+```kotlin
+interface Filterable {
+    fun isSatisfied(customer: Customer): Boolean
+}
+
+//
+
+interface Sortable : Comparator<Customer>
+```
 
 ## 의존성 역전 원칙
 
