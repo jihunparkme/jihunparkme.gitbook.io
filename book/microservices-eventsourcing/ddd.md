@@ -127,7 +127,7 @@ class Cart {
   - 첫 번째, 클라이언트 요청부터 응답까지를 하나의 트랜잭션으로 처리하는 것
   - 두 번째, 비즈니스 유스케이스를 수행하는 일련의 흐름 조정
 
-  <center><img src="../../.gitbook/assets/microservices-eventsourcing/1-21.png" width="100%"></center>
+  <figure><img src="../../.gitbook/assets/microservices-eventsourcing/1-21.png" alt=""><figcaption></figcaption></figure>
 
   애플리케이션 서비스가 비즈니스 유스케이스 흐름을 조정핳기 위해 엔티티, 도메인 서비스, 인프라스트럭처 서비스간 의존성
 
@@ -178,7 +178,7 @@ class Cart {
 
 > 인지적 과부화(cognitive overload): 정보를 나누고 분류해 빠르게 찾을 수 있도록 조직화하는것
 
-<center><img src="../../.gitbook/assets/microservices-eventsourcing/1-22.png" width="100%"></center>
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/1-22.png" alt=""><figcaption></figcaption></figure>
 
 .
 
@@ -232,20 +232,20 @@ class CartService {
 - 규칙 #1. 비즈니스 불변식을 애그리게이트로 한정
   - 불변식은 다른 식별자를 가진 애그리게이트와 독립적으로 유지되고 데이터베이스에 저장되어야 하므로 트랙잭션 범위나 일관성 범위라 부름
   
-  <center><img src="../../.gitbook/assets/microservices-eventsourcing/1-25.png" width="50%"></center>
+  <figure><img src="../../.gitbook/assets/microservices-eventsourcing/1-25.png" alt=""><figcaption></figcaption></figure>
 
 - 규칙 #2. 작은 애그리게이트로 설계
   
-  <center><img src="../../.gitbook/assets/microservices-eventsourcing/1-26.png" width="50%"></center>
+  <figure><img src="../../.gitbook/assets/microservices-eventsourcing/1-26.png" alt=""><figcaption></figcaption></figure>
 
 - 규칙 #3. 다른 애그리게이트는 식별자로 참조
   
-  <center><img src="../../.gitbook/assets/microservices-eventsourcing/1-27.png" width="50%"></center>
+  <figure><img src="../../.gitbook/assets/microservices-eventsourcing/1-27.png" alt=""><figcaption></figcaption></figure>
 
 - 규칙 #4. 애그리게이트간 변화는 결과적 일관성을 이용
   - 이벤트를 활용한 결과적 일관성은 비즈니스 프로세스를 시스템 전체가 아닌 애그리게이트로 한정하는 효과가 있어 애플리케이션 서비스를 훨씬 단순하게 구현 가능
 
-  <center><img src="../../.gitbook/assets/microservices-eventsourcing/1-28.png" width="50%"></center>
+  <figure><img src="../../.gitbook/assets/microservices-eventsourcing/1-28.png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
 
