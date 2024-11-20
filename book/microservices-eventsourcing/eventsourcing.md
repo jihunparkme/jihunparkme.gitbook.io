@@ -18,6 +18,19 @@
 3. 파라미터 employee에 새로운 일련번호 할당
 4. employeeDao를 사용해 최종 상태를 새로운 레코드로 추가
 
+### 상태 테이블과 이력 테이블
+
+두 번째 방법으로 현재 상태를 가진 TB_EMPLOYEE 테이블과 이력을 기록하는 TB_EMPLOYEE_HISTORY 테이블로 분리
+- 기록 테이블은 현재 상태를 가진 테이블과 동일한 컬럼을 구성하고
+- 단일 테이블-시퀀스 방법과 동일하게 상태 변화 순서를 구별하기 위해 일련번호를 추가
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/t3-4-5.png" alt=""><figcaption></figcaption></figure>
+
+1. 직원 정보와 직원 정보 이력에서 일련번호 조회
+2. 이력 일련번호 증가
+3. 저장 단계에서 변경 이전 직원 상태를 이력 테이블에 추가
+4. 직원의 새로운 상태를 테이블에 저장
+
 ## 도메인 이벤트
 
 ## 이벤트 소싱
