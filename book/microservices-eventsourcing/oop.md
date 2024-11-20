@@ -126,17 +126,12 @@ class AssignService(
 
 ```
 
-
-
-
-
-
-코드 정리 생성자랑...
-
-
-
-
-
 ## 모듈
+
+> 도메인 주도 설계에서 설명한 모듈을 활용하면 개별 클래스의 단순한 나열이 아닌 패키지 수준이서 개략적인 배정 비즈니스를 설명할 수 있습니다.
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/2-11.png" alt=""><figcaption></figcaption></figure>
+
+분배 알고리즘의 성능 개선이나 알고리즘을 다양하게 적용하기 위해 배포 단위로 분리하는 것도 고려할 수 있다.
 
 ## 요약
