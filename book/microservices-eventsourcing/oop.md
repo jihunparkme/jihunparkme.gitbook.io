@@ -92,41 +92,50 @@ interface Sortable : Comparator<Customer>
 
 ```kotlin
 class AssignBundle(
-    private val customers: List<Customer>,
-    private val surveyors: List<Surveyor>,
-    private val filterables: Filterables, 
-    private val sortables: Sortables, 
+    private val filterables: Filterables,
+    private val sortables: Sortables,
     private val distributable: Distributable
 ) {
-    fun assign(): List<Assign> {
-        var filteredCustomer: List<Customer> = filterables.filter(customers)
-        filteredCustomer = sortables.sort(filteredCustomer)
-
-        val distributable: Distributable = RoundRobinDistributor()
-        val assigns: List<Assign> = distributable.distribute(filteredCustomer, surveyors)
-        return assigns
+    fun assign(customers: List<Customer>, surveyors: List<Surveyor>): List<Assign> {
+        var filteredCustomers = filterables.filter(customers)
+        filteredCustomers = sortables.sort(filteredCustomers)
+        return distributable.distribute(filteredCustomers, surveyors)
     }
 }
 
-...
+//
 
 class AssignService(
     private val customerDao: CustomerDao,
     private val surveyorDao: SurveyorDao,
     private val assignDao: AssignDao,
-    
+    private val filterables: Filterables,
+    private val sortables: Sortables,
+    private val distributable: Distributable
 ) {
     fun assign() {
-        // 목록 조회
         val customers: List<Customer> = customerDao.selectAll()
         val surveyors: List<Surveyor> = surveyorDao.selectAll()
 
-        val assignBundle = AssignBundle(customers, surveyors)
-        val assigns: List<Assign> = assignBundle.assign()
+        val assignBundle = AssignBundle(filterables, sortables, distributable)
+        val assigns: List<Assign> = assignBundle.assign(customers, surveyors)
+
         assignDao.insertAll(assigns)
     }
 }
+
 ```
+
+
+
+
+
+
+코드 정리 생성자랑...
+
+
+
+
 
 ## 모듈
 
