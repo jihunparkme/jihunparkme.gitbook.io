@@ -84,6 +84,32 @@
 Cart 애그리게이트가 제공하는 메소드를 호출하면 실행 결과인 도메인 이벤트 인스턴스를 생성하고, 이벤트 저장소인 TB_CART_EVENT 테이블에 저장하기 전까지 Cart 애그리게이트가 임시로 보관
 - 메소드 실행에 오류가 없으면 요청에 대응하는 도메인 이벤트를 생성해 event 변수에 추가
 
+**도메인 이벤트를 일반화시킨 Event 클래스**
+
+```kotlin
+abstract class Event {
+    private val eventId: String = UUID.randomUUID().toString()
+    private val time: Long = System.currentTimeMillis()
+    private var cartId: String? = null
+
+    fun getPayload(): String {
+        return JsonUtil.toJson(this)
+    }
+}
+```
+
+**이벤트 추상 클래스와 상속**
+
+```kotlin
+class ItemAdded : Event()
+class QuantityChanged : Event()
+class ItemRemoved : Event()
+```
+
+Cart 애그리게이트가 네 번의 사용자 요청을 처리했을 때 TB_CART_EVENT 테이블에 기록한 도메인 이벤트 예시
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/t3-9.png" alt=""><figcaption></figcaption></figure>
+
 ## 마이크로서비스 모듈
 
 ## 이벤트 소싱과 단위 테스트
