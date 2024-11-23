@@ -190,8 +190,73 @@ data class RemoveItem(
 
 유효성 검사를 기술이 아닌 도메인 영역으로 정의하면 커맨드에서 유효성을 검사해 응집도를 높일 수 있다.
 
+### 재수화(이벤트 리플레이)
 
+애그리게이트 상태의 변화 기록인 도메인 이벤트를 데이터베이스에 빠짐없이 기록했으면, 이벤트를 리플레이해 애그리게이트의 현재 상태로 복원 가능
+- 도메인 이벤트로 상태를 복원하는 것을 `재수화`(Rehydration)
 
+시스템은 쓰기보다 읽기 빈도가 훨씬 높은데 이벤트 소싱을 적용하면 다양한 조건으로 데이터를 조회할 때 한계가 있다.
+- 조회 성능과 개발 편의성을 해소하기 위해 도메인 이벤트에서 조회 전용 데이터를 미리 만드는 것을 `프로젝션`
+
+`load` 메소드는 애그리게이트인 Cart 식별자를 사용하고 다섯 스텝으로 현재 상태로 복원
+1. 애그리게이트와 매핑한 **CartJpo를 조회**
+2. 도메인 이벤트와 매핑한 **CartEventJpo 목록을 발생한 시간순으로 조회**
+3. CartJpo를 Cart **애그리게이트로 변환**
+4. 조회한 CartEventJpo를 **도메인 이벤트로 변환**
+5. Cart 애그리게이트가 제공하는 **재수화 메소드를 호출해 이벤트를 리플레이**
+
+CartEventJpo를 도메인 이벤트로 변환하기 위해
+- 도메인 이벤트를 저장할 때 역직렬화할 타입명을 가지는 TYPE 컬럼이 필요
+
+```kotlin
+@Entity
+@Table(name = "TB_CART_EVENT")
+data class CartEventJpo(
+    @Id
+    var eventId: String? = null,
+    var cartId: String? = null,
+    @Lob
+    var payload: String? = null,
+    var eventType: String? = null,
+    var correlationId: String? = null,
+    var sequence: Long = 0,
+    var relayed: Boolean = false,
+    var propagate: Boolean = false,
+    var deleted: Boolean = false
+) {
+    constructor(cart: Cart, event: Event) : this() {
+        this.eventId = event.eventId()
+        this.cartId = cart.getCartId()
+        this.payload = event.payload()
+        this.eventType = event.typeName()
+        this.correlationId = event.correlationId()
+        this.sequence = event.sequence()
+        this.relayed = event.relayed()
+        this.propagate = event.propagate()
+        this.deleted = false
+    }
+
+    fun toEvent(): Event {
+        try {
+            // 도메인 이벤트를 CartEventJpo로 변환하는 생성자에서 이벤트의 타입명을 복사해 이벤트 저장소에 함께 저장
+            val event = JsonUtil.fromJson(this.payload, Class.forName(this.eventType)) as Event
+            event.eventId(this.eventId)
+            event.sequence(this.sequence)
+            event.relayed(this.relayed)
+            event.propagate(this.propagate)
+            event.correlationId(this.correlationId)
+            return event
+        } catch (e: ClassNotFoundException) {
+            e.printStackTrace()
+        }
+        throw IllegalStateException()
+    }
+}
+```
+
+애그리게이트가 네 번의 커맨드를 처리하고 TB_CART_EVENT 테이블에 기록한 도메인 이벤트
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/3-11.png" alt=""><figcaption></figcaption></figure>
 
 ## 마이크로서비스 모듈
 
