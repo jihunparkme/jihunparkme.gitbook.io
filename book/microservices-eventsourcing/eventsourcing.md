@@ -132,7 +132,60 @@ Cart 애그리게이트가 네 번의 사용자 요청을 처리했을 때 TB_CA
 이벤트는 단순히 커맨드에 의해 발생한 사건이므로 커맨드를 과거형으로 사용
 - cartCreated, ItemAdded, ItemRemoved, QuantityCahrged
 
-반대로 이벤트에서 시작하는 접근법으로 이벤트 스토밍이 있따.
+반대로 이벤트에서 시작하는 접근법으로 이벤트 스토밍이 있다.
+
+.
+
+비즈니스 프로세스는 식별한 이벤트와 연관된 커맨드 그리고 파생되는 이벤트까지 고려해야 한다.
+- ex. 사용자 등록 UserRegistered or UserCreated 이벤트를 식별
+- 위 이벤트에 반응해 가입 환영 이메일을 발송하는 sendWelcomMail 커맨드와 WelcomeMailSend 이벤트를 추가로 식별
+
+{% hint style="info" %}
+
+이벤트 소싱은 생각보다 많은 커맨드와 이벤트를 선언해야 하고
+
+커맨드와 이벤트에 속성을 중복으로 선언해야 하는 단점이 존재
+
+{% endhint %}
+
+변경에 따른 영향도를 낮추는 것뿐만 아니라 설계 의도를 명확하게 표현하기 위해 `커맨드 객체`를 사용하는 것이 좋다.
+- 커맨드 클래스를 사용하면 응집도, 결합도, 유지보수에 도움이 되므로 파라미터 목록을 대신할 커맨드 클래스를 사용하자
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/3-5.png" alt=""><figcaption></figcaption></figure>
+
+**command class**
+
+```kotlin
+abstract class Command {
+    private var version: Long = 0
+}
+
+...
+
+data class AddItem(
+    @Transient var cartId: String? = null,
+    var productNo: String,
+    var productName: String,
+    var price: Int,
+    var quantity: Int = 1
+) : Command()
+
+...
+
+data class ChangeQuantity(
+    @Transient var cartId: String? = null,
+    var productNo: String? = null,
+    var quantity: Int = 0
+) : Command()
+
+...
+
+data class RemoveItem(
+    @Transient var cartId: String? = null,
+    var productNo: String? = null
+) : Command()
+```
+
 
 ## 마이크로서비스 모듈
 
