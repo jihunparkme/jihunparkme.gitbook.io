@@ -256,11 +256,22 @@ data class CartEventJpo(
 
 애그리게이트가 네 번의 커맨드를 처리하고 TB_CART_EVENT 테이블에 기록한 도메인 이벤트
 
-<figure><img src="../../.gitbook/assets/microservices-eventsourcing/3-11.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/t3-11.png" alt=""><figcaption></figcaption></figure>
 
 애그리게이트에 커맨드 처리와 도메인 이벤트 리플레이 메소드를 분리하면 리플레이에 사용하는 도메인 이벤트는 상태 복원에만 적용하고 event 속성에 저장하지 않게 할 수 있다.
 
 ## 마이크로서비스 모듈
+
+이벤트 소싱을 적용한 마이크로서비스의 핵심 모듈은 `aggregate`, `command`, `event`, `store` 패키지로 구분
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/3-6.png" alt=""><figcaption></figcaption></figure>
+
+package
+- `aggregate`: 식별한 애그리게이트 클래스
+- `command`: 애그리게이트를 생성하고 폐기할 때까지 영향을 주는 커맨드
+- `event`: 커맨드에 영향을 받은 결과
+- `store`: 이벤트 저장소, 애그리게이트, 이벤트 테이블과 매핑한 JPA 엔티티 클래스
+- `service`: 전체 흐름을 조정하는 책임을 가지는 애플리케이션 서비스
 
 ## 이벤트 소싱과 단위 테스트
 
