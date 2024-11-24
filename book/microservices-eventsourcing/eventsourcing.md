@@ -258,7 +258,7 @@ data class CartEventJpo(
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/3-11.png" alt=""><figcaption></figcaption></figure>
 
-애그리게이트에 커맨드 처리와 도메인 이벤트 리플레이 메소드를 분리하면 리플레이에 사용하는 도메인 이벤트는 상태 복원에만 적용하고 event 속성에 저장하지 않게 할 수 있따.
+애그리게이트에 커맨드 처리와 도메인 이벤트 리플레이 메소드를 분리하면 리플레이에 사용하는 도메인 이벤트는 상태 복원에만 적용하고 event 속성에 저장하지 않게 할 수 있다.
 
 ## 마이크로서비스 모듈
 
