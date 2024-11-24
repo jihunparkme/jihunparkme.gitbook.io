@@ -262,7 +262,7 @@ data class CartEventJpo(
 
 ## 마이크로서비스 모듈
 
-이벤트 소싱을 적용한 마이크로서비스의 핵심 모듈은 `aggregate`, `command`, `event`, `store` 패키지로 구분
+> 이벤트 소싱을 적용한 마이크로서비스의 핵심 모듈은 `aggregate`, `command`, `event`, `store` 패키지로 구분
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/3-6.png" alt=""><figcaption></figcaption></figure>
 
@@ -274,5 +274,10 @@ package
 - `service`: 전체 흐름을 조정하는 책임을 가지는 애플리케이션 서비스
 
 ## 이벤트 소싱과 단위 테스트
+
+> 주요 비즈니스 로직은 여전히 도메인 객체에 있으므로 도메인 객체만 사용하는 단위 테스트를 구현 가능
+
+- 하나의 커맨드가 여러 개의 도메인 이벤트를 발생시키는 경우 단위 테스트의 통과 조건으로 이벤트 개수를 검사
+- 시스템 전체 구조가 아닌 도메인 모델만 이해하면 테스트 코드를 작성할 수 있으므로 독립적이면서 실용적
 
 ## 요약
