@@ -314,6 +314,33 @@ package
 
 ## 동시성과 이벤트 충돌
 
+동시에 수정해 같은 속성을 변경할 때 나중에 처리된 요청이 이전 요청을 덮어쓰는 현상
+- 데이터베이스에서는 이 현상을 갱신 분실(Lost Update)이라고 한다.
+- 이벤트 소싱에서 이와 같은 현상을 이벤트 충돌(Event Conflicts)라고 한다.
+
+이벤트간 충돌을 해결하려면 먼저 동시성 메커니즘을 이해해야 한다.
+- 동시성 메커니즘은 비관적 잠금(Pessimistic Lock)과 낙관적 잠금(Optimistic Lock)으로 구분
+
+**비관적 잠금(Pessimistic Lock)**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-3.png" alt=""><figcaption></figcaption></figure>
+
+비관적 잠금에서 트랜잭션은 많은 충돌이 발생한다고 가정하고 데이터베이스가 제공하는 잠금 기능을 사용
+- 어떤 프로세스가 데이터 변경을 목적으로 조회를 요청하고 변경을 완료할 때까지 다른 프로세스가 해당 데이터에 접근하지 못함
+- 안정적이지만 낙관적 잠금에 비해 비즈니스 동시성 환경에 비적합
+
+**낙관적 잠금(Optimistic Lock)**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-4.png" alt=""><figcaption></figcaption></figure>
+
+낙관적 잠금에서 트랜잭션은 충돌이 발생하지 않는다고 가정하고 데이터를 변경하는 시점에만 잠금을 사용
+- 버전 컬럼을 비교해 데이터 조회 후 업데이트를 요청하는 사이에 변경이 있었는지 확인
+- 버전 컬럼의 값이 같으면 변경하고 그렇지 않으면 예외를 던져 데이터의 일관성을 유지
+- 비관적 잠금에 비해 높은 성능을 제공해 대부분의 비즈니스 서비스는 낙관적 잠금을 사용
+
+
+
+
 ## 재수화 성능과 스냅샷
 
 ## 스냅샷 생성 전략
