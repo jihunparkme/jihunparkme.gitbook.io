@@ -383,6 +383,39 @@ class CartService(private val cartStore: CartStore) {
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-8.png" alt=""><figcaption></figcaption></figure>
 
+👉🏻 **스냅샷 생성**
+
+이벤트 소싱도 하나의 도메인
+- Cart와 연관 관계를 갖는 값 객체로 **Snapshot 클래스**를 모델에 추가
+- Snapshot 클래스는 특정 시점의 Cart 객체를 **JSON으로 직렬화한 문자열**과 **스냅샷 생성 시간**을 포함
+  - 생성 시간: 스냅샷 생성 이후에 발생한 도메인 이벤트를 조회하는데 사용
+  - 스냅샷 생성 시스템 시간이 아닌 스냅샷 생성에 사용한 마지막 도메인 이벤트가 발생한 시간
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-9.png" alt=""><figcaption></figcaption></figure>
+
+{% hint style="info" %}
+
+이벤트 소싱에서 발생한 이벤트의 순서로 시간을 사용했지만, 일반적으로 순번을 사용하고 시간은 보조적인 값으로 사용
+
+{% endhint %}
+
+객체를 직렬화한 JSON 문자열을 담기 위해 SNAPSHOT_PAYLOADd 컬럼의 데이터 타입은 `CLOB`
+
+```kotlin
+@Entity
+@Table(name = "TB_CART")
+class CartJpo(
+    @Id
+    var cartId: String,
+
+    @Lob
+    @Column(name = "SNAPSHOT_PAYLOAD")
+    var snapshot: String? = null,
+
+    var snapshotTime: Long = 0
+)
+```
+
 ## 스냅샷 생성 전략
 
 ## 이벤트 소싱과 상수
