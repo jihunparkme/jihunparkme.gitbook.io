@@ -351,6 +351,25 @@ package
 
 {% endhint %}
 
+JPA가 제공하는 동시성 매커니즘을 사용하면 version 비교를 위해 try-catch 구문으로 이벤트 충돌 확인 가능
+
+```kotlin
+class CartService(private val cartStore: CartStore) {
+
+    fun addItem(command: AddItem) {
+        val foundCart = cartStore.load(command.cartId)
+        foundCart.version = command.version
+        foundCart.addItem(command)
+
+        try {
+            cartStore.save(foundCart)
+        } catch (e: OptimisticLockException) {
+            throw AlreadyChangedException()
+        }
+    }
+}
+```
+
 
 ## 재수화 성능과 스냅샷
 
