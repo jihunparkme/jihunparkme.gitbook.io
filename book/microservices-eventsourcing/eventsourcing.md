@@ -383,6 +383,8 @@ class CartService(private val cartStore: CartStore) {
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-8.png" alt=""><figcaption></figcaption></figure>
 
+.
+
 👉🏻 **스냅샷 생성**
 
 이벤트 소싱도 하나의 도메인
@@ -406,15 +408,27 @@ class CartService(private val cartStore: CartStore) {
 @Table(name = "TB_CART")
 class CartJpo(
     @Id
-    var cartId: String,
+    var cartId: String? = null,
 
     @Lob
     @Column(name = "SNAPSHOT_PAYLOAD")
-    var snapshot: String? = null,
+    var snapshotPayload: String? = null,
 
-    var snapshotTime: Long = 0
+    @Column(name = "SNAPSHOT_TIME")
+    var snapshotTime: Long = 0,
 )
 ```
+
+.
+
+👉🏻 **재수화 제외 이벤트**
+
+> 리플레이할 이벤트와 그렇지 않은 이벤트를 구분하면 
+> 
+> 리플레이 대상이 아닌 이벤트가 많이 발생하는 애그리게이트에서 성능 향상을 기대
+
+- 리플레이 대상 이벤트를 구별하는 용도로 Event 추상 클래스에 rehydration 속성을 추가
+- 애그리게이트에서 발생하는 이벤트 중 리플레이에서 제외할 이벤트가 적으면 생성자에게 기본값을 true로 할당해 재수화 대상으로 설정하고 구체적인 도메인 이벤트 생성자에서 선택적으로 false 할당
 
 ## 스냅샷 생성 전략
 
