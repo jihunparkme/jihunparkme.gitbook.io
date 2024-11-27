@@ -440,6 +440,19 @@ class CartJpo(
 - 매 N번째 이벤트: 매 N번째 도메인 이벤트가 발생했을 경우
 - 도메인 이벤트: 특정 도메인 이벤트가 발생했을 경우
 
+### 주기적인 시간
+
+스냅샷 생성 후 지정된 시간을 초과했을 때 새로운 스냅샷을 생성
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-10.png" alt=""><figcaption></figcaption></figure>
+
+- snapshot 클래스의 time과 저장해야 하는 마지막 도메인 이벤트의 시간 비교
+- 지정 시간 초과 시 snapshot 객체 생성
+
+### 매 N번째 이벤트
+
+### 도메인 이벤트
+
 ## 이벤트 소싱과 상수
 
 ## 도메인 이벤트와 버전
