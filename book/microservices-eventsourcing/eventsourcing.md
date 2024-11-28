@@ -442,7 +442,7 @@ class CartJpo(
 
 ### 주기적인 시간
 
-스냅샷 생성 후 지정된 시간을 초과했을 때 새로운 스냅샷을 생성
+> 스냅샷 생성 후 지정된 시간을 초과했을 때 새로운 스냅샷을 생성
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-10.png" alt=""><figcaption></figcaption></figure>
 
@@ -450,6 +450,36 @@ class CartJpo(
 - 지정 시간 초과 시 snapshot 객체 생성
 
 ### 매 N번째 이벤트
+
+> 매 N번째 이벤트가 발생할 때 스냅샷을 생성
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-11.png" alt=""><figcaption></figcaption></figure>
+
+- 모듈로 연산자(나머지)를 사용하기 위해 애그릐게이트에서 발생한 이벤트의 횟수를 기록
+  - 일련번호를 사용하도록 설정하고
+- 애그리게이트가 제공하는 메소드를 호출하기 전 시퀀스의 몫까지 비교
+
+```kotlin
+data class Snapshot(
+    var payload: String? = null,
+    var sequence: Long = 0,
+    var time: Long = 0,
+    var quotient: Long = 0,
+    var remainder: Long = 0
+) {
+    constructor(payload: String, time: Long, sequence: Long) : this() {
+        this.payload = payload
+        this.time = time
+        this.sequence = sequence
+        this.quotient = sequence / 3
+        this.remainder = sequence % 3
+    }
+
+    fun isExpired(sequence: Long): Boolean {
+        return sequence % 3 == 0 && this.quotient != sequence / 3
+    }
+}
+```
 
 ### 도메인 이벤트
 
