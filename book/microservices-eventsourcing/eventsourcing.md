@@ -515,6 +515,45 @@ private fun hasSnapshotEvent(): Boolean {
 
 ## 도메인 이벤트와 버전
 
+> 이벤트에 속성 추가와 삭제처럼 이벤트의 타입이 변하는 사례에 대응하는 방법
+
+@Deprecated 어노테이션을 추가해서 이벤트와 메소드를 사용하지 않도록 할 수도 있지만
+- 더 이상 사용하지 않는 이벤트 핸들러를 제거할 수 있는 방법이 필요
+
+### 업캐스팅과 업캐스터
+
+`Upcasting`: 이벤트 스토어에 기록한 변경 불가능한 과거 버전의 도메인 이벤트를 **현재 버전으로 변환하는 것**
+
+`Upcaster`: 과거 버전의 이벤트를 현재 버전의 이벤트로 변환하는 **책임을 가진 클래스**
+- 과거 이벤트를 변경하지 않고, 현재 이벤트로 변환하는 단 한 가지 책임
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-13.png" alt=""><figcaption></figcaption></figure>
+
+업캐스터는 이전 버전의 도메인 이벤트를 최신 버전의 도메인 이벤트로 변환하는 일종의 mapper이고 오버로드한 upcast 메소드만 제공
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-14.png" alt=""><figcaption></figcaption></figure>
+
+더 이상 사용하지 않는 속성을 삭제하는 경우에도 같은 방식으로 업캐스팅 코드를 변경 가능
+- 업캐스터는 이벤트 객체에서 속성 이름을 변경하는 경우에도 사용 가능성
+- 업캐스팅은 이전 또는 오래된 버전의 도메인 이벤트에서 새 버전의 도메인 이벤트로 변환하는 규칙이 존재할 때만 적용 가능
+
+```kotlin
+object OrderEventUpcaster {
+
+    fun upcast(event: OrderCanceled): OrderCanceledV3 {
+        return OrderCanceledV3(event.orderNo, event.time, "upcasted.")
+    }
+
+    fun upcast(event: OrderCanceledV2): OrderCanceledV3 {
+        return OrderCanceledV3(event.orderNo, event.time, true)
+    }
+
+    fun upcast(event: OrderCanceledV3): OrderCanceledV3 {
+        return event
+    }
+}
+```
+
 ## 마이크로서비스 모듈
 
 ## 다건 처리와 성능
