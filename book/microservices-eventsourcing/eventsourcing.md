@@ -483,6 +483,28 @@ data class Snapshot(
 
 ### 도메인 이벤트
 
+> 설계 시 스냅샷을 생성할 이벤트를 결정
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-11.png" alt=""><figcaption></figcaption></figure>
+
+- 비즈니스 케이스를 가장 잘 반영
+  - ex. Order는 주문부터 배송 중까지 스냅샷을 생성하지 않고 **배송완료 이벤트가 발생했을 때 스냅샷을 생성**
+
+```kotlin
+fun takeSnapshot() {
+    val currentTime = System.currentTimeMillis()
+
+    if (hasSnapshotEvent()) {
+        println("create snapshot")
+        snapshot = Snapshot(JsonUtil.toJson(this), currentTime)
+    }
+}
+
+private fun hasSnapshotEvent(): Boolean {
+    return events.any { it is OrderCompleted }
+}
+```
+
 ## 이벤트 소싱과 상수
 
 ## 도메인 이벤트와 버전
