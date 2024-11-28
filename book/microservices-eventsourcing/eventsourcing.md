@@ -575,10 +575,16 @@ object OrderEventUpcaster {
 - 스냅샷 자체를 업캐스팅하는 것은 불가능에 가까움
 - 따라서 과거 발생한 전체 도메인 이벤트를 다시 레플레이해 새로운 스냅샷을 만드는 것이 현실적인 방법
 
-
 ## 마이크로서비스 모듈
 
+오래된 이벤트를 현재 버전으로 변환하는 Upcaster 객체는 store.upcast 패키지에 위치
+- 특정 이벤트의 버전이 너무 많아지면 특정 이벤트의 버전만 변환하는 전용 Upcaster로 분리 가능
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-16.png" alt=""><figcaption></figcaption></figure>
+
 ## 다건 처리와 성능
+
+
 
 ## 데이터 마이그레이션
 
