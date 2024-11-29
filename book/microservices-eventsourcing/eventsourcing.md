@@ -594,6 +594,38 @@ object OrderEventUpcaster {
 - 성능 개선은 애그리게이트 생성, 변경, 삭제를 위한 유효성 검사와 같은 비즈니스 로직으로 한정
 - 이러한 제약은 대부분의 시스템에서 저장소와 관련된 행위를 단일 트랜잭션으로 처리하기 때문
 
+ex. Java `CompletableFuture`, kotlin `coroutines`를 이용한 병렬 처리
+
+### 캐싱
+
+호출 결과가 전혀 변경되지 않거나 주기적으로 정해진 시간에 변경된다면 매번 데이터베이스에 질의하거나 원격 서비스를 호출하는 것은 낭비이면서 애플리케이션 성능에 부정적인 영향을 주게 된다.
+- 이 경우 동일 요청을 반복하는 대신 결과를 더 빨리 사용할 수 있게 메모리에 유지할 수 있다.
+
+캐싱은 자주 필요한 정보를 저장해 필요할 때 즉시 사용하는 방법
+- 이벤트 소싱에서 캐싱은 리플레이 횟수를 감소
+- 하지만, 리소스 한계로 모든 애그리게이트를 메모리로 관리할 수 없으므로 효율적인 사용이 필요
+- 다양한 캐싱 알고리즘 중 LRU(Least Recently Used)를 주로 사용
+
+ex. Spring `@Cacheable`, `@CachePut`
+
+```kotlin
+@Repository
+class CartStore {
+
+    @Cacheable(value = ["carts"])
+    fun load(identifier: String): Cart {
+        // 
+    }
+
+    @CachePut(value = ["carts"])
+    fun save(cart: Cart) {
+        // 
+    }
+}
+```
+
+그밖에도, `Redis`는 캐싱의 유효시간을 지정할 수 있어 활용도가 높다.
+
 ## 데이터 마이그레이션
 
 ## 백업과 아카이빙
