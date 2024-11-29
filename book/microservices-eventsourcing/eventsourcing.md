@@ -628,6 +628,22 @@ class CartStore {
 
 ## 데이터 마이그레이션
 
+> 이벤트 소싱으로 재 구축하는 경우 데이터 마이그레이션을 고려해야 한다.
+
+마지막 상태만 기록하고 있는 기존 시스템의 데이터를 마이그레이션할 때 LegacyMigrated 같은 1회성 이벤트를 사용
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-20.png" alt=""><figcaption></figcaption></figure>
+
+하나의 테이블을 다수의 마이그레이션 이벤트로 분리하기도 한다.
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-21.png" alt=""><figcaption></figcaption></figure>
+
+반대로 여러 테이블에 있는 값들을 조합해 하나의 마이그레이션 이벤트로 통합하기도 한다.
+- 하나의 이벤트로 통합하는 경우 기존 시스템이 성능 개선을 위해 데이터 중복을 허용하면서 
+- 테이블을 분리한 사례에서 자주 볼 수 있음으로 세심한 주의가 필요
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-22.png" alt=""><figcaption></figcaption></figure>
+
 ## 백업과 아카이빙
 
 ## 이벤트 소싱과 추상화된 핵심
