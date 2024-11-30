@@ -696,4 +696,18 @@ abstract class Command {
 }
 ```
 
+.
+
+👉🏻 **AggregateStore**
+
+- 리포지토리는 불변식을 유지하는 애그리게이트 단위의 읽기/쓰기를 제공하는 AggregateStore를 추가
+- 리포지토리는 사용하는 데이터베이스의 특성에 최적화할 수 있게 인터페이스로 선언하고 데이터베이스 유형에 따라 구현을 분리
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-24.png" alt=""><figcaption></figcaption></figure>
+
+`TB_CART, TB_EVENT`는 `TB_AGGREGATE, TB_AGGREGATE_EVENT` 테이블로 일반화
+- `TB_AGGREGATE`, `TB_AGGREGATE_EVENT` 테이블에 여러 타입의 애그리게이트를 저장할 수 있도록 `TYPE`, `AGGREGATE_TYPE` 컬럼을 추가 
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/ex4-51.png" alt=""><figcaption></figcaption></figure>
+
 ## 요약
