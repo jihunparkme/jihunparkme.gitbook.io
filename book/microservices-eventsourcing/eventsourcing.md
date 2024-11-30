@@ -654,4 +654,12 @@ class CartStore {
 
 ## 이벤트 소싱과 추상화된 핵심
 
+재사용 가능한 이벤트 소싱 라이브러리 설계 시 고려사항
+- 이벤트 소싱을 적용하는 애그리게이트, 커맨드, 이벤트를 추상화하고 이벤트를 저장하는 이벤트 스토어를 데이터베이스 유형에 따라 확장 가능해야 함
+- 이벤트 발행과 수신, 수신한 이벤트에 반응하는 메커니즘 또한 추상화 대상
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-23.png" alt=""><figcaption></figcaption></figure>
+
+👉🏻 E
+
 ## 요약
