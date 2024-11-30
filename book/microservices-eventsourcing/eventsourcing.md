@@ -683,4 +683,17 @@ abstract class EventSourcedAggregate {
 }
 ```
 
+.
+
+👉🏻 **Command**
+
+- 갱신 분실을 방지하기 위해 낙관적 잠금을 사용
+- AddItem, ChangeQuantity, ChangeOption 등이 상속
+
+```kotlin
+abstract class Command {
+    var version: Long = 0
+}
+```
+
 ## 요약
