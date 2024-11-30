@@ -660,6 +660,27 @@ class CartStore {
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/4-23.png" alt=""><figcaption></figcaption></figure>
 
-👉🏻 E
+👉🏻 **EventSourcedAggregate**
+
+- 이벤트 소싱을 적용하는 애그리게이트가 상속하는 추상 클래스
+- 이벤트의 임시 저장, 리플레이, 스냅샷 생성 등 이벤트 소싱의 공통 기능을 제공
+
+```kotlin
+abstract class EventSourcedAggregate {
+    private var snapshot: Snapshot? = null
+
+    var deleted: Boolean
+
+    abstract fun identifier(): String
+
+    open fun apply(event: Event) {}
+
+    open fun apply(event: Event, isNew: Boolean) {}
+
+    open fun takeSnapshot() {}
+
+    fun markDelete() {}
+}
+```
 
 ## 요약
