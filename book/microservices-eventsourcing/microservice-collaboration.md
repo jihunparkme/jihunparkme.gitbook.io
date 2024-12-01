@@ -9,6 +9,18 @@
 
 ## 인바운드 어댑터와 RESTful API
 
+👉🏻 **HTTP 메소드**
+
+- RESTful API URL은 자원을 기준으로 `목록`과 `단일 엔티티`를 다루고 `명사`를 사용
+- HTTP 메소드와 활용 범위
+
+|URL|POST|GET|PUT|DELETE|
+|---|---|---|---|---|
+|/cart|새로운 Cart 생성|Cart 목록|Cart 대량 업데이트|모든 Cart 삭제|
+|/cart/1234|오류|Cart 상세 조회|있으면 업데이트, 없으면 에러|Cart 삭제|
+
+
+
 ## 아웃바운드 어댑터와 RESTful API
 
 ## 이벤트 브로커
