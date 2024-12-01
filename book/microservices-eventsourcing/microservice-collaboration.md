@@ -141,6 +141,56 @@ class CartEndpoint(
 
 {% endhint %}
 
+### 전역 예외 처리
+
+스프링은 예외에 따라 HTTP 응답코드를 반환하는 @RestControllerAdvice 어노테이션을 제공
+- 전역 예외처리를 위해 @RestControllerAdvice를 이용한 ExceptionAdvisor 구현
+
+```kotlin
+@RestControllerAdvice
+class ExceptionAdvisor : ResponseEntityExceptionHandler() {
+
+    @ExceptionHandler(NoSuchElementException::class)
+    fun handleNoSuchElementException(exception: NoSuchElementException, webRequest: WebRequest): ResponseEntity<Any> {
+        val body = mapOf(
+            "timestamp" to LocalDateTime.now(),
+            "status" to HttpStatus.NOT_FOUND.value(),
+            "error" to exception::class.simpleName,
+            "message" to exception.message,
+            "path" to webRequest.getDescription(false)
+        )
+
+        return ResponseEntity(body, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(exception: IllegalArgumentException, webRequest: WebRequest): ResponseEntity<Any> {
+        val body = mapOf(
+            "timestamp" to LocalDateTime.now(),
+            "status" to HttpStatus.BAD_REQUEST.value(),
+            "error" to exception::class.simpleName,
+            "message" to exception.message,
+            "path" to webRequest.getDescription(false)
+        )
+        
+        return ResponseEntity(body, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(RuntimeException::class)
+    fun handleRuntimeException(exception: RuntimeException, webRequest: WebRequest): ResponseEntity<Any> {
+        val body = mapOf(
+            "timestamp" to LocalDateTime.now(),
+            "status" to HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "error" to exception::class.simpleName,
+            "message" to exception.message,
+            "path" to webRequest.getDescription(false)
+        )
+        
+        return ResponseEntity(body, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+}
+```
+
 
 ## 아웃바운드 어댑터와 RESTful API
 
