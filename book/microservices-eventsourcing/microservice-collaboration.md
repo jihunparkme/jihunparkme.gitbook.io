@@ -28,9 +28,7 @@ HTTP는 같은 URL을 HTTP 헤더로 구별하는 명세를 제공
 - ex) /cart/{itemId}와 PUT 메소드를 사용해 두 가지 요청을 구분
   - 옵션 변경, 수량 변경
 
-.
-
-👉🏻 **커맨드와 RESTful API**
+### 커맨드와 RESTful API
 
 - 스프링은 동일한 URL과 메소드로 설계한 RESTful API를 헤더로 구별하는데 사용할 수 있는 `@xMapping` 어노테이션 세트를 제공
   - 상세한 요청을 구별하기 위해 `key=value` 형식을 가진 headers 필드를 사용
@@ -104,6 +102,45 @@ class CartEndpoint(
     }
 }
 ```
+
+### 조회와 RESTful API
+
+```kotlin
+@RestController
+class CartEndpoint(
+    private val httpSession: HttpSession,
+    private val cartService: CartService
+) {
+
+    @GetMapping("/cart")
+    fun queryCart(): Cart {
+        val userId = httpSession.getAttribute("userId")?.toString()
+        return cartService.queryCart(userId)
+    }
+
+    @GetMapping("/cart/{itemId}")
+    fun queryItem(@PathVariable itemId: String): Item {
+        val userId = httpSession.getAttribute("userId")?.toString()
+        val cart = cartService.queryCart(userId)
+        return cart.findItem(itemId)
+    }
+}
+```
+
+{% hint style="info" %}
+
+단일 애그리게이트를 조회
+
+- ❌ : null 반환
+- ⭕️ : HTTP 표준인 '404 Not Found'를 반환
+  - 요청한 데이터가 없음을 클라이언트에 명확하게 알리는 것이 좋다.
+
+목록을 조회
+- ❌ : null이나 HTTP 표준인 404코드를 반환
+- ⭕️ : 빈 배열을 반환하는 것이 실용적
+
+{% endhint %}
+
 
 ## 아웃바운드 어댑터와 RESTful API
 
