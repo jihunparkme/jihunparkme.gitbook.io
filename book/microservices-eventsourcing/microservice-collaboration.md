@@ -185,12 +185,23 @@ class ExceptionAdvisor : ResponseEntityExceptionHandler() {
             "message" to exception.message,
             "path" to webRequest.getDescription(false)
         )
-        
+
         return ResponseEntity(body, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
 ```
 
+### 마이크로서비스 모듈
+
+RESTful API는 핵사고날 아키텍처에서 `인바운드 어댑터`
+- 어댑터는 비즈니스 로직을 포함하면 안되고
+- 외부 요청을 받아 애플리케이션 서비스에 요청을 위임
+- 비즈니스와 관련있는 모듈인 service 패키지와 분리
+
+RESTful API를 적용한 마이크로서비스의 모듈은 `endpoint`
+- 핵사고날 아키텍처에서 외부 요청을 받는 인바운드 어댑터인 RESTful API를 endpoint 패키지에 두면서 애그리게이트 단위로 분리
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/5-1.png" alt=""><figcaption></figcaption></figure>
 
 ## 아웃바운드 어댑터와 RESTful API
 
