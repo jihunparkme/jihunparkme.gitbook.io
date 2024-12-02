@@ -205,6 +205,32 @@ RESTful API를 적용한 마이크로서비스의 모듈은 `endpoint`
 
 ## 아웃바운드 어댑터와 RESTful API
 
+아웃바운드 어댑터는 아파치 HttpClient나 스프링 WebClient와 같이 HTTP를 지원하는 다양한 라이브러리를 사용할 수 있지만 중복 코드를 작성해야 하는 단점이 존재
+- 대안으로 스프링이 제공하는 `FeignClient` 사용
+- `FeignClient`는 인터페이스 선언만으로 다른 마이크로서비스를 사용할 수 있는 개발 편의성을 제공
+- `spring-cloud-starter-openfeign` 의존성
+
+`@FeignClient`는 오퍼레이션에 선언한 `@xMapping`에 따라 RESTful API를 호출하고 결과를 반환
+  
+```kolint
+@FeignClient(value = "cart")
+interface CartClient {
+
+    @GetMapping("/cart/{itemId}")
+    fun queryItem(@PathVariable itemId: String): Item
+}
+
+data class Item(
+    var cartId: String? = null,
+    var productNo: String? = null,
+    var productName: String? = null,
+    var price: Int = 0,
+    var quantity: Int = 0
+)
+```
+
+사용하지 않는 속성을 알고 있는 것보다는 코드 중복이 있더라도 개발자가 유지하는 소스 코드 단위로 필요한 속성만 선언하면 독립성을 높일 수 있다.
+
 ## 이벤트 브로커
 
 ## 아웃바운드 어댑터와 이벤트 발행
