@@ -344,6 +344,47 @@ class MessageRelay(
 }
 ```
 
+### 이벤트 브로커와 메시지
+
+많은 브로커가 제공하는 기능은 유사하지만 설계 의도에 따라 서로 다른 데이터 포맷을 요구
+- 메시지 릴레이가 다양한 포맷을 알아야 하면 브로커를 교체할 때마다 데이터 포맷을 변환하는 코드도 변경 필요
+- 브로커에 중립적인 이벤트를 정의하고 리스코프 치환 원칙을 적용해 다양한 메시지 브로커의 특성을 반영한 포맷으로 변환해 이벤트를 발행하는 로직을 분리해야 함
+
+도메인 이벤트와 브로커가 제공하는 데이터 포맷을 분리한 설계
+- 사용하는 브로커에 최적화시킨 구체적인 메시지 릴레이는 도메인 이벤트를 브로커가 요구하는 데이터 포맷으로 변환해 발행
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/5-15.png" alt=""><figcaption></figcaption></figure>
+
+```kotlin
+@Component
+class KafkaMessageRelay(
+    private val eventStore: EventStore,
+    private val kafkaTemplate: KafkaTemplate<String, Message<*>>
+) {
+
+    @Scheduled(fixedDelay = 500)
+    fun publish() {
+        val events = eventStore.retrieve()
+        events.forEach { event ->
+            val message = KafkaMessage(
+                eventId = event.eventId(),
+                type = event::class.java.typeName,
+                payload = JsonUtil.toJson(event)
+            )
+
+            val domainMessage: Message<String> = MessageBuilder
+                .withPayload(message.toJson())
+                .setHeader(KafkaHeader.TOPIC, serviceName)
+                .build()
+
+            kafkaTemplate.send(domainMessage)
+            event.relayed = true
+            eventStore.update(event)
+        }
+    }
+}
+```
+
 ## 인바운드 어댑터와 이벤트 소비
 
 ## 이벤트 어댑터와 마이크로서비스 모듈
