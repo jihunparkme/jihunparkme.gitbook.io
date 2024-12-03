@@ -302,6 +302,48 @@ $ docker-compose up -d
 - 단일 트랜잭션으로 도메인 객체 외에 이벤트를 데이터베이스에 함께 저장하고 메시지 릴레이가 데이터베이스에 저장되어 있는 도메인 이벤트를 주기적으로 조회해 브로커에 전달
 - 메시지 릴레이 사용 시 애플리케이션 서비스가 직접 이벤트를 발행하는 방법에 비해 약간의 지연이 발생하지만, `트랜잭션`과 `이벤트 전달`을 보장 -> 개발자가 이벤트를 발행하지 않는 실수를 방지
 
+### 이벤트 발생
+
+메시지 릴레이는 TB_CART_EVENT 테이블에 저장되어 있는 도메인 이벤트를 폴링해 카프카에 이벤트를 발행
+- 이벤트를 발행하면 이벤트 테이블에 카프카에 이벤트를 발행했음을 의미하는 플래그 값을 변경
+
+```kotlin
+@Entity
+@Table(name = "TB_CART_EVENT")
+public class CartEventJpo {
+    // ...
+    private boolean relayed;
+    // ...
+}
+```
+
+메시지 릴레이는 스프링이 제공하는 `@Scheduled`을 사용해 이벤트 테이블에서 발행해야 하는 이벤트를 주기적으로 조회
+- `@Scheduled`는 `fixedDelay`, `fixedRate` 값으로 폴링 주기와 방식을 설정 가능
+- `fixedDelay`: 이전 작업이 끝난 후 다음 작업을 시작하기까지 지정한 시간을 대기
+- `fixedRate`: 이전 작업을 시작한 시간 기준으로 다음 작업을 시작
+
+```kotlin
+@Component
+class MessageRelay(
+    private val eventStore: EventStore,
+    private val kafkaTemplate: KafkaTemplate<String, String>
+) {
+
+    @Scheduled(fixedDelay = 500)
+    fun publish() {
+        val events = eventStore.retrieve() // (1): 이벤트 저장소에서 대상 목록(relayed=false)을 시간순 조회
+        // ...
+        events.forEach { event ->
+            // ...
+            kafkaTemplate.send(message) // (2) 이벤트 발행
+            
+            event.relayed = true // (3) relayed true로 변경
+            eventStore.update(event) // (4) 상태 저장
+        }
+    }
+}
+```
+
 ## 인바운드 어댑터와 이벤트 소비
 
 ## 이벤트 어댑터와 마이크로서비스 모듈
