@@ -243,6 +243,55 @@ data class Item(
 - 단일 생산자 : 다중 소비자
 - 다중 생산자 : 다중 소비자
 
+### 도커와 카프카
+
+카프카는 주키퍼 기반으로 동작하므로 두 개의 컨테이너를 한 번에 선언해 실행하는 docker compose를 사용
+
+```yml
+version: '2'
+
+services:
+  zookeeper: # (1) 컨테이너 정의
+    container_name: zookeeper
+    image: wurstmeister/zookeeper:3.4.6
+    expose:
+      - "2181"
+    ports:
+      - "2181:2181"
+
+  kafka: # (2) 컨테이너 정의
+    container_name: kafka
+    image: wurstmeister/kafka:2.12-2.4.1
+    depends_on: # (3) zookeeper 컨테이너를 먼저 실행 후 kafka 컨테이너를 실행
+      - zookeeper
+    expose:
+      - "9092"
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 172.30.1.90 # (4) docker를 실행하고 있는 서버 또는 개발자 PC
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
+
+docker-compose 명령어로 주키퍼와 카프카를 실행
+
+```bash
+$ docker-compose up -d
+```
+
+웹 UI를 제공하는 `kafdrop`, `Offset Explorer`, `kafka-ui` 등 다양한 도구 사용
+- [kafdrop](https://github.com/obsidiandynamics/kafdrop)
+- [Offset Explorer](https://www.kafkatool.com/download.html)
+- [kafka-ui](https://github.com/provectus/kafka-ui)
+
+카프카의 기본 정보
+- `Brokers`: 카프카 클러스터를 구성하는 서버 목록
+- `Topics`: 카프카에 등록되어 있는 토픽 목록
+- `Consumers`: 토픽에 발행한 메시지를 사용하는 소비자 목록
+
 ## 아웃바운드 어댑터와 이벤트 발행
 
 ## 인바운드 어댑터와 이벤트 소비
