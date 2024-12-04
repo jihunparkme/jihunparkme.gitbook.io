@@ -399,6 +399,55 @@ class KafkaMessageRelay(
     - 이벤트 스토어에서 이벤트를 읽어 브로커에 발행할 때 필요한 만큼 여러 번 메시지를 변환해 발행 가능
     - 메시지 변환은 발행이 주 목적으므로 책임 관점에서도 메시지 릴레이에 부여하는 것이 적합
 
+```kotlin
+@Component
+class KafkaMessageRelay(
+    private val eventStore: EventStore,
+    private val kafkaTemplate: KafkaTemplate<String, Message<*>>
+) {
+
+    @Scheduled(fixedDelay = 500)
+    fun publish() {
+        val events = eventStore.retrieve()
+        events.forEach { event ->
+            // KafkaMessage 생성
+            val transformedEvent = TransformedEvent(event)
+            val mappedMessage = KafkaMessage(
+                eventId = transformedEvent.eventId(),
+                type = transformedEvent::class.java.typeName,
+                payload = JsonUtil.toJson(transformedEvent)
+            )
+
+            // Message 생성
+            val transformedMessage: Message<String> = MessageBuilder
+                .withPayload(mappedMessage.toJson())
+                .setHeader(KafkaHeader.TOPIC, "notification")
+                .build()
+
+            // Kafka 메시지 전송
+            kafkaTemplate.send(transformedMessage)
+
+            // Event 업데이트
+            event.relayed = true
+            eventStore.update(event)
+        }
+    }
+}
+```
+
+메시지 릴레이의 책임은 메시지 변환이 아니라 브로커에 메시지를 발행하는 것
+- 변환의 책임을 독립된 클래스로 분리하고 메시지 릴레이는 분리한 클래스에 변환을 위임하고 변환 결과를 발행
+
+이벤트를 다른 커맨드나 이벤트로 변환하는 책임을 가진 인터페이스와 구현 클래스의 관계
+- 메시지 릴레이가 동일한 메커니즘으로 브로커에 이벤트를 발행할 수 있게 Message 인터페이스를 선언하고 커맨드와 이벤트가 인터페이스를 구현
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/5-19.png" alt=""><figcaption></figcaption></figure>
+
+KafkaMessageRelay는 데이터베이스에 저장되어 있는 이벤트를 폴링해 1차로 발행하고, MessageMapper에게 변환을 위임
+- MessageMapper는 1차로 발행한 이벤트가 변환 대상이면 2차 메시지를 생성해 반환
+
+
+
 ## 인바운드 어댑터와 이벤트 소비
 
 ## 이벤트 어댑터와 마이크로서비스 모듈
