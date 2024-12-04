@@ -385,7 +385,7 @@ class KafkaMessageRelay(
 }
 ```
 
-👉🏻 **변환(2차) 메시지(command/event)**
+### 변환(2차) 메시지(command/event)
 
 - 한 서비스가 이벤트를 발행하고 다른 마이크로서비스가 이벤트를 소비하려면 메시지를 구독하는 서비스가 역직렬화하기 위해 이벤트 타입을 알아야 한다.
 - 이벤트를 발행하는 서비스와 구독한 서비스간 타입 의존성이 존재
@@ -446,7 +446,99 @@ class KafkaMessageRelay(
 KafkaMessageRelay는 데이터베이스에 저장되어 있는 이벤트를 폴링해 1차로 발행하고, MessageMapper에게 변환을 위임
 - MessageMapper는 1차로 발행한 이벤트가 변환 대상이면 2차 메시지를 생성해 반환
 
+**MessageMapper**
 
+```kotlin
+/* MessageMapper.kt */
+interface MessageMapper {
+    fun map(event: Event): Message?
+}
+
+...
+
+/* NotificationMessageMapper.kt */
+@Component
+class NotificationMessageMapper(
+    private val kafkaTemplate: KafkaTemplate<String, Message<*>>
+) : MessageMapper(kafkaTemplate) {
+
+    companion object {
+        private const val defaultOutput = "notification"
+    }
+
+    fun map(event: OrderCompleted) {
+        val id = UUID.randomUUID().toString().split("-")[0]
+        val transformedEvent = PutAlert(
+            id,
+            "A new order has been placed.",
+            "/order/${event.orderNo}"
+        )
+
+        val kafkaMessage = KafkaMessage(
+            eventId = transformedEvent.identifier,
+            type = transformedEvent::class.java.typeName,
+            payload = JsonUtil.toJson(transformedEvent),
+            time = transformedEvent.time()
+        )
+
+        val message: Message<String> = MessageBuilder
+            .withPayload(JsonUtil.toJson(kafkaMessage))
+            .setHeader(KafkaHeaders.TOPIC, defaultOutput)
+            .build()
+
+        kafkaTemplate.send(message)
+    }
+}
+
+...
+
+/* KafkaMessageRelay.kt */
+@Component
+class KafkaMessageRelay(
+    private val context: ApplicationContext,
+    private val eventStore: EventStore,
+    private val kafkaTemplate: KafkaTemplate<String, Message<*>>
+) {
+
+    private val messageMappers: List<MessageMapper>
+
+    init {
+        messageMappers = context.getBeanNamesForType(MessageMapper::class.java)
+            .map { context.getBean(it, MessageMapper::class.java) }
+    }
+
+    @Scheduled(fixedDelay = 500)
+    fun publish() {
+        val events = eventStore.retrieve()
+        events.forEach { event ->
+            // Kafka 기본 메시지 전송
+            kafkaTemplate.send(domainMessage)
+
+            // MessageMapper를 사용해 변환된 메시지 처리
+            messageMappers.forEach { mapper ->
+                val transformedEvent = mapper.map(event)
+                transformedEvent?.let {
+                    val message = KafkaMessage(
+                        eventId = event.eventId(),
+                        type = it::class.java.typeName,
+                        payload = JsonUtil.toJson(it)
+                    )
+
+                    val transformedMessage: Message<String> = MessageBuilder
+                        .withPayload(message.toJson())
+                        .setHeader(KafkaHeader.TOPIC, message.topicName)
+                        .build()
+
+                    kafkaTemplate.send(transformedMessage)
+                }
+            }
+
+            event.relayed = true
+            eventStore.update(event)
+        }
+    }
+}
+```
 
 ## 인바운드 어댑터와 이벤트 소비
 
