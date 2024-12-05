@@ -540,6 +540,24 @@ class KafkaMessageRelay(
 }
 ```
 
+### 서비스 내부 이벤트와 외부 이벤트
+
+Event 클래스에 outbox 속성을 추가해 내부 이벤트와 외부 발행 이벤트를 구분
+- 메시지 릴레이는 outbox=true 인 경우에만 카프카와 같은 이벤트 브로커로 이벤트를 발행하도록 변경
+
+```kotlin
+@Scheduled(fixedDelay = 500)
+fun publish() {
+    val events = eventStore.retrieve()
+    events.forEach { event ->
+        // 스프링 컨텍스트에 이벤트 발행
+        if (event.isOutbox()) {
+            // 브로커로 이벤트 발행
+        }
+    }
+}
+```
+
 ## 인바운드 어댑터와 이벤트 소비
 
 ## 이벤트 어댑터와 마이크로서비스 모듈
