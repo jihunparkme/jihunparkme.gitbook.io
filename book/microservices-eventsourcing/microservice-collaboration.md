@@ -570,6 +570,62 @@ fun publish() {
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/5-20.png" alt=""><figcaption></figcaption></figure>
 
+**수신한 이벤트를 테이블에 저장**
+
+```kotlin
+@Component
+class CartStreamListener(
+    private val messageStore: MessageStore
+) {
+    private val logger = LoggerFactory.getLogger(CartStreamListener::class.java)
+
+    @KafkaListener(
+        topics = ["${broker.topic}"],
+        groupId = ["${spring.application.name}"]
+    )
+    fun on(message: String) {
+        // JSON으로 직렬화한 KakfaMessage를 수신
+        val kafkaMessage = JsonUtil.fromJson(message, KafkaMessage::class.java)
+
+        try {
+            val clazz = Class.forName(kafkaMessage.typeName) as Class<Message>
+            // 기술에 중립적인 Message 객체로 역지렬화
+            val msg = JsonUtil.fromJson(kafkaMessage.payload, clazz)
+            // MessageStore를 이용해 수신 메시지를 테이블에 저장
+            messageStore.save(msg)
+        } catch (e: ClassNotFoundException) {
+            logger.warn("Could not find class ${kafkaMessage.typeName}")
+        }
+    }
+}
+```
+
+**수신한 이벤트를 스프링 컨텍스트에 발행**
+
+```kotlin
+Component
+class ReverseRelay(
+    private val messageStore: MessageStore,
+    private val eventPublisher: ApplicationEventPublisher
+) {
+
+    @Scheduled(fixedDelay = 100)
+    fun publish() {
+        // 메시지가 도착한 순서로 조회
+        val messages = messageStore.retrieveUnexecutedMessages()
+
+        messages.forEach { message ->
+            message.ifPresent { msg ->
+                // 스프링 컨텍스트에 메시지를 발행
+                eventPublisher.publishEvent(msg)
+                // 메시지를 처리한 결과가 정상이면 발행한 메시지는 처리된 것으로 플래그를 변경
+                messageStore.update(msg)
+            }
+        }
+    }
+}
+```
+
 ## 이벤트 어댑터와 마이크로서비스 모듈
 
 ## 이벤트 어댑터와 추상화된 핵심
