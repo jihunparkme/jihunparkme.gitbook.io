@@ -628,6 +628,8 @@ class ReverseRelay(
 
 ## 이벤트 어댑터와 마이크로서비스 모듈
 
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/5-21.png" alt=""><figcaption></figcaption></figure>
+
 ## 이벤트 어댑터와 추상화된 핵심
 
 ## 레거시 통합
