@@ -638,7 +638,34 @@ EventStore는 메시지 릴레이에서 이벤트 브로커로 도메인 이벤�
 
 ### 어노테이션
 
+리플레이 대상과 이벤트 브로커로 이벤트를 발행할지 설정할 수 있는 어노테이션
 
+```kotlin
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@MustBeDocumented
+annotation class Event(
+    val rehydration: Boolean = true,
+    val outbox: Boolean = false,
+    val topic: String = ""
+)
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@MustBeDocumented
+annotation class Command(
+    val topic: String = ""
+)
+
+...
+
+/* @Event의 outbox 속성을 검사해 메시지 브로커로 이벤트를 발행하거나 topic 속성 값에 할당한 토픽으로 이벤트를 발행 */
+@Event(rehydration = false, outbox = true, topic = "audit")
+data class LoggedIn(
+    val tenantId: String,
+    val time: Long
+)
+```
 
 ## 레거시 통합
 
