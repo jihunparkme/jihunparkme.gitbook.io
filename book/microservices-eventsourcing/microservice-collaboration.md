@@ -632,6 +632,14 @@ class ReverseRelay(
 
 ## 이벤트 어댑터와 추상화된 핵심
 
+EventStore는 메시지 릴레이에서 이벤트 브로커로 도메인 이벤트를 발행하기 위해 사용하는 전용 인터페이스
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/5-22.png" alt=""><figcaption></figcaption></figure>
+
+### 어노테이션
+
+
+
 ## 레거시 통합
 
 ## 요약
