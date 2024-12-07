@@ -49,6 +49,13 @@ MSA는 ACID와는 다르게 가용성을 더 중요하게 여기는 분산 시�
 - (2) 처리 순서는 선형이어야 한다.
   - 다음에 어떤 프로세스가 실행되어야 하는지 동적으로 선택하거나 처리 단계가 순차적이지 않은 상황에 사용 불가
 
+### Process Manager Pattern
+
+> 프로세스 매니저는 라우팅 슬립과 다르게 프로시저의 실행 결과를 이용해 다음에 실행할 프로시저를 결정
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-7.png" alt=""><figcaption></figcaption></figure>
+
+대부분의 워크플로우 엔진이 이 패턴을 사용
 
 ## 분산 트랜잭션
 
