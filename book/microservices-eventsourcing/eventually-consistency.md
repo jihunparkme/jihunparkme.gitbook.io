@@ -32,6 +32,24 @@ MSA는 ACID와는 다르게 가용성을 더 중요하게 여기는 분산 시�
 결과적 일관성은 비즈니스 프로세스에 참여하는 시스템간 협력의 결과
 - Gregor Hohpe, Bobby Woolf 가 소개한 기업 통합 패턴(Enterprise Integration Patterns) 중 결과적 일관성에 활용할 수 있는 `Routing Slip`, `Process Manager` Pattern 존재
 
+### Routing Slip Pattern
+
+> 사전에 정의한 규칙에 따라 수신한 메시지를 하나 이상의 대상으로 라우팅
+
+각 필터는 수신 메시지를 검사하고 다양한 비즈니스 규칙을 적용한 후 그 결과를 다음 필터로 전달
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-6.png" alt=""><figcaption></figcaption></figure>
+
+메시지가 도착하면 시작 프로시저 A는 메시지를 검사해 자신이 처리할지 다음 프로시저로 전달할지 결정
+- 자신이 처리해야 하면 처리 후 결과를 다음 프로시저에 전달
+- 단순 비즈니스 프로세스는 이 패턴을 활용해 마이크로서비스간 협업 순서를 정의
+
+단, 두 가지 제약 사항이 존재
+- (1) 처리 단계의 순서는 미리 결정되어 있어야 한다.
+- (2) 처리 순서는 선형이어야 한다.
+  - 다음에 어떤 프로세스가 실행되어야 하는지 동적으로 선택하거나 처리 단계가 순차적이지 않은 상황에 사용 불가
+
+
 ## 분산 트랜잭션
 
 ## 사가
