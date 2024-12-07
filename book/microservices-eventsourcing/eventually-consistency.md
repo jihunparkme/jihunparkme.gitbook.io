@@ -29,6 +29,9 @@ MSA는 ACID와는 다르게 가용성을 더 중요하게 여기는 분산 시�
 
 ## 기업 통합 패턴
 
+결과적 일관성은 비즈니스 프로세스에 참여하는 시스템간 협력의 결과
+- Gregor Hohpe, Bobby Woolf 가 소개한 기업 통합 패턴(Enterprise Integration Patterns) 중 결과적 일관성에 활용할 수 있는 `Routing Slip`, `Process Manager` Pattern 존재
+
 ## 분산 트랜잭션
 
 ## 사가
