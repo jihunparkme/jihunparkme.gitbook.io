@@ -710,3 +710,21 @@ data class LoggedIn(
 {% endhint %}
 
 ## 요약
+
+{% hint style="info" %}
+
+**RESTful API 설계와 마이크로서비스에서 발생한 도메인 이벤트를 외부에 발행하는 방법과 다른 마이크로서비스에서 발행한 이벤트를 수신하는 방법**
+
+- 데이터베이스 CURL은 HTTP 메소드 POST, GET, PUT, DELETE와 매핑
+- `RESTful API`는 사용하는 클라이언트에게 명확성을 드러내도록 설계해야 한다.
+- `URL`은 애그리게이트 단위로 설계하고 다양한 행위는 `HTTP header`(command, query)를 사용해 URL을 단순하게 유지할 수 있습니다.
+- 트랜잭션을 지원하지 않는 브로커는 `Transactional Outbox`와 `Inbox` Pattern을 적용할 수 있다.
+- `Transactional Outbox Pattern`는 이벤트 스토어에 저장되어 있는 도메인 이벤트를 폴링해 브로커에 메시지를 발행하는 `Message relay`를 사용하고,
+  - `Transactional Inbox Pattern`은 반대로 동작하는 `Reverse relay`를 사용
+- Redis, Kafka 같은 메시지 브로커가 제공하는 기능을 활용하기 위해 `브로커 전용 객체`를 사용
+- `Message relay`는 도메인 이벤트를 다른 메시지로 변환해 발행하는 책임이 있다.
+- 도메인 이벤트를 여러 번 처리하지 않게 하기 위해 이미 처리한 `이벤트 식별자` 관리 필요
+- 레거시 시스템과 통합은 대상 시스템이 복제할 수 있는 `Feed`를 제공해야 하고, 조회 최적화를 위해 `GraphQL` 활용 가능
+- 실시간 복제 요구가 있다면 이벤트 소싱을 적용한 시스템이 이벤트를 레거시 시스템에 능동적으로 전달하는 `Webhook`을 활용 가능
+
+{% endhint %}
