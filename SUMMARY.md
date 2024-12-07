@@ -59,6 +59,7 @@
   * [02.객체지향 설계 원칙](book/microservices-eventsourcing/oop.md)
   * [03-04.이벤트 소싱](book/microservices-eventsourcing/eventsourcing.md)
   * [05.마이크로서비스 협업](book/microservices-eventsourcing/microservice-collaboration.md)
+  * [06.결과적 일관성](book/microservices-eventsourcing/consequential-consistency.md)
 * [몽고DB 완벽 가이드](book/mongo-db-guide/README.md)
   * [I. 몽고DB 시작](book/mongo-db-guide/mongo-db-start.md)
   * [II. 몽고DB 개발](book/mongo-db-guide/mongo-db-dev.md)
