@@ -89,6 +89,23 @@ MSA에서 일련의 사건은 비즈니스 프로세스를 완성하는 여러 �
 일반적으로 비즈니스 트랜잭션의 각 스텝에서 상태를 중앙에서 관리하는 프로세스 매니저를 함께 사용해 보상 프로세스를 진행
 - 일관성을 유지하기 위해 비즈니스 트랜잭션에 참여하는 애그리게이트간에 트랜잭션을 구분하는 값을 주고 받음
 
+### 상관 관계 아이디
+
+> 결과적 일관성은 애그리게이트 식별자를 상관 관계 아이디로 사용
+
+ex. 주문 프로세스에서는 결제, 배송 마이크로서비스와 주문번호를 상관관계 아이디로 사용
+
+**주문과 상관 관계 아이디**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-11.png" alt=""><figcaption></figcaption></figure>
+
+**결제 실패와 상관 관계 아이디**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-12.png" alt=""><figcaption></figcaption></figure>
+
+
+
+
 ## 계좌 이체
 
 ## 이벤트 소싱과 결과적 일관성
