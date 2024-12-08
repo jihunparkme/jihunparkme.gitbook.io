@@ -103,8 +103,24 @@ ex. 주문 프로세스에서는 결제, 배송 마이크로서비스와 주문�
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-12.png" alt=""><figcaption></figcaption></figure>
 
+### Orchestration
 
+주문 마이크로서비스가 비즈니스 프로세스에 필요한 모든 작업을 알고 있으며 이벤트가 발생할 때마다 프로세스의 다음 스탭을 결정
 
+**오케스트레이션 - 주문 성공 시나리오**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-13.png" alt=""><figcaption></figcaption></figure>
+
+- 응답 토픽에 주문 프로세스의 마지막 스텝 결과로 성공이 도착하면 비즈니스 프로세스를 완료
+
+오케스트레이션 주문 실패(배송예약) 시나리오
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-14.png" alt=""><figcaption></figcaption></figure>
+
+- 배송 마이크로서비스는 배송 처리 중 오류가 발생하면 shipRejected 이벤트를 발행
+- 오케스트레이션 방식에서 주문 서비스는 비즈니스 프로세스의 진행 상태를 관리하는 객체가 필요
+  - 상태 관리 객체는 직접 구현하거나 스프링 스테이트 머신과 같은 라이브러리를 사용 가능
+  - 주문 서비스도 일시적으로 장애가 발생할 수 있으므로 프로세스의 진행 상태를 데이터베이스에 저장하고 서비스가 다시 시작했을 때 저장한 진행 상태를 조회하고 다음 스텝을 계속 진행
 
 ## 계좌 이체
 
