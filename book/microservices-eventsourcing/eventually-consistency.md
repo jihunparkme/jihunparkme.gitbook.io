@@ -105,7 +105,7 @@ ex. 주문 프로세스에서는 결제, 배송 마이크로서비스와 주문�
 
 ### Orchestration
 
-주문 마이크로서비스가 비즈니스 프로세스에 필요한 모든 작업을 알고 있으며 이벤트가 발생할 때마다 프로세스의 다음 스탭을 결정
+> 주문 마이크로서비스가 비즈니스 프로세스에 필요한 모든 작업을 알고 있으며 이벤트가 발생할 때마다 프로세스의 다음 스탭을 결정
 
 **오케스트레이션 - 주문 성공 시나리오**
 
@@ -124,7 +124,8 @@ ex. 주문 프로세스에서는 결제, 배송 마이크로서비스와 주문�
 
 ### Choreography
 
-`Orchestration` 방식은 주문 마이크로서비스가 전체 흐름을 제어하지만 `Choreography` 방식은 개별 마이크로서비스가 설계 시 부여한 책임을 가지고 자율적으로 비즈니스 트랜잭션에 참여
+> `Orchestration` 방식은 주문 마이크로서비스가 전체 흐름을 제어하지만 `Choreography` 방식은 개별 마이크로서비스가 설계 시 부여한 책임을 가지고 자율적으로 비즈니스 트랜잭션에 참여
+
 - 비즈니스 프로세스를 완료하기 위해 서로 어떤 메시지를 발행하고 반응해 무엇을 처리할지 상세하게 정의
 - 마이크로서비스는 자신이 반응하기로 한 메시지를 수신하면 설계 시 부여한 기능을 실행
 - 중간 스텝에서 실패가 발생하면 각 서비스는 실패 이벤트에 반응해 개별적으로 보상 로직을 실행
@@ -162,6 +163,306 @@ MSA에는 비즈니스 프로세스에 참여하는 서비스에서 데이터베
   - ex. 결제 대기 -> 트랜잭션 완료 후 결제 완료 및 버튼 활성화
 
 ## 계좌 이체
+
+### Orchestration
+
+> 루트 마이크로서비스가 비즈니스 프로세스에 필요한 모든 작업을 알고 있으며 이벤트가 발생할 때마다 프로세스의 다음 스탭을 결정
+
+Orchestration 방식에서 계좌 이체 성공 시나리오
+
+1. 사용자가 transfer 서비스에 `TransferMoney` 커맨드로 이체 요청
+2. transfer 서비스는 Transfer 애그리게이트를 생성하고 `TransferCreated` 이벤트 발행
+3. TransferOrchestrator가 `TransferCreated` 도메인 이벤트에 반응해 to 계좌에 `Deposit` 커맨드 발행
+4. `Deposit` 커맨드를 수신한 account 서비스는 to 계좌에 입금 처리하고 `Deposited` 이벤트 발행
+5. TransferOrchestrator는 `Deposited` 이벤트를 수신하고 transfer 서비스에 입금 완료로 처리하는 `CompleteDeposit` 커맨드를 발행
+6. TransferOrchestrator는 transfer 서비스가 입금 완료를 처리하면 from 계좌에 `Withdraw` 커맨드 발행
+7. `Withdraw` 커맨드를 수신한 account 서비스는 from 계좌에서 출금을 처리하고 `Withdrawed` 이벤트 발행
+8. TransferOrchestrator는 `Withdrawed` 이벤트에 반응해 transfer 출금 완료로 처리하는 `CompleteWithdraw` 커맨드 발행
+
+transfer 서비스는 `CompleteDeposit`, `CompleteWithdraw` 커맨드를 처리하고 계좌 이체 완료를 검사해 입금/출금을 모두 완료했으면 계좌 이체 상태를 완료로 변경
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-21.png" alt=""><figcaption></figcaption></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<details>
+<summary>EventSourcedAggregate.kt</summary>
+
+```kotlin
+abstract class EventSourcedAggregate {
+    private val events: MutableList<Event> = mutableListOf()
+    private var inSaga: Boolean = false
+    private var deleted: Boolean = false
+    private var sequence: Long = 0
+    private var version: Long = 0
+    private var snapshot: Snapshot? = null
+
+    abstract fun identifier(): String
+
+    fun apply(event: Event) {
+        apply(event, isNew = true)
+    }
+
+    fun apply(event: Event, isNew: Boolean) {
+        try {
+            val eventHandler: Method = this::class.java.getDeclaredMethod("on", event::class.java)
+            eventHandler.isAccessible = true
+            eventHandler.invoke(this, event)
+
+            if (isNew) {
+                event.sequence(++sequence)
+                events.add(event)
+            } else {
+                sequence = event.sequence()
+            }
+        } catch (e: NoSuchMethodException) {
+            throw EventHandlerNotFoundException(this::class.java, event::class.java)
+        } catch (e: IllegalAccessException) {
+            throw EventHandlerInvokeException(this::class.java, event::class.java, e)
+        } catch (e: InvocationTargetException) {
+            throw EventHandlerInvokeException(this::class.java, event::class.java, e)
+        }
+    }
+
+    fun takeSnapshot() {
+        val currentTime = System.currentTimeMillis()
+        if (snapshot == null || (snapshot != null && currentTime - snapshot!!.time > 600_000)) {
+            snapshot = Snapshot(JsonUtil.toJson(this), currentTime)
+        }
+    }
+
+    fun snapshot(): Snapshot? = snapshot
+
+    fun events(): List<Event> = events
+
+    fun sequence(): Long = sequence
+
+    fun sequence(sequence: Long) {
+        this.sequence = sequence
+    }
+
+    fun getVersion(): Long = version
+
+    fun setVersion(version: Long) {
+        this.version = version
+    }
+
+    fun markDelete() {
+        deleted = true
+    }
+
+    fun deleted(): Boolean = deleted
+
+    fun isInSaga(): Boolean = inSaga
+
+    protected fun startSaga() {
+        inSaga = true
+    }
+
+    protected fun endSaga() {
+        inSaga = false
+    }
+}
+```
+</details>
+
+<details>
+<summary>Transfer.kt</summary>
+
+```kotlin
+data class Transfer(
+    var transferId: String? = null, // 상관 관계 아이디
+    var fromAccountNo: String? = null,
+    var toAccountNo: String? = null,
+    var amount: Int = 0,
+    var state: State = State.Unknown
+) : EventSourcedAggregate() {
+
+    override fun identifier(): String {
+        return transferId ?: ""
+    }
+
+    constructor(command: TransferMoney) : this() {
+        val event = TransferCreated(
+            transferId = command.transferId,
+            fromAccountNo = command.fromAccountNo,
+            toAccountNo = command.toAccountNo,
+            amount = command.amount
+        ).apply {
+            correlationId = command.transferId
+        }
+
+        apply(event)
+    }
+
+    private fun on(event: TransferCreated) {
+        transferId = event.transferId
+        fromAccountNo = event.fromAccountNo
+        toAccountNo = event.toAccountNo
+        amount = event.amount
+        state = State.Unknown
+
+        startSaga()
+    }
+
+    fun completeTransfer(command: CompleteTransfer) {
+        val event = TransferCompleted(
+            transferId = command.transferId,
+            fromAccountNo = fromAccountNo ?: "",
+            toAccountNo = toAccountNo ?: "",
+            amount = amount
+        ).apply {
+            correlationId = command.transferId
+        }
+
+        apply(event)
+    }
+
+    private fun on(event: TransferCompleted) {
+        state = State.Succeed
+        endSaga()
+    }
+
+    fun cancelTransfer(command: CancelTransfer) {
+        apply(TransferCanceled(command.transferId))
+    }
+
+    private fun on(event: TransferCanceled) {
+        state = State.Fail
+        endSaga()
+    }
+}
+
+```
+</details>
+
+<details>
+<summary>TransferSagaCoordinator.kt</summary>
+
+```kotlin
+@Component
+class TransferSagaCoordinator(
+    private val applicationEventPublisher: ApplicationEventPublisher,
+    private val taskScheduler: TaskScheduler,
+    private val transferService: TransferService,
+    private val sagaStore: SagaStore<TransferSaga>
+) {
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(TransferSagaCoordinator::class.java)
+        private const val SAGA_NAME = "Transfer"
+    }
+
+    @EventListener
+    fun on(event: TransferCreated) {
+        // 입금 커맨드 발행
+        val command = BeginTransferSaga(
+            transferId = event.transferId,
+            fromAccountNo = event.fromAccountNo,
+            toAccountNo = event.toAccountNo,
+            amount = event.amount
+        )
+        val saga = TransferSaga(command)
+        sagaStore.save(saga)
+
+        val sagaTimeout = SagaTimeout(event.transferId, SAGA_NAME, applicationEventPublisher)
+        taskScheduler.schedule(sagaTimeout, SagaTimeout.expireTime(5))
+    }
+
+    @EventListener
+    fun on(event: SagaTimeExpired) {
+        logger.info("TransferChoreographer.on(SagaTimeExpired);")
+
+        if (SAGA_NAME != event.sagaType) return
+
+        val saga = sagaStore.load(event.correlationId)
+        if (!saga.isCompleteSaga()) {
+            saga.cancel(CancelTransferSaga(event.correlationId))
+            sagaStore.save(saga)
+
+            if (saga.completed()) {
+                val command = CancelTransfer(event.correlationId)
+                transferService.cancel(command)
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: WithdrawFailed) {
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+            if (!saga.isCompleteSaga()) {
+                saga.cancel(CancelTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) {
+                    val command = CancelTransfer(transferId)
+                    transferService.cancel(command)
+                }
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: Withdrawed) { // 출금 완료 이벤트를 수신하면
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+            if (!saga.isCompleteSaga()) {
+                saga.withdraw(WithdrawTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) {
+                    val command = CompleteTransfer(transferId)
+                    transferService.complete(command) // 트랜잭션을 완료
+                }
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: Deposited) { // 입금 완료 이벤트를 수신하면
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+            if (!saga.isCompleteSaga()) {
+                saga.deposit(DepositTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) {
+                    val command = CompleteTransfer(transferId)
+                    transferService.complete(command) // 출금 처맨드 발행
+                }
+            }
+        }
+    }
+
+    @EventListener
+    fun on(event: TransferCompleted) {
+        val saga = sagaStore.load(event.transferId)
+        saga.complete(CompleteTransferSaga(event.transferId))
+        sagaStore.save(saga)
+    }
+
+    @EventListener
+    fun on(event: TransferCanceled) {
+        val saga = sagaStore.load(event.transferId)
+        saga.cancel(CancelTransferSaga(event.transferId))
+        sagaStore.save(saga)
+    }
+}
+```
+</details>
 
 ## 이벤트 소싱과 결과적 일관성
 
