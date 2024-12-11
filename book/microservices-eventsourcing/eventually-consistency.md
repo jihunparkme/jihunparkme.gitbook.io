@@ -223,8 +223,22 @@ transfer 서비스는 `CompleteDeposit`, `CompleteWithdraw` 커맨드를 처리�
 - 오류가 있는 차액만 정정하는 것을 `부분 반전`(Partial Reversal)
 - 전체를 취소하고 올바른 금액으로 다시 기록하는 방법을 `전체 반전`(Full Reversal)
 
+### 이벤트 소싱과 사가
 
+> 이벤트 소싱으로 SAGA를 구현하면 이벤트 소싱의 장점을 모두 얻을 수 있다.
 
+트리거 역할의 사가
+- 클라이언트 요청으로 발생하는 커맨드와 이벤트의 전달 흐름에서 Saga 객체의 역할
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-27.png" alt=""><figcaption></figcaption></figure>
+
+비즈니스 프로세스 흐름과 Saga 객체
+- Saga 객체가 애그리게이트에서 발행한 도메인 이벤트에 직접 반응하는 방식
+- 협력에 참여하지 않고 Saga 객체가 발행한 이벤트에만 반응해 비즈니스 트랜잭션에 참여하는 방식으로 직접적인 의존성을 제거
+- 장점: 도메인이 처리해야 하는 고유 기능과 비즈니스 트랜잭션을 조정하는 기능을 분리하고, 애플리케이션 서비스를 포함한 하위 레이어의 변경을 최소화
+- 단점: Saga 이벤트를 추가로 정의해야 함
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-28.png" alt=""><figcaption></figcaption></figure>
 
 
 
