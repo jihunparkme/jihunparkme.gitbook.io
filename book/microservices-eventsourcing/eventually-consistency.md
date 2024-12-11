@@ -183,10 +183,15 @@ transfer 서비스는 `CompleteDeposit`, `CompleteWithdraw` 커맨드를 처리�
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-21.png" alt=""><figcaption></figcaption></figure>
 
+입금은 성공했지만 잔액 부족으로 출금에 실패한 시나리오의 보상 흐름
 
+9. AccountService는 출금 계좌에 잔액이 부족하면 `WithdrawFailed` 이벤트를 발행
+10. `WithdrawFailed` 이벤트를 수신한 TransferOrchestrator는 TransferService에 계좌 이체 취소를 요청
+11. TransferService는 Transfer 애그리게이트를 실패로 처리하고 `TransferCanceled` 이벤트를 발행
+12. `TransferCanceled` 이벤트를 수신한 TransferOrchestrator는 `CancelDeposit` 커맨드를 발행
+13. `CancelDeposit` 커맨드를 수신한 DepositHandler는 입금을 취소
 
-
-
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-22.png" alt=""><figcaption></figcaption></figure>
 
 
 
