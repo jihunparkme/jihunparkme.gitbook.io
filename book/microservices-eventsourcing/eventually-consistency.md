@@ -205,6 +205,19 @@ transfer 서비스는 `CompleteDeposit`, `CompleteWithdraw` 커맨드를 처리�
 - `WithdrawHandler`는 Deposited 이벤트에 반응해 AccountService에 출금 처리를 위임
 - `TransferHandler`는 Withdrawed 이벤트에 반응해 AccountService에 계좌 이체 완료를 위임
 
+잔액 부족으로 출금에 실패할 경우 보상 흐름을 실행
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-24.png" alt=""><figcaption></figcaption></figure>
+
+{% hint style="info" %}
+
+`Orchestration`, `Choreography` 방식 모두 보상 로직을 가진 메소드를 제공해야 하는 번거로움이 있지만 이벤트를 사용해 서비스의 독립성을 높일 수 있다.
+
+{% endhint %}
+
+
+
+
 
 <details>
 <summary>EventSourcedAggregate.kt</summary>
