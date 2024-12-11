@@ -240,8 +240,17 @@ transfer 서비스는 `CompleteDeposit`, `CompleteWithdraw` 커맨드를 처리�
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-28.png" alt=""><figcaption></figcaption></figure>
 
+### 결과적 일관성
 
+Saga 이벤트에 반응하고 TransferSaga 객체로 상태를 관리하면서 입금과 출금을 처리하는 흐름
 
+**TransferSaga와 입금 흐름**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-29.png" alt=""><figcaption></figcaption></figure>
+
+**TransferSaga와 출금 흐름**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-30.png" alt=""><figcaption></figcaption></figure>
 
 
 
