@@ -367,9 +367,136 @@ abstract class EventSourcedSaga {
 ```
 </details>
 
+transfer 서비스가 발행하는 Saga 이벤트와 account 서비스가 발행하는 도메인 이벤트에 반응해 일관성을 달성
+  
+1. Transer 애그리게이트에서 발행한 `TransferCreated` 도메인 이벤트에 반응해 TransferSaga 시작
+2. Account 애그리게이트에서 발행한 `Deposited`, `Withdrawed` 도메인 이벤트에 반응해 TransferSaga의 상태를 변경하고 완료 여부 확인
+3. 입금/출금이 모두 완료되면 TransferSaga를 완료 처리하고 Transfer를 종료 상태로 변경
+4. 출금이 실패해 `WithdrawFailed` 이벤트를 수신하면 TransferSaga를 취소 처리하고 Transter도 취소
+5. Transter가 취소되면 `TransferSagaCanceled` 이벤트를 발행하고 account 서비스는 상관 관계 아이디로 입금 이벤트를 삭제로 변경
 
+참고. 데이터베이스 동시성 문제가 발생하므로 `@Retryable`을 사용해 재시도 패턴을 적용
 
+<details>
+<summary>TransferSagaCoordinator.kt</summary>
 
+```kotlin
+@Component
+class TransferSagaCoordinator(
+    private val applicationEventPublisher: ApplicationEventPublisher,
+    private val taskScheduler: TaskScheduler,
+    private val transferService: TransferService,
+    private val sagaStore: SagaStore<TransferSaga>
+) {
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(TransferSagaCoordinator::class.java)
+        private const val SAGA_NAME = "Transfer"
+    }
+
+    @EventListener
+    fun on(event: TransferCreated) { // (1)
+        val command = BeginTransferSaga(
+            transferId = event.transferId,
+            fromAccountNo = event.fromAccountNo,
+            toAccountNo = event.toAccountNo,
+            amount = event.amount
+        )
+        val saga = TransferSaga(command)
+        sagaStore.save(saga)
+
+        val sagaTimeout = SagaTimeout(event.transferId, SAGA_NAME, applicationEventPublisher)
+        taskScheduler.schedule(sagaTimeout, SagaTimeout.expireTime(5))
+    }
+
+    @EventListener
+    fun on(event: SagaTimeExpired) {
+        logger.info("TransferChoreographer.on(SagaTimeExpired)")
+
+        if (event.sagaType != SAGA_NAME) return
+
+        val saga = sagaStore.load(event.correlationId)
+
+        if (!saga.isCompleteSaga) {
+            saga.cancel(CancelTransferSaga(event.correlationId))
+            sagaStore.save(saga)
+
+            if (saga.completed()) {
+                val command = CancelTransfer(event.correlationId)
+                transferService.cancel(command)
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: WithdrawFailed) { // (5)
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+
+            if (!saga.isCompleteSaga) {
+                saga.cancel(CancelTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) {
+                    val command = CancelTransfer(transferId)
+                    transferService.cancel(command)
+                }
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: Withdrawed) { // (2)
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+
+            if (!saga.isCompleteSaga) {
+                saga.withdraw(WithdrawTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) { // (3)
+                    val command = CompleteTransfer(transferId)
+                    transferService.complete(command)
+                }
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: Deposited) { // (2)
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+
+            if (!saga.isCompleteSaga) {
+                saga.deposit(DepositTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) { // (3)
+                    val command = CompleteTransfer(transferId)
+                    transferService.complete(command)
+                }
+            }
+        }
+    }
+
+    @EventListener
+    fun on(event: TransferCompleted) {
+        val saga = sagaStore.load(event.transferId)
+        saga.complete(CompleteTransferSaga(event.transferId))
+        sagaStore.save(saga)
+    }
+
+    @EventListener
+    fun on(event: TransferCanceled) {
+        val saga = sagaStore.load(event.transferId)
+        saga.cancel(CancelTransferSaga(event.transferId))
+        sagaStore.save(saga)
+    }
+}
+```
+</details>
 
 
 
