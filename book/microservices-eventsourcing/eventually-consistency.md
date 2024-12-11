@@ -215,6 +215,22 @@ transfer 서비스는 `CompleteDeposit`, `CompleteWithdraw` 커맨드를 처리�
 
 {% endhint %}
 
+## 이벤트 소싱과 결과적 일관성
+
+회계 장부를 기입하는 방법에서 이벤트 소싱을 사용할 때 보상 트랜잭션을 처리하는 아이디어를 얻을 수 있다.
+- 회계는 원장 중간에 수기로 작성한 것에 취소선을 사용할 뿐 절대 지우거나 변경하지 않는다.
+- 삭제 대한 정정(correcting) 과정을 거쳐 잔액을 맞춘다
+- 오류가 있는 차액만 정정하는 것을 `부분 반전`(Partial Reversal)
+- 전체를 취소하고 올바른 금액으로 다시 기록하는 방법을 `전체 반전`(Full Reversal)
+
+
+
+
+
+
+
+
+
 
 
 
@@ -487,8 +503,6 @@ class TransferSagaCoordinator(
 }
 ```
 </details>
-
-## 이벤트 소싱과 결과적 일관성
 
 ## 사례 연구
 
