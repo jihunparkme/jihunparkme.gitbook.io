@@ -193,11 +193,17 @@ transfer 서비스는 `CompleteDeposit`, `CompleteWithdraw` 커맨드를 처리�
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-22.png" alt=""><figcaption></figcaption></figure>
 
+### Choreography
 
+전체 흐름을 제어하는 `Orchestrator` 없이 **애그리게이트에서 발행한 이벤트에 핸들러가 직접 반응**해 비즈니스 트랜잭션을 처리
+- 애그리게이트 단위로 발행하는 이벤트에 반응해 처리를 위임하는 클래스를 추가
+- 사전에 설계된 프로세스로만 진행하므로 라우팅 슬립 패턴과 유사
 
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-23.png" alt=""><figcaption></figcaption></figure>
 
-
-
+- `DepositHandler`는 TransferCreated 이벤트에 직접 반응해 AccountService에 입금 처리를 위임
+- `WithdrawHandler`는 Deposited 이벤트에 반응해 AccountService에 출금 처리를 위임
+- `TransferHandler`는 Withdrawed 이벤트에 반응해 AccountService에 계좌 이체 완료를 위임
 
 
 <details>
