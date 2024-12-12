@@ -546,11 +546,183 @@ class TransferAccountSagaCoordinator(
 ```
 </details>
 
+### 타임아웃
+
+마이크로서비스에서 스레드를 이용해 타임아웃을 구현
+- TaskScheduler 인터페이스가 제공하는 schedule 오퍼레이션은 Date로 전달한 시간이 되면 Runnable.run 메소드를 실행하는데 이 때 타임아웃 이벤트를 발행
+- 지정한 시간이 되었을 때 발행하는 SagaTimeExpired 이벤트 클래스
+
+<details>
+<summary>SagaTimeExpired.kt</summary>
+
+```kotlin
+data class SagaTimeExpired(
+    var correlationId: String = "",
+    var sagaType: String = ""
+)
+```
+</details>
+
+<details>
+<summary>SagaTimeout.kt</summary>
+
+```kotlin
+class SagaTimeout(
+    private val correlationId: String,
+    private val sagaType: String,
+    private val applicationEventPublisher: ApplicationEventPublisher
+) : Runnable {
+
+    override fun run() {
+        val sagaTimeExpired = SagaTimeExpired(correlationId, sagaType)
+        applicationEventPublisher.publishEvent(sagaTimeExpired)
+    }
+
+    companion object {
+        fun expireTime(seconds: Int): Date {
+            return Calendar.getInstance().apply {
+                time = Date()
+                add(Calendar.SECOND, seconds)
+            }.time
+        }
+    }
+}
+```
+</details>
 
 
+<details>
+<summary>TransferSagaCoordinator.kt</summary>
 
+```kotlin
+@Component
+class TransferSagaCoordinator(
+    private val applicationEventPublisher: ApplicationEventPublisher,
+    private val taskScheduler: TaskScheduler,
+    private val transferService: TransferService,
+    private val sagaStore: SagaStore<TransferSaga>
+) {
 
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(TransferSagaCoordinator::class.java)
+        private const val SAGA_NAME = "Transfer"
+    }
 
+    @EventListener
+    fun on(event: TransferCreated) {
+        val command = BeginTransferSaga(
+            transferId = event.transferId,
+            fromAccountNo = event.fromAccountNo,
+            toAccountNo = event.toAccountNo,
+            amount = event.amount
+        )
+        val saga = TransferSaga(command)
+        sagaStore.save(saga)
+
+        val sagaTimeout = SagaTimeout(event.transferId, SAGA_NAME, applicationEventPublisher)
+        // 트랜잭션을 시작하고 5초 후 타임아웃 이벤트를 발행하는 SagaTimeout 객체 생성 후
+        // taskScheduler에 등록
+        taskScheduler.schedule(sagaTimeout, SagaTimeout.expireTime(5))
+    }
+
+    @EventListener
+    fun on(event: SagaTimeExpired) {
+        logger.info("TransferChoreographer.on(SagaTimeExpired)")
+
+        // sagaType을 비교해 자신이 처리할 타임아웃 이벤트인지 확인
+        if (event.sagaType != SAGA_NAME) return
+
+        val saga = sagaStore.load(event.correlationId)
+
+        // 비즈니스 트랜잭션이 정상적으로 완료되어도 발행되므로
+        // TransferSaga가 이미 완료되었는지 한번 더 확인
+        if (!saga.isCompleteSaga) {
+            saga.cancel(CancelTransferSaga(event.correlationId))
+            sagaStore.save(saga)
+
+            if (saga.completed()) {
+                val command = CancelTransfer(event.correlationId)
+                transferService.cancel(command)
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: WithdrawFailed) {
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+
+            if (!saga.isCompleteSaga) {
+                saga.cancel(CancelTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) {
+                    val command = CancelTransfer(transferId)
+                    transferService.cancel(command)
+                }
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: Withdrawed) {
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+
+            if (!saga.isCompleteSaga) {
+                saga.withdraw(WithdrawTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) {
+                    val command = CompleteTransfer(transferId)
+                    transferService.complete(command)
+                }
+            }
+        }
+    }
+
+    @Retryable
+    @EventListener
+    fun on(event: Deposited) {
+        event.transferId?.let { transferId ->
+            val saga = sagaStore.load(transferId)
+
+            if (!saga.isCompleteSaga) {
+                saga.deposit(DepositTransferSaga(transferId))
+                sagaStore.save(saga)
+
+                if (saga.completed()) {
+                    val command = CompleteTransfer(transferId)
+                    transferService.complete(command)
+                }
+            }
+        }
+    }
+
+    @EventListener
+    fun on(event: TransferCompleted) {
+        val saga = sagaStore.load(event.transferId)
+        saga.complete(CompleteTransferSaga(event.transferId))
+        sagaStore.save(saga)
+    }
+
+    @EventListener
+    fun on(event: TransferCanceled) {
+        val saga = sagaStore.load(event.transferId)
+        saga.cancel(CancelTransferSaga(event.transferId))
+        sagaStore.save(saga)
+    }
+}
+
+```
+</details>
+
+장애로 transfer 서비스를 재시작하면 저장소에 등록되어 있는 SagaTimeout을 조회해 다시 TaskScheduler에 등록해야 한다.
+- 아직 완료되지 않은 SagaTimeout 목록 조회
+- 목록을 반복하며 이미 시간이 만료되었으면 즉시 보상로직을 시작하도록 현재 시간을 사용해 이벤트를 발행
+- 그렇지 않은 경우 저장되어 있는 시간에 타임아웃 이벤트를 발행하게 TaskScheduler에 다시 등록
 
 
 
