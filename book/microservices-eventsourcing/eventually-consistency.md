@@ -498,6 +498,63 @@ class TransferSagaCoordinator(
 ```
 </details>
 
+`TransferAccountSagaCoordinator`는 transfer 서비스가 발행한 Saga 관련 이벤트에 반응
+
+<details>
+<summary>TransferAccountSagaCoordinator.kt</summary>
+
+```kotlin
+@Component
+class TransferAccountSagaCoordinator(
+    private val accountService: AccountService
+) {
+
+    @Retryable(exclude = [ObjectOptimisticLockingFailureException::class])
+    @EventListener
+    fun onDeposit(event: TransferSagaBegan) {
+        val command = Deposit(
+            accountNo = event.toAccountNo,
+            amount = event.amount,
+            transferId = event.transferId
+        )
+        accountService.deposit(command)
+    }
+
+    @EventListener
+    fun onWithdraw(event: TransferSagaBegan) {
+        val command = Withdraw(
+            accountNo = event.fromAccountNo,
+            amount = event.amount,
+            transferId = event.transferId
+        )
+        try {
+            accountService.withdraw(command)
+        } catch (e: Exception) {
+            // Handle the exception if necessary
+        }
+    }
+
+    @EventListener
+    fun on(event: TransferSagaCanceled) {
+        val command = CancelDeposit(
+            accountNo = event.accountNo,
+            transferId = event.transferId
+        )
+        accountService.cancelDeposit(command)
+    }
+}
+```
+</details>
+
+
+
+
+
+
+
+
+
+
 
 
 
