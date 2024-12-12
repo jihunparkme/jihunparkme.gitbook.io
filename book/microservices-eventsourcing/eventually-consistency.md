@@ -724,18 +724,28 @@ class TransferSagaCoordinator(
 - 목록을 반복하며 이미 시간이 만료되었으면 즉시 보상로직을 시작하도록 현재 시간을 사용해 이벤트를 발행
 - 그렇지 않은 경우 저장되어 있는 시간에 타임아웃 이벤트를 발행하게 TaskScheduler에 다시 등록
 
+### 상관 관계 아이디와 추적성
 
+분산 추적 패턴은 외부 요청별로 고유한 요청 식별자를 할당하고 다른 마이크로서비스와 협력할 때 요청 식별자를 전달해 마이크로서비스간 의존성을 추적
+- `Spring Cloud Sleuth`는 고유한 요청 식별자를 생성하고 전달하는 기능을 제공
+- 요청 식별자는 세 가지의 속성을 보유
+  - `traceId`: 요청별로 할당한 고유값, 하나의 비즈니스 프로세스에 다수의 마이크로서비스가 협력해도 동일한 값을 가짐
+  - `spanId`: 비즈니스 프로세스에서 실행 순서, 애플리케이션별로 할당하는 고유값으로 최초 요청은 traceId와 동일
+  - `parentId`: 자신을 요청한 마이크로서비스의 spanId, Linked List와 유사해서 호출 관계를 분석하는데 사용
+    - 최초 요청 시 null 할당
 
+**Spring Cloud Sleuth**
 
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-31.png" alt=""><figcaption></figcaption></figure>
 
+- 이벤트 소싱과 결과적 일관성에 추적성을 언급하는 것은 보상 메커니즘을 구현하는데 중요한 속성인 상관 관계 아이디 값으로 traceId를 사용할 수 있기 때문
+- 분산 추적에 사용하는 traceId를 상관 관계 아이디로 사용하면 추적성을 유지하면서 도메인 객체에서 발생한 이벤트의 deleted 속성을 손쉽게 변경 가능
 
+**TraceId를 이용한 추적성과 상관 관계 아이디**
 
-<details>
-<summary>aaa.kt</summary>
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-32.png" alt=""><figcaption></figcaption></figure>
 
-
-</details>
-
+- traceId를 사용하면 도메인 이벤트를 저장할 때 CORRELATION_ID에 traceId를 저장하고 브로커에 이벤트 발행 시에도 traceId를 포함해야 함
 
 ## 사례 연구
 
