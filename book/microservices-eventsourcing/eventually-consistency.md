@@ -755,4 +755,22 @@ class TransferSagaCoordinator(
 
 ## 일관성과 마이크로서비스 분리 및 통합
 
+**모노리스 아키텍처와 트랜잭션**
+- 여러 애그리게이트간 일관성을 단일 트랜잭션으로 처리하는 마이크로서비스를 분할하려면 결과적 일관성을 적용하기 위한 많은 노력이 필요
+- 이벤트를 사용해 애그리게이트간 일관성을 유지하면 단순한 소스 이동만으로 마이크로서비스를 분할하거나 통합할 수 있다.
+- 명확하지 않은 애그리게이트는 비교적 큰 마이크로서비스로 개발하더라도 결과적 일관성을 적용하고, 도메인을 더 깊이 이해하고 필요할 때 분할하는 전략 선택 가능
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-39.png" alt=""><figcaption></figcaption></figure>
+
+**모노리스에서 마이크로서비스로 전환**
+- 단일 트랜잭션으로 구현한 마이크로서비스를 분할할 때 이벤트 처리를 위해 추가해야 하는 주요 구성요소
+- 여러 애그리게이트를 가진 마이크로서비스에서 결과적 일관성을 사용하지 않으면 서비스 릴리즈 후 분할해야 하는 상황에서 일관성, 가용성과 같은 품질 속성을 그대로 유지하기 위해 많은 노력이 필요
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-40.png" alt=""><figcaption></figcaption></figure>
+
+**애그리게이트간 결과적 일관성과 마이크로서비스 분리**
+- 분리되어 있던 여러 애그리게이트를 하나의 서비스로 통합하는 경우에도 영향을 받게 되는데, 결과적 일관성으로 구현하면 비용은 거의 무료
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/6-41.png" alt=""><figcaption></figcaption></figure>
+
 ## 요약
