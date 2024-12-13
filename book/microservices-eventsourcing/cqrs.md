@@ -6,6 +6,14 @@
 
 ## 명령과 조회 책임 분리
 
+`CQS`는 객체가 제공하는 메소들르 객체의 상태를 변경하는 `커맨드`와 상태를 반환하는 `쿼리`로 구분
+
+**CQS and CQRS**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/7-1.png" alt=""><figcaption></figcaption></figure>
+
+- `CQRS`는 많은 테이블 조인을 피하기 위해 조회에 최적화시킨 테이블을 분리해서 설계하고 커맨드 처리를 완료한 후 발행한 도메인 이벤트에서 필요한 속성을 복사해 조회 전용 테이블에 한번 더 CUD를 실행
+
 ## 구체화된 뷰와 이벤트 핸들러
 
 ## 뷰 조회
