@@ -22,6 +22,8 @@
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/7-3.png" alt=""><figcaption></figcaption></figure>
 
+.
+
 **뷰와 구체화된 뷰의 특징과 차이점**
 
 `뷰`
@@ -36,6 +38,16 @@
 - JSON을 포함해 다양한 조건의 SELECT 쿼리를 위한 빠른 성능을 제공
 - 쿼리 옵티마이저가 실행 계획을 수립할 때 더 빠른 방법을 선택
 
+.
+
+**CQRS 핵심 객체와 의존성**
+- 구체화된 뷰를 생성하기 위해 필요한 구성 요소간 관계
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/7-4.png" alt=""><figcaption></figcaption></figure>
+
+- 애그리게이트가 도메인 이벤트를 발행하면 이벤트 핸들러가 이벤트에 반응해 뷰 객체로 변환
+- ViewStore는 뷰 객체를 구체화된 뷰 테이블과 매핑한 JPA 엔티티 객체로 변환해 데이터베이스에 저장
+- 조회 목적에 따라 개별 테이블로 분리해 설계하거나 동일 조회 조건을 가진 여러 뷰 클래스를 하나의 테이블로 통합 가능
 
 ## 뷰 조회
 
