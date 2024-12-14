@@ -96,9 +96,12 @@ class CartEndpoint(
 }
 ```
 
-## CQRS와 RESTful API
-
 ## 뷰 복원
+
+조회 전용 데이터를 삭제해도 이벤트 스토어에 모든 도메인 이벤트가 저장되어 있으므로 필요 시 다시 조회 전용 데이터를 생성 가능
+- ViewRecover가 이벤트 저장소에서 도메인 이벤트 조회 후 이벤트 핸들러에 전달해 실수로 삭제한 쿠체화된 뷰를 다시 생성
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/7-6.png" alt=""><figcaption></figcaption></figure>
 
 ## 마이크로서비스 모듈
 
