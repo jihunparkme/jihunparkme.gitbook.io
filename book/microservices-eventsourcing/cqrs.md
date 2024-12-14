@@ -71,6 +71,31 @@
 
 ## 뷰 조회
 
+> 조회를 위한 클래스는 접두어로 Query를 사용
+
+```kotlin
+@RestController
+@RequestMapping("/cart")
+class CartEndpoint(
+    private val httpSession: HttpSession,
+    private val cartService: CartService,
+    private val cartViewStore: CartViewStore
+) {
+
+    @GetMapping(headers = ["query=QueryCart"])
+    fun queryCart(): Cart {
+        return cartService.queryCart()
+    }
+
+    @GetMapping(headers = ["query=QueryCartItem"])
+    fun queryItem(@RequestParam itemId: String): ItemView {
+        val userId = httpSession.getAttribute("userId")?.toString() ?: throw IllegalStateException("User not logged in")
+        val query = QueryCartItem(userId, itemId)
+        return cartViewStore.queryItem(query)
+    }
+}
+```
+
 ## CQRS와 RESTful API
 
 ## 뷰 복원
