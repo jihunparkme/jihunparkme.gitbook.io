@@ -105,6 +105,16 @@ class CartEndpoint(
 
 ## 마이크로서비스 모듈
 
+CQRS를 적용한 마이크로서비스의 모듈은 view
+- `view` 패키지는 조회 전용 데이터를 생성하거나 변경하는 데 필요한 모든 클래스를 포함
+- 조회를 위한 클래스는 `query` 패키지에 위치
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/7-7.png" alt=""><figcaption></figcaption></figure>
+
+마이크로서비스에서 여러 개의 뷰를 만들어야 한다면 view 하위 패키지에 추가하여 구분
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/7-8.png" alt=""><figcaption></figcaption></figure>
+
 ## CQRS 활용 사례
 
 ## 이벤트 소싱과 뷰 일관성
