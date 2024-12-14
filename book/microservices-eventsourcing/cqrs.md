@@ -49,6 +49,14 @@
 - ViewStore는 뷰 객체를 구체화된 뷰 테이블과 매핑한 JPA 엔티티 객체로 변환해 데이터베이스에 저장
 - 조회 목적에 따라 개별 테이블로 분리해 설계하거나 동일 조회 조건을 가진 여러 뷰 클래스를 하나의 테이블로 통합 가능
 
+주문 애그리게이트가 요청을 처리하고 메시지 릴레이가 OrderCompleted 도메인 이벤트를 발행
+- OrderCompleted 이벤트에 반응하는 ProductOrderViewHandler는 상품별 판매 수량 속성을 포함하는 ProductORderView를 생성하고 데이터베이스에 저장
+
+반대로 주문을 취소하면 해당 상품 판매량 뷰를 삭제
+- ProductOrderViewHandler는 OrderCanceled 이벤트에 반응해 OrderNo로 뷰 테이블의 레코드를 찾아 삭제
+
+
+
 ## 뷰 조회
 
 ## CQRS와 RESTful API
