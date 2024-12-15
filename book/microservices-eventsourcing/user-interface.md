@@ -39,6 +39,14 @@
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-14.png" alt=""><figcaption></figcaption></figure>
 
+### 확인(완료) 화면
+
+사용자에게 '확인'또는 '감사합니다' 화면을 먼저 표시
+- 비즈니스 트랜잭션을 완료하는 일반적인 지연 시간을 할당하고 사용자가 다른 화면으로 이동했을 때 최신 상태를 표시
+- ex. 완료 -> 내역 보기 버튼 클릭 -> 내역
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-15.png" alt=""><figcaption></figcaption></figure>
+
 ## 스벨트와 비트
 
 ## 계좌 이체와 계좌 페이지
