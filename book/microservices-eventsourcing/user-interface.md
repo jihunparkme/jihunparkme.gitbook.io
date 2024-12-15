@@ -65,6 +65,14 @@
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-17.png" alt=""><figcaption></figcaption></figure>
 
+### 타이머와 폴링
+
+화면을 비활성화시키는 방법은 동일하지만 서버에서 완료 이벤트를 수신할 때까지 대기하지 않고 사용자 인터페이스에서 타이머를 이용해 쥑적으로 처리 상태를 확인
+- 처리를 완료했으면 화면을 다시 활성화시키거나 다른 페이지로 이동
+- 푸시와 비교 시 구현 난의도가 낮아 많이 사용하는 방법이지만 서버로 요청이 많은 단점이 존재
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-18.png" alt=""><figcaption></figcaption></figure>
+
 ## 스벨트와 비트
 
 ## 계좌 이체와 계좌 페이지
