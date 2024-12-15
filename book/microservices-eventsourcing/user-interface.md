@@ -52,8 +52,18 @@
 사용자 인터페이스는 요청이 접수되었다는 응답을 받으면 새로운 읽기 모델의 상태 예상 가능
 - 응답을 받았을 때 화면 변경을 예측할 수 있으므로 서버가 제공하는 조회 API를 호출하지 않고 프론트에서 화면을 직접 렌더링
 - 구현에 시간이 조금 더 걸리지만 훨씬 더 자연스러운 사용자 경험을 제공
+- ex. 새로운 메시지 트윗
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-16.png" alt=""><figcaption></figcaption></figure>
+
+### 이벤트 무시
+
+사용자 인터페이스는 요청을 보낸 후 화면을 비활성화시키고 기대하는 이벤트를 받을 때까지 유지
+- 비즈니스 트랜잭션을 완료하ㅏ면 백엔드는 프론트에 완료 메시지를 보내고 프론트는 화면을 다시 활성화시키거나 지정 페이지로 이동
+- 이벤트는 다른 개발 방법과 비교했을 때 오버 헤드가 있으므로 실시한 업데이트가 꼭 필요한 요구사항인지 확인이 필요
+- 대표적인 구현 기술이 WebSocket, SSE(Server0Side Events)
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-17.png" alt=""><figcaption></figcaption></figure>
 
 ## 스벨트와 비트
 
