@@ -47,6 +47,14 @@
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-15.png" alt=""><figcaption></figcaption></figure>
 
+### 예상 결과 표시
+
+사용자 인터페이스는 요청이 접수되었다는 응답을 받으면 새로운 읽기 모델의 상태 예상 가능
+- 응답을 받았을 때 화면 변경을 예측할 수 있으므로 서버가 제공하는 조회 API를 호출하지 않고 프론트에서 화면을 직접 렌더링
+- 구현에 시간이 조금 더 걸리지만 훨씬 더 자연스러운 사용자 경험을 제공
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-16.png" alt=""><figcaption></figcaption></figure>
+
 ## 스벨트와 비트
 
 ## 계좌 이체와 계좌 페이지
