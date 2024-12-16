@@ -124,7 +124,20 @@
 - 함수 의존성을 이벤트로 변경했을 때 컴포넌트간 협력
 - 상단 컴포넌트에서 상품을 등록하면 웹 브라우저에 이벤트를 발행하고 이벤트를 수신한 이벤트 핸들러가 목록을 갱신
 
+## 마이크로서비스와 형상 관리
 
+백엔드와 프론트엔드를 단일 배포 단위로 통합하기 위해 형상 관리 도구에서 프론트와 백엔드를 하나의 프로젝트로 구성
+- 웹 컴포넌트는 fragment 디렉토리로 구성
 
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-35.png" alt=""><figcaption></figcaption></figure>
+
+- 지속적인 통합과 배포 스크립트에서 `fragment`와 `frontend`를 순서대로 빌드하고, 번들 파일을 backend 프로젝트의 `/resources/public`으로 복사한 후 백엔드를 빌드
+- 웹 컴포넌트는 `/resources/public/fragment`에 둬 다른 서비스가 실행 시간에 참조할 수 있게 함
+- `deploy` 디렉토리는 도커 이미지 생성 및 푸시, 쿠버네티스 배포 등 CI/CD에 필요한 파일을 포함
 
 ## 요약
+
+{% hint style="info" %}
+
+
+{% endhint %}
