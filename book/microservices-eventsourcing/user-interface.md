@@ -101,4 +101,15 @@
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-24.png" alt=""><figcaption></figcaption></figure>
 
+.
+
+**단일 페이지 애플리케이션과 컴포넌트**
+
+- 마이크로 프론트엔드는 페이지에서 상품 정보를 한번에 변경하지 않고 단일 속성이나 관련 속성을 그룹 단위로 변경
+  - 변경 요청은 애그리게이트를 소유한 마이크로서비스가 직접 처리
+  - 마이크로프론트엔드는 변경 요청뿐 아니라 페이지를 구성하는 상세 컴포넌트도 애그리게이트를 소유한 마이크로서비스가 제공하고 복합 화면은 컴포넌트를 임포트해서 구성
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-26.png" alt=""><figcaption></figcaption></figure>
+
+
 ## 요약
