@@ -86,9 +86,19 @@
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-22.png" alt=""><figcaption></figcaption></figure>
 
-`마이크로 프론트엔드`는 단순히 컴포넌트 조합에 머물면서 거대한 모노리식 프론트를 만들지 않고 **하이퍼링크를 사용해 서로 연결**
+- `마이크로 프론트엔드`는 단순히 컴포넌트 조합에 머물면서 거대한 모노리식 프론트를 만들지 않고 **하이퍼링크를 사용해 서로 연결**
 - 하이퍼링크로 작은 마이크로 프론트엔드를 연결하면 백엔드와 마찬가지로 프론트엔드도 더 작은 단위를 독립적으로 배포 가능
 - 프론트엔드도 독립적으로 배포할 수 있다면 백엔드와 프론트엔드를 하나의 배포 단위로 구성해 더 높은 응집도와 낮은 결합도를 가진 시스템을 구축
 
+**마이크로 프론트엔드와 하이퍼링크**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-23.png" alt=""><figcaption></figcaption></figure>
+
+- 프론트엔드 프로젝트를 빌드하면 dist 디렉토리에 번들 파일인 css, js, html, svg를 생성
+- 이 번들 파일을 /resources/public에 복사해 백엔드와 프론트엔드를 하나의 배포 단위로 만들 수 있음
+
+**글로벌 CSS와 덮어쓰기**
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/8-24.png" alt=""><figcaption></figcaption></figure>
 
 ## 요약
