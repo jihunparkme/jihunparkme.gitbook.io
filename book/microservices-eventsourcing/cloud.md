@@ -51,6 +51,13 @@ ENTRYPOINT ["java", "-Duser.timezone='Asia/Seoul'",
 > docker build -t cosmos/transfermoney:1.0.0 -f Dockerfile .
 ```
 
+👉🏻 **도커 허브에 이미지 푸시**
+
+```bash
+> docker login -u [ID] # 도커 허브 로그인
+> docker push cosmos/transfermoney:1.0.0 # 컨테이너 레지스트리인 도커 허브에 업로드
+```
+
 
 ## 쿠버네티스
 
