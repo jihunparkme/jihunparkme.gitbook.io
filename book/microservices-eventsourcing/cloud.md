@@ -58,10 +58,18 @@ ENTRYPOINT ["java", "-Duser.timezone='Asia/Seoul'",
 > docker push cosmos/transfermoney:1.0.0 # 컨테이너 레지스트리인 도커 허브에 업로드
 ```
 
-
 ## 쿠버네티스
 
-## 쿠버네티스 구성 요소
+컨테이너 수가 증가할수록 관리가 힘들어지고, 설치 계획 수립과 배포할 서버가 필요
+- 모니터링하면서 문제 발생 시 재시작하거나 Fail-over 같은 장애 상황에도 대응이 필요
+
+### 쿠버네티스 구성 요소
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/9-10.png" alt=""><figcaption></figcaption></figure>
+
+👉🏻 **네임스페이스**
+
+> 쿠버네티스 클러스터에서 `Pod`, `ConfigMap`, `Secret`, `Service` 같은 객체들을 논리적으로 분리하는 가상의 단위
 
 ## 이스티오
 
