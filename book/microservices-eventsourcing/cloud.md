@@ -30,7 +30,7 @@
 
 👉🏻 **Dockerfile**
 - 운영 체제만 있는 베이스 이미지를 기반으로 JRE(Java Runtime Environment)와 서비스를 포함한 새로운 이미지를 만들 수 있음
-- Dockerfile과 transfermoney 서비스
+- `Dockerfile`과 transfermoney 서비스
 
 ```bash
 FROM adoptopenjdk/openjdk15:x86_64-tumbleweed-jre-15.0.2_7 # openjdk를 포함한 베이스 이미지
@@ -41,6 +41,16 @@ ENTRYPOINT ["java", "-Duser.timezone='Asia/Seoul'",
                 "-Djava.security.egd=file:/dev/./urandom", "-Xmx256m",
                 "-jar", "/app.jar"] 
 ```
+
+👉🏻 **이미지 생성**
+- `docker build` 명령어로 컨테이너 이미지를 생성
+- `-t` 옵션은 이미지에 이름을 부여
+- `-f` 옵션은 이미지 생성에 사용할 Dockerfile 파일명
+
+```bash
+> docker build -t cosmos/transfermoney:1.0.0 -f Dockerfile .
+```
+
 
 ## 쿠버네티스
 
