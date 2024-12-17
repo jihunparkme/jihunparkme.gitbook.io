@@ -67,9 +67,15 @@ ENTRYPOINT ["java", "-Duser.timezone='Asia/Seoul'",
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/9-10.png" alt=""><figcaption></figcaption></figure>
 
-👉🏻 **네임스페이스**
+👉🏻 **Namespace**
 
 > 쿠버네티스 클러스터에서 `Pod`, `ConfigMap`, `Secret`, `Service` 같은 객체들을 논리적으로 분리하는 가상의 단위
+
+👉🏻 **Pod**
+
+> 쿠버네티스에서 생성해 관리하는 배포 단위로 컨테이너를 하나 이상 포함하는 그룹
+
+- 파드를 직접 관리하는 경우는 드물도 `Deployment`를 주로 사용
 
 ## 이스티오
 
