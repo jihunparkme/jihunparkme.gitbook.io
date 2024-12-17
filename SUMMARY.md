@@ -62,6 +62,7 @@
   * [06.결과적 일관성](book/microservices-eventsourcing/eventually-consistency.md)
   * [07.CQRS](book/microservices-eventsourcing/cqrs.md)
   * [08.UI](book/microservices-eventsourcing/user-interface.md)
+  * [09.클라우드 환경](book/microservices-eventsourcing/cloud.md)
 * [몽고DB 완벽 가이드](book/mongo-db-guide/README.md)
   * [I. 몽고DB 시작](book/mongo-db-guide/mongo-db-start.md)
   * [II. 몽고DB 개발](book/mongo-db-guide/mongo-db-dev.md)
