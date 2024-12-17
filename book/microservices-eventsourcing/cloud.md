@@ -6,6 +6,23 @@
 
 ## 도커
 
+> 도커는 리눅스 기반의 컨테이너 런타임 오픈소스
+
+- `도커`는 버추얼 머신과 달리 하이퍼바이저 없이 호스트 운영 체제에서 직접 실행되므로 훨씬 가볍고 빠름
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/9-1.png" alt=""><figcaption></figcaption></figure>
+
+도커의 가장 큰 특징이자 장점은 컨테이너 `레지스트리`
+- 컨테이너 이미지를 중앙 저장소에 저장한 후 다른 환경에서 다운로드해 사용 가능
+- 컨테이너 이미지는 애플리케이션, 환경 정보 등 실행에 필요한 모든 설정을 포함
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/9-2.png" alt=""><figcaption></figcaption></figure>
+
+도커는 컨테이너 이미지를 생성 시 `Base Image`와 `Dockerfile`을 사용
+- 실무에서는 이미 공개되어 있는 베이스 이미지에 사용할 프로그램을 설치하는 방식으로 사용
+
+<figure><img src="../../.gitbook/assets/microservices-eventsourcing/9-3.png" alt=""><figcaption></figcaption></figure>
+
 ## 쿠버네티스
 
 ## 쿠버네티스 구성 요소
