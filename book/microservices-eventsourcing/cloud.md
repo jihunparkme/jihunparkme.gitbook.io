@@ -67,15 +67,34 @@ ENTRYPOINT ["java", "-Duser.timezone='Asia/Seoul'",
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/9-10.png" alt=""><figcaption></figcaption></figure>
 
-👉🏻 **Namespace**
+👉🏻 **`Namespace`**
 
 > 쿠버네티스 클러스터에서 `Pod`, `ConfigMap`, `Secret`, `Service` 같은 객체들을 논리적으로 분리하는 가상의 단위
 
-👉🏻 **Pod**
+👉🏻 **`Pod`**
 
 > 쿠버네티스에서 생성해 관리하는 배포 단위로 컨테이너를 하나 이상 포함하는 그룹
 
 - 파드를 직접 관리하는 경우는 드물도 `Deployment`를 주로 사용
+
+👉🏻 **`ConfigMap`**
+
+> key-value 쌍으로 데이터베이스 드라이버나 사용자와 비밀번호를 포함하지 않는 연결 정보와 같이 보호가 필요없는 데이터를 저장하는 데 사용
+
+- 반대로 보호가 필요한 데이터는 `Secret`을 사용
+- 아이디 비밀번호를 제외한 데이터베이스 연결 정보와 카프카 호스트 정보를 선언한 ConfigMap
+
+```bash
+apiVersion: v1 
+kind: ConfigMap 
+metadata:
+    name: account
+data:
+    spring.profile: kubernetes
+    datasource.url: jdbc:h2:mem: account
+    datasource.driver.class.name: org.h2.Driver
+    broker: broker:9092
+```
 
 ## 이스티오
 
