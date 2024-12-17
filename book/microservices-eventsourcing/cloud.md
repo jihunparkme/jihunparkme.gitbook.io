@@ -23,6 +23,25 @@
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/9-3.png" alt=""><figcaption></figcaption></figure>
 
+.
+
+👉🏻 **도커 리소스 설정**
+- 도커가 사용하는 프로세서와 메모리를 제한 가능
+
+👉🏻 **Dockerfile**
+- 운영 체제만 있는 베이스 이미지를 기반으로 JRE(Java Runtime Environment)와 서비스를 포함한 새로운 이미지를 만들 수 있음
+- Dockerfile과 transfermoney 서비스
+
+```bash
+FROM adoptopenjdk/openjdk15:x86_64-tumbleweed-jre-15.0.2_7 # openjdk를 포함한 베이스 이미지
+VOLUME / tmp
+COPY target/transfermoney-1.0.0-SNAPSHOT.jar app.jar # jar 파일을 복사
+# docker run 커맨드로 컨테이너 실행 시 java -jar 명령어로 서비스를 시작
+ENTRYPOINT ["java", "-Duser.timezone='Asia/Seoul'",
+                "-Djava.security.egd=file:/dev/./urandom", "-Xmx256m",
+                "-jar", "/app.jar"] 
+```
+
 ## 쿠버네티스
 
 ## 쿠버네티스 구성 요소
