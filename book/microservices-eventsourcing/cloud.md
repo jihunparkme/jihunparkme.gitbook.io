@@ -67,17 +67,17 @@ $ docker push cosmos/transfermoney:1.0.0 # 컨테이너 레지스트리인 도�
 
 <figure><img src="../../.gitbook/assets/microservices-eventsourcing/9-10.png" alt=""><figcaption></figcaption></figure>
 
-👉🏻 **`Namespace`**
+### Namespace
 
 > 쿠버네티스 클러스터에서 `Pod`, `ConfigMap`, `Secret`, `Service` 같은 객체들을 논리적으로 분리하는 가상의 단위
 
-👉🏻 **`Pod`**
+### Pod
 
 > 쿠버네티스에서 생성해 관리하는 배포 단위로 컨테이너를 하나 이상 포함하는 그룹
 
 - 파드를 직접 관리하는 경우는 드물도 `Deployment`를 주로 사용
 
-👉🏻 **`ConfigMap`**
+### ConfigMap
 
 > key-value 쌍으로 데이터베이스 드라이버나 사용자와 비밀번호를 포함하지 않는 연결 정보와 같이 보호가 필요없는 데이터를 저장하는 데 사용
 
@@ -96,7 +96,7 @@ data:
     broker: broker:9092
 ```
 
-👉🏻 **`Secret`**
+### Secret
 
 > 일반적인 환경 설정 정보가 아닌 데이터베이스의 사용자와 비밀번호, API키 처럼 보안이 중요한 정보는 `Secret`을 사용
 
@@ -141,6 +141,27 @@ $ kubectl apply -f secret.yml -n cosmos
 secret/account created
 
 $ kubectl get secret account -o yaml
+```
+
+### Service
+
+> 실행 중인 애플리케이션이 일관된 방법으로 접근할 수 있도록 노출하는 방법이 `서비스`
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+    name: account
+    labels:
+        app: account
+spec:
+    ports:
+        - name: http
+          port: 8080
+          targetPort: 8080
+    selector:
+        app: account
+    type: ClusterIP
 ```
 
 ## 이스티오
