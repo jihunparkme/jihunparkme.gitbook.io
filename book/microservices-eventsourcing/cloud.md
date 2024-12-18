@@ -164,6 +164,33 @@ spec:
     type: ClusterIP
 ```
 
+### 엔드포인트
+
+> 데이터베이스나 이벤트 브로커처럼 쿠버네티스 외부 자원에 접근할 수 있도록 지원
+
+네임스페이스에 배포한 파드에서 다른 파드에 접근할 수 있는 방법인 서비스와 함께 이용하면 파드가 외부 자원에 접근 가능
+- kafka로 네이밍한 서비스와 엔드포인트 설정
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+    name: kafka
+spec:
+    ports:
+    - port: 9092
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+    name: kafka
+subsets:
+- addresses:
+    - ip: 172.30.1.90
+    ports:
+    - port: 9092
+```
+
 ## 이스티오
 
 ## 프로메테우스와 그라파나
