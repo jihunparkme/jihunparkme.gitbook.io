@@ -48,14 +48,14 @@ ENTRYPOINT ["java", "-Duser.timezone='Asia/Seoul'",
 - `-f` 옵션은 이미지 생성에 사용할 Dockerfile 파일명
 
 ```bash
-> docker build -t cosmos/transfermoney:1.0.0 -f Dockerfile .
+$ docker build -t cosmos/transfermoney:1.0.0 -f Dockerfile .
 ```
 
 👉🏻 **도커 허브에 이미지 푸시**
 
 ```bash
-> docker login -u [ID] # 도커 허브 로그인
-> docker push cosmos/transfermoney:1.0.0 # 컨테이너 레지스트리인 도커 허브에 업로드
+$ docker login -u [ID] # 도커 허브 로그인
+$ docker push cosmos/transfermoney:1.0.0 # 컨테이너 레지스트리인 도커 허브에 업로드
 ```
 
 ## 쿠버네티스
@@ -94,6 +94,53 @@ data:
     datasource.url: jdbc:h2:mem: account
     datasource.driver.class.name: org.h2.Driver
     broker: broker:9092
+```
+
+👉🏻 **`Secret`**
+
+> 일반적인 환경 설정 정보가 아닌 데이터베이스의 사용자와 비밀번호, API키 처럼 보안이 중요한 정보는 `Secret`을 사용
+
+- `ConfigMap` 처럼 key-value 쌍으로 선언하지만 값을 BASE64로 인코딩하고 ConfigMap과 동일하게 디플로이먼트에서 파드의 환경 변수로 참조
+- `kubectl create secret` 명령어로 시크릿 생성
+
+```bash
+### 커맨드로 시크릿 생성
+$ echo -n 'usrnm' > datasource.username
+$ echo -n 'usrpw' > datasource.password
+$ kubectl create secret generic account --from-file=datasource.username --from-file=datasource.password -n cosmos
+
+secret/account created
+
+$ kubectl get secret account -n cosmos
+
+NAME    TYPE    DATA    AGE
+account Opaque  2       25s
+
+### 시크릿 확인
+$ kubectl get secret account -n cosmos -o yaml
+```
+
+- yml 파일로 시크릿 생성
+  - 명령어로 생성할 때와 달리 BASE64로 인코딩한 값으로 파일을 생성해야 함
+
+```yml
+apiVersion: v1
+kind: Secret
+metadata:
+    name: account
+data:
+    datasource.username: dXNybm0=
+    datasource.password: dXNycHc=
+```
+
+- 시크릿 확인
+
+```bash
+$ kubectl apply -f secret.yml -n cosmos
+
+secret/account created
+
+$ kubectl get secret account -o yaml
 ```
 
 ## 이스티오
