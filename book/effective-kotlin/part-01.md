@@ -63,6 +63,25 @@ var list: MutableList<Int> = mutableListOf()
 
 👉🏻 가변 컬렉션과 읽기 전용 컬렉션 구분하기
 
+- mutable이 붙은 인터페이스는 대응되는 읽기 전용 인터페이스를 상속 받아서, 변경을 위한 메서드를 추가
+  - 읽기 전용
+    - Iterable
+    - Collection
+    - Set
+    - List
+  - 읽고 쓸 수 있는 컬렉션
+    - MutableIterable
+    - MutableCollection
+    - MutableSet
+    - MutableList
+- 읽기 전용에서 mutable로 변경해야 한다면, 복제를 통해 새로운 mutable 컬렉션을 만드는 `list.toMutableList`를 활용
+    
+    ```kotlin
+    val list = ListOf(1, 2, 3)
+    val mutableList = list.toMutableList()
+    mutableList.add(4)
+    ```
+
 👉🏻 데이터 클래스의 copy
 
 
