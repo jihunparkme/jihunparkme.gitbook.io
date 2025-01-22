@@ -144,5 +144,36 @@ var list3 = mutableListOf<Int>() // XXX!
 
 > ⚠️ 상태를 변경할 수 있는 불필요한 방법은 만들지 말자 !
 
+.
+
+✅ **변경 가능 지점 노출하지 말기**
+
+- 첫 번째는 리턴이 되는 mutable 객체를 복제하는 것 (방어적 복제 / defensive copying)
+
+    ```kotlin
+    class UserHolder {
+        private val user: MutableUser()
+
+        fun get(): MutableUser {
+            return user.copy()
+        }
+    }
+    ```
+
+- 컬렉션은 객체를 읽기 전용 슈퍼타입으로 업캐스트하여 가변성을 제한 가능
+
+    ```kotlin
+    data class User(val name: String)
+
+    class UserRepository {
+        private val storeUsers: MutableMap<Int, String> = mutableMapOf()
+
+        fun loadAll(): Map<Int, String> {
+            return storeUsers
+        }
+    }
+    ```
+
+
 
 75
