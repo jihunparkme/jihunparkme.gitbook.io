@@ -4,7 +4,7 @@
 
 ## Item 1. 가변성을 제한하라
 
-> `var`(쓸 수 있는 프로퍼티)를 사용하거나, `mutable` 객체를 사용하면 상태를 가질 수 있다.
+`var`(쓸 수 있는 프로퍼티)를 사용하거나, `mutable` 객체를 사용하면 상태를 가질 수 있다.
 
 ```kotlin
 var a = 10
@@ -20,7 +20,7 @@ var list: MutableList<Int> = mutableListOf()
 
 .
 
-**코틀린에서 가변성 제한하기**
+✅  **코틀린에서 가변성 제한하기**
 
 - 읽기 전용 프로퍼티(val)
 - 가변 컬렉션과 읽기 전용 컬렉션 구분하기
@@ -103,7 +103,46 @@ var list: MutableList<Int> = mutableListOf()
     user = user.copy(surname = "World")
     ```
 
+.
 
+✅ **다른 종류의 변경 가능 지점**
+
+```kotlin
+val list1: MutableList<Int> = mutableListOf()
+list1 += 1 // list1.plusAssign(1) 로 변경
+
+var list2: List<Int> = listOf()
+list2 += 1 // list2 = list2.plus(1) 로 변경
+```
+
+- 첫 번째 코드는 구체적인 리스트 구현 내부에 변경 가능 지점이 존재 (멀티스레드 처리에 위험)
+- 두 번째 코드는 프로퍼티 자체가 변경 가능 지점 (멀티스레드 처리에 안정성)
+
+mutable 리스트 대신 mutable 프로퍼티를 사용하는 형태는 사용자 정의 setter 를 활용해 변경 추적이 가능
+
+```kotlin
+var names by Delegates.observable(listOf<String>()) { _, old, new -> 
+    println("Names changed from $old to $new)
+}
+
+names += "Hello" // Names changed from [] to [Hello]
+```
+
+- mutable 프로퍼티에 읽기 전용 컬렉션을 넣어 사용하는 것이 쉽다.
+  - 이렇게 하면 여러 객체를 변경하는 여러 메서드 대신 setter 를 사용하면 되고, 이를 private 로 만들 수 있다.
+
+```kotlin
+var announcements = listOf<Announcement>()
+    private set
+```
+
+- 최악의 방식은 프로퍼티와 컬렉션 모두 변경 가능한 지점으로 만드는 것
+
+```kotlin
+var list3 = mutableListOf<Int>() // XXX!
+```
+
+> ⚠️ 상태를 변경할 수 있는 불필요한 방법은 만들지 말자 !
 
 
 75
