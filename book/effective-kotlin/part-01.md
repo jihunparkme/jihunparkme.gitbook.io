@@ -26,7 +26,7 @@ var list: MutableList<Int> = mutableListOf()
 - 가변 컬렉션과 읽기 전용 컬렉션 구분하기
 - 데이터 클래스의 copy
 
-👉🏻 읽기 전용 프로퍼티(val)
+**👉🏻 읽기 전용 프로퍼티(val)**
 
 - 마치 값 처럼 동작
 - 일반적인 방법으로는 값이 변하지 않음(읽고 쓸 수 있는 프로퍼티는 var로 생성)
@@ -61,7 +61,7 @@ var list: MutableList<Int> = mutableListOf()
 
 - 만일 완전히 변경할 필요가 없다면 final 프로퍼티 사용하기
 
-👉🏻 가변 컬렉션과 읽기 전용 컬렉션 구분하기
+**👉🏻 가변 컬렉션과 읽기 전용 컬렉션 구분하기**
 
 - mutable이 붙은 인터페이스는 대응되는 읽기 전용 인터페이스를 상속 받아서, 변경을 위한 메서드를 추가
   - 읽기 전용
@@ -82,11 +82,26 @@ var list: MutableList<Int> = mutableListOf()
     mutableList.add(4)
     ```
 
-👉🏻 데이터 클래스의 copy
+**👉🏻 데이터 클래스의 copy**
 
+- immutable 객체를 사용할 때의 장점
+  - 한 번 정의된 상태가 유지되므로 코드 이해가 쉬움
+  - immutable 객체는 공유했을 때도 충돌이 따로 이루어지지 않으므로, 병렬처리를 안전하게 가능
+  - immutable 객체에 대한 참조는 변경되지 않으므로, 쉽게 캐싱 가능
+  - immutable 객체는 방어적 복사본을 만들 필요가 없음
+  - immutable 객체는 다른 객체(mutable, immutable)를 만들 때 활용하기 좋음
+  - immutable 객체는 set 또는 map 키로 사용 가능
+- 데이터 모델 클래스를 만들어 immutable 객체로 만드는 것이 많은 장점을 가지므로, 기본적으로 이렇게 만드는 것을 권장
 
+    ```kotlin
+    data class User {
+        val name: String,
+        val surname: String
+    }
 
-
+    var user = User("Hello", "Kotlin")
+    user = user.copy(surname = "World")
+    ```
 
 
 
