@@ -142,7 +142,7 @@ var announcements = listOf<Announcement>()
 var list3 = mutableListOf<Int>() // XXX!
 ```
 
-> ⚠️ 상태를 변경할 수 있는 불필요한 방법은 만들지 말자 !
+**⚠️ 상태를 변경할 수 있는 불필요한 방법은 만들지 말자 !**
 
 .
 
@@ -193,7 +193,7 @@ var list3 = mutableListOf<Int>() // XXX!
 
 ## Item 2. 변수의 스코프를 최소화하라
 
-> 상태를 정의할 때는 변수와 프로퍼티의 스코프를 최소화하는 것이 좋다.
+상태를 정의할 때는 변수와 프로퍼티의 스코프를 최소화하는 것이 좋다.
 
 - 프로퍼티보다는 지역 변수를 사용하기
 - 최대한 좁은 스코프를 갖게 변수를 사용하기
@@ -205,5 +205,29 @@ var list3 = mutableListOf<Int>() // XXX!
 > - 변수의 스코프는 좁게 만들어 활용하는 것이 좋다.
 > 
 > - var 보다는 val를 사용하는 것이 좋다.
+
+## Item 3. 최대한 플랫폼 타입을 사용하지 말라
+
+`플랫폼 타입`: 다른 프로그래밍 언어에서 전달되어 nullable 인지 아닌지 알 수 없는 타입
+- 플랫폼 타입은 String! 처럼 타입 이름 뒤에 `!` 기호를 붙여 표기
+
+```kotlin
+val repo = UserRepo()
+val user1 = repo.user // user1 타입 : User!
+val user2: User = repo.user // user1 타입 : User
+val user3: User? = repo.user // user1 타입 : User?
+```
+
+자바와 코틀린을 함께 사용할 때 가능한 자바에 `@Nullable`, `@NotNull` 을 붙여 사용하자.
+- 현재 지원되는 어노테이션들
+- [JvmAnnotationNames.kt](https://github.com/JetBrains/kotlin/blob/master/core/compiler.common.jvm/src/org/jetbrains/kotlin/load/java/JvmAnnotationNames.kt)
+
+📖 **정리**
+
+> - 다른 프로그래밍 언어에서 와서 nullable 여부를 알 수 없는 타입을 **플랫폼 타입**이라고 부름.
+> 
+> - 연결되어 있는 자바 생성자, 메서드, 필드에 nullable 여부를 지정하는 어노테이션을 활용하는 것이 좋음.
+
+
 
 89
