@@ -235,7 +235,7 @@ val user3: User? = repo.user // user1 타입 : User?
 ```kotlin
 val DEFAULT_CAR: Car = Fiat126P()
 
-// inferred(추론) 타입
+// inferred(추론) 타입 (Fiat126P 이외의 자동차 생산 불가)
 val DEFAULT_CAR = Fiat126P()
 ```
 
@@ -245,8 +245,60 @@ val DEFAULT_CAR = Fiat126P()
 >
 > - inferred 타입은 프로젝트가 진전될 때, 제한이 너무 많아지거나 예측하지 못한 결과를 낼 수 있다.
 
+## Item 5. 예외를 활용해 코드에 제한을 걸어라
 
+확실하게 어떤 형태로 동작해야 하는 코드가 있다면, 예외를 활용해 제한을 거는 것이 좋다.
+- `require` block: 아규먼트 제한
+- `check` block: 상태와 관련된 동작 제한
+- `assert` block: 어떤 것이 true 인지 확인(테스트 모드에서만 작동)
+- `return` or `throw`와 함께 활용하는 Elvis 연산자
+  - 예상하지 못한 동작을 하지 않고 예외를 throw
+  - 코드가 어느정도 자체적으로 검사
 
+👉🏻 **아규먼트**
+
+```kotlin
+fun something(n: Int): Long {
+    require(n >= 0) { "Cannot calculate.. of $n .." }
+}
+```
+
+- 함수 정의 시 타입 시스템을 활용해서 아규먼트에 제한을 거는 코드를 많이 사용
+- `require` 함수는 제한을 확인하고, 제한을 만족하지 못할 경우 `IllegalArgumentException` throw
+
+👉🏻 **상태**
+
+```kotlin
+fun something(text: String) {
+    check(isInitialized)
+    ..
+}
+
+fun something2(): User {
+    checkNotNull(token)
+    ...
+}
+```
+
+- 상태와 관련된 제한을 걸 경우 일반적으로 `check` 함수 사용
+- 지정된 예측을 만족하지 못할 경우 `IllegalStateException` throw
+
+👉🏻 **Assert 계열 함수**
+
+```kotlin
+fun something(num: Int = 1): List<T> {
+    ...
+    assert(ret.size == nul)
+    return ret
+}
+```
+
+- 테스트에서만 활성화. 단위 테스트 대신 함수에서 활용 가능
+  - 코드를 자체 점검하며, 더 효율적으로 테스트 가능
+  - 특정 상황이 아닌 모든 상황에 대한 테스트 가능
+  - 실행 시점에 정확하게 어떻게 되는지 확인 가능
+  - 실제 코드가 더 빠른 시점에 실패하도록 만듦
+- 심각한 오류이고 심각한 결과를 초래할 수 있다면 `check`를 활용하자.
 
 
 
