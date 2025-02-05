@@ -357,9 +357,36 @@ val email: String = person.email ?: run {
 > 
 > - `return`, `throw`, `Elvis` 연산자 사용
 
+## Item 6. 사용자 정의 오류보다는 표준 오류를 사용하라
+
+```kotlin
+inline fun <reified T> String.readObject(): T {
+    //...
+    if (incorrectSign) {
+        throw JsonParsingException()
+    }
+    //...
+    return result
+}
+```
+
+직접 오류를 정의하는 것보다 최대한 표준 라이브러리의 오류를 사용하는 것이 좋다.
+- 다른 사람들이 API를 더 쉽게 배우고 이해
+- IllegalArgumentException
+- IllegalStateException
+- IndexOutOfBoundException
+- ConcurrentModificationException: 동시 수정 금지에도 발생 시
+- UnsupportedOperationException: 사용하려는 메서드가 현재 객체에서 사용 불가
+- NoSuchElementException: 사용하려는 요소가 존재하지 않음
 
 
 
 
 
-89
+
+
+
+
+
+
+138
