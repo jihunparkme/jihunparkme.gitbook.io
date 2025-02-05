@@ -379,14 +379,72 @@ inline fun <reified T> String.readObject(): T {
 - UnsupportedOperationException: 사용하려는 메서드가 현재 객체에서 사용 불가
 - NoSuchElementException: 사용하려는 요소가 존재하지 않음
 
+## Item 7. 결과 부족이 발생할 경우 null, Failure 사용하라
 
+함수가 원하는 결과를 만들어 낼 수 없을 때 처리하는 메커니즘
+- 예외 throw
+- null 또는 실패를 나타내는 sealed 클래스(일반적으로 Failure)
 
+👉🏻 **두 메커니즘의 중요한 차이점**
 
+1️⃣ **예외**
+- 예외는 정보를 전달하는 방법으로 사용해서는 안 된다.
+  - 예외는 잘못된 특별한 상황을 나타내야 하며, 처리되어야 한다.
+  - 예외는 예외적인 상황이 발생했을 때 사용하는 것을 권장
 
+2️⃣ **null과 Failure**
+- 충분이 예측할 수 있는 범위의 오류는 `null`, `Failure를` 사용하고
+- 예측하기 어려운 예외적인 범위의 오류는 `예외`를 throw해서 처리하는 것을 권장
+- null을 처리해야 한다면 사용자는 `safe call` 또는 `Elvis` 연산자 같은 다양한 널 안정성 기능 활용 가능
+  - 일반적으로 `getOrNull` 또는 `Elvis` 연산자 사용
 
+```kotlin
+// null 사용
+inline fun <reified T> String.readObjectOrNull(): T? {
+    //...
+    if (incorrectSign) {
+        return null
+    }
+    //...
+    return result
+}
 
+// Failure 사용
+inline fun <reified T> String.readObject(): Result<T> {
+    //...
+    if (incorrectSign) {
+        return Failure(JsonParsingException())
+    }
+    //...
+    return Success(result)
+}
 
+sealed class Result<out T>
+class Success<out T>(val result: T): Result<T>()
+class Failure(val throwable: Throwable): REsult<Nothing>()
+class JsonParsingException: Exception()
+```
 
+ℹ️ Result같은 공용체를 리턴하기로 했다면, when 표현식을 사용해서 처리 가능
+- try-catch 블록보다 효율적이며 사용하기 쉽고 더 명확
+
+```kotlin
+val person = userText.readObjectOrNull<Person>()
+val age = when(person) {
+    is Success -> person.age
+    is Failure -> -1
+}
+```
+
+ℹ️ `null` 값과 `sealed result` 클래스의 차이점
+- 추가적인 정보를 전달해야 한다면 `sealed result`
+- 그렇지 않으면 null 사용
+
+📖 **정리**
+
+> - 개발자는 항상 자신이 요소를 안전하게 추출할 것이라고 생각한다. 따라서, nullable을 리턴해서는 안 된다.
+>
+> - 개발자에게 null이 발생할 수 있다는 경고를 주려면, getOrNull 등을 사용해서 무엇이 리턴되는지 예측할 수 있게 하자.
 
 
 138
