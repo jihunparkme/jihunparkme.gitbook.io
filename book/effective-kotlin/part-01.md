@@ -446,5 +446,36 @@ val age = when(person) {
 >
 > - 개발자에게 null이 발생할 수 있다는 경고를 주려면, getOrNull 등을 사용해서 무엇이 리턴되는지 예측할 수 있게 하자.
 
+## Item 8. 적절하게 null을 처리하라
+
+`null`은 값이 부족하다(lack of value)는 것을 의미
+
+기본적으로 nullable 타입은 세 가지 방법으로 처리
+- `?.`, `스마트 캐스팅`, `Elvis 연산자` 등을 활용해서 안전하게 처리
+- 오류를 throw
+- 함수 또는 프로퍼티를 리팩터링해서 nullable 타입이 나오지 않게 수정
+
+👉🏻 **null 안전하게 처리하기**
+
+- null을 안전하게 처리하는 방법 중 널리 사용되는 방법은 `안전 호출`과 `스마트 캐스팅`
+
+```kotlin
+printer?.print() // 안전 호출
+if (printer != null) printer.print() // 스마트 캐스팅
+```
+
+대표적으로 인기 있는 다른 방법은 Elvis 연산자를 사용하는 것
+- 오른쪽에 return or throw 포함 모든 표현식 허용
+
+```kotlin
+val printerName1 = printer?.name ?: "Unnamed"
+val printerName2 = printer?.name ?: return
+val printerName3 = printer?.name ?: throw Error("Printer must be named")
+```
+
+컬렉션 처리할 때 Collection\<T\>?.orEmpty() 확장 함수를 사용하면 nullable이 아닌 List\<T\>를 리턴
+
+
+
 
 138
