@@ -516,6 +516,39 @@ val printerName3 = printer?.name ?: throw Error("Printer must be named")
   - 프로퍼티가 초기화된 이후 초기화되지 않은 상태로 돌아갈 수 없다.
 - **`lateinit`은 프로퍼티를 처음 사용하기 전에 반드시 초기화될 것이라고 예상되는 상황에 활용**
 
+## Item 9. use를 사용하여 리소스를 닫아라
+
+Closeable 객체에 사용 
+
+```kotlin
+fun countCharactersInFile(path: String): Int {
+    val reader = BufferedReader(FileReader(path))
+    reader.use {
+        return reader.lineSequence().sumBy { it.length }
+    }
+}
+
+// using lambda
+fun countCharactersInFile(path: String): Int {
+    BufferedReader(FileReader(path)).use { reader ->
+        return reader.lineSequence().sumBy { it.length }
+    }
+}
+
+// 대용량 파일 처리
+fun countCharactersInFile(path: String): Int {
+    File(path).useLines { reader ->
+        lines.sumBy { it.length }
+    }
+}
+```
+
+📖 **정리**
+
+> - `use`를 사용하면 Closeable/AutoCloseable을 구현한 객체를 쉽고 안전하게 처리 가능
+>
+> - 또한 파일 처리 시 파일을 한 줄씩 읽어 들이는 `useLines` 사용 권장
+
 
 
 
