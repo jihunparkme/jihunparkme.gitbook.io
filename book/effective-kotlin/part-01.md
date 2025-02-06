@@ -495,4 +495,22 @@ val printerName3 = printer?.name ?: throw Error("Printer must be named")
   - 올바른 방법으로 `lateinit` 또는 `Delegates.notNull`을 사용하자.
   - 명시적 오류는 제네릭 NPE보다 훨씬 더 많은 정보를 제공해 줄 수 있으므로 `!!`연산자 보다 훨씬 좋다.
 
-138
+.
+
+👉🏻 **의미 없는 nullability 피하기**
+
+- 필요한 경우가 아니라면, nullability 자체를 피하는 것이 좋다.
+- nullability를 피할 때 사용할 수 있는 몇 가지 방법
+  - 클래스에서 nullability에 따라 여러 함수를 만들어 제공(ex. List\<T\>.`get`, List\<T\>.`getOrNull`)
+  - 어떤 값이 클래스 생성 이후 확실하게 설정된다는 보장이 있다면 `lateinit` 프로퍼티와, `notNull` 델리게이트 사용
+  - 빈 컬랙션 대신 null을 리턴하지 말고, 빈 컬렉션을 사용
+  - nullable enum과 None enum 값은 완전히 다른 의미
+
+
+
+
+
+80~
+
+
+154
