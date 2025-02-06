@@ -502,10 +502,19 @@ val printerName3 = printer?.name ?: throw Error("Printer must be named")
 - 필요한 경우가 아니라면, nullability 자체를 피하는 것이 좋다.
 - nullability를 피할 때 사용할 수 있는 몇 가지 방법
   - 클래스에서 nullability에 따라 여러 함수를 만들어 제공(ex. List\<T\>.`get`, List\<T\>.`getOrNull`)
-  - 어떤 값이 클래스 생성 이후 확실하게 설정된다는 보장이 있다면 `lateinit` 프로퍼티와, `notNull` 델리게이트 사용
+  - 어떤 값이 클래스 생성 이후 확실하게 설정된다는 보장이 있다면 `lateinit` 프로퍼티와 `notNull` 델리게이트 사용
   - 빈 컬랙션 대신 null을 리턴하지 말고, 빈 컬렉션을 사용
   - nullable enum과 None enum 값은 완전히 다른 의미
 
+.
+
+👉🏻 **`lateinit` 프로퍼티와 `notNull` 델리게이트**
+- `lateinit` 한정자는 프로퍼티가 이후에 설정될 것임을 명시하는 한정자
+- `lateinit`는 nullable과 비교해서 다음과 같은 차이가 존재
+  - `!!` 연산자로 언팩하지 않아도 된다.
+  - 이후 어떤 의미를 나타내기 위해 null을 사용하고 싶다면, nullable로 만들 수 있다.
+  - 프로퍼티가 초기화된 이후 초기화되지 않은 상태로 돌아갈 수 없다.
+- **`lateinit`은 프로퍼티를 처음 사용하기 전에 반드시 초기화될 것이라고 예상되는 상황에 활용**
 
 
 
