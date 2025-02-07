@@ -613,6 +613,29 @@ person?.takeIf { it.isAdult }
 
 .
 
+👉🏻 **극단적이 되지 않기**
+
+- let 활용하기
+  - 연산을 아규먼트 처리 후로 이동시킬 때
+  - 데코레이터를 사용해서 객체를 랩할 때
+
+```kotlin
+students
+  .filter { it.result >= 50 }
+  .joinToString(separator = "\n") {
+    "${it.name} ${it.surname}, ${it.result}"
+  }
+  .let(::print)
+
+var obj = FileInputStream("/file.gz")
+  .let(::BufferedInputStream)
+  .let(::ZipInputStream)
+  .let(::ObjectInputStream)
+  .readObject() as SomeObject
+```
+
+이 비용은 지불할 만한 가치가 있으므로 사용해도 괜찮다.
+
 
 
 
