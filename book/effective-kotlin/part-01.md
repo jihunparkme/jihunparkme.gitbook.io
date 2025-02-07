@@ -586,9 +586,12 @@ fun countCharactersInFile(path: String): Int {
 
 코틀린은 간결성을 목표로 설계된 프로그래밍이 아니라 `가독성`을 좋게 하는 데 목표를 두고 설계된 프로그래밍 언어
 
+## Item 11. 가독성을 목표로 설계하라
 
 
 
+
+94
 
 
 
