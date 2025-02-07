@@ -588,6 +588,31 @@ fun countCharactersInFile(path: String): Int {
 
 ## Item 11. 가독성을 목표로 설계하라
 
+**프로그래밍은 쓰기보다 읽기가 중요하다**
+- 항상 가독성을 생각하면서 코드를 작성하자!
+
+.
+
+👉🏻 **인식 부하 감소**
+
+```kotlin
+//
+if (person != null && person.isAdult) {
+    view.showPerson(person)
+} else {
+    view.showError()
+}
+
+//
+person?.takeIf { it.isAdult }
+    ?.let(view::showPerson)
+    ?: view.showError()
+```
+
+뇌는 기본적으로 짧은 코드를 빠르게 읽을 수 있겠지만, 익숙한 코드는 더 빠르게 읽을 수 있다.
+
+.
+
 
 
 
