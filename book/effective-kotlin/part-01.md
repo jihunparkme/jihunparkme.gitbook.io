@@ -636,11 +636,44 @@ var obj = FileInputStream("/file.gz")
 
 이 비용은 지불할 만한 가치가 있으므로 사용해도 괜찮다.
 
+## Item 12. 연산자 오버로드를 할 때는 의미에 맞게 사용하라
 
+연산자 오버로딩은 굉장히 강력한 기능이지만, '큰 힘에는 큰 책임이 따른다'라는 말처럼 위험할 수 있다.
+- 굉장히 혼란스럽고 오해의 소지를 불러올 수 있다.
 
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kotlin/kotlin-override.png?raw=true 'Result')
 
-94
+.
 
+👉🏻 **분명하지 않은 경우**
+
+```kotlin
+operator fun Int.times(operation: ()->Unit) {
+    repeat(this) { operation() }
+}
+
+3 * { print("Hello) } // HelloHelloHello
+```
+
+의미가 명확하지 않다면 `infix`를 활용한 확장 함수를 사용하는 것이 좋다.
+- 일반적으로 이항 연산자 형태처럼 사용
+
+```kotlin
+infix fun Int.timesRepeated(operation: ()->Unit) = {
+    repeat(this) { operation() }
+}
+
+val tripleHello = 3 timesRepeated { pring("Hello) }
+tripleHello() // HelloHelloHello
+```
+
+📖 **정리**
+
+> 연산자 오버로딩은 그 이름의 의미에 맞게 사용하자.
+>
+> 연산자 의미가 명확하지 않다면, 연산자 오버로딩을 사용하지 않는 것이 좋다.
+>
+> 대신 이름이 있는 일반 함수를 사용하고, 꼭 연산자 같은 형태로 사용하고 싶다면 `infix` 확장 함수 또는 톱레벨 함수를 활용하자. 
 
 
 154
