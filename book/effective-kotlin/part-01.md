@@ -685,6 +685,18 @@ tripleHello() // HelloHelloHello
 >
 > 기본적으로 Unit?을 리턴하거나, 이를 기반으로 연산하지 말자.
 
+## Item 14. 변수 타입이 명확하지 않은 경우 확실하게 지정하라
+
+```kotlin
+// AS-IS
+val data = getSomeData()
+
+// TO-BE
+val data: UserData = getSomeData()
+```
+
+가독성을 위해 코드를 설계할 때 읽는 사람에게 중요한 정보를 숨겨서는 안 된다.
+- 그렇다고 타입을 무조건 지정하라는 것이 아니고, 상황에 맞게 사용하자.
 
 
 
