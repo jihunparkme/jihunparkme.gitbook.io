@@ -712,6 +712,58 @@ val data: UserData = getSomeData()
 >
 > DSL에서 외부 스코프에 있는 리시버를 명시적으로 적게 강제하고 싶다면, DslMarker 메타 어노테이션을 사용하자.
 
+## Item 16. 프로퍼티는 동작이 아니라 상태를 나타내야 한다
+
+```kotlin
+// 코틀린의 프로퍼티
+var name: String? = null
+
+// 자바의 필드
+String name = null;
+```
+
+둘 다 데이터를 저장하는 공통점이 있지만, 프로퍼티에 더 많은 기능이 있다.
+- 기본적으로 프로퍼티는 사용자 정의 세터, 게터를 가질 수 있다.
+
+```kotlin
+var name: String? = null
+    get() = field?.toUpperCase()
+    set(value) {
+        if(!value.isNullOrBlank()) {
+            field = value
+        }
+    }
+```
+
+.
+
+참고. `val`을 사용해서 읽기 전용 프로퍼티를 만들 때는 field 미생성
+- `var`을 사용해서 만든 읽고 쓸 수 있는 프로퍼티는 게터, 세터 정의 가능
+- 이러한 프로퍼티를 `파생 프로퍼티`(derived property)
+
+```kotlin
+val fullName: String
+    get() = "$name $surname"
+```
+
+.
+
+데이터를 millis라는 별도 프로퍼티로 옮기고, 이를 활용해서 date 프로퍼티에 데이터를 저장하지 않고, wrap/unwrap 하도록 코드를 변경하기만 하면 된다.
+- 프로퍼티는 필드가 필요 없다
+- 프로퍼티는 개념적으로 접근자를 나타낸다.
+
+```kotlin
+var date: Date
+    get() = Date(millis)
+    set(value) {
+        millis = value.time
+    }
+```
+
+
+
+
+
 
 
 154
