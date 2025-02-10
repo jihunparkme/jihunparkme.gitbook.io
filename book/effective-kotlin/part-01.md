@@ -813,9 +813,18 @@ sleep(timeMillis = 100)
 >
 > 예외는 마지막 파라미터가 DSL처럼 특별한 의미를 갖고 있는 경우이다.
 
+## Item 18. 코딩 컨벤션을 지켜라
 
+컨벤션을 지킬 때 도움되는 두 가지 도구
+- **IntelliJ formatter**
+  - 공식 코딩 컨벤션 스타일에 맞춰 코드를 변경
+  - `Settings` -> `Editor` -> `Code Style` -> `Kotlin` -> `Set from..` -> `Predefined style/Kotlin style guide`
+  - [Coding conventions](https://kotlinlang.org/docs/coding-conventions.html#names-for-backing-properties)
+- **Ktlink**
+  - 많이 사용되는 코드를 분석하고 컨벤션 위반을 알려주는 linter
+  - [ktlint](https://github.com/pinterest/ktlint)
 
-
+> 프로젝트의 모든 코드는 여러 사람이 싸우는 느낌으로 작성되면 안 되며, 마치 한 사람이 작성한 것처럼 작성되어야 한다.
 
 
 
