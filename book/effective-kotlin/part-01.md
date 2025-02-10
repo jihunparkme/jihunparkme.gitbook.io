@@ -825,15 +825,3 @@ sleep(timeMillis = 100)
   - [ktlint](https://github.com/pinterest/ktlint)
 
 > 프로젝트의 모든 코드는 여러 사람이 싸우는 느낌으로 작성되면 안 되며, 마치 한 사람이 작성한 것처럼 작성되어야 한다.
-
-
-
-
-
-
-
-
-
-
-
-169
