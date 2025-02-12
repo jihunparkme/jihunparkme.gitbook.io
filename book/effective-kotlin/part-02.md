@@ -154,6 +154,28 @@ fun loggingProperty() {
 >
 > 일반적인 패턴을 추출하거나 더 좋은 API 생성에 활용 가능
 
+## Item 22. 일반적인 알고리즘을 구현할 때 제네릭을 사용하라
+
+> 타입 아규먼트(타입 파라미터)를 사용하는 함수를 `제네릭 함수`라고 부른다.
+
+타입 파라미터는 컴파일러에 타입과 관련된 정보를 제공하여 컴파일러가 타입을 조금이라도 더 정확하게 추측할 수 있도록 지원
+
+```kotlin
+public inline fun <T> Iterable<T>.filter(
+    predicate: (T) -> Boolean
+): List<T> {
+    return filterTo(ArrayList<T>(), predicate)
+}
+
+public inline fun <T, C : MutableCollection<in T>> Iterable<T>.filterTo(
+    destination: C, 
+    predicate: (T) -> Boolean
+): C {
+    for (element in this) if (predicate(element)) destination.add(element)
+    return destination
+}
+```
+
 
 
 
