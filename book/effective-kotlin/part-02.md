@@ -116,7 +116,7 @@ private class LoggingProperty<T>(var value: T) {
         thisRef: Any?,
         prop: KProperty<*>
     ): T {
-        print("${prop.name} returned value $value")
+        println("${prop.name} returned value $value")
         return value
     }
 
@@ -126,9 +126,15 @@ private class LoggingProperty<T>(var value: T) {
         newValue: T
     ) {
         val name = prop.name
-        print("$name changed form $value to $newValue")
+        println("$name changed form $value to $newValue")
         value = newValue
     }
+}
+
+@Test
+fun loggingProperty() {
+    token = "abe" // token changed form null to abe
+    attempt = 10 // attempt changed form 0 to 10
 }
 ```
 
