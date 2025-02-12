@@ -79,5 +79,81 @@
 >
 > 일반적으로 이런 알고리즘들은 `확장 함수`로 정의하자.
 
+## Item 21. 일반적인 프로퍼티 패턴은 프로퍼티 위임으로 만들어라
 
-192
+코틀린은 코드 재사용과 관련해서 프로퍼티 위임이라는 새로운 기능을 제공
+- 일반적인 프로퍼티의 행위를 추출해서 재사용 가능
+
+대표적인 예로 지연 프로퍼티
+- 코틀린에서는 stdlib `lazy` 프로퍼티 패턴으로 쉽게 구현
+
+```kotlin
+val value by lazy { createValue() }
+```
+
+.
+
+프로퍼티 위임을 사용하면, 이외에도 변화가 있을 때 이를 감지하는 `observable` 패턴을 쉽게 생성 가능
+
+```kotlin
+var items: List<Item> by
+    Delegates.observable(listOf()) { -, -, - ->
+        notifyDataSetChanged()
+    }
+```
+
+.
+
+프로퍼티 위임은 다른 객체의 메서드를 활용해서 프로퍼티의 접근자(Getter, Setter)를 만드는 방식
+- Getter ➔ getValue, Setter ➔ setValue 함수를 사용해서 생성
+
+```kotlin
+var token: String? by LoggingProperty(null)
+var attempt: Int by LoggingProperty(0)
+
+private class LoggingProperty<T>(var value: T) {
+    operator fun getValue(
+        thisRef: Any?,
+        prop: KProperty<*>
+    ): T {
+        print("${prop.name} returned value $value")
+        return value
+    }
+
+    operator fun setValue(
+        thisRef: Any?,
+        prop: KProperty<*>,
+        newValue: T
+    ) {
+        val name = prop.name
+        print("$name changed form $value to $newValue")
+        value = newValue
+    }
+}
+```
+
+.
+
+코틀린 stdlib에서 알아두면 좋은 프로퍼티 델리게이터
+- lazy
+- Delegates.observable
+- Delegates.vetoable
+- Delegates.notNull
+
+📖 **정리**
+
+> 프로퍼티 위임은 프로퍼티 패턴을 추출하는 일반적인 방법이라 많이 사용
+>
+> 코틀린 개발자라면 프로퍼티 위임이라는 강력한 도구와 관련된 내용을 잘 알아야 함
+>
+> 일반적인 패턴을 추출하거나 더 좋은 API 생성에 활용 가능
+
+
+
+
+
+
+
+
+
+205
