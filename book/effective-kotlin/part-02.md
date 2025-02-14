@@ -253,6 +253,22 @@ forest.addTree(Spruce()) // type mismatch ERROR
 >
 > 타입 파라미터가 섀도잉되는 경우 코드를 주의해서 살펴보자.
 
+## Item 24. 제네릭 타입과 variance 한정자를 활용하라
+
+`invariant`는 제네릭 타입으로 만들어지는 타입들이 서로 관련성이 없다는 의미
+- 만일 어떤 관련성을 원한다면, `out` 또는 `in` 이라는 variance 한정자를 붙인다.
+
+`out`은 타입 파라미터를 `covariant`(공변성)으로 만든다.
+- ex. A가 B의 서브 타입일 때, Cup\<A\>가 Cup\<B\>의 서브타입
+
+`in` 한정자는 타입 파라미터를 `contravariant`(반변성)으로 만든다.
+- ex. A가 B의 서브 타입일 때, Cup\<A\>가 Cup\<B\>의 슈퍼타입
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kotlin/variance.png?raw=true 'Result')
+
+
+
+
 
 
 
