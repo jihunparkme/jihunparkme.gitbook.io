@@ -176,6 +176,47 @@ public inline fun <T, C : MutableCollection<in T>> Iterable<T>.filterTo(
 }
 ```
 
+.
+
+👉🏻 **제네릭 제한**
+
+타입 파라미터의 중요한 기능 중 하나는 구체적인 타입의 서브타입만 사용하게 타입을 제한하는 것
+- 타입 제한이 걸리므로 내부에서 해당 타입이 제공하는 메서드를 사용할 수 있다.
+
+```kotlin
+fun <T : Comparable<T>> Iterable<T>.sorted(): List<T> {
+    //
+}
+
+fun <T, C : MutableCollection<in T>>
+Iterable<T>.toCollection(destination: C): C {
+    //
+}
+
+class ListAdapter<T: ItemAdapter>( /* ... */ ) {
+    //
+}
+```
+
+많이 사용하는 제한으로는 `Any`가 있는데, `nullable`이 아닌 타입을 나타낸다.
+
+```kotlin
+public inline fun <T, R : Any> Iterable<T>.mapNotNull(
+    transform: (T) -> R?
+): List<R> {
+    return mapNotNullTo(ArrayList<R>(), transform)
+}
+```
+
+📖 **정리**
+
+> 코틀린 자료형 시스템에서 타입 파라미터는 굉장히 중요한 부분
+>
+> 일반적으로 이를 사용해서 type-safe 제네릭 알고리즘과 제네릭 객체를 구현
+>
+> 타입 파라미터는 구체 자료형의 서브타입을 제한 가능
+>
+> 이렇게 하면 특정 자료형이 제공하는 메서드를 안전하게 사용 가능
 
 
 
@@ -184,4 +225,7 @@ public inline fun <T, C : MutableCollection<in T>> Iterable<T>.filterTo(
 
 
 
-205
+
+
+
+232
