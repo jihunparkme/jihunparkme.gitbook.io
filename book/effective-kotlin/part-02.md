@@ -266,10 +266,35 @@ forest.addTree(Spruce()) // type mismatch ERROR
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kotlin/variance.png?raw=true 'Result')
 
+📖 **정리**
+
+코틀린은 타입 아규먼트의 관계에 제약을 걸 수 있는 강력한 제네릭 기능을 제공
+
+> 코틀린에서 제공하는 타입 한정자
+>
+> - 타입 파라미터의 기본적인 `variance` 동작은 `invariant`
+>   - 만일 Cup\<T\>라면, 타입 파라미터 T는 invariant
+>   - A가 B의 서브타입이라고 할 때 Cup\<A\>와 Cup\<B\>는 아무 관계를 갖지 않음
+> - `out` 한정자는 타입 파라미터를 `covariant`하게 만듦
+>   - 만일 Cup\<T\>라면, 타입 파라미터 T는 covariant
+>   - A가 B의 서브타입이라고 할 때 Cup\<A\>는 Cup\<B\>의 서브타입
+>   - covariant 타입은 out 위치에 사용 가능
+> - `in` 한정자는  타입 파라미터를 `contravariant`하게 만듦
+>   - 만일 Cup\<T\>라면, 타입 파라미터 T는 contravariant
+>   - A가 B의 서브타입이라고 할 때 Cup\<B\>는 Cup\<A\>의 슈퍼타입
+>   - contravariant 타입은 in 위치에 사용 가능
+>
+> 코틀린에서는
+>
+> - List, Set 타입 파라미터는 `covariant`(out 한정자)
+>   - Map 값 타입을 나타내는 타입 파라미터도 covariant(out 한정자)
+>   - 단, Mutable.. 타입 파라미터는 `invariant`
+> - 함수 타입의 파라미터 타입은 `contravariant`(in 한정자)
+>   - 리턴 타입은 `contravariant`(out 한정자)
+> - 리턴만 되는 타입에는 `covariant`(out 한정자) 사용
+> - 허용만 되는 타입에는 `contravariant`(in 한정자) 사용
 
 
-
-
-
+160
 
 232
