@@ -492,7 +492,37 @@ fun getNextId(): Id = Id(next++)
 >
 > 추상화가 너무 많거나 너무 적은 상황 모두 좋은 상황은 아니다.
 
+## Item 28. API 안정성을 확인하라
 
+`Experimental` 메타 어노테이션을 사용해서 사용자들에게 아직 해당 요소가 안정적이지 않다는 것을 알려 주는 것이 좋다.
+
+```kotlin
+@Experimental(level = Experimental.Level.WARNING)
+annotation class ExperimentalNewApi
+
+@ExperimentalNewApi
+suspend fun getUsers(): List<User> {
+    //...
+}
+```
+
+API의 일부를 변경해야 한다면, 전환하는 데 시간을 두고 `Deprecated` 어노테이션을 활용해서 사용자에게 미리 알려 줘야 한다.
+
+```kotlin
+@Deprecated("Use suspending getUsers instead")
+fun getUsers(callback: (List<User>)->Unit) {
+    //...
+}
+```
+
+직접적인 대안이 있다면, IDE가 자동 전환을 할 수 있게 `ReplaceWith`를 붙여 주는 것도 좋다.
+
+```kotlin
+@Deprecated("Use suspending getUsers instead", ReplaceWith("getUsers()"))
+fun getUsers(callback: (List<User>)->Unit) {
+    //...
+}
+```
 
 
 
