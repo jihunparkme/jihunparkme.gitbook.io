@@ -390,9 +390,46 @@ val messageDisplay: MessageDisplay = mockk()
 messageDisplay.setChristmasMode(true)
 ```
 
+.
 
+👉🏻 **인터페이스**
 
+거의 모든 것이 인터페이스로 표현
+- `listOf` 함수는 `List`를 리턴
+- 컬렉션 처리 함수는 `Iterable` 또는 `Collection` 확장 함수로서 `List`, `Map` 등을 리턴
+- 프로퍼티 위임은 `ReadOnlyProperty` 또는 `ReadWriteProperty` 뒤에 숨겨짐
 
+인터페이스 뒤에 객체를 숨김으로써 실질적인 구현을 추상화하고, 사용자가 추상화된 것에만 의존하게 만들 수 있음
+- 즉, 결합(coupling)을 줄일 수 있음
+
+인터페이스 도입
+
+```kotlin
+interface MessageDisplay {
+    fun show(
+        message: String,
+        duraion: MessageLength = LONG
+    )
+}
+
+class ToastDisplay(val context: Context): MessageDisplay {
+    override fun show(
+        message: String,
+        duraion: MessageLength
+    ) {
+        val toastDuration = when(duraion) {
+            SHORT -> Length.SHORT
+            LONG -> Length.LONG
+        }
+        Toast.makeText(context, message, toastDuration).show()
+    }
+}
+
+enum class MessageLength { SHORT, LONG }
+```
+
+테스트할 때 인터페이스 페이킹이 클래스 모킹보다 간단하므로, 별도의 모킹 라이브러리를 사용하지 않아도 된다.
+- 선언과 사용이 분리되어 있으므로, 실제 클래스를 자유롭게 변경 가능
 
 
 
