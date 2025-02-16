@@ -327,8 +327,49 @@ forest.addTree(Spruce()) // type mismatch ERROR
 > 
 > 작고 최소한의 책임만 갖는 함수가 이해하기 쉽다.
 
+## Item 27. 변화로부터 코드를 보호하려면 추상화를 사용하라
 
+상수로 추출할 때의 장점
+- 이름을 붙일 수 있고,
+- 나중에 해당 값을 쉽게 변경 가능
 
+.
+
+👉🏻 **함수**
+
+많이 사용되는 알고리즘은 간단한 확장 함수로 사용 가능
+
+```kotlin
+fun Context.toast(
+    message: String,
+    duration: Int = Toast.LENGTH_LONG
+) {
+    Toast.makeText(this, message, duration).show()
+}
+```
+
+메시지를 출력하는 더 추상적인 방법
+
+```kotlin
+fun Context.showMessage(
+    message: String,
+    duration: MessageLength = MessageLength.LONG
+) {
+    val toastDuration = when(duraion) {
+        SHORT -> Length.LENGTH_SHORT
+        LONG -> Length.LENGTH_LONG
+    }
+    Toask.makeText(this, message, toastDuration).show()
+}
+
+enum class MessageLength { SHORT, LONG }
+```
+
+.
+
+👉🏻 **클래스**
+
+구현을 추상화할 수 있는 더 걍력한 방법은 클래스
 
 
 
