@@ -614,6 +614,31 @@ var elementsAdded: Int = 0
 - 클래스를 사용하는 사람은 스스로 할 수 있는 것과 할 수 없는 것을 모르므로, 구현의 세부적인 정보에 의존
 - 클래스를 만든 사람은 사용자가 무엇을 할지 알 수 없으므로 사용자의 구현을 망칠 위험이 있음
 
+.
+
+👉🏻 **규약 정의하기**
+
+규약 정의하기
+- 이름
+- 주석과 문서
+- 타입
+
+.
+
+👉🏻 **주석을 써야 할까?**
+- 주석을 함께 사용하면 요소(함수 또는 클래스)에 더 많은 내용의 규약을 설명 가능
+- 함수 이름과 파라미터만으로 정확하게 표현되는 요소에는 따로 주석을 넣지 않는 것이 좋음
+- 규약이 잘 정리된 함수
+  
+  ```kotlin
+  /**
+   * Returns a new read-only list of given elements.  
+   * The returned list is serializable (JVM).
+   * @sample samples.collections.Collections.Lists.readOnlyList
+   */
+   public fun <T> listOf(vararg elements: T): List<T> = if (elements.size > 0) elements.asList() else emptyList()
+  ```
+
 
 
 
