@@ -639,6 +639,20 @@ var elementsAdded: Int = 0
    public fun <T> listOf(vararg elements: T): List<T> = if (elements.size > 0) elements.asList() else emptyList()
   ```
 
+.
+
+👉🏻 **KDoc 형식**
+
+KDoc 주석의 구조
+- 첫 번째 부분은 요소에 대한 요약 설명
+- 두 번째 부분은 상세 설명
+- 이어지는 줄은 모두 태그로 시작(추가 설명 용도)
+
+[KDoc syntax﻿ Block tags](https://kotlinlang.org/docs/kotlin-doc.html#block-tags)
+
+공식적인 코틀린 문서 생성 도구 이름은 `Dokka`
+- [GitHub](https://github.com/Kotlin/dokka)
+- [Doc.](https://kotlin.github.io/dokka/1.6.10/)
 
 
 
