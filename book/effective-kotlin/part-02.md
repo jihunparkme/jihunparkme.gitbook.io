@@ -789,6 +789,20 @@ Tool.createBigTool()
 이러한 코트를 활용하면 팩토리 메서드를 만들어서 외부 라이브러리를 확장 가능
 - 다만 companion 객체를 확장하려면 (적어도 비어있는) companion 객체가 필요
 
+.
+
+👉🏻 **톱레벨 팩토리 함수**
+
+- 대표적인 예로 listOf, setOf, mapOf
+
+```kotlin
+public fun <T> listOf(
+    vararg elements: T
+): List<T> = if (elements.size > 0) elements.asList() else emptyList()
+```
+
+
+215
 
 
 
