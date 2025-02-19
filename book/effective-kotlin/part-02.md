@@ -697,11 +697,72 @@ KDoc 주석의 구조
 - 가짜 생성자
 - 팩토리 클래스의 메서드
 
+.
 
+👉🏻 **Companion 객체 팩토리 함수**
 
+- 팩토리 함수를 정의하는 가장 일반적인 방법
+  - 코틀린에서 이러한 접근 방법을 인터페이스에도 구현 가능
 
+  ```kotlin
+  class MyLinkedList<T>(
+    val head: T,
+    val tail: MyLinkedList<T>?
+  ) {
+    companion object {
+        fun <T> of(vararg elements: T): MyLinkedList<T>? {
+            /* ... */
+        }
+    }
+  }
 
+  // 사용
+  val list = MyLinkedList.of(1, 2)
+  ```
 
+팩토리 함수에 자주 사용되는 이름들
+- `from`: 파라미터를 하나 받고, 같은 타입의 인스턴스 하나를 리턴
+- `of`: 파라미터 여러개를 받고, 이를 통합해 인스턴스를 생성
+- `valueOf`: from, of와 비슷한 기능을 하면서도, 의미를 조금 더 쉽게 읽을 수 있는 함수
+- `instance` or `getInstance`: 싱글턴으로 인스턴스 하나를 리턴
+- `createInstance` or `newInstance`: getInstance처럼 동작하지만, 싱글턴이 적용되지 않아 함수 호출마다 새로운 인스턴스 생성
+- `getType`: getInstance처럼 동작하지만, 팩토리 함수가 다른 클래스에 있을 때 사용
+- `newType`: newInstance처럼 동작하지만, 팩토리 함수가 다른 클래스에 있을 때 사용
+
+companion 객체는 인터페이스를 구현할 수 있으며, 클래스를 상속받을 수도 있다.
+- companion 객체를 만드는 팩토리 함수
+
+```kotlin
+abstract class ActivityFactory {
+    abstract fun getIntent(context: Context): Intent
+
+    fun start(context: Context) {
+        val intent = getIntent(context)
+        context.startActivity(intent)
+    }
+
+    fun startForResult(activity: Activity, requestCode: Int) {
+        val intent = getIntent(activity)
+        activity.startActivityForResult(intent, requestCode)
+    }
+}
+
+class MainActivity: AppCompatActivity() {
+    //...
+
+    companion object: ActivityFactory() {
+        override fun getIntent(context: Context): Intent = 
+            Intent(context, MainActivity::class.java)
+    }
+}
+
+// Use
+val intent = MainActivity.getIntent(context)
+MainActivity.start(context)
+MainActivity.startForResult(activity, requestCode)
+```
+
+추상 companion 객체 팩토리는 값을 가질 수 있어서, 캐싱을 구현하거나 테스트를 위한 가짜 객체 생성 가능
 
 
 
