@@ -764,6 +764,37 @@ MainActivity.startForResult(activity, requestCode)
 
 추상 companion 객체 팩토리는 값을 가질 수 있어서, 캐싱을 구현하거나 테스트를 위한 가짜 객체 생성 가능
 
+.
+
+👉🏻 **확장 팩토리 함수**
+
+- 이미 companion 객체가 존재할 때, 이 객체의 함수처럼 사용할 수 있는 팩토리 함수를 만들어야 할 때가 있다.
+
+```kotlin
+interface Tool {
+    companion object { /* ... */ }
+}
+```
+
+- companion 객체를 활용해서 확장 함수를 정의 가능
+
+```kotlin
+fun Tool.Companion.createBigTool( /*...*/ ): BigTool {
+    //...
+}
+
+Tool.createBigTool()
+```
+
+이러한 코트를 활용하면 팩토리 메서드를 만들어서 외부 라이브러리를 확장 가능
+- 다만 companion 객체를 확장하려면 (적어도 비어있는) companion 객체가 필요
+
+
+
+
+
+
+
 
 
 
