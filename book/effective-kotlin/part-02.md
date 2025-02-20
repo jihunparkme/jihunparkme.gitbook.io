@@ -847,7 +847,31 @@ public inline fun <T> MutableList(
 - 캐싱, nullable 리턴, 서브 클래스 리턴 등의 기능까지 포함해서 객체를 만들고 싶다면, companion 객체 팩토리 메서드처럼 다른 이름을 가진 팩토리 함수를 사용하는 것을 권장
 - 기본 생성자를 만들 수 없는 상황 또는 생성자가 제공하지 않는 기능으로 생성자를 만들어야 하는 상황에만 가짜 생성자를 사용하자
 
+.
 
+👉🏻 **팩토리 클래스의 메서드**
+
+```kotlin
+data class Student(
+    val id: Int,
+    val name: String,
+    val surname: String,
+)
+
+class StudentsFactory {
+    var nextId = 0
+    fun next(name: String, surname: String) = 
+        Student(nextId++, name, surname)
+}
+
+val factory = StudentsFactory()
+var s1 = factory.next("Marcin", "Moskala")
+var s2 = factory.next("Igor", "Wojda")
+```
+
+팩토리 클래스는 프로퍼티를 가질 수 있다.
+- 이를 활용하면 다양한 종류로 최적화하고, 다양한 기능 도입이 가능
+- 캐싱 활용, 이전에 생성한 객체를 복제해서 객체 생성 등 객체 생성 속도 향상 등..
 
 
 
