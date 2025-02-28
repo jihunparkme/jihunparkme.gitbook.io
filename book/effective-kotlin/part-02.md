@@ -917,6 +917,48 @@ class Pizza(
 >
 > 좋은 DSL을 만드는 작업은 굉장히 어렵지만, 잘 정의된 DSL은 프로젝트에 굉장히 큰 도움
 
+# 6장. 클래스 설계
+
+## Item 36. 상속보다는 컴포지션을 사용하라
+
+보통 간단한 행위를 재사용하기 위해 슈퍼클래스를 만들어서 공통되는 행위를 추출
+
+이 경우 문제 없이 동작은 하지만, 몇 가지의 단점이 존재
+- 상속은 하나의 클래스만을 대상으로 가능
+- 상속은 클래스의 모든 것을 가져옴
+- 상속은 이해하기 어려움
+
+대표적인 대안은 `컴포지션`(composition)
+- 컴포지션을 사용한다는 것은 객체를 프로퍼티로 갖고, 함수를 호출하는 형태로 재사용하는 것을 의미
+- 추가 코드를 적절하게 처리하는 것이 조금 어려울 순 있지만, 실행을 더 명확하게 예측 가능한 장점
+- 또, 하나의 클래스 내부에서 여러 기능을 재사용 가능
+
+```kotlin
+class Progress {
+    fun showProgress() { /* */ }
+    fun hideProgress() { /* */ }
+}
+
+class ProfileLoader {
+    val progress = Progress()
+
+    fun load() {
+        progress.showProgress()
+        progress.hideProgress()
+    }
+}
+
+class ImageLoader {
+    val progress = Progress()
+
+    fun load() {
+        progress.showProgress()
+        progress.hideProgress()
+    }
+}
+```
+
+
 
 
 
