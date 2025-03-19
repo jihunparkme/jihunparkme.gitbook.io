@@ -1024,12 +1024,52 @@ data 한정자를 붙이면, 다음과 같은 몇 가지 함수가 자동으로 
 코틀린에서 클래스는 큰 비용없이 사용할 수 있는 좋은 도구
 - 따라서 클래스를 활용하는 데 두려움을 갖지 말고, 적극적으로 활용 권장
 
+## Item 38. 연산 또는 액션을 전달할 때는 인터페이스 대신 함수 타입을 사용하라
+
+함수 타입을 사용하는 코드는 더 많은 자유를 얻을 수 있다.
+
+👉🏻 람다 표현식 또는 익명 함수로 전달
+
+```kotlin
+setOnClickListener { /*..*/ } 
+setOnClickListener(fun(view) { /*..*/ })
+```
+
+👉🏻 함수 레퍼런스 또는 제한된 함수 레퍼런스로 전달
+
+```kotlin
+setOnClickListener(::println)
+setOnClickListener(this::showUsers)
+```
+
+👉🏻 선언된 함수 타입을 구현한 객체로 전달
+
+```kotlin
+class ClickListener: (View)->Unit {
+    override fun invoke(view: View) {
+        // ...
+    }
+}
+
+setOnClickListener(ClickListener())
+```
+
+타입 별칭을 사용하면 함수 타입도 이름을 붙일 수 있다.
+
+```kotlin
+typealias OnClick = (View) -> Unit
+```
+
+📖 **정리**
+
+> 자바에서 사용하기 위한 API를 설계할 때는 함수 타입보다 SAM(Single-Abstract Method)을 사용하는 것이 합리적
+>
+> 하지만, 이외의 경우에는 함수 타입을 사용하는 것이 좋다.
 
 
 
 
-242
-
+260
 
 
 
