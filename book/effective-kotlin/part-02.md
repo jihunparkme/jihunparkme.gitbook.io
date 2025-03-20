@@ -1151,3 +1151,49 @@ Any 클래스에 구현되어 있는 equals 메서드는 디폴트로 ===처럼 
 - 특별한 이유가 없는 이상 직접 equals를 구현하는 것은 좋지 않다.
 - 기본적으로 제공되는 것을 그대로 쓰거나, 데이터 클래스로 만들어서 사용하는 것이 좋다.
 - 직접 구현해야 한다면, 반사적/대칭적/연속적/일관적 동작을 하는지 확인하자.
+
+## Item 41. hashCode 규약을 지켜라
+
+hashCode 규약
+
+1️⃣ 어떤 객체를 변경하지 않았다면, `hashCode`는 여러 번 호출해도 그 결과가 항상 같아야 한다.
+
+2️⃣ equals 메서드의 실행 결과로 두 객체가 같다고 나온다면, `hashCode` 메서드의 호출 결과도 같다고 나와야 한다.
+
+- 일관성 유지를 위해 hashCode가 필요
+- hashCode는 equals와 같이 일관성 있는 동작을 해야 함
+- 같은 요소는 반드시 같은 hashCode를 가져야 함
+
+.
+
+👉🏻 **hashCode 구현하기**
+- 일반적으로 모든 해시 코드의 값을 더한다.
+- 더하는 과정마다 이전까지의 결과에 31을 곱한 뒤 더한다.
+
+```kotlin
+class DateTime(
+    private var millis: Long = 0L,
+    private var timeZone: TimeZone? = null
+) {
+    private var asStringCache = ""
+    private var changed = false
+    
+    override fun equals(other: Any?): Boolean =
+        other is DateTime &&
+            other.millis == millis &&
+            other.timeZone == timeZone
+           
+    override fun hashCode(): Int {
+        var result = millis.hashCode()
+        result = result * 31 + timeZone.hashCode()
+        return result
+    }   
+}
+```
+
+이때 유용한 함수로 코틀린/JVM의 `Objects.hashCode`를 사용하면 해시를 계산해 줍니다.
+
+```kotlin
+override fun hashCode(): Int = 
+    Objects.hash(timeZone, millis)
+```
