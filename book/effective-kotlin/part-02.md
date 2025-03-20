@@ -1197,3 +1197,62 @@ class DateTime(
 override fun hashCode(): Int = 
     Objects.hash(timeZone, millis)
 ```
+
+## Item 42. compareTo의 규약을 지켜라
+
+1️⃣ 비대칭적 동작
+- a >= b이고 b >= a 라면, a == b
+
+2️⃣ 연속적 동장
+- a >= b이고 b >= c 라면, a >= c
+
+3️⃣ 코넥스적 동작
+- 두 요소는 어떤 확실한 관계를 가지고 있어야 한다.
+- a >= b 또는 b >= a 중 적어도 하나는 항상 true
+
+.
+
+👉🏻 **compareTo를 따로 정의해야 할까?**
+
+- 코틀린에서 compareTo를 따로 정의해야 하는 상황은 거의 없다.
+  - 일반적으로 어떤 프로퍼티 하나를 기반으로 순서를 지정하는 것으로 충분하기 때문
+  - 예를 들어, sortedBy를 사용하면, 원하는 키로 컬렉션을 정렬
+- 여러 프로퍼티를 기반으로 정렬해야 한다면 `sortedWith` 함수를 사용
+
+```kotlin
+val sorted = names
+            .sortedWith(compareBy({ it.surname }, { it.name }))
+```
+
+.
+
+👉🏻 **compareTo 구현하기**
+
+- compareTo를 구현할 때 유용하게 활용할 수 있는 톱레벨 함수가 있다.
+  - 두 값을 단순하게 비교하기만 한다면, `compareValues` 함수 활용 가능
+- 더 많은 값을 비교하거나, selector를 활용해서 비교하고 싶다면, `compareValuesBy`를 사용
+
+```kotlin
+class User(
+    val name: String,
+    val surname: String
+): Comparable<User> {
+    override fun compareTo(other: User): Int =
+        compareValues(surname, other.surname)
+}
+
+...
+
+class User(
+    val name: String,
+    val surname: String
+): Comparable<User> {
+    override fun compareTo(other: User): Int =
+        compareValuesBy(this, other, { it.surname }, { it.name })
+}
+```
+
+특별한 논리를 구현해야 하는 경우 이 함수가 다음 값을 리턴하도록 하자
+- 0: 리시버와 other가 같은 경우
+- 양수: 리시버가 other보다 큰 경우
+- 음수: 리시버가 other보다 작은 경우
