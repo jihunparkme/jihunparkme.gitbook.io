@@ -1287,3 +1287,45 @@ class User(
 > - 확장 함수는 클래스 레퍼런스에 나오지 않는다.
 >
 > API의 필수적인 부분은 멤버로 두는 것이 좋지만, 필수적이지 않은 부분은 확장 함수로 만드는 것이 여러모로 좋다.
+
+## Item 44. 멤버 확장 함수의 사용을 피하라
+
+어떤 클래스에 대한 확장 함수를 정의할 때, 멤버로 추가하는 것은 좋지 않다.
+- 확장 함수는 첫 번째 아규먼트로 리시버를 받는 단순한 일반 함수로 컴파일된다.
+
+```kotlin
+// 컴파일 전
+fun String.isPhoneNumber(): Boolean = 
+        length == 7 && all { it.isDigit() }
+
+// 컴파일 후
+fun isPhoneNumber('$this': String): Boolean = 
+        '$this'.length == 7 && '$this'.all { it.isDigit() }
+```
+
+확장 함수를 클래스 멤버로 정의하는 것은 DSL을 만들 때를 제외하면 사용하지 않는 것이 좋다.
+- 가시성을 제한하지 못하므로 확장 함수를 사용하는 형태를 어렵게 만든다.
+- 확장 함수의 가시성을 제한하고 싶다면, 멤버로 만들지 말고, 가시성 한정자를 붙여주자.
+
+```kotlin
+/* 
+ * 멤버 확장 함수를 사용하는 경우
+ */
+class PhoneBookCorrect {
+    fun String.isPhoneNumber() =
+        length == 7 && all { it.isDigit() }
+}
+
+PhoneBookCorrect().apply { "1234567890".test() }
+
+/* 
+ * 멤버가 아닌 확장 함수를 사용하는 경우
+ */
+class PhoneBookCorrect {
+    // ...
+}
+
+private fun String.isPhoneNumber() =
+            length == 7 && all { it.isDigit() }
+```
+
