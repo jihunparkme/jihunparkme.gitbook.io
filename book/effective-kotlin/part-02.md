@@ -1329,3 +1329,48 @@ private fun String.isPhoneNumber() =
             length == 7 && all { it.isDigit() }
 ```
 
+✅ 멤버 확장을 피해야 하는 몇 가지 타당한 이유
+
+1️⃣ 레퍼런스를 지원하지 않는다.
+
+```kotlin
+val refX = PhoneBookInCorrect::isPhoneNumber // 오류
+val boundedRefX = book::isPhoneNumber // 오류
+```
+
+2️⃣ 암묵적 접근 시, 두 리시버 중 어떤 리시버가 선택될지 혼동된다.
+
+```
+class A {
+    val a = 10
+}
+class B {
+    val a = 20
+    val b = 30
+
+    fun A.test() = a + b
+}
+```
+
+3️⃣ 확장 함수가 외부에 있는 다른 클래스를 리시버로 받을 때, 해당 함수가 어떤 동작을 하는지 명확하지 않다.
+
+```kotlin
+class A {
+    // ...
+}
+class B {
+    // ...
+
+    fun A.update() = ... // A, B 중 어떤 것을 업데이트?
+}
+```
+
+📖 **정리**
+
+> 멤버 확장 함수를 사용하는 것이 의미가 있는 경우에는 사용해도 괜찮다.
+>
+> 하지만, 일반적으로 그 단점을 인지하고, 사용하지 않는 것이 좋다.
+>
+> 가시성을 제어하려면 가시성과 관련된 한정자를 사용하자.
+>
+> 클래스 내부에 확장 함수를 배치한다고, 외부에서 해당 함수를 사용하지 못하게 제한되는 것이 아니다.
