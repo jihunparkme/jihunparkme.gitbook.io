@@ -55,8 +55,9 @@
 ## Book
 
 * [Effective Kotlin](book/effective-kotlin/README.md)
-  * [01,좋은 코드](book/effective-kotlin/part-01.md)
-  * [02,코드 설계](book/effective-kotlin/part-02.md)
+  * [01.좋은 코드](book/effective-kotlin/part-01.md)
+  * [02.코드 설계](book/effective-kotlin/part-02.md)
+  * [03.효율성](book/effective-kotlin/part-03.md)
 * [이벤트 소싱과 MSA](book/microservices-eventsourcing/README.md)
   * [01.도메인 주도 설계](book/microservices-eventsourcing/ddd.md)
   * [02.객체지향 설계 원칙](book/microservices-eventsourcing/oop.md)
