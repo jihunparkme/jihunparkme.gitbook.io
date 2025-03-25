@@ -78,3 +78,67 @@ class A {
 📖 **정리**
 
 > 이러한 최적화에 큰 변경이 필요하거나, 다른 코드에 문제를 일으킬 수 있다면 최적화를 미루는 것도 방법이다.
+
+## Item 46. 함수 타입 파라미터를 갖는 함수에 inline 한정자 붙이기
+
+`inline` 한정자의 역할은 컴파일 시점에 '함수를 호출하는 부분'을 '함수의 본문'으로 대체하는 것이다.
+
+```kotlin
+repeat(10) {
+    print(it)
+}
+
+// 컴파일
+for (index in 0 until 10) {
+    print(index)
+}
+```
+
+`inline` 한정자를 사용할 때 장점
+- 타입 아규먼트에 `reified` 한정자를 붙여 사용 가능
+- 함수 타입 파라미터를 가진 함수가 훨씬 빠르게 동작
+- 비지연 리턴 사용 가능
+
+.
+
+👉🏻 **타입 아규먼트를 reified로 사용할 수 있다**
+- 단순 호출이 본문으로 대체되므로, reified 한정자를 지정하면, 타입 파라미터를 사용한 부분이 타입 아규먼트로 대체
+
+```kotlin
+inline fun <reified T> printTypeName() {
+    print(T::class.simpleName)
+}
+
+// 사용
+printTypeName<Int>()
+printTypeName<Char>()
+printTypeName<String>()
+
+// 컴파일
+print(Int::class.simpleName)
+print(Char::class.simpleName)
+print(String::class.simpleName)
+```
+
+.
+
+👉🏻 **함수 타입 파라미터를 가진 함수가 훨씬 빠르게 동작한다**
+- 모든 함수는 inline 한정자를 붙이면 조금 더 빠르게 동작한다.
+  - 함수 호출과 리턴을 위해 점프하는 과정과 백스택을 추적하는 과정이 없기 때문
+  - 그래서 표준 라이브러리에 있는 간단한 함수들에는 대부분 inline 한정자 사용
+
+.
+
+👉🏻 **비지역적 리턴을 사용할 수 있다**
+- 함수 리터럴이 컴파일될 때, 함수가 객체로 래핑되어서 문제가 발생할 수 있다.
+  - 함수가 다른 클래스에 위치하므로 return을 사용해서 main으로 돌아올 수 없기 때문
+  - 함수가 main 함수 내부에 박히기 때문에 인라인 함수는 이런 제한이 없다.
+
+```kotlin
+fun  main() {
+    repeat(10) {
+        print(it)
+        return
+    }
+}
+```
