@@ -198,3 +198,129 @@ fun httpCall(url: String, callback: ()->Unit) {
 >   - ex. 컬렉션 헬퍼 함수(map, filter, flatMap, joinToString..)
 >   - 스코프 함수(also, apply, let...)
 >   - 톱레벨 유틸리티 함수(repeat, run, with..)
+
+## Item 47. 인라인 클래스의 사용을 고려하라
+
+하나의 값을 보유하는 객체도 inline으로 만들 수 있다.
+- 기본 생성자 프로퍼티가 하나인 클래스 앞에 inline을 붙이면, 해당 객체를 사용하는 위치가 모두 해당 프로퍼티로 교체
+
+```kotlin
+inline class Name(private val value: String) {
+    // ..
+}
+```
+
+이러한 inline 클래스는 타입만 맞다면, 다음과 같이 그냥 값을 곧바로 집어 넣는 것도 허용
+
+```kotlin
+val name: Name = Name("Marcin")
+
+//컴파일
+val name: String = "Marcin"
+```
+
+inline 클래스의 메서드는 모두 정적 메서드로 만들어 진다.
+
+```kotlin
+inline class Name(private val value: String) {
+    //...
+    fun greet() {
+        print("Hello, I am $value")
+    }
+}
+
+val name: Name = Name("Marcin")
+name.greet()
+
+//컴파일
+val name: String = "Marcin"
+Name.`greet-impl`(name)
+```
+
+.
+
+👉🏻 **타입 오용으로 발생하는 문제를 막을 때**
+
+```kotlin
+// AS-IS
+@Entity(tableName = "grades")
+class Grades(
+    @ColumnInfo(name = "studentId")
+    val studentId: Int,
+    @ColumnInfo(name = "teacherId")
+    val teacherId: Int,
+    @ColumnInfo(name = "schoolId")
+    val schoolId: Int
+    //...
+)
+
+// TO-BE
+inline class StudentId(val id: Int)
+inline class TeacherId(val id: Int)
+inline class SchoolId(val id: Int)
+
+@Entity(tableName = "grades")
+class Grades(
+    @ColumnInfo(name = "studentId")
+    val studentId: StudentId,
+    @ColumnInfo(name = "teacherId")
+    val teacherId: TeacherId,
+    @ColumnInfo(name = "schoolId")
+    val schoolId: SchoolId
+    //...
+)
+```
+
+Int 자료형의 값을 inline 클래스를 활용해 래핑
+- ID를 사용하는 것이 굉장히 안전해지며, 컴파일할 때 타입이 Int로 대체되므로 코드를 바꿔도 별도의 문제가 발생하지 않는다.
+
+.
+
+👉🏻 **인라인 클래스와 인터페이스**
+- 인라인 클래스도 다른 클래스와 마찬가지로 인터페이스를 구현할 수 있다.
+- 하지만, 인터페이스를 구현하는 인라인 클래스는 아무런 의미가 없다.
+
+.
+
+👉🏻 **typealias**
+- `typealias`를 사용하면 타입에 새로운 이름을 붙여줄 수 있다.
+- 길고 반복적으로 사용해야 할 때 많이 유용
+
+```kotlin
+typealias ClickListener = 
+    (view: View, event: Event) -> Unit
+
+class View {
+    fun addClickListener(listener: ClickListener) {}
+    fun removeClickListener(listener: ClickListener) {}
+    //...
+}
+```
+
+하지만 typealias는 안전하지 않다.
+- 단위 등을 표현하려면, 파라미터 이름 또는 클래스를 사용하자
+- 이름은 비용이 적게 들고, 클래스는 안전하다
+- 인라인 클래스를 사용하면, 비용과 안전이라는 두 마리 토끼를 모두 잡을 수 있다.
+
+```kotlin
+typealias Seconds = Int
+typealias Millis = Int
+
+fun getTime(): Millis = 10
+fun setUpTimer(time: Seconds) {}
+
+fun main() {
+    val seconds: Seconds = 10
+    val millis: Millis = seconds // 컴파일 오류가 발생하지 않는다.
+    
+    setUpTimer(getTime())
+}
+```
+
+📖 **정리**
+
+> 인라인 클래스를 사용하면 성능적인 오버헤드 없이 타입을 래핑할 수 있다.
+>
+> 인라인 클래스는 타입 시스템을 통해 실수로 코드를 잘못 작성하는 것을 막아주므로, 코드의 안정성을 향상시켜 준다.
+>
+> 의미가 명확하지 않은 타입, 특히 여러 측정 단위들을 함께 사용하는 경우 인라인 클래스를 꼭 활용하자.
