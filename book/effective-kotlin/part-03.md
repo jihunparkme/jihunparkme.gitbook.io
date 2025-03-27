@@ -461,3 +461,39 @@ numbers
 > - 최소한만 연산
 > - 무한 시퀀스 형태로 사용 가능
 > - 각각의 단계에서 컬렉션을 만들지 않음
+
+## Item 50. 컬렉션 처리 단계 수를 제한하라
+
+모든 컬렉션 처리 메서드는 비용이 많이 든다.
+- 따라서, 적절한 메서드를 활용해서, 컬렉션 처리 단계 수를 적절하게 제한하는 것이 좋다.
+- 어떤 메서드를 사용하는지에 따라 컬렉션 처리의 단계 수가 달라진다.
+
+```kotlin
+class Student(val name: String?)
+
+// 작동은 한다.
+fun List<Student>.getNames(): List<String> = this
+    .map { it.name }
+    .filter { it != null }
+    .map { it!! }
+
+// 더 좋다.
+fun List<Student>.getNames(): List<String> = this
+    .map { it.name }
+    .filterNotNull()
+
+// 가장 좋다.
+fun List<Student>.getNames(): List<String> = this
+    .mapNotNull { it.name }
+```
+
+컬렉션 처리를 어떤 형태로 줄일 수 있는지 알아두면 좋다.
+- 다음 표는 두 단계 이상의 컬렉션 처리 함수를 한번에 끝내는 방법을 정리한 것이다.
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kotlin/collection-56.png?raw=true 'Result')
+
+📖 **정리**
+
+> 대부분의 컬렉션 처리 단계는 '전체 컬렉션에 대한 반복'과 중간 컬렉션 생성'이라는 비용이 발생한다.
+>
+> 이 비용은 적절한 컬렉션 처리 함수들을 활용해서 줄일 수 있다.
