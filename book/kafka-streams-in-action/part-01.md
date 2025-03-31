@@ -134,3 +134,12 @@
 - 핵심 고려사항 중 하나는 주어진 토픽에 들어오는 데이터의 양
 - 데이터가 ㅁ낳을수록 처리량을 높이기 위해 더 많은 파티션이 필요
 - 그러나 트레이드 오프(trade-off)는 존재
+- [How to Choose the Number of Topics/Partitions in a Kafka Cluster?](https://www.confluent.io/blog/how-choose-number-topics-partitions-kafka-cluster/)
+
+.
+
+👉🏻 **분산 로그**
+- 토픽이 분할되면 카프카는 하나의 머신에 모든 파티션을 할당하지 않음
+- 카프카는 클러스터를 구성하는 여러 머신에 파티션을 분산
+- 카프카는 레코드를 로그에 추가하므로 카프카는 이런한 레코드를 파티션별로 여러 머신에 분산
+- 하나의 브로커에 저장하면 클러스터의 하나 혹은 그 이상의 머신에 데이터를 복제
