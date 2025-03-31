@@ -90,3 +90,47 @@
     - hashCode(AByte) % 2 = 0
     - hashCode(BByte) % 2 = 1
 - 동일한 키를 가진 레코드가 항상 동일한 파티션에 순서대로 전송
+
+.
+
+👉🏻 **사용자 정의 파티셔너 작성하기**
+- 복합 키를 사용하는 간단한 경우
+- 파티셔닝과 관련해 특정 고객에 대한 모든 트랜잭션이 동일한 파티션으로 이동해야 하지만, 키 전체(고객ID, 구매 날짜)를 사용하면 이 작업을 수행 불가
+- 파티션을 결정할 때 고객 ID만 사용하도록 사용자 정의 파티셔너 작성
+
+  ```java
+  public class PurchaseKeyPartitioner extends DefaultPartitioner {
+
+
+      @Override
+      public int partition(String topic, Object key, byte[] keyBytes, Object value, byte[] valueBytes, Cluster cluster) {
+          Object newKey = null;
+          if (key != null) { // 키가 널이 아니면 사용자 ID를 추출
+              PurchaseKey purchaseKey = (PurchaseKey) key;
+              newKey = purchaseKey.getCustomerId();
+              keyBytes = ((String) newKey).getBytes(); // 새로운 값으로 키의 바이트 설정
+          }
+          // 슈퍼 클래스에 위임하여 업데이트된 키로 파티션을 반환
+          return super.partition(topic, newKey, keyBytes, value, valueBytes, cluster); 
+      }
+  }
+  ```
+
+.
+
+👉🏻 **사용자 정의 파티셔너 지정하기**
+- 카프카 프로듀서 설정 시 파티셔너 지정
+- 프로듀서 인스턴스별로 파티셔너 설정 가능
+  - 프로듀서마다 각기 다른 파티셔너를 자유롭게 사용 가능
+
+  ```bash
+  partitioner.class=aaronp_2.partitioner.PurchaseKeyPartitioner
+  ```
+
+.
+
+👉🏻 **정확한 파티션 수 정하기**
+- 토픽 생성 시 사용할 파티션 수를 선택하는 것은 기술의 영역이면서 과학의 영역
+- 핵심 고려사항 중 하나는 주어진 토픽에 들어오는 데이터의 양
+- 데이터가 ㅁ낳을수록 처리량을 높이기 위해 더 많은 파티션이 필요
+- 그러나 트레이드 오프(trade-off)는 존재
