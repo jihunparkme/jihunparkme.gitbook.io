@@ -178,3 +178,23 @@
   - **토픽 설정**: 클러스터의 토픽을 트래킹
     - 브로커가 토픽의 리더인지, 토픽에 파티션이 몇 개인지, 토픽의 특정 설정이 업데이트되었는지 확인
   - **접근 제어**: 특정 토픽에 대해 누가 읽고 쓸 수 있는지 식별
+
+.
+
+👉🏻 **로그 관리**
+- 카프카에서 오래된 데이터를 제거할 때 두 가지 방식이 있는데 전통적인 접근법인 로그 삭제, 그리고 압축이 존재
+- 로그 삭제
+  - 로그를 세그먼트로 나누어 가장 오래된 세그먼트를 삭제
+  - 로그 분할 시간은 메시지에 포함된 타임스탬프를 기반으로 수행
+  - 로그 롤링: 카프카 브로커 설정 시 지정하는 구성 설정 ([Broker Configs](https://kafka.apache.org/documentation/#brokerconfigs))
+    - `log.roll.ms`: 주 설정(default. x)
+    - `log.roll.hours`: 보조 설정. 주 설정이 없는 경우만 사용(default. 168h)
+  - 세그먼트 삭제 우선순위
+    - `log.retention.ms`: 로그 파일을 밀리초 단위로 보관하는 기간
+    - `log.retention.minutes`: 로그 파일을 분 단위로 보관하는 기간
+    - `log.retention.hours`: 시간 단위의 로그 파일 보존 기간
+- 로그 압축
+  - 대략적인(coarse-grained) 접근 방식을 사용하고, 시간이나 크기를 기반으로 전체 세그먼트를 삭제하는 대신
+  - 좀 더 세밀한(fine-grained) 접근 방식을 사용하고 로그에서 키별로 오래된 레코드를 삭제
+    - 로그 압축이 각 키별로 가장 최근의 메시지를 유지
+  - [Log Compaction](https://kafka.apache.org/documentation/#compaction)
