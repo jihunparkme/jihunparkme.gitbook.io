@@ -205,6 +205,8 @@
 - 카프카 프로듀서는 스레드 안전
 - 모든 전송은 비동기
 
+[SimpleProducer](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_2/producer/SimpleProducer.java)
+
 ```java
 public class SimpleProducer {
     public static void main(String[] args) {
@@ -257,3 +259,131 @@ public class SimpleProducer {
 - **파티셔너 클래스**:
   - Partitioner 인터페이스를 구현하는 클래스 이름 지정
 - [Producer Configs](https://kafka.apache.org/documentation/#producerconfigs)
+
+### 컨슈머로 메시지 읽기
+
+👉🏻 **오프셋 관리**
+- KafkaProducer는 본질적으로 상태가 없지만, KafkaConsumer는 주기적으로 카프카에서 소비되는 메시지의 `오프셋`을 커밋해 일부 상태를 관리
+- 오프셋은 메시지를 고유하게 식별하고 로그에서 메시지의 시작 위치를 나타낸다.
+- 컨슈머는 받은 메시지의 오프셋을 주기적으로 커밋해야 한다.
+- 오프셋 커밋은 컨슈머에 있어서 두 가지 의미가 존재
+  - 커밋한다는 것은 컨슈머가 메시지를 완전히 처리했음을 의미
+  - 커밋은 실패나 재시작 시 해당 컨슈머의 시작 지점도 나타냄
+- 새로운 컨슈머 인스턴스가 있거나 일부 오류가 발생했고, 마지막 커밋한 오프셋을 사용할 수 없는 경우 컨슈머가 시작하는 위치는 설정에 따라 다름
+  - `auto.offset.reset="earliest"`
+    - 사용 가능한 가장 이른 오프셋부터 시작. 로그 관리 프로세스에 의해 아직 제거되지 않은 메시지
+  - `auto.offset.reset="latest"`
+    - 가장 최신 오프셋에서 메시지를 읽어서 기본적으로 컨슈머가 클러스터에 합류한 지점부터 유입된 메시지만 소비
+  - `auto.offset.reset="none"`
+    - 재설정 전략을 지정하지 않음. 브로커가 컨슈머에게 예외를 발생
+
+.
+
+👉🏻 **자동 오프셋 커밋**
+- 자동 오프셋 커밋 방식이 기본값
+- `enable.auto.commit` 프로퍼티로 설정 가능
+- 짝을 이루는 설정 옵션은 `auto.commit.interval.ms`
+  - 컨슈머가 오프셋을 커밋하는 주기를 지정(default. 5s)
+
+.
+
+👉🏻 **수동 오프셋 커밋**
+- 수동 커밋된 오프셋에는 동기식, 비동기식 두 가지 유형이 존재
+- 동기식(`commitSync()`)
+  - 마지막 검색에서 반환된 모든 오프셋이 성공할 때까지 블로킹
+  - 호출은 구독한 모든 토픽과 파티션에 적용
+  - 맵에 지정된 오프셋, 파티션, 토픽만 커밋하도록 파라미터를 넘길 수도 있음
+- 비동기식(`commitAsync()`)
+  - 즉시 반환
+- 수동 커밋을 사용하면 레코드가 처리된 것으로 간주되는 시기를 직접 제어 가능
+
+.
+
+👉🏻 **컨슈머와 파티션**
+- 여러 애플리케이션이나 머신에 컨슈머를 분산하는 경우 모든 인스턴스의 총 스레드 수는 해당 토픽의 총 파티션 수를 넘지 않아야 한다.
+  - 전체 파티션 수를 초과하는 스레드는 유휴 상태가 되기 때문
+- 컨슈머가 실패하면 리더 브로커는 파티션을 다른 활성 컨슈머에게 할당
+
+.
+
+👉🏻 **리밸런싱**
+- 컨슈머에게 토픽-파티션 할당을 추가 및 제거하는 프로세스
+- [ThreadedConsumerExample](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_2/consumer/ThreadedConsumerExample.java)
+
+  ```java
+  public class ThreadedConsumerExample {
+
+      private volatile boolean doneConsuming = false;
+      private int numberPartitions;
+      private ExecutorService executorService;
+
+      public ThreadedConsumerExample(int numberPartitions) {
+          this.numberPartitions = numberPartitions;
+      }
+
+
+      public void startConsuming() {
+          executorService = Executors.newFixedThreadPool(numberPartitions);
+          Properties properties = getConsumerProps();
+
+          for (int i = 0; i < numberPartitions; i++) {
+              Runnable consumerThread = getConsumerThread(properties);
+              executorService.submit(consumerThread);
+          }
+      }
+
+      private Runnable getConsumerThread(Properties properties) {
+          return () -> {
+              Consumer<String, String> consumer = null;
+              try {
+                  consumer = new KafkaConsumer<>(properties);
+                  consumer.subscribe(Collections.singletonList("test-topic"));
+                  while (!doneConsuming) {
+                      ConsumerRecords<String, String> records = consumer.poll(5000);
+                      for (ConsumerRecord<String, String> record : records) {
+                          String message = String.format("Consumed: key = %s value = %s with offset = %d partition = %d",
+                                  record.key(), record.value(), record.offset(), record.partition());
+                          System.out.println(message);
+                      }
+
+                  }
+              } catch (Exception e) {
+                  e.printStackTrace();
+              } finally {
+                  if (consumer != null) {
+                      consumer.close();
+                  }
+              }
+          };
+      }
+
+      public void stopConsuming() throws InterruptedException {
+          doneConsuming = true;
+          executorService.awaitTermination(10000, TimeUnit.MILLISECONDS);
+          executorService.shutdownNow();
+      }
+
+
+      private Properties getConsumerProps() {
+          Properties properties = new Properties();
+          properties.put("bootstrap.servers", "localhost:9092");
+          properties.put("group.id", "simple-consumer-example");
+          properties.put("auto.offset.reset", "earliest");
+          properties.put("enable.auto.commit", "true");
+          properties.put("auto.commit.interval.ms", "3000");
+          properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+          properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+          return properties;
+
+      }
+
+      public static void main(String[] args) throws InterruptedException {
+          ThreadedConsumerExample consumerExample = new ThreadedConsumerExample(2);
+          consumerExample.startConsuming();
+          Thread.sleep(60000); //Run for one minute
+          consumerExample.stopConsuming();
+      }
+
+  }
+  ```
