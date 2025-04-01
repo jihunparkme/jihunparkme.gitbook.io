@@ -198,3 +198,44 @@
   - 좀 더 세밀한(fine-grained) 접근 방식을 사용하고 로그에서 키별로 오래된 레코드를 삭제
     - 로그 압축이 각 키별로 가장 최근의 메시지를 유지
   - [Log Compaction](https://kafka.apache.org/documentation/#compaction)
+
+### 프로듀서로 메시지 보내기
+
+프로듀서가 데이터를 카프카 클러스터로 보낼 수 있다.
+- 카프카 프로듀서는 스레드 안전
+- 모든 전송은 비동기
+
+```java
+public class SimpleProducer {
+    public static void main(String[] args) {
+
+        Properties properties = new Properties();
+        properties.put("bootstrap.servers", "localhost:9092");
+        properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        properties.put("acks", "1");
+        properties.put("retries", "3");
+        properties.put("compression.type", "snappy");
+        properties.put("partitioner.class", PurchaseKeyPartitioner.class.getName());
+
+        PurchaseKey key = new PurchaseKey("12334568", new Date());
+
+        try(Producer<PurchaseKey, String> producer = new KafkaProducer<>(properties)) {
+            ProducerRecord<PurchaseKey, String> record = new ProducerRecord<>("some-topic", key, "value");
+
+            Callback callback = (metadata, exception) -> {
+                if (exception != null) {
+                    exception.printStackTrace();
+                }
+            };
+
+            // 프로듀서가 내부 버퍼에 레코드를 저장하면 즉시 반환
+            Future<RecordMetadata> sendFuture = producer.send(record, callback);
+        }
+    }
+}
+```
+
+.
+
+👉🏻 **로그 관리**
