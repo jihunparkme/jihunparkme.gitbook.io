@@ -56,6 +56,7 @@
 
 * [Kafka Streams in Action](book/kafka-streams-in-action/README.md)
   * [01.카프카 스트림즈](book/kafka-streams-in-action/part-01.md)
+  * [02.카프카 스트림즈 개발](book/kafka-streams-in-action/part-02.md)
 * [Effective Kotlin](book/effective-kotlin/README.md)
   * [01.좋은 코드](book/effective-kotlin/part-01.md)
   * [02.코드 설계](book/effective-kotlin/part-02.md)
