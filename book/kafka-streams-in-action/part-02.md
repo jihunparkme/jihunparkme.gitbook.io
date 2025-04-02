@@ -58,6 +58,7 @@ builder.stream("src-topic", Consumed.with(stringSerde, tringSerde))
 .
 
 👉🏻 **Serde 생성**
+
 ```java
 Serde<String> stringSerde = Serdes.String();
 ```
@@ -74,3 +75,45 @@ Serde<String> stringSerde = Serdes.String();
 2. Serde 객체 생성
 3. 처리 토폴로지 구성
 4. 카프카 스트림즈 프로그램 시작
+
+## 사용자 데이터로 작업하기
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/example-stream.png?raw=true 'Result')
+
+👉🏻 **토폴로지 구성하기**
+- 소스 노드 만들기
+  - 고객의 개인 정보를 보호하기 위해 신용카드번호를 마스킹하는 책임
+
+```java
+KStream<String,Purchase> purchaseKStream = 
+        // 쉼표로 구분된 이름 목록 또는 토픽 이름과 일치하는 정규 표현식을 대신 제공
+        streamsBuilder.stream("transactions", 
+        // 토픽 이름만 제공하면 설정 매개변수를 통해 제공된 기본 Serdes 사용
+        Consumed.with(stringSerde, purchaseSerde))
+        // 하나의 타입 매개변수를 취해 해당 객체를 새로운 값으로 매핑
+        // 만일 새 값을 만드는데 새 키/값 쌍을 생성하거나 키를 포함하려면 KStream.map 메소드를 사용
+        .mapValues(p -> Purchase.builder(p).maskCreditCard().build());
+```
+
+👉🏻 **두 번째 프로세서 만들기**
+
+```java
+KStream<String, PurchasePattern> patternKStream = 
+    purchaseKStream.mapValues(purchase -> 
+    PurchasePattern.builder(purchase).build());
+
+// KStream 인스턴스의 데이터를 카프카 토픽에 쓰는 데 사용하는 싱크 노드를 정의
+patternKStream.to("patterns", 
+    Produced.with(stringSerde,purchasePatternSerde));
+```
+
+👉🏻 **세 번째 프로세서 만들기**
+
+```java
+KStream<String, RewardAccumulator> rewardsKStream = 
+        purchaseKStream.mapValues(purchase -> 
+        RewardAccumulator.builder(purchase).build());
+
+rewardsKStream.to("rewards", 
+        Produced.with(stringSerde,rewardAccumulatorSerde));
+```
