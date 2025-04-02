@@ -117,3 +117,10 @@ KStream<String, RewardAccumulator> rewardsKStream =
 rewardsKStream.to("rewards", 
         Produced.with(stringSerde,rewardAccumulatorSerde));
 ```
+
+👉🏻 **마지막 프로세서 만들기**
+- [ZMartKafkaStreamsApp](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_3/ZMartKafkaStreamsApp.java)
+
+```java
+purchaseKStream.to("purchases", Produced.with(stringSerde,purchaseSerde));
+```
