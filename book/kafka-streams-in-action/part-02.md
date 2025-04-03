@@ -124,3 +124,95 @@ rewardsKStream.to("rewards",
 ```java
 purchaseKStream.to("purchases", Produced.with(stringSerde,purchaseSerde));
 ```
+
+.
+
+✅ **사용자 정의 Serde 생성하기**
+- 카프카는 데이터를 바이트 배열 형식으로 전송
+  - 데이터 형식이 JSON 이므로 토픽에 데이터를 보낼 때 먼저 객체를 JSON으로 변환하고 바이트 배열로 변환하는 방법을 카프카에게 알려줘야 한다.
+  - 반대로, 소비한 바이트 배열을 JSON으로 변환한 다음 프로세서에서 사용할 객체 타입으로 변환하는 방법을 명시해야 한다.
+- 즉, `Serde`는 데이터를 다른 형식으로 변환하기 위해 필요
+- Serde를 만들려면 Deserializer\<T\>와 Serializer\<T\> 인터페이스를 구현해야 한다.
+
+    ```java
+    // 직렬화
+    public class JsonSerializer<T> implements Serializer<T> {
+        private Gson gson;
+
+        public JsonSerializer() {
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(FixedSizePriorityQueue.class, new FixedSizePriorityQueueAdapter().nullSafe());
+            gson = builder.create();
+        }
+
+        @Override
+        public void configure(Map<String, ?> map, boolean b) { }
+
+        @Override
+        public byte[] serialize(String topic, T t) {
+            // 객체를 바이트로 직렬화(객체를 JSON으로 변환 후 문자열에서 바이트를 가져옴)
+            return gson.toJson(t).getBytes(Charset.forName("UTF-8"));
+        }
+
+        @Override
+        public void close() { }
+    }
+
+    ...
+
+    // 역직렬화
+    public class JsonDeserializer<T> implements Deserializer<T> {
+        private Gson gson;
+        private Class<T> deserializedClass;
+        private Type reflectionTypeToken;
+
+        public JsonDeserializer(Class<T> deserializedClass) {
+            this.deserializedClass = deserializedClass;
+            init();
+
+        }
+
+        public JsonDeserializer(Type reflectionTypeToken) {
+            this.reflectionTypeToken = reflectionTypeToken;
+            init();
+        }
+
+        private void init () {
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(FixedSizePriorityQueue.class, new FixedSizePriorityQueueAdapter().nullSafe());
+            gson = builder.create();
+        }
+
+        public JsonDeserializer() { }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void configure(Map<String, ?> map, boolean b) {
+            if(deserializedClass == null) {
+                deserializedClass = (Class<T>) map.get("serializedClass");
+            }
+        }
+
+        @Override
+        public T deserialize(String s, byte[] bytes) {
+            if(bytes == null){
+                return null;
+            }
+            Type deserializeFrom = deserializedClass != null ? deserializedClass : reflectionTypeToken;
+            // 바이트 배열을 기대하는 클래스의 인스턴스로 역직렬화
+            return gson.fromJson(new String(bytes), deserializeFrom);
+        }
+
+        @Override
+        public void close() { }
+    }
+
+    ...
+
+    JsonDeserializer<Purchase> purchaseJsonDesirializer = 
+            new JsonDeserializer<>(Purchase.class);
+    JsonSerializer<Purchase> purchaseJsonSirializer = 
+            new JsonSerializer<>();
+    Serde<Purchase> purchaseSerde = 
+            Serdes.serdeForm(purchaseJsonSerializer, purchaseJsonDesirializer);
+    ```
