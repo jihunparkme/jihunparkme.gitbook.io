@@ -134,100 +134,116 @@ purchaseKStream.to("purchases", Produced.with(stringSerde,purchaseSerde));
 - 즉, `Serde`는 데이터를 다른 형식으로 변환하기 위해 필요
 - Serde를 만들려면 Deserializer\<T\>와 Serializer\<T\> 인터페이스를 구현해야 한다.
 
-    ```java
-    // 직렬화
-    public class JsonSerializer<T> implements Serializer<T> {
-        private Gson gson;
+```java
+// 직렬화
+public class JsonSerializer<T> implements Serializer<T> {
+    private Gson gson;
 
-        public JsonSerializer() {
-            GsonBuilder builder = new GsonBuilder();
-            builder.registerTypeAdapter(FixedSizePriorityQueue.class, new FixedSizePriorityQueueAdapter().nullSafe());
-            gson = builder.create();
-        }
-
-        @Override
-        public void configure(Map<String, ?> map, boolean b) { }
-
-        @Override
-        public byte[] serialize(String topic, T t) {
-            // 객체를 바이트로 직렬화(객체를 JSON으로 변환 후 문자열에서 바이트를 가져옴)
-            return gson.toJson(t).getBytes(Charset.forName("UTF-8"));
-        }
-
-        @Override
-        public void close() { }
+    public JsonSerializer() {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(FixedSizePriorityQueue.class, new FixedSizePriorityQueueAdapter().nullSafe());
+        gson = builder.create();
     }
 
-    ...
+    @Override
+    public void configure(Map<String, ?> map, boolean b) { }
 
-    // 역직렬화
-    public class JsonDeserializer<T> implements Deserializer<T> {
-        private Gson gson;
-        private Class<T> deserializedClass;
-        private Type reflectionTypeToken;
-
-        public JsonDeserializer(Class<T> deserializedClass) {
-            this.deserializedClass = deserializedClass;
-            init();
-
-        }
-
-        public JsonDeserializer(Type reflectionTypeToken) {
-            this.reflectionTypeToken = reflectionTypeToken;
-            init();
-        }
-
-        private void init () {
-            GsonBuilder builder = new GsonBuilder();
-            builder.registerTypeAdapter(FixedSizePriorityQueue.class, new FixedSizePriorityQueueAdapter().nullSafe());
-            gson = builder.create();
-        }
-
-        public JsonDeserializer() { }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public void configure(Map<String, ?> map, boolean b) {
-            if(deserializedClass == null) {
-                deserializedClass = (Class<T>) map.get("serializedClass");
-            }
-        }
-
-        @Override
-        public T deserialize(String s, byte[] bytes) {
-            if(bytes == null){
-                return null;
-            }
-            Type deserializeFrom = deserializedClass != null ? deserializedClass : reflectionTypeToken;
-            // 바이트 배열을 기대하는 클래스의 인스턴스로 역직렬화
-            return gson.fromJson(new String(bytes), deserializeFrom);
-        }
-
-        @Override
-        public void close() { }
+    @Override
+    public byte[] serialize(String topic, T t) {
+        // 객체를 바이트로 직렬화(객체를 JSON으로 변환 후 문자열에서 바이트를 가져옴)
+        return gson.toJson(t).getBytes(Charset.forName("UTF-8"));
     }
 
-    ...
+    @Override
+    public void close() { }
+}
 
-    JsonDeserializer<Purchase> purchaseJsonDesirializer = 
-            new JsonDeserializer<>(Purchase.class);
-    JsonSerializer<Purchase> purchaseJsonSirializer = 
-            new JsonSerializer<>();
-    Serde<Purchase> purchaseSerde = 
-            Serdes.serdeForm(purchaseJsonSerializer, purchaseJsonDesirializer);
-    ```
+...
 
-    ## 대화형 개발
+// 역직렬화
+public class JsonDeserializer<T> implements Deserializer<T> {
+    private Gson gson;
+    private Class<T> deserializedClass;
+    private Type reflectionTypeToken;
 
-    Printed는 stdout에 출력하는 `Printed.toSysOut()` 혹은 파일에 결과를 기록하는 `Printed.toFile(filePath)` 두 가지 정적 메소드를 제공
+    public JsonDeserializer(Class<T> deserializedClass) {
+        this.deserializedClass = deserializedClass;
+        init();
 
-    ```java
-    patternKStream.print(Printed.<String, PurchasePattern>toSysOut()
-                  .withLabel("patterns"));
+    }
 
-    rewardsKStream.print(Printed.<String, RewardAccumulator>toSysOut()
-                  .withLabel("rewards"));
+    public JsonDeserializer(Type reflectionTypeToken) {
+        this.reflectionTypeToken = reflectionTypeToken;
+        init();
+    }
 
-    purchaseKStream.print(Printed.<String, Purchase>toSysOut()
-                  .withLabel("purchases"));
-    ```
+    private void init () {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(FixedSizePriorityQueue.class, new FixedSizePriorityQueueAdapter().nullSafe());
+        gson = builder.create();
+    }
+
+    public JsonDeserializer() { }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void configure(Map<String, ?> map, boolean b) {
+        if(deserializedClass == null) {
+            deserializedClass = (Class<T>) map.get("serializedClass");
+        }
+    }
+
+    @Override
+    public T deserialize(String s, byte[] bytes) {
+        if(bytes == null){
+            return null;
+        }
+        Type deserializeFrom = deserializedClass != null ? deserializedClass : reflectionTypeToken;
+        // 바이트 배열을 기대하는 클래스의 인스턴스로 역직렬화
+        return gson.fromJson(new String(bytes), deserializeFrom);
+    }
+
+    @Override
+    public void close() { }
+}
+
+...
+
+JsonDeserializer<Purchase> purchaseJsonDesirializer = 
+        new JsonDeserializer<>(Purchase.class);
+JsonSerializer<Purchase> purchaseJsonSirializer = 
+        new JsonSerializer<>();
+Serde<Purchase> purchaseSerde = 
+        Serdes.serdeForm(purchaseJsonSerializer, purchaseJsonDesirializer);
+```
+
+## 대화형 개발
+
+Printed는 stdout에 출력하는 `Printed.toSysOut()` 혹은 파일에 결과를 기록하는 `Printed.toFile(filePath)` 두 가지 정적 메소드를 제공
+
+```java
+patternKStream.print(Printed.<String, PurchasePattern>toSysOut()
+                .withLabel("patterns"));
+
+rewardsKStream.print(Printed.<String, RewardAccumulator>toSysOut()
+                .withLabel("rewards"));
+
+purchaseKStream.print(Printed.<String, Purchase>toSysOut()
+                .withLabel("purchases"));
+```
+
+## 다음 단계
+
+👉🏻 **구매 필터링**
+
+- Predicate<K, V> 인스턴스를 매개변수로 사용하는 KStream 메소드 사용
+
+  ```java
+  KeyValueMapper<String, Purchase, Long> purchaseDateAsKey = (key, purchase) -> 
+        purchase.getPurchaseDate().getTime();
+
+  // $5.00 미만인 구매를 필터링하고 Long 값의 구매 날짜를 키로 선택
+  KStream<Long, Purchase> filteredKStream = 
+        purchaseKStream.filter((key, purchase) -> 
+        purchase.getPrice() > 5.00).selectKey(purchaseDateAsKey);
+  ```
