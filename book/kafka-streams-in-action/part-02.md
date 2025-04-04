@@ -216,3 +216,18 @@ purchaseKStream.to("purchases", Produced.with(stringSerde,purchaseSerde));
     Serde<Purchase> purchaseSerde = 
             Serdes.serdeForm(purchaseJsonSerializer, purchaseJsonDesirializer);
     ```
+
+    ## 대화형 개발
+
+    Printed는 stdout에 출력하는 `Printed.toSysOut()` 혹은 파일에 결과를 기록하는 `Printed.toFile(filePath)` 두 가지 정적 메소드를 제공
+
+    ```java
+    patternKStream.print(Printed.<String, PurchasePattern>toSysOut()
+                  .withLabel("patterns"));
+
+    rewardsKStream.print(Printed.<String, RewardAccumulator>toSysOut()
+                  .withLabel("rewards"));
+
+    purchaseKStream.print(Printed.<String, Purchase>toSysOut()
+                  .withLabel("purchases"));
+    ```
