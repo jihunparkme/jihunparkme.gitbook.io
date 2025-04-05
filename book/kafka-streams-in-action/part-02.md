@@ -247,3 +247,25 @@ purchaseKStream.print(Printed.<String, Purchase>toSysOut()
         purchaseKStream.filter((key, purchase) -> 
         purchase.getPrice() > 5.00).selectKey(purchaseDateAsKey);
   ```
+
+.
+
+👉🏻 **키 생성하기**
+
+`KStream.selectKey` 메소드를 통해 새로운 키와 동일한 값을 갖는 레코드를 만드는 KStream 인스턴스를 반환
+- 키 타입을 (Long으로) 변경했으므로 KStream.to 메소드에서 사용된 serde 타입도 변경
+
+```java
+KeyValueMapper<String, Purchase, Long> purchaseDateAsKey = (key, purchase) -> 
+    purchase.getPurchaseDate().getTime();
+
+// $5.00 미만인 구매를 필터링하고 Long 값의 구매 날짜를 키로 선택
+KStream<Long, Purchase> filteredKStream = 
+    purchaseKStream.filter((key, purchase) -> 
+    purchase.getPrice() > 5.00).selectKey(purchaseDateAsKey);
+
+filteredKStream.print(Printed.<Long, Purchase>
+        toSysOut().withLabel("purchases"));
+filteredKStream.to("purchases", 
+        Produced.with(Serdes.Long(), purchaseSerde));
+```
