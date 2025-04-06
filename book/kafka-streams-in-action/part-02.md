@@ -269,3 +269,46 @@ filteredKStream.print(Printed.<Long, Purchase>
 filteredKStream.to("purchases", 
         Produced.with(Serdes.Long(), purchaseSerde));
 ```
+
+.
+
+👉🏻 **Foreach 액션**
+- KStream.foreach는 ForeachACtion<K, V>인스턴스를 사용하며, 터미널 노드의 또 다른 예
+  - 제공된 ForeachACtion 인스턴스를 사용해 받는 각 레코드에 대해 작업을 수행하는 간단한 프로세서
+
+```java
+ForeachAction<String, Purchase> purchaseForeachAction = (key, purchase) ->
+    SecurityDBService.saveRecord(
+        purchase.getPurchaseDate(), 
+        purchase.getEmployeeId(), 
+        purchase.getItemPurchased()
+    );
+
+
+purchaseKStream.filter((key, purchase) -> 
+    purchase.getEmployeeId()
+    .equals("000000"))
+    .foreach(purchaseForeachAction);
+```
+
+📖 **요약**
+
+> KStream.`mapValues` 함수를 사용하면 들어오는 레코드값을 가능한 다른 타입의 새로운 값으로 매핑
+> - 메소드인 KStream.`map은` 동일한 작업을 수행하지만 키와 값을 모두 새로운 것으로 매핑
+>
+> `predicate`는 매개변수로 객체를 받아들이고 해당 객체가 주어진 조건과 일치하는지 여부에 따라 true 또는 false를 반환하는 구문
+>
+> KStream.`selectKey` 메소드를 사용하면 기존 키를 수정하거나 새 키를 생성
+
+## 이벤트
+
+📖 **스트림의 상태**
+- 스트림 처리에서 추가된 문맥을 상태라고 부른다.
+- 상태의 개념은 데이터베이스 테이블 같은 정적 리소스의 이미지를 떠올릴 수 있다.
+- 가장 기본적인 상태 유지 함수는 `KStream.transformValues`
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/transformingState.png?raw=true 'Result')
+
+- `transformValues` 프로세서는 로컬 상태에 저장된 정보를 사용하여 들어오는 레코드를 업데이트
+- 의미상으로는 mapVAlues()와 동일하지만 몇 가지 예외가 존재
+  - 한 가지 차이점은 transformValues가 StateStore 인스턴스에 접근해서 작업을 완료하는 것
