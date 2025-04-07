@@ -302,7 +302,9 @@ purchaseKStream.filter((key, purchase) ->
 
 ## 이벤트
 
-📖 **스트림의 상태**
+[ZMartKafkaStreamsAddStateApp](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_4/ZMartKafkaStreamsAddStateApp.java)
+
+👉🏻 **스트림의 상태**
 - 스트림 처리에서 추가된 문맥을 상태라고 부른다.
 - 상태의 개념은 데이터베이스 테이블 같은 정적 리소스의 이미지를 떠올릴 수 있다.
 - 가장 기본적인 상태 유지 함수는 `KStream.transformValues`
@@ -315,7 +317,7 @@ purchaseKStream.filter((key, purchase) ->
 
 .
 
-📖 **고객 보상의 상태 유지 예시**
+👉🏻 **고객 보상의 상태 유지 예시**
 
 - 보상을 분배하기 위해 로컬 상태를 사용하여 누적 포인트와 마지막 구매 날짜를 추적
 - 여기서 `transformValues`의 역할
@@ -335,7 +337,7 @@ public class RewardAccumulator {
 
 .
 
-📖 **Transformer**
+👉🏻 **Transformer**
 - 여기서 키가 채워지지 않으므로 라운드 로빈 할당은 주어진 고객에 대한 트랜잭션이 동일한 파티션에 들어가지 않음을 의미
 - 이 문제를 해결하는 방법은 고객 ID로 데이터를 다시 분할하는 것
 
@@ -396,3 +398,53 @@ KStream<String, RewardAccumulator> statefulRewardAccumulator =
         transByCustomerStream.transformValues(() -> 
                 new PurchaseRewardTransformer(rewardsStateStoreName), rewardsStateStoreName);
 ```
+
+.
+
+👉🏻 **데이터 리파티셔닝**
+- 레코드를 리파티셔닝하려면 먼저 원본 레코드의 키를 변경하거나 바꾼 다음 레코드를 새로운 토픽에 쓴다.
+  - 그 다음으로, 해당 레코드를 다시 소비
+- [StreamPartitioner](https://kafka.apache.org/10/javadoc/org/apache/kafka/streams/processor/StreamPartitioner.html)를 사용하면 키 대신 값 또는 값의 일부를 이용해서 분할하는 다른 파티션 전략 적용 가능
+
+.
+
+👉🏻 **카프카 스트림즈의 리파티셔닝**
+- 카프카 스트림즈에서 리파티셔닝은 KStream.through()를 사용해 쉽게 수행
+  - 중간 토픽을 생성하고 현재 KStream 인스턴스는 해당 토픽에 레코드를 기록
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/kstreamThroughDemo.png?raw=true 'Result')
+
+- 반환된 KStream 인스턴스는 중간 토픽을 즉시 소비하기 시작
+- 중간 토픽을 사용하기 위해 내부적으로 싱크 노드와 소스 노드를 생성
+
+**KStream.through 메소드 사용하기**
+
+```java
+RewardsStreamPartitioner streamPartitioner = new RewardsStreamPartitioner();
+
+KStream<String, Purchase> transByCustomerStream = 
+        purchaseKStream.through( "customer_transactions", 
+                Produced.with(stringSerde, purchaseSerde, streamPartitioner));
+```
+
+**StreamPartitioner 사용하기**
+- 키 대신 Purchase 객체에 있는 고객 ID를 사용해 특정 고객의 모든 데이터가 동일한 상태 저장소에 저장되도록 적용
+- 여기서 핵심은 상태를 사용해 레코드를 업데이트하고 수정할 때 해당 레코드가 같은 파티션에 있어야 한다는 것
+
+```java
+public class RewardsStreamPartitioner implements StreamPartitioner<String, Purchase> {
+    @Override
+    public Integer partition(String key, Purchase value, int numPartitions) {
+        // 고객 ID로 파티션을 결정
+        return value.getCustomerId().hashCode() % numPartitions;
+    }
+}
+```
+
+✅ 참고
+
+> 리파티셔닝이 가끔 필요하긴 하지만, 데이터가 중복되거나 프로세싱 오버헤드가 발생한다.
+>
+> 가능하면 mapValue(), transformValues(), flatMapValues() 사용을 권장
+>
+> map(), transform(), flatMap()은 자동으로 리파티셔닝을 유발할 수 있기 때문
