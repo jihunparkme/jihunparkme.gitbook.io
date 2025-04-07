@@ -312,3 +312,87 @@ purchaseKStream.filter((key, purchase) ->
 - `transformValues` 프로세서는 로컬 상태에 저장된 정보를 사용하여 들어오는 레코드를 업데이트
 - 의미상으로는 mapVAlues()와 동일하지만 몇 가지 예외가 존재
   - 한 가지 차이점은 transformValues가 StateStore 인스턴스에 접근해서 작업을 완료하는 것
+
+.
+
+📖 **고객 보상의 상태 유지 예시**
+
+- 보상을 분배하기 위해 로컬 상태를 사용하여 누적 포인트와 마지막 구매 날짜를 추적
+- 여기서 `transformValues`의 역할
+  - 값 변환기를 초기화
+  - 상태를 사용해 Purchase 객체를 RewardAccumulator로 매핑
+
+```java
+public class RewardAccumulator {
+    private String customerId;
+    private double purchaseTotal;
+    private int totalRewardPoints; // 포인트
+    private int currentRewardPoints;
+    private int daysFromLastPurchase; // 마지막 구매 날짜
+    //...
+}
+```
+
+.
+
+📖 **Transformer**
+- 여기서 키가 채워지지 않으므로 라운드 로빈 할당은 주어진 고객에 대한 트랜잭션이 동일한 파티션에 들어가지 않음을 의미
+- 이 문제를 해결하는 방법은 고객 ID로 데이터를 다시 분할하는 것
+
+```java
+public class PurchaseRewardTransformer implements ValueTransformer<Purchase, RewardAccumulator> {
+
+    private KeyValueStore<String, Integer> stateStore;
+    private final String storeName;
+    private ProcessorContext context;
+
+    public PurchaseRewardTransformer(String storeName) {
+        Objects.requireNonNull(storeName,"Store Name can't be null");
+        this.storeName = storeName;
+    }
+
+    /** 처리 토폴로지를 만들 때 생성된 상태 저장소 찾기 **/
+    @Override
+    @SuppressWarnings("unchecked")
+    public void init(ProcessorContext context) {
+        this.context = context;
+        stateStore = (KeyValueStore) this.context.getStateStore(storeName);
+    }
+
+    /** 상태를 사용해 Purchase 객체를 RewardAccumulator에 매핑하기  **/
+    @Override
+    public RewardAccumulator transform(Purchase value) {
+        RewardAccumulator rewardAccumulator = RewardAccumulator.builder(value).build();
+        // 1. 고객 ID별로 누적된 포인트 조회
+        Integer accumulatedSoFar = stateStore.get(rewardAccumulator.getCustomerId());
+
+        if (accumulatedSoFar != null) {
+            // 2. 현재 거래에 대한 포인트를 합산하고 합계를 표시
+            rewardAccumulator.addRewardPoints(accumulatedSoFar);
+        }
+        // 3. RewardAccumulator 보상 포인트를 새로운 총 보상 포인트로 설정
+        // 4. 고객 ID별로 새 총점을 로컬 상태 저장소에 저장
+        stateStore.put(rewardAccumulator.getCustomerId(), rewardAccumulator.getTotalRewardPoints());
+
+        return rewardAccumulator;
+
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public RewardAccumulator punctuate(long timestamp) {
+        return null;  //no-op null values not forwarded.
+    }
+
+    @Override
+    public void close() {
+        //no-op
+    }
+}
+
+...
+
+KStream<String, RewardAccumulator> statefulRewardAccumulator = 
+        transByCustomerStream.transformValues(() -> 
+                new PurchaseRewardTransformer(rewardsStateStoreName), rewardsStateStoreName);
+```
