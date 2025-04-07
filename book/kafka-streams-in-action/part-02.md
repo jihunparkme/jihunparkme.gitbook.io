@@ -408,14 +408,14 @@ KStream<String, RewardAccumulator> statefulRewardAccumulator =
 
 .
 
-👉🏻 **카프카 스트림즈의 리파티셔닝**
+**카프카 스트림즈의 리파티셔닝**
 - 카프카 스트림즈에서 리파티셔닝은 KStream.through()를 사용해 쉽게 수행
   - 중간 토픽을 생성하고 현재 KStream 인스턴스는 해당 토픽에 레코드를 기록
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/kstreamThroughDemo.png?raw=true 'Result')
 
 - 반환된 KStream 인스턴스는 중간 토픽을 즉시 소비하기 시작
-- 중간 토픽을 사용하기 위해 내부적으로 싱크 노드와 소스 노드를 생성
+- 중간 토픽을 사용하기 위해 내부적으로 싱크 노드와 소스 노4드를 생성
 
 **KStream.through 메소드 사용하기**
 
@@ -448,3 +448,19 @@ public class RewardsStreamPartitioner implements StreamPartitioner<String, Purch
 > 가능하면 mapValue(), transformValues(), flatMapValues() 사용을 권장
 >
 > map(), transform(), flatMap()은 자동으로 리파티셔닝을 유발할 수 있기 때문
+
+.
+
+👉🏻 **보상 프로세서 업데이트**
+
+```java
+// 상태를 가진 변환 사용
+KStream<String, RewardAccumulator> statefulRewardAccumulator = 
+        transByCustomerStream.transformValues(() -> 
+            new PurchaseRewardTransformer(rewardsStateStoreName), rewardsStateStoreName);
+
+// 결과를 토픽에 기록
+statefulRewardAccumulator.to("rewards", Produced.with(stringSerde, rewardAccumulatorSerde));
+```
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/through-processor.pngrf?raw=true 'Result')
