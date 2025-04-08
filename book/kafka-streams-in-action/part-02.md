@@ -309,7 +309,7 @@ purchaseKStream.filter((key, purchase) ->
 - 상태의 개념은 데이터베이스 테이블 같은 정적 리소스의 이미지를 떠올릴 수 있다.
 - 가장 기본적인 상태 유지 함수는 `KStream.transformValues`
 
-![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/transformingState.png?raw=true 'Result')
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/transformingState.jpg?raw=true 'Result')
 
 - `transformValues` 프로세서는 로컬 상태에 저장된 정보를 사용하여 들어오는 레코드를 업데이트
 - 의미상으로는 mapVAlues()와 동일하지만 몇 가지 예외가 존재
@@ -412,7 +412,7 @@ KStream<String, RewardAccumulator> statefulRewardAccumulator =
 - 카프카 스트림즈에서 리파티셔닝은 KStream.through()를 사용해 쉽게 수행
   - 중간 토픽을 생성하고 현재 KStream 인스턴스는 해당 토픽에 레코드를 기록
 
-![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/kstreamThroughDemo.png?raw=true 'Result')
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/kstreamThroughDemo.jpg?raw=true 'Result')
 
 - 반환된 KStream 인스턴스는 중간 토픽을 즉시 소비하기 시작
 - 중간 토픽을 사용하기 위해 내부적으로 싱크 노드와 소스 노4드를 생성
@@ -489,3 +489,23 @@ statefulRewardAccumulator.to("rewards", Produced.with(stringSerde, rewardAccumul
 - 또한, 각 저장소는 토픽에 복제된 키/값을 가지며 프로세스가 실패하거나 다시 시작할 때 잃어버린 값을 복구하는 데 사용
   - 오류를 복구하는 기능은 스트림 애플리케이션에서 중요
   - 카프카 스트림즈는 로컬 인메모리 저장소의 데이터를 내부 토픽으로 유지하므로 실패 또는 재시작 후 작업을 다시 시작할 때 데이터가 다시 채워짐
+
+.
+
+👉🏻 **상태 저장소 사용하기**
+- 고수준 DSL을 사용하는 경우 보통 `Materialized` 클래스를 사용
+- 저수는 프로세서 API로 작업 시 `StoredBuilder`를 사용
+
+```java
+String rewardsStateStoreName = "rewardsPointsStore";
+// StateStore 공급자 생성
+KeyValueBytesStoreSupplier storeSupplier = 
+        Stores.inMemoryKeyValueStore(rewardsStateStoreName);
+
+// StoreBuilder를 생성하고 키와 값의 타입을 명시
+StoreBuilder<KeyValueStore<String, Integer>> storeBuilder = 
+        Stores.keyValueStoreBuilder(storeSupplier, Serdes.String(), Serdes.Integer());
+
+// 상태 저장소를 토폴로지에 추가
+builder.addStateStore(storeBuilder);
+```
