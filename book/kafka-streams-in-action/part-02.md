@@ -526,3 +526,39 @@ builder.addStateStore(storeBuilder);
 - 모든 `StateStoreSupplier` 타입은 기본적으로 로깅이 활성화
   - 로깅은 저장소의 값을 백업하고, 내결함성을 제공하기 위한 변경로그로 사용되는 카프카 토픽을 의미
   - 서버를 복구하고 카프카 스트림즈 애플리케이션을 다시 시작하면 해당 인스턴스의 상태 저장소가 원래 내용으로 복원
+
+.
+
+👉🏻 **변경로그 토픽 설정하기**
+- 상태 저장소에 대한 변경로그는 `withLoggingEnabled(Map<String, String> config)` 메소드를 통해 설정 가능
+- 토픽에 대해 가능한 모든 설정 매개변수를 사용 가능
+- 카프카 스트림즈는 변경로그 토픽 생성을 자동으로 처리
+- ✅ 참고: 상태 저장소에서 영구적으로 레코드를 제거하고 싶다면 put(key, null) 작업을 실행
+
+로그 세그먼트의 데이터 보전에 대한 기본 설정은 일주일이고, 크기는 무제한
+- 변경로그 토픽이 10GB의 보존 크기와 2일의 보존 기간을 갖도록 설정하는 방법
+
+    ```java
+    Map<String, String> changeLogConfigs = new HashMap<>();
+    changeLogConfigs.put("retention.ms", "172800000"); // 2일
+    changeLogConfigs.put("retention.bytes", "10000000000"); // 10GN
+
+    // StoreBuilder 사용 시
+    storeBuilder.withLoggingEnable(changeLogConfigs);
+
+    // Materialized 사용 시
+    Meterialized.as(Stores.inMemoryKeyValueStore("foo").withLoggingEnable(changeLogConfigs));
+    ```
+- 압축 토픽은 토픽을 정리하는 데 다른 방법을 사용
+  - 로그 세그먼트를 크기나 시간별로 삭제하는 대신 **로그 세그먼트를 각 키별로 최신 레코드만 유지하는 방식으로 압축**
+  - 동일한 키를 가진 이전 레코드는 삭제
+  - 기본적으로 카프카 스트림즈는 삭제 정책이 `compact`인 변경로그 토픽을 생성
+- 그러나, 많은 고유 키를 가진 변경로그 토픽이 있다면 로그 세그먼트의 크기가 계속 커지면서 압축으로 충분하지 않을 수 있음
+  - 이 경우 `delete`, `compact` 클린업 정책을 명시
+
+    ```java
+    Map<String, String> changeLogConfigs = new HashMap<>();
+    changeLogConfigs.put("retention.ms", "172800000");
+    changeLogConfigs.put("retention.bytes", "10000000000");
+    changeLogConfigs.put("cleanup.policy", "compact,delete");
+    ```
