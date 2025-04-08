@@ -509,3 +509,17 @@ StoreBuilder<KeyValueStore<String, Integer>> storeBuilder =
 // 상태 저장소를 토폴로지에 추가
 builder.addStateStore(storeBuilder);
 ```
+
+.
+
+👉🏻 **추가적인 키/값 저장소 공급자**
+- `Stores.inMemoryKeyValueStore` 메소드 외에도 정적 팩토리 메소드를 사용해 저장소 공급자 생성 가능
+  - Stores.persistentKeyValueStore
+  - Stores.persistentWindowStore
+  - Stores.lruMap
+  - Stores.persistentSessionStore
+- 모든 영구 StateStore 인스턴스가 [RocksDB](https://rocksdb.org/)를 사용해 로컬 스토리지를 제공
+
+.
+
+👉🏻 ****
