@@ -463,4 +463,29 @@ KStream<String, RewardAccumulator> statefulRewardAccumulator =
 statefulRewardAccumulator.to("rewards", Produced.with(stringSerde, rewardAccumulatorSerde));
 ```
 
-![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/through-processor.pngrf?raw=true 'Result')
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/through-processor.png?raw=true 'Result')
+
+## 상태 저장소 사용하기
+
+상태의 두 가지 중요한 속성인 데이터 지역성(data locality)과 실패 복구(failure recovery)를 살펴보자
+
+👉🏻 **데이터 지역성**
+- 데이터 지역성은 스트림 처리에 필요
+- 중요한 점은 스트리밍 애플리케이션이 때로 상태를 필요로 하지만 처리가 이뤄지는 곳은 로컬이어야 한다.
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/dataLocality.jpg?raw=true 'Result')
+
+.
+
+👉🏻 **실패 복구와 내결함성**
+- 각 프로세서에는 로컬 데이터 저장소가 있으며, 변경로그 토픽은 상태 저장소를 백업하는 데 사용
+- kafkaProducer는 레코드를 배치로 보내며 기본적으로 레코드는 캐시
+- 캐시를 플러시할 때만 카프카 스트림즈가 레코드를 저장소에 기록하므로 주어진 키에 대한 최신 레코드만 유지
+- 카프카 스트림이 제공하는 상태 저장소는 지역성과 내결함성 요구사항을 모두 충족
+- 상태 저장소는 또한 백업과 빠른 복구를 위해 토픽을 사용
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/failureRecovery.jpg?raw=true 'Result')
+- 프로세서는 자체 로컬 상태 저장소와 비공유 아키텍처가 있으므로 두 프로세스 중 하나가 실패하면 다른 프로세스는 영향을 받지 않음
+- 또한, 각 저장소는 토픽에 복제된 키/값을 가지며 프로세스가 실패하거나 다시 시작할 때 잃어버린 값을 복구하는 데 사용
+  - 오류를 복구하는 기능은 스트림 애플리케이션에서 중요
+  - 카프카 스트림즈는 로컬 인메모리 저장소의 데이터를 내부 토픽으로 유지하므로 실패 또는 재시작 후 작업을 다시 시작할 때 데이터가 다시 채워짐
