@@ -578,8 +578,8 @@ KStream<String, Purchase>[] filtereDelectronicPurchase =
       v.getCustomerId()).filter(electronicPurchase);
 ```
 
-- 새로운 키를 생성하는 메소드(selectKey, map, transform) 호출 때마다 내부 Boolean 플래그가 true로 설정된다.
-- 이 boolean 플래그 설정을 사용해 조인, 리듀스 또는 집계 연산을 수행하면 자동으로 리파티셔닝을 처리
+- 새로운 키를 생성하는 메소드(`selectKey`, `map`, `transform`)를 호출할 때마다 내부 Boolean 플래그가 true로 설정된다.
+  - 이 boolean 플래그 설정을 사용해 조인, 리듀스 또는 집계 연산을 수행하면 **자동으로 `리파티셔닝`을 처리**
 
 .
 
@@ -589,3 +589,52 @@ KStream<String, Purchase>[] filtereDelectronicPurchase =
 
 - 업데이트된 토폴로지에서 카페와 전자제품 프로세서 모두는 레코드를 조인 프로세서로 전달
 - 조인 프로세서는 상태 저장소 2개를 사용해 다른 스트림의 레코드와 일치하는 항목을 검색한다.
+
+.
+
+👉🏻 **구매 레코드 조인하기**
+- 조인된 레코드를 만들려면 `ValueJoiner<V1, V2, R>`의 인스턴스를 생성해야 한다.
+
+```java
+public class PurchaseJoiner implements ValueJoiner<Purchase, Purchase, CorrelatedPurchase> {
+
+    @Override
+    public CorrelatedPurchase apply(Purchase purchase, Purchase otherPurchase) {
+
+        // 빌더 생성
+        CorrelatedPurchase.Builder builder = CorrelatedPurchase.newBuilder();
+
+        // outer join의 경우 null을 다룬다.
+        Date purchaseDate = purchase != null ? purchase.getPurchaseDate() : null;
+        Double price = purchase != null ? purchase.getPrice() : 0.0;
+        String itemPurchased = purchase != null ? purchase.getItemPurchased() : null;
+
+        // left join의 경우 null을 다룬다.
+        Date otherPurchaseDate = otherPurchase != null ? otherPurchase.getPurchaseDate() : null;
+        Double otherPrice = otherPurchase != null ? otherPurchase.getPrice() : 0.0;
+        String otherItemPurchased = otherPurchase != null ? otherPurchase.getItemPurchased() : null;
+
+        List<String> purchasedItems = new ArrayList<>();
+
+        if (itemPurchased != null) {
+            purchasedItems.add(itemPurchased);
+        }
+
+        if (otherItemPurchased != null) {
+            purchasedItems.add(otherItemPurchased);
+        }
+
+        String customerId = purchase != null ? purchase.getCustomerId() : null;
+        String otherCustomerId = otherPurchase != null ? otherPurchase.getCustomerId() : null;
+
+        builder.withCustomerId(customerId != null ? customerId : otherCustomerId)
+                .withFirstPurchaseDate(purchaseDate)
+                .withSecondPurchaseDate(otherPurchaseDate)
+                .withItemsPurchased(purchasedItems)
+                .withTotalAmount(price + otherPrice);
+
+        // 새로운 CorrelatedPurchase 반환
+        return builder.build();
+    }
+}
+```
