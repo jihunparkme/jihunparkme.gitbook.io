@@ -583,3 +583,9 @@ KStream<String, Purchase>[] filtereDelectronicPurchase =
 
 .
 
+👉🏻 **조인 구성하기**
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/joinToplogy.jpg?raw=true 'Result')
+
+- 업데이트된 토폴로지에서 카페와 전자제품 프로세서 모두는 레코드를 조인 프로세서로 전달
+- 조인 프로세서는 상태 저장소 2개를 사용해 다른 스트림의 레코드와 일치하는 항목을 검색한다.
