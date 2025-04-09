@@ -569,13 +569,13 @@ builder.addStateStore(storeBuilder);
 - 키를 생성하려면 스트림의 구매 데이터에서 고객 ID를 선택
 
 ```java
-KStream<String, Purchase>[] filteredCoffeePurchase = 
-    transactionStream.selectKey((k,v)-> 
-      v.getCustomerId()).filter(coffeePurchase);
+KStream<String, Purchase> filteredCoffeePurchase =
+        transactionStream.selectKey((k,v)->
+                v.getCustomerId()).filter(coffeePurchase);
 
-KStream<String, Purchase>[] filtereDelectronicPurchase = 
-    transactionStream.selectKey((k,v)-> 
-      v.getCustomerId()).filter(electronicPurchase);
+KStream<String, Purchase> filteredElectronicPurchase =
+        transactionStream.selectKey((k,v)->
+                v.getCustomerId()).filter(electronicPurchase);
 ```
 
 - 새로운 키를 생성하는 메소드(`selectKey`, `map`, `transform`)를 호출할 때마다 내부 Boolean 플래그가 true로 설정된다.
@@ -638,3 +638,38 @@ public class PurchaseJoiner implements ValueJoiner<Purchase, Purchase, Correlate
     }
 }
 ```
+
+.
+
+**조인 구현하기**
+
+```java
+ValueJoiner<Purchase, Purchase, CorrelatedPurchase> purchaseJoiner = new PurchaseJoiner();
+// 조인에 포함될 두 값 사이의 최대 시간 차이 지정(타임스탬프는 서로 20분 이내에 있어야 한다.)
+JoinWindows twentyMinuteWindow =  JoinWindows.of(60 * 1000 * 20);
+
+// 키와 스트림을 호출하기 위한 값 Serde, 보조 스트림을 위한 값 Serde
+KStream<String, CorrelatedPurchase> joinedKStream = filteredCoffeePurchase.join(
+      filteredElectronicPurchase,
+      purchaseJoiner,
+      twentyMinuteWindow,
+      Joined.with(stringSerde,
+                  purchaseSerde,
+                  purchaseSerde));
+
+joinedKStream.print(Printed.<String, CorrelatedPurchase>toSysOut().withLabel("joined KStream"));
+```
+
+이벤트의 순서를 지정하는 데 사용할 수 있는 2개의 추가 JoinWindows() 메소드를 사용 가능
+- `JoinWindows.after`
+  - StreamA.join(StreamB, ..., twentyMinuteWindow.after(5000), ...)
+  - streamB 레코드의 타임스탬프가 streamA 레코드의 타임스탬프 이후 최대 5초임을 명시
+- `JoinWindows.before`
+  - StreamA.join(StreamB, ..., twentyMinuteWindow.before(5000), ...)
+  - streamB 레코드의 타임스탬프는 streamA 레코드의 타임스탬프 전 최대 5초임을 명시
+  
+✅ 참고
+
+> 카프카가 설정한 타임스탬프가 아닌 실제 거래에 포함된 타임스탬프가 필요하다면
+>
+> `StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG`를 `TransactionTimestampExtractor.class`를 사용하도록 설정해 사용자 정의 타임스탬프 추출기를 지정
