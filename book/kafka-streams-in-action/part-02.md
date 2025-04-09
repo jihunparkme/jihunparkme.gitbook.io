@@ -562,3 +562,24 @@ builder.addStateStore(storeBuilder);
     changeLogConfigs.put("retention.bytes", "10000000000");
     changeLogConfigs.put("cleanup.policy", "compact,delete");
     ```
+
+## 스트림 조인하기
+
+👉🏻 **조인을 위한 키 생성**
+- 키를 생성하려면 스트림의 구매 데이터에서 고객 ID를 선택
+
+```java
+KStream<String, Purchase>[] filteredCoffeePurchase = 
+    transactionStream.selectKey((k,v)-> 
+      v.getCustomerId()).filter(coffeePurchase);
+
+KStream<String, Purchase>[] filtereDelectronicPurchase = 
+    transactionStream.selectKey((k,v)-> 
+      v.getCustomerId()).filter(electronicPurchase);
+```
+
+- 새로운 키를 생성하는 메소드(selectKey, map, transform) 호출 때마다 내부 Boolean 플래그가 true로 설정된다.
+- 이 boolean 플래그 설정을 사용해 조인, 리듀스 또는 집계 연산을 수행하면 자동으로 리파티셔닝을 처리
+
+.
+
