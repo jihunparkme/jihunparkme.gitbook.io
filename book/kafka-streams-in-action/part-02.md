@@ -738,3 +738,16 @@ coffeeStream.leftJoin(electronicsStream, ..)
 - 카프카 스트림즈 애플리케이션이 레코드를 인제스트할 때 현재 타임스탬프(현재 로컬 시간)를 사용(처리 시간 시맨틱)
 
 다양한 처리 시맨틱을 가능하게 하기 위해 카프카 스트림즈는 하나의 추상 구현과 네 가지 구현체가 있는 TimestampExtractor 인터페이스를 제공
+
+.
+
+👉🏻 **제공된 TimestapExtractor 구현**
+- 제공된 TimestampExtractor 구현의 거의 모든 부분은 메시지 메타데이터에 있는 프로듀서나 브로커가 설정한 타임스탬프를 다룬다.
+  - 그러므로 이벤트 시간 처리 시맨틱(프로듀서가 설정한 타임스탬프)이나 로그 추가 시간 처리 시맨틱(브로커가 설정한 타임스탬프)을 사용할 수 있다.
+- 타임스탬프에 대해 기본 설정은 `CreateTime`
+  - `LogAppendTime`을 사용할 경우 카프카 브로커가 로그에 레코드를 추가할 시점의 타임스탬프 값을 반환
+  - `ExtractRecordMetadataTimestamp`는 `ConsumerRecord`에서 메타데이터 타임스탬프를 추출하는 핵심 기능을 제공하는 추상 클래스
+    - 해당 클래스를 확장한 클래스 목록
+    - FailOnInvalidTimestamp: 유효하지 않은 타임스탬프는 예외 발생
+    - LogAndSkipOnInvalidTimestamp: 유효하지 않은 타임스탬프를 반환하고 이로 인해 레코드가 삭제된다는 경고 메시지
+    - UsePreviousTimeOnInvalidTimestamp: 유효하지 않은 타임스탬프의 경우 마지막으로 추출한 유효한 타임스탬프를 반환
