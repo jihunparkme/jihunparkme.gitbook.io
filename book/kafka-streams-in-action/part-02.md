@@ -795,3 +795,13 @@ public class TransactionTimestampExtractor implements TimestampExtractor {
   ```java
   Consumed.with(Serdes.String(), purchaseSerde).withTimestampExtractor(new TransactionTimestampExtractor())
   ```
+
+📖 **요약**
+
+> 스트림 처리는 상태가 필요하다. 때로는 이벤트가 독자적으로 진행될 수 있지만, 보통 좋은 결정을 내리기 위해 추가 정보가 필요하다.
+>
+> 카프카 스트림즈는 조인을 포함해 상태 변환에 유용한 추상화를 제공한다.
+>
+> 카프카 스트림즈의 상태 저장소는 데이터 지역성과 내결함성 같은 스틀미 처리에 필요한 상태 유형을 제공한다.
+>
+> 타임스탬프는 카프카 스트림즈에서 데이터 흐름을 제어한다. 타임스탬프 소스의 선택은 신중하게 고려해야 한다.
