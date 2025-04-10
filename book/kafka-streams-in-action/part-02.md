@@ -641,7 +641,7 @@ public class PurchaseJoiner implements ValueJoiner<Purchase, Purchase, Correlate
 
 .
 
-**조인 구현하기**
+👉🏻 **조인 구현하기**
 
 ```java
 ValueJoiner<Purchase, Purchase, CorrelatedPurchase> purchaseJoiner = new PurchaseJoiner();
@@ -673,3 +673,14 @@ joinedKStream.print(Printed.<String, CorrelatedPurchase>toSysOut().withLabel("jo
 > 카프카가 설정한 타임스탬프가 아닌 실제 거래에 포함된 타임스탬프가 필요하다면
 >
 > `StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG`를 `TransactionTimestampExtractor.class`를 사용하도록 설정해 사용자 정의 타임스탬프 추출기를 지정
+
+.
+
+👉🏻 **코파티셔닝**
+- 스트림즈에서 조인을 수행하려면 모든 조인 참가자가 `코파티셔닝`되어 있음을 보장해야 한다.
+- `GlobalKTable` 인스턴스는 조인에 참여할 때 `리파티셔닝`이 필요하지 않다.
+- selectKey() 메소드는 키를 수정하므로 리파티셔닝이 필요하다.
+  - 여기서 리파티셔닝은 자동으로 처리된다.
+  - 또한 카프카 스트림즈 애플리케이션을 시작할 때 조인과 관련된 토픽이 동일한 수의 파티션을 갖는지 확인한다.
+  - 불일치가 발견되면 `TopologyBuilderException` 발생
+  - 조인과 관련된 키가 동일한 타입인지 확인하는 것은 개발자의 책임
