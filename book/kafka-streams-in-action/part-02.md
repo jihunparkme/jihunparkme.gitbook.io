@@ -777,4 +777,21 @@ public class TransactionTimestampExtractor implements TimestampExtractor {
 }
 ```
 
-- 조인 예제에서는 실제 구매 시간의 타임스탬프가 필요하므로 사용자 정의 TimestampExtractor 적용
+- 조인 예제에서는 실제 구매 시간의 타임스탬프가 필요하므로 사용자 정의 `TimestampExtractor` 적용
+
+.
+
+👉🏻 **TimestampExtractor 명시하기**
+- 타임스탬프 추출기를 지정하는 방법에는 두 가지가 존재
+- 첫 번째. 카프카 스트림즈 애플리케이션을 설정할 때 속성에 전역 타임스탬프 추출기 설정하기
+  - 속성을 설정하지 않았다면 기본 설정은 `FailOnInvalidTimestamp.class`
+
+  ```java
+  props.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, TransactionTimestampExtractor.class);
+  ```
+
+- 두 번째, Consumed 객체를 통해 `TimestampExtractor` 인스턴스 제공
+
+  ```java
+  Consumed.with(Serdes.String(), purchaseSerde).withTimestampExtractor(new TransactionTimestampExtractor())
+  ```
