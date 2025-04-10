@@ -300,6 +300,8 @@ purchaseKStream.filter((key, purchase) ->
 >
 > KStream.`selectKey` 메소드를 사용하면 기존 키를 수정하거나 새 키를 생성
 
+# 스트림과 상태
+
 ## 이벤트
 
 [ZMartKafkaStreamsAddStateApp](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_4/ZMartKafkaStreamsAddStateApp.java)
@@ -805,3 +807,23 @@ public class TransactionTimestampExtractor implements TimestampExtractor {
 > 카프카 스트림즈의 상태 저장소는 데이터 지역성과 내결함성 같은 스틀미 처리에 필요한 상태 유형을 제공한다.
 >
 > 타임스탬프는 카프카 스트림즈에서 데이터 흐름을 제어한다. 타임스탬프 소스의 선택은 신중하게 고려해야 한다.
+
+# KTable API
+
+## 스트림과 테이블의 관계
+
+변경로그나 업데이트 스트림을 처리하기 위해 `KTable`로 알려진 개념을 사용
+
+.
+
+👉🏻 **이벤트 스트림과 업데이트 스트림 비교**
+- KStream은 각 레코드를 개별적으로 다루므로 모든 레코드를 출력하는 반면
+- KTable은 레코드를 이전 레코드에 대한 업데이트로 다룬다.
+
+```java
+KTable<String, StockTickerData> stockTickerTable = builder.table(STOCK_TICKER_TABLE_TOPIC);
+KStream<String, StockTickerData> stockTickerStream = builder.stream(STOCK_TICKER_STREAM_TOPIC);
+
+stockTickerTable.toStream().print(Printed.<String, StockTickerData>toSysOut().withLabel("Stocks-KTable"));
+stockTickerStream.print(Printed.<String, StockTickerData>toSysOut().withLabel( "Stocks-KStream"));
+```
