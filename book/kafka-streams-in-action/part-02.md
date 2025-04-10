@@ -706,3 +706,29 @@ coffeeStream.outerJoin(electronicsStream, ..)
 coffeeStream.leftJoin(electronicsStream, ..)
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/leftOuterJoinExamples.jpg?raw=true 'Result')
+
+## 타임스탬프
+
+타임스탬프는 카프카 스트림즈 기능의 핵심 영역에서 다음과 같은 역할을 담당
+- 스트림 조인
+- 변경로그 업데이트(KTable API)
+- Processor.punctuate() 메소드가 언제 작동할지 결정(processor API)
+
+타임스탬프를 세 가지 범주로 나눌 수 있다.
+- 이벤트 시간:
+  - 이벤트가 발생했을 때 설정한 타임스탬프
+  - ProducerRecord 생성 시 타임스탬프
+- 인제스트 시간:
+  - 데이터가 처음 데이터 처리 파이프라인에 들어갈 때 설정되는 타임스탬프
+  - 카프카 브로커가 설정한 타임스탬프
+- 처리 시간:
+  - 데이터나 이벤트 레코드가 처음 처리 파이프라인을 통과하기 시작할 때 설정된 타임스탬프
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/timestamps.jpg?raw=true 'Result')
+
+✅ 참고
+
+> 타임스탬프를 사용하는 경우 UTC 표준 시간대를 사용해 시간을 표준화하는 것이 가장 안전
+>
+> 브로커와 클라이언트가 어떤 표준 시간대를 사용하고 있는지 혼동을 제거하기 때문
+
