@@ -590,9 +590,7 @@ KStream<String, Purchase> filteredElectronicPurchase =
 - 업데이트된 토폴로지에서 카페와 전자제품 프로세서 모두는 레코드를 조인 프로세서로 전달
 - 조인 프로세서는 상태 저장소 2개를 사용해 다른 스트림의 레코드와 일치하는 항목을 검색한다.
 
-.
-
-👉🏻 **구매 레코드 조인하기**
+**구매 레코드 조인하기**
 - 조인된 레코드를 만들려면 `ValueJoiner<V1, V2, R>`의 인스턴스를 생성해야 한다.
 
 ```java
@@ -639,9 +637,7 @@ public class PurchaseJoiner implements ValueJoiner<Purchase, Purchase, Correlate
 }
 ```
 
-.
-
-👉🏻 **조인 구현하기**
+**조인 구현하기**
 
 ```java
 ValueJoiner<Purchase, Purchase, CorrelatedPurchase> purchaseJoiner = new PurchaseJoiner();
@@ -674,9 +670,7 @@ joinedKStream.print(Printed.<String, CorrelatedPurchase>toSysOut().withLabel("jo
 >
 > `StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG`를 `TransactionTimestampExtractor.class`를 사용하도록 설정해 사용자 정의 타임스탬프 추출기를 지정
 
-.
-
-👉🏻 **코파티셔닝**
+**코파티셔닝**
 - 스트림즈에서 조인을 수행하려면 모든 조인 참가자가 `코파티셔닝`되어 있음을 보장해야 한다.
 - `GlobalKTable` 인스턴스는 조인에 참여할 때 `리파티셔닝`이 필요하지 않다.
 - selectKey() 메소드는 키를 수정하므로 리파티셔닝이 필요하다.
@@ -684,3 +678,31 @@ joinedKStream.print(Printed.<String, CorrelatedPurchase>toSysOut().withLabel("jo
   - 또한 카프카 스트림즈 애플리케이션을 시작할 때 조인과 관련된 토픽이 동일한 수의 파티션을 갖는지 확인한다.
   - 불일치가 발견되면 `TopologyBuilderException` 발생
   - 조인과 관련된 키가 동일한 타입인지 확인하는 것은 개발자의 책임
+
+.
+
+👉🏻 **그 밖의 조인 옵션**
+- 기본 조인은 내부 조인(inner join)dlek.
+- 내부 조인에서 두 레코드가 존재하지 않을 경우 조인이 발생하지 않고 객체를 내보내지도 않는다.
+
+**외부 조인**
+- 외부 조인(outer join)은 항상 레코드를 출력하며, 전달된 조인 레코드는 조인에서 명시한 두 이벤트 모두가 포함되지 않을 수 있다.
+- 외부 조인의 세 가지 가능한 결과
+  - 스트림의 이벤트만 타임 윈도에서 사용 가능해서, 포함된 유일한 레코드(커피 구매, null)
+  - 두 스트림의 이벤트 모두 타임 윈도에서 사용 가능해서, 둘 다 조인 레코드에 포함(커피 구매, 전자제품 구매)
+  - 다른 스트림의 이벤트만 타임 윈도에서 사용 가능해서, 포함된 유일한 레코드(null, 전자제품 구매)
+
+coffeeStream.outerJoin(electronicsStream, ..)
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/outerJoinExamples.jpg?raw=true 'Result')
+
+**왼쪽 외부 조인**
+
+- 왼쪽 외부 조인의 세 가지 가능한 결과
+  - 호출한 스트림의 이벤트만 타임 윈도에서 사용 가능해서, 포함된 유일한 레코드(커피 구매, null)
+  - 두 스트림의 이벤트 모두 타임 윈도에서 사용 가능해서, 둘 다 조인 레코드에 포함(커피 구매, 전자제품 구매)
+  - 다른 스트림의 이벤트만 타임 윈도에서 사용 가능해서, 다운 스트림에 아무 것도 보내지 않는다.(출력 X)
+
+coffeeStream.leftJoin(electronicsStream, ..)
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/leftOuterJoinExamples.jpg?raw=true 'Result')
