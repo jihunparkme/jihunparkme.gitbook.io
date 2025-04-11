@@ -869,3 +869,49 @@ builder.table(STOCK_TICKER_TABLE_TOPIC);
 전체 캐시 워크플로: 캐시를 활성화하면 레코드 중복을 제거하고, 캐시를 비우거나 커밋할 때 다운스트림에 전송
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/cachingAndFlushingMechanism.jpg?raw=true 'Result')
+
+## 집계와 윈도 작업
+
+👉🏻 **업계별 거래량 집계**
+- 스트리밍 데이터를 다룰 경우 집계와 그룹화는 필수 도구
+- 집계를 위한 몇 가지 단계
+  - 원시 주식 거래 정보가 입력된 토픽으로부터 소스 생성
+  - 종목 코드로 ShareVolume 그룹 만들기
+    - KStream.groupBy 호출 시 `KGroupedStream` 인스턴스를 반환하는데, KGroupedStream.reduce 호출 시 `KTable` 인스턴스를 반환
+
+✅ 참고
+
+> KGroupedStream 이란?
+>
+> - KGroupedStream은 키별로 그룹화한 이벤트 스트림의 중간 표현일 뿐, 직접 작업하기 위한 것은 아님
+> - 대신, KGroupedStream은 집계 작업을 수행하기 위해 필요하며 항상 KTable이 된다.
+
+StockTransaction 객체를 ShareVolume 객체로 매핑과 리듀스 작업을 한 다음, 롤링 합계로 데이터를 줄임
+
+```java
+// AggregationsAndReducingExample.java
+KTable<String, ShareVolume> shareVolume = builder.stream(STOCK_TRANSACTIONS_TOPIC,
+              Consumed.with(stringSerde, stockTransactionSerde)
+                      .withOffsetResetPolicy(EARLIEST))
+      // StockTransaction 객체를 ShareVolume 객체로 매핑
+      .mapValues(st -> ShareVolume.newBuilder(st).build())
+      // 주식 종목에 따른 ShareVolume 객체 그룹화
+      .groupBy((k, v) -> v.getSymbol(), Serialized.with(stringSerde, shareVolumeSerde))
+      // 거래량을 롤링 집계하기 위한 ShareVolume 객체 리듀스
+      .reduce(ShareVolume::sum);
+```
+
+✅ 참고
+
+> `GroupByKey`와 `GroupBy`의 차이점
+>
+> GroupByKey 메소드는 KStream이 이미 null이 아닌 키를 가지고 있을 경우를 위해 사용
+> - 중요한 점은, '리파티셔닝 필요' 플래그가 절대 설정되지 않는다는 점
+>
+> GroupBy 메소드는 그룹화를 위한 키가 변경될 수 있다고 가정
+> - GroupBy를 호출하면 조인, 집계 등이 자동으로 리파티셔닝된다.
+>
+> 결론은 가능하면 GroupBy 보다는 GroupByKey를 사용하는 편이 낫다
+
+ShareVolume 객체가 들어오면 연관된 KTable은 가장 최근 업데이트를 유지
+- 개별 업데이트를 다운스트림에 내보내는 것이 아니라, 모든 업데이트가 앞의 shareVolume KTable에 반영되었음을 기억하자.
