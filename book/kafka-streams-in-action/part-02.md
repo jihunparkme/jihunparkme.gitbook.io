@@ -915,3 +915,18 @@ KTable<String, ShareVolume> shareVolume = builder.stream(STOCK_TRANSACTIONS_TOPI
 
 ShareVolume 객체가 들어오면 연관된 KTable은 가장 최근 업데이트를 유지
 - 개별 업데이트를 다운스트림에 내보내는 것이 아니라, 모든 업데이트가 앞의 shareVolume KTable에 반영되었음을 기억하자.
+
+.
+
+👉🏻 **집계의 요약**
+- KTable을 가져와서 상위 5개 집계의 요약을 수행하는 데 사용해보자.
+  - 1/ 산업별로 ShareVolume 객체를 그룹화하는 또 다른 groupBy 작업을 수행
+  - 2/ ShareVolume 객체를 추가. 이때 집계 객체는 고정 크기의 우선순위 큐
+    - 고정 크기 큐는 거래량에 의한 상위 5개 회사만 유지
+  - 3/ 이 큐를 문자열로 매핑하고, 거래량에 따른 산업별 상위 5개 주식만 결과에 포함
+  - 4/ 문자열 결과를 토픽에 작성
+
+데이터 흐름에 관한 토폴로지 그래프
+- 이 토폴로지는 산업별로 그룹화하고, 상위 5개만 집계하며, 큐에 있는 상위 5개를 문자열로 매핑한 후 토픽에 전송
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/groupAggregateAndMap.jpg?raw=true 'Result')
