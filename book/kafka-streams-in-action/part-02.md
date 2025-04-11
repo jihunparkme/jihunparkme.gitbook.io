@@ -827,3 +827,14 @@ KStream<String, StockTickerData> stockTickerStream = builder.stream(STOCK_TICKER
 stockTickerTable.toStream().print(Printed.<String, StockTickerData>toSysOut().withLabel("Stocks-KTable"));
 stockTickerStream.print(Printed.<String, StockTickerData>toSysOut().withLabel( "Stocks-KStream"));
 ```
+
+.
+
+👉🏻 **레코드 업데이트와 KTable 구성**
+
+```java
+builder.table(STOCK_TICKER_TABLE_TOPIC);
+```
+
+- 이 단순한 구문으로 StreamsBuilder는 **KTable 인스턴스**를 만들고 동시에 그 내부에 스트림 상태를 추적하는 **상태 저장소**를 만들어 업데이트 스트림을 만든다.
+- KTable은 카프카 스트림즈와 통합된 로컬 상태 저장소를 저장 공간으로 사용한다.
