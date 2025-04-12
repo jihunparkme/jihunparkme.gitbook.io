@@ -930,3 +930,27 @@ ShareVolume 객체가 들어오면 연관된 KTable은 가장 최근 업데이�
 - 이 토폴로지는 산업별로 그룹화하고, 상위 5개만 집계하며, 큐에 있는 상위 5개를 문자열로 매핑한 후 토픽에 전송
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/groupAggregateAndMap.jpg?raw=true 'Result')
+
+```java
+// AggregationsAndReducingExample.java
+Comparator<ShareVolume> comparator = 
+    (sv1, sv2) -> sv2.getShares() - sv1.getShares();
+
+FixedSizePriorityQueue<ShareVolume> fixedQueue = 
+    new FixedSizePriorityQueue<>(comparator, 5);
+
+shareVolume.groupBy((k, v) -> KeyValue.pair(v.getIndustry(), v), 
+        Serialized.with(stringSerde, shareVolumeSerde)) // 산업별 그룹화 후 필요한 serdes 제공
+    .aggregate(() -> fixedQueue,
+            (k, v, agg) -> agg.add(v), // 집계 add 메소드가 새 업데이트 추가
+            (k, v, agg) -> agg.remove(v), // 집계 remove 메소드가 기존 업데이트 제거
+            Materialized.with(stringSerde, fixedSizePriorityQueueSerde)) // 집계를 위한 serde
+    .mapValues(valueMapper) // 집계를 리포팅에 사용되는 문자열로 변환
+    .toStream().peek((k, v) -> 
+        LOG.info("Stock volume by industry {} {}", k, v)) // 콘솔에 결과를 남기기 위함
+    .to("stock-volume-by-company", Produced.with(stringSerde, stringSerde));
+```
+
+- FixedSizePriorityQueue 집계는 같은 키가 있는 모든 값을 집계하는 것이 아니라, 가장 높은 값을 가진 상위 N개의 주식 총계만 유지
+- 리듀스와 집계 연산은 KTable 인스턴스를 반환하고, 이 KTable은 기존 결과를 새 결과로 교체하기 위해 **상태 저장소를 사용**
+- 모든 업데이트가 다운스트림에 전달되는 것은 아니며, **집계 연산이 요약 정보를 모은다**는 사실이 중요
