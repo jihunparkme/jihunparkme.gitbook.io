@@ -973,3 +973,13 @@ shareVolume.groupBy((k, v) -> KeyValue.pair(v.getIndustry(), v),
 **카운트 연산을 하는 윈도 토폴로지**
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/countingWindowsTopology.jpg?raw=true 'Result')
+
+.
+
+👉🏻 **윈도 유형**
+- 카프카 스트림즈에서 세 가지 유형의 윈도를 사용 가능
+  - `Session` window
+  - `Tumbling` window
+  - `Sliding` or `Hopping` window
+- `Tumbling`, `Hopping` 윈도는 시간 제한이 있는 반면, `Session` 윈도는 사용자 활동에 관련이 있다.
+- 모든 윈도에 대해 염두에 둬야 할 사항은 `레코드의 타임스템프`에 기반한다는 것이다.
