@@ -954,3 +954,22 @@ shareVolume.groupBy((k, v) -> KeyValue.pair(v.getIndustry(), v),
 - FixedSizePriorityQueue 집계는 같은 키가 있는 모든 값을 집계하는 것이 아니라, 가장 높은 값을 가진 상위 N개의 주식 총계만 유지
 - 리듀스와 집계 연산은 KTable 인스턴스를 반환하고, 이 KTable은 기존 결과를 새 결과로 교체하기 위해 **상태 저장소를 사용**
 - 모든 업데이트가 다운스트림에 전달되는 것은 아니며, **집계 연산이 요약 정보를 모은다**는 사실이 중요
+
+.
+
+👉🏻 **윈도 연산**
+
+**고객별 주식 거래량 집계**
+- 거래량 추적을 위한 절차
+  - (1) 주식 거래 토픽을 읽어 스트림 만들기
+  - (2) 고객 ID와 주식 종목 코드별 유입 레코드 그룹화하기
+    - groupBy 호출은 KGroupedStream 인스턴스를 반환
+  - (3) 윈도 스트림을 반환하기 위해 KGroupedStream.,windowedBy 메소드를 사용하면, 특정 유형의 윈도 집계 수행 가능
+    - 제공한 윈도 타입에 따라 TimeWindowedKStream 또는 SessionWindowedKStream 을 반환
+  - (4) 집계 연산을 위해 계산을 수행
+    - 윈도 스트림은 레코드를 이 계산에 포함할 것인지를 결장
+  - (5) 결과를 토픽에 쓰거나, 개발 중에는 콘솔에 결과를 출력
+
+**카운트 연산을 하는 윈도 토폴로지**
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/countingWindowsTopology.jpg?raw=true 'Result')
