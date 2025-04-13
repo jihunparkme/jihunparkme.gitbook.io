@@ -983,3 +983,32 @@ shareVolume.groupBy((k, v) -> KeyValue.pair(v.getIndustry(), v),
   - `Sliding` or `Hopping` window
 - `Tumbling`, `Hopping` 윈도는 시간 제한이 있는 반면, `Session` 윈도는 사용자 활동에 관련이 있다.
 - 모든 윈도에 대해 염두에 둬야 할 사항은 `레코드의 타임스템프`에 기반한다는 것이다.
+
+1️⃣ 세션 윈도(Session window)
+- 시간에 엄격하게 제한받지 않고 사용자 활동(또는 추적하려는 어떤 활동)과 관련
+  - 작은 비활성 구간으로 분할된 세션 윈도를 결합해 더 큰 새로운 세션으로 생성
+- 세션 윈도를 구현하는 방법
+    
+  ```java
+  Serde<String> stringSerde = Serdes.String();
+  Serde<StockTransaction> transactionSerde = StreamsSerdes.StockTransactionSerde();
+  Serde<TransactionSummary> transactionKeySerde = StreamsSerdes.TransactionSummarySerde();
+
+  long twentySeconds = 1000 * 20;
+  long fifteenMinutes = 1000 * 60 * 15;
+
+  // groupBy, count 호출로 생성된 KTable
+  KTable<Windowed<TransactionSummary>, Long> customerTransactionCounts =
+      builder.stream(STOCK_TRANSACTIONS_TOPIC, Consumed.with(stringSerde, transactionSerde)
+      .withOffsetResetPolicy(LATEST))
+      .groupBy((noKey, transaction) -> 
+          TransactionSummary.from(transaction), // TransactionSummary 객체에 저장된 고객 ID, 주식 종목으로 레코드를 그룹화
+          Serialized.with(transactionKeySerde, transactionSerde))
+        // session window comment line below and uncomment another line below for a different window example
+      .windowedBy(SessionWindows.with(twentySeconds)
+      .until(fifteenMinutes)).count(); // 비활성 시간 20초, 유지 시간 15분의 SessionWindows로 그룹을 윈도 처리한 다음 집계 수행
+
+  customerTransactionCounts.toStream()
+      .print(Printed.<Windowed<TransactionSummary>, Long>toSysOut()
+      .withLabel("Customer Transactions Counts"));
+  ```
