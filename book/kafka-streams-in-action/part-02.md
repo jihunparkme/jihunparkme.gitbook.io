@@ -1008,7 +1008,27 @@ shareVolume.groupBy((k, v) -> KeyValue.pair(v.getIndustry(), v),
       .windowedBy(SessionWindows.with(twentySeconds)
       .until(fifteenMinutes)).count(); // 비활성 시간 20초, 유지 시간 15분의 SessionWindows로 그룹을 윈도 처리한 다음 집계 수행
 
+  // KTable ㅊ출력을 KStream으로 변환하고 콘솔에 결과 출력
   customerTransactionCounts.toStream()
       .print(Printed.<Windowed<TransactionSummary>, Long>toSysOut()
       .withLabel("Customer Transactions Counts"));
   ```
+
+  - groupBy 연산을 할 때마다 일반적으로 일종의 집계 작업(집계, 리듀스, 카운트)을 수행
+    - 이전 결과가 계속 축적되는 누적 집계를 수행하거나 지정된 시간 윈도 동안 레코드를 병합하는 윈도 집계를 수행
+  - 세션 윈도를 카운트하는 코드
+
+    ```java
+    /**
+     * with: 20초의 비활성 간격 만들기
+     * until: 15분의 유지 기간 만들기
+     */
+    SessionWindows.with(twentySeconds).until(fifteenMinutes)
+    ```
+
+  - 20초 비활성 시간은 현재 세션이 종료되거나 현재 세션 내의 시작 시간부터 20초 내에 도달하는 레코드를 애플리케이션이 포함한다는 의미
+  - 레코드가 들어올 때, 같은 키가 있는 기존 세션이면서, '현재 타임스탬스 - 비활성 간격'보다 작은 종료 시간을 갖고,
+    - '현재 타임스탬프 + 비활성 간격'보다 더 큰 시작 시간을 갖는 세션을 찾는다.
+- 기억할 요점
+  - 세션은 고정 크기 윈도가 아니다. 오히려 세션의 크기는 주어진 시간 프레임 내의 총 활성화 시간에 의해 결정
+  - 데이터에 있어서 타임스탬프는 이벤트가 기존 세션에 맞는지 또는 비활성화 간격으로 나뉘는지를 결정
