@@ -989,46 +989,70 @@ shareVolume.groupBy((k, v) -> KeyValue.pair(v.getIndustry(), v),
   - 작은 비활성 구간으로 분할된 세션 윈도를 결합해 더 큰 새로운 세션으로 생성
 - 세션 윈도를 구현하는 방법
     
+```java
+// CountingWindowingAndKtableJoinExample.java
+Serde<String> stringSerde = Serdes.String();
+Serde<StockTransaction> transactionSerde = StreamsSerdes.StockTransactionSerde();
+Serde<TransactionSummary> transactionKeySerde = StreamsSerdes.TransactionSummarySerde();
+
+long twentySeconds = 1000 * 20;
+long fifteenMinutes = 1000 * 60 * 15;
+
+// groupBy, count 호출로 생성된 KTable
+KTable<Windowed<TransactionSummary>, Long> customerTransactionCounts =
+    builder.stream(STOCK_TRANSACTIONS_TOPIC, Consumed.with(stringSerde, transactionSerde)
+    .withOffsetResetPolicy(LATEST))
+    .groupBy((noKey, transaction) -> 
+        TransactionSummary.from(transaction), // TransactionSummary 객체에 저장된 고객 ID, 주식 종목으로 레코드를 그룹화
+        Serialized.with(transactionKeySerde, transactionSerde))
+    .windowedBy(SessionWindows.with(twentySeconds)
+    .until(fifteenMinutes)).count(); // 비활성 시간 20초, 유지 시간 15분의 SessionWindows로 그룹을 윈도 처리한 다음 집계 수행
+
+// KTable ㅊ출력을 KStream으로 변환하고 콘솔에 결과 출력
+customerTransactionCounts.toStream()
+    .print(Printed.<Windowed<TransactionSummary>, Long>toSysOut()
+    .withLabel("Customer Transactions Counts"));
+```
+
+- groupBy 연산을 할 때마다 일반적으로 일종의 집계 작업(집계, 리듀스, 카운트)을 수행
+  - 이전 결과가 계속 축적되는 누적 집계를 수행하거나 지정된 시간 윈도 동안 레코드를 병합하는 윈도 집계를 수행
+- 세션 윈도를 카운트하는 코드
+
   ```java
-  Serde<String> stringSerde = Serdes.String();
-  Serde<StockTransaction> transactionSerde = StreamsSerdes.StockTransactionSerde();
-  Serde<TransactionSummary> transactionKeySerde = StreamsSerdes.TransactionSummarySerde();
-
-  long twentySeconds = 1000 * 20;
-  long fifteenMinutes = 1000 * 60 * 15;
-
-  // groupBy, count 호출로 생성된 KTable
-  KTable<Windowed<TransactionSummary>, Long> customerTransactionCounts =
-      builder.stream(STOCK_TRANSACTIONS_TOPIC, Consumed.with(stringSerde, transactionSerde)
-      .withOffsetResetPolicy(LATEST))
-      .groupBy((noKey, transaction) -> 
-          TransactionSummary.from(transaction), // TransactionSummary 객체에 저장된 고객 ID, 주식 종목으로 레코드를 그룹화
-          Serialized.with(transactionKeySerde, transactionSerde))
-        // session window comment line below and uncomment another line below for a different window example
-      .windowedBy(SessionWindows.with(twentySeconds)
-      .until(fifteenMinutes)).count(); // 비활성 시간 20초, 유지 시간 15분의 SessionWindows로 그룹을 윈도 처리한 다음 집계 수행
-
-  // KTable ㅊ출력을 KStream으로 변환하고 콘솔에 결과 출력
-  customerTransactionCounts.toStream()
-      .print(Printed.<Windowed<TransactionSummary>, Long>toSysOut()
-      .withLabel("Customer Transactions Counts"));
+  /**
+   * with: 20초의 비활성 간격 만들기
+   * until: 15분의 유지 기간 만들기
+   */
+  SessionWindows.with(twentySeconds).until(fifteenMinutes)
   ```
 
-  - groupBy 연산을 할 때마다 일반적으로 일종의 집계 작업(집계, 리듀스, 카운트)을 수행
-    - 이전 결과가 계속 축적되는 누적 집계를 수행하거나 지정된 시간 윈도 동안 레코드를 병합하는 윈도 집계를 수행
-  - 세션 윈도를 카운트하는 코드
-
-    ```java
-    /**
-     * with: 20초의 비활성 간격 만들기
-     * until: 15분의 유지 기간 만들기
-     */
-    SessionWindows.with(twentySeconds).until(fifteenMinutes)
-    ```
-
-  - 20초 비활성 시간은 현재 세션이 종료되거나 현재 세션 내의 시작 시간부터 20초 내에 도달하는 레코드를 애플리케이션이 포함한다는 의미
-  - 레코드가 들어올 때, 같은 키가 있는 기존 세션이면서, '현재 타임스탬스 - 비활성 간격'보다 작은 종료 시간을 갖고,
-    - '현재 타임스탬프 + 비활성 간격'보다 더 큰 시작 시간을 갖는 세션을 찾는다.
+- 20초 비활성 시간은 현재 세션이 종료되거나 현재 세션 내의 시작 시간부터 20초 내에 도달하는 레코드를 애플리케이션이 포함한다는 의미
+- 레코드가 들어올 때, 같은 키가 있는 기존 세션이면서, '현재 타임스탬스 - 비활성 간격'보다 작은 종료 시간을 갖고,
+  - '현재 타임스탬프 + 비활성 간격'보다 더 큰 시작 시간을 갖는 세션을 찾는다.
 - 기억할 요점
   - 세션은 고정 크기 윈도가 아니다. 오히려 세션의 크기는 주어진 시간 프레임 내의 총 활성화 시간에 의해 결정
   - 데이터에 있어서 타임스탬프는 이벤트가 기존 세션에 맞는지 또는 비활성화 간격으로 나뉘는지를 결정
+
+.
+
+2️⃣ 텀블링 윈도(Tumbling window)
+- fixed 또는 tumblind 윈도는 **지정한 기간 내의 이벤트를 추적**
+- 특정 회사의 전체 주식 거래를 20초마다 추적해야 하고, 그 시간 동안 모든 이벤트를 수집한다고 할 때
+ - 20초가 경과하면 윈도는 다음 20초 감시 주기로 텀블링
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/tumblingWindows.jpg?raw=true 'Result')
+
+```java
+// CountingWindowingAndKtableJoinExample.java
+KTable<Windowed<TransactionSummary>, Long> customerTransactionCounts =
+    builder.stream(STOCK_TRANSACTIONS_TOPIC, Consumed.with(stringSerde, transactionSerde)
+    .withOffsetResetPolicy(LATEST))
+    .groupBy((noKey, transaction) -> 
+        TransactionSummary.from(transaction), // TransactionSummary 객체에 저장된 고객 ID, 주식 종목으로 레코드를 그룹화
+        Serialized.with(transactionKeySerde, transactionSerde))
+    // 20초 텀블링 윈도 지정
+    .windowedBy(TimeWindows.of(twentySeconds)
+    .until(fifteenMinutes)).count();
+```
+
+- 유지 기간을 정의하지 않았기 떄문에 유지 기간은 기본 유지 기간인 24시간
