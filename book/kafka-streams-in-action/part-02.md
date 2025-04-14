@@ -1036,7 +1036,7 @@ customerTransactionCounts.toStream()
 .
 
 2️⃣ 텀블링 윈도(Tumbling window)
-- fixed 또는 tumblind 윈도는 **지정한 기간 내의 이벤트를 추적**
+- `fixed` 또는 `tumblind` 윈도는 **지정한 기간 내의 이벤트를 추적**
 - 특정 회사의 전체 주식 거래를 20초마다 추적해야 하고, 그 시간 동안 모든 이벤트를 수집한다고 할 때
  - 20초가 경과하면 윈도는 다음 20초 감시 주기로 텀블링
 
@@ -1051,8 +1051,39 @@ KTable<Windowed<TransactionSummary>, Long> customerTransactionCounts =
         TransactionSummary.from(transaction), // TransactionSummary 객체에 저장된 고객 ID, 주식 종목으로 레코드를 그룹화
         Serialized.with(transactionKeySerde, transactionSerde))
     // 20초 텀블링 윈도 지정
-    .windowedBy(TimeWindows.of(twentySeconds)
-    .until(fifteenMinutes)).count();
+    .windowedBy(TimeWindows.of(twentySeconds)).count();
+    //Tumbling window with timeout 15 minutes
+    //.windowedBy(TimeWindows.of(twentySeconds).until(fifteenMinutes)).count();
 ```
 
 - 유지 기간을 정의하지 않았기 떄문에 유지 기간은 기본 유지 기간인 24시간
+
+.
+
+3️⃣ 슬라이딩 또는 호핑 윈도
+- `sliding` 또는 `hopping` 윈도는 **텀블링 윈도와 비슷**하지만 작은 차이가 있다.
+- 최근 이벤트를 처리할 새 윈도를 시작하기 전에 그 윈도 전체 시간을 기다리지 않는다.
+- 전체 윈도 유지 기간보다는 더 짧은 간격 동안 기다린 후 새 연산을 수행
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/slidingWIndows.jpg?raw=true 'Result')
+
+```java
+// CountingWindowingAndKtableJoinExample.java
+KTable<Windowed<TransactionSummary>, Long> customerTransactionCounts =
+    builder.stream(STOCK_TRANSACTIONS_TOPIC, Consumed.with(stringSerde, transactionSerde)
+    .withOffsetResetPolicy(LATEST))
+    .groupBy((noKey, transaction) -> 
+        TransactionSummary.from(transaction), // TransactionSummary 객체에 저장된 고객 ID, 주식 종목으로 레코드를 그룹화
+        Serialized.with(transactionKeySerde, transactionSerde))
+    // 5초마다 이동하는 20초 간격의 호핑 윈도 사용
+    .windowedBy(TimeWindows.of(twentySeconds).advanceBy(fiveSeconds).until(fifteenMinutes))
+    .count()
+```
+
+✅ 기억하기
+
+> `세션 윈도`는 시간에 의해 고정되지 않고, 사용자 활동으로 유도된다.
+>
+> `텀블링 윈도`는 지정된 시간 프레임 내에서 이벤트의 상황을 보게 한다.
+>
+> `호핑 윈도`는 고정 길이지만, 자주 업데이트되며, 개별 윈도에 겹치는 레코드가 들어있을 수 있따.
