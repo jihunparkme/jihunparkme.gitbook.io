@@ -1096,9 +1096,7 @@ KTable<Windowed<TransactionSummary>, Long> customerTransactionCounts =
   - 금융 관련 토픽 뉴스를 읽어 KTable을 만든다. 새 KTable은 산업별로 분류될 것이다.
   - 이 뉴스 업데이트를 산업별 주식 거래 카운트와 조인한다.
 
-.
-
-👉🏻 **KTable을 KStream으로 변환하기**
+**KTable을 KStream으로 변환하기**
 - KTable을 KStream으로 변환하기 위해 다음 절차를 따라가자
   - KTable.toStream() 메소드 호출
   - 키를 산업명으로 바꾸기 위해 KStream.map 호출을 이용하고 윈도 인스턴스로부터 TransactionSummary 객체를 추출
@@ -1114,12 +1112,29 @@ KStream<String, TransactionSummary> countStream =
     });
 ```
 
-.
-
-👉🏻 **금융 뉴스 KTable 만들기**
+**금융 뉴스 KTable 만들기**
 
 ```java
 // CountingWindowingAndKtableJoinExample.java
 KTable<String, String> financialNews = 
     builder.table( "financial-news", Consumed.with(EARLIEST));
+```
+
+**뉴스 업데이트를 트랜잭션 카운트와 조인하기**
+
+```java
+// CountingWindowingAndKtableJoinExample.java
+ValueJoiner<TransactionSummary, String, String> valueJoiner = 
+    (txnct, news) ->
+    String.format("%d shares purchased %s related news [%s]", 
+    txnct.getSummaryCount(), txnct.getStockTicker(), news); // ValueJoiner는 조인 결과로부터 값을 결합
+
+KStream<String, String> joined = 
+    countStream.leftJoin(financialNews, valueJoiner, 
+    Joined.with(stringSerde, transactionKeySerde, stringSerde));
+    // countStream KStream과 금융 뉴스 KTable을 위한 leftJoin 구문에는 조인한 인스턴스와 함께 serdes를 제공
+
+joined.print(Printed.<String, String>toSysOut()
+    .withLabel("Transactions and News"));
+    // 결과를 콘솔에 출력
 ```
