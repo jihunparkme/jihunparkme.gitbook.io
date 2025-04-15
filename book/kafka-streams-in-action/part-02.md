@@ -1095,3 +1095,21 @@ KTable<Windowed<TransactionSummary>, Long> customerTransactionCounts =
   - 주식 거래 카운트 KTable을 키가 주식 종목인 산업별 카운트로 변경한 KStream에 변환해 넣는다.
   - 금융 관련 토픽 뉴스를 읽어 KTable을 만든다. 새 KTable은 산업별로 분류될 것이다.
   - 이 뉴스 업데이트를 산업별 주식 거래 카운트와 조인한다.
+
+.
+
+👉🏻 **KTable을 KStream으로 변환하기**
+- KTable을 KStream으로 변환하기 위해 다음 절차를 따라가자
+  - KTable.toStream() 메소드 호출
+  - 키를 산업명으로 바꾸기 위해 KStream.map 호출을 이용하고 윈도 인스턴스로부터 TransactionSummary 객체를 추출
+
+```java
+// CountingWindowingAndKtableJoinExample.java
+KStream<String, TransactionSummary> countStream = 
+    customerTransactionCounts.toStream().map((window, count) -> { // 조인에 사용되면 KStream 인스턴스가 반환한 것은 자동으로 리파티셔닝
+        TransactionSummary transactionSummary = window.key(); // 윈도 인스턴스로부터 TransactionSummary 객체를 추출
+        String newKey = transactionSummary.getIndustry(); // 키를 주식 구매의 산업 분야로 설정
+        transactionSummary.setSummaryCount(count); // 집계를 통해 카운트값을 가져와서 transactionSummary 객체에 둔다.
+        return KeyValue.pair(newKey, transactionSummary); // KStream을 위한 새 KeyValue 쌍을 반환
+    });
+```
