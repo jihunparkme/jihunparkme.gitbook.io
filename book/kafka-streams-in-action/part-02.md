@@ -1113,3 +1113,13 @@ KStream<String, TransactionSummary> countStream =
         return KeyValue.pair(newKey, transactionSummary); // KStream을 위한 새 KeyValue 쌍을 반환
     });
 ```
+
+.
+
+👉🏻 **금융 뉴스 KTable 만들기**
+
+```java
+// CountingWindowingAndKtableJoinExample.java
+KTable<String, String> financialNews = 
+    builder.table( "financial-news", Consumed.with(EARLIEST));
+```
