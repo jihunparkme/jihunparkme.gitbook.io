@@ -1169,4 +1169,9 @@ KStream<String, TransactionSummary> countStream =
         Serialized.with(transactionSummarySerde, transactionSerde))
           .windowedBy(SessionWindows.with(twentySeconds)).count()
           .toStream().map(transactionMapper);
+
+
+/** 조회 데이터용 GlobalKTable 정의 */
+GlobalKTable<String, String> publicCompanies = builder.globalTable(COMPANIES.topicName()); // 주식 종목 코드로 회사 찾기
+GlobalKTable<String, String> clients = builder.globalTable(CLIENTS.topicName()); // 고객 ID를 키로 하는 clients 테이블과 leftJoin을 설정하고, 고객 이름이 추가된 transactionSummary 반환
 ```
