@@ -1138,3 +1138,4 @@ joined.print(Printed.<String, String>toSysOut()
     .withLabel("Transactions and News"));
     // 결과를 콘솔에 출력
 ```
+- 
