@@ -1151,5 +1151,22 @@ joined.print(Printed.<String, String>toSysOut()
 - 리파티셔닝은 공짜가 아니며 처리 과정에 추가적인 오버헤드가 있는데, 다른 토픽에 중복 데이터를 저장하는 중간 토픽을 만들어 다른 토픽에서 읽어서 쓰기 때문에 지연 시간을 증가시킨다.
 
 **더 작은 데이터 집합과 조인하기**
-- 조회 데이터가 상당히 작을 경우 카프카 스트림즈는 GlobalKTable을 사용할 수 있따.
-- 애플리케이션이 모든 데이터를 각 노드에 동일하게 복제하기 때문에 GlobalKTable은 모두 같은 데이터를 갖는다.
+- 조회 데이터가 상당히 작을 경우 카프카 스트림즈는 `GlobalKTable`을 사용할 수 있다.
+- 애플리케이션이 모든 데이터를 각 노드에 동일하게 복제하기 때문에 `GlobalKTable`은 모두 같은 데이터를 갖는다.
+
+**GlobalKTable로 KStream 조인하기**
+
+```java
+// GlobalKTableExample.java
+
+/** 세션 윈도를 사용한 주식 거래 집계 */
+KStream<String, TransactionSummary> countStream =
+    builder.stream(STOCK_TRANSACTIONS_TOPIC, 
+      Consumed.with(stringSerde, transactionSerde)
+      .withOffsetResetPolicy(LATEST))
+      .groupBy((noKey, transaction) -> 
+        TransactionSummary.from(transaction), 
+        Serialized.with(transactionSummarySerde, transactionSerde))
+          .windowedBy(SessionWindows.with(twentySeconds)).count()
+          .toStream().map(transactionMapper);
+```
