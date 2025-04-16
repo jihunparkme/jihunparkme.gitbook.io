@@ -1138,4 +1138,13 @@ joined.print(Printed.<String, String>toSysOut()
     .withLabel("Transactions and News"));
     // 결과를 콘솔에 출력
 ```
-- 
+- KTable에는 하나의 키에 단일 레코드만 있기 때문에 KStream과 KTable 조인을 수행할 때 JoinWindow를 제공하지 않는다 
+
+.
+
+👉🏻 **GlobalKTable**
+- 키를 새 타입이나 값으로 매핑할 때 이 스트림은 리파티셔닝을 해야 한다.
+- 가끔은 직접 명시적으로 리파티셔닝을 할 경우도 있고 어떨 때는 카프카 스트림즈가 자동으로 이를 수행할 것이다.
+- 키가 변경되어 결국 새 파티션이 되거나 결합이 발생하지 않을 것이므로 리파티셔닝이 필요하다.
+
+**리파티셔닝 비용**
