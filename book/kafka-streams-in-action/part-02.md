@@ -1188,5 +1188,19 @@ countStream.leftJoin(publicCompanies, (key, txn) ->
     // { customer='Barney, Smith' company="Exxon", transacrions=17 }
 ```
 
+[카프카 스트림즈의 조인](https://docs.confluent.io/platform/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins)
+
 로컬 상태(local state)를 이용하면 이벤트 스트림과 업데이트 스트림을 결합 가능하다
 - 조회 데이터가 처리 가능한 크기라면 `GlobalKTable`을 사용할 수 있다.
+
+.
+
+👉🏻 **쿼리 가능한 상태**
+- 카프카 스트림즈는 상태 저장소로부터 **대화형 쿼리**도 제공하는데, 이러한 구체화된 뷰에서 직접 데이터를 읽는 기능을 제공한다.
+  - 상태 저장소가 읽기 전용 작업이라는 점을 유의
+- 상태 저장소를 쿼리 가능하게 만드는 것은 상당히 중요
+  - 카프카 컨슈머에서 데이터를 소비하지 않고도 대시보드 애플리케이션을 만들 수 있음을 의미
+  - 또한, 데이터를 다시 쓰기 않으므로 효율성도 증가
+    - 이 데이터는 로컬에 있으므로 매우 빠르게 접근 가능
+    - 외부 저장소로 복사하지 않으므로 데이터 중복 방지. [Unifying Stream Processing and Interactive Queries in Apache Kafka](https://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/)
+- 레코드를 데이터베이스에 저장하는 대신, 같은 결과를 상태 저장소에 직접 쿼리 가능
