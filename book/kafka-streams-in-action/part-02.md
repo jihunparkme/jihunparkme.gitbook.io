@@ -1204,3 +1204,18 @@ countStream.leftJoin(publicCompanies, (key, txn) ->
     - 이 데이터는 로컬에 있으므로 매우 빠르게 접근 가능
     - 외부 저장소로 복사하지 않으므로 데이터 중복 방지. [Unifying Stream Processing and Interactive Queries in Apache Kafka](https://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/)
 - 레코드를 데이터베이스에 저장하는 대신, 같은 결과를 상태 저장소에 직접 쿼리 가능
+
+## 요약
+
+1️⃣ `KStream`은 데이터베이스에 삽입하는 것과 비슷한 이벤트 스트림을 나타낸다
+- `KTable`은 업데이트 스트림이고, 데이터베이스에 변경하는 것과 비슷하다.
+- `KTable` 크기는 계속 증가하지 않으며, 기존 레코드는 새 레코드로 교체된다.
+
+2️⃣ `KTable`은 집계 작업이 필요하다.
+
+3️⃣ 윈도 연산으로 시간 버킷에 데이터를 집계해서 넣을 수 있다.
+
+4️⃣ `GlobalKTable`은 파티션에 대한 고려 없이 애플리케이션 전체에 걸쳐 조회 데이터를 제공한다.
+
+5️⃣ `KStream`, `KTable`, `GlobalKTable` 서로 조인할 수 있다.
+
