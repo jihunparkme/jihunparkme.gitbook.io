@@ -1174,4 +1174,19 @@ KStream<String, TransactionSummary> countStream =
 /** 조회 데이터용 GlobalKTable 정의 */
 GlobalKTable<String, String> publicCompanies = builder.globalTable(COMPANIES.topicName()); // 주식 종목 코드로 회사 찾기
 GlobalKTable<String, String> clients = builder.globalTable(CLIENTS.topicName()); // 고객 ID를 키로 하는 clients 테이블과 leftJoin을 설정하고, 고객 이름이 추가된 transactionSummary 반환
+
+
+/** GlobalKTable KStream 조인 */
+countStream.leftJoin(publicCompanies, (key, txn) -> 
+    // 주식 종목 코드를 키로 하는 publicCompanies와 leftJoin을 설정하고, 회사 이름이 추가된 transactionSummary 반환
+    txn.getStockTicker(), TransactionSummary::withCompanyName)
+      .leftJoin(clients, (key, txn) -> 
+    // 고객 ID를 키로 하는 clients 테이블과 leftJoin을 설정하고, 고객 이름이 추가된 transactionSummary 반환
+    txn.getCustomerId(), TransactionSummary::withCustomerName)
+      .print(Printed.<String, TransactionSummary>toSysOut()
+      .withLabel("Resolved Transaction Summaries"));
+    // { customer='Barney, Smith' company="Exxon", transacrions=17 }
 ```
+
+로컬 상태(local state)를 이용하면 이벤트 스트림과 업데이트 스트림을 결합 가능하다
+- 조회 데이터가 처리 가능한 크기라면 `GlobalKTable`을 사용할 수 있다.
