@@ -1,6 +1,6 @@
 # Part 2. 카프카 스트림즈 개발
 
-# 카프카 스트림즈 개발
+# 3장. 카프카 스트림즈 개발
 
 ## 스트림 프로세서 API
 - 카프카 스트림즈 애플리케이션을 신속하게 만들 수 있게 해주는 `고수준 API`
@@ -300,7 +300,7 @@ purchaseKStream.filter((key, purchase) ->
 >
 > KStream.`selectKey` 메소드를 사용하면 기존 키를 수정하거나 새 키를 생성
 
-# 스트림과 상태
+# 4장. 스트림과 상태
 
 ## 이벤트
 
@@ -808,7 +808,7 @@ public class TransactionTimestampExtractor implements TimestampExtractor {
 >
 > 타임스탬프는 카프카 스트림즈에서 데이터 흐름을 제어한다. 타임스탬프 소스의 선택은 신중하게 고려해야 한다.
 
-# KTable API
+# 5장. KTable API
 
 ## 스트림과 테이블의 관계
 
@@ -1219,3 +1219,7 @@ countStream.leftJoin(publicCompanies, (key, txn) ->
 
 5️⃣ `KStream`, `KTable`, `GlobalKTable` 서로 조인할 수 있다.
 
+# 6장. 프로세서 API
+
+KStream DSL로 작업하면 더 간결한 코드를 얻는 대신 특정 수준의 제어는 포기해야 한다.
+- 저수준 프로세서 API를 살펴보며 각기 다른 트레이드 오프를 정리해보자.
