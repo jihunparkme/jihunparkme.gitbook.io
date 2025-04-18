@@ -1258,3 +1258,41 @@ toplogy.addSource(LATEST,
   - 노드 이름은 자식 노드를 부모 노드에 묶기 위해 사용
 - 다음으로, 카프카 스트림즈 DSL과 또 하나의 차이점인 키 역직렬화기와 값 역직렬화기를 제공해야 한다.
   - `프로세서 API`는 저수준 추상화이므로 **소스 노드를 만들 때는 역직렬화기**를, **싱크 노드를 만들 때는 직렬화기**를 직접 제공해야 한다.
+
+.
+
+👉🏻 **프로세서 노드 추가**
+
+```java
+// PopsHopsApplication.java
+
+BeerPurchaseProcessor beerProcessor = 
+    new BeerPurchaseProcessor(domesticSalesSink, internationalSalesSink);
+
+/** 소스 노드 추가 */
+toplogy.addSource(LATEST,
+                purchaseSourceNodeName,
+                new UsePreviousTimeOnInvalidTimestamp(),
+                stringDeserializer,
+                beerPurchaseDeserializer,
+                Topics.POPS_HOPS_PURCHASES.topicName())
+        /** 프로세서 노드 추가 */
+        .addProcessor(purchaseProcessor, // 프로세서 노드 이름
+                () -> beerProcessor, // 위에 정의한 프로세서 추가
+                purchaseSourceNodeName); // 부모 노드 또는 복수의 부모 노드 이름을 지정(한 프로세서에서 다른 프로세서로 어떻게 레코드를 이동할 것인지 결정)
+```
+
+- 카프카 스트림즈 API의 경우 모든 KStream 메소드 호출은 **새 KStream**이나 **KTable 인스턴스**를 반환한다.
+  - `프로세서 API`에서 토폴로지에 대한 각각의 호출은 **같은 토폴로지 인스턴스를 반환**한다.
+
+**프로세서 API에서 부모와 자식 노드를 연결**
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/addingNodeWithParentName.jpg?raw=true 'Result')
+
+**노드 이름과 부모 이름을 포함한 프로세서 API 토폴로지**
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/beerProcessingFlow.jpg?raw=true 'Result')
+
+BeerPurchaseProcessor 역할
+- 해외 판매 총액을 유로화에서 달러화로 변환
+- 국내 또는 해외의 판매 원가 기준으로 적절한 싱크 노드에 레코드를 전달
