@@ -1293,6 +1293,51 @@ toplogy.addSource(LATEST,
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/beerProcessingFlow.jpg?raw=true 'Result')
 
-BeerPurchaseProcessor 역할
+**BeerPurchaseProcessor 역할**
 - 해외 판매 총액을 유로화에서 달러화로 변환
 - 국내 또는 해외의 판매 원가 기준으로 적절한 싱크 노드에 레코드를 전달
+
+**process() 메소드가 하는 일**
+- 통화 유형을 확인. 달러화가 아니면 달러화로 환산
+- 국내 판매가 아니라면 업데이트된 레코드를 해외 판매 토픽에 전달
+- 그렇지 않다면, 이 레코드를 국내 판매 토픽에 바로 전달
+
+```java
+// BeerPurchaseProcessor.java
+
+public class BeerPurchaseProcessor extends AbstractProcessor<String, BeerPurchase> {
+
+    private String domesticSalesNode;
+    private String internationalSalesNode;
+
+    public BeerPurchaseProcessor(String domesticSalesNode, String internationalSalesNode) {
+        this.domesticSalesNode = domesticSalesNode;
+        this.internationalSalesNode = internationalSalesNode; // 레코드가 전달될 각 노드 이름을 지정
+    }
+
+    @Override
+    public void process(String key, BeerPurchase beerPurchase) { // 액션이 실행될 process() 메소드
+
+        Currency transactionCurrency = beerPurchase.getCurrency();
+        if (transactionCurrency != DOLLARS) {
+            BeerPurchase dollarBeerPurchase;
+            BeerPurchase.Builder builder = BeerPurchase.newBuilder(beerPurchase);
+            double internationalSaleAmount = beerPurchase.getTotalSale();
+            String pattern = "###.##";
+            DecimalFormat decimalFormat = new DecimalFormat(pattern);
+            builder.currency(DOLLARS);
+            builder.totalSale(
+                Double.parseDouble(decimalFormat.format(transactionCurrency
+                  .convertToDollars(internationalSaleAmount)))); // 해외 판매액을 달러로 환산
+            dollarBeerPurchase = builder.build();
+            // context() 메소드가 반환하는 ProcessorContext를 사용해 레코드를 international 자식 노드에 전달
+            context().forward(key, dollarBeerPurchase, internationalSalesNode); 
+        } else {
+            // 국내 판매 레코드를 domestic 자식 노드로 전송
+            context().forward(key, beerPurchase, domesticSalesNode);
+        }
+
+    }
+}
+
+```
