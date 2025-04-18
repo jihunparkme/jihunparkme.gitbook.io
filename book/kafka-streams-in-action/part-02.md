@@ -1235,3 +1235,26 @@ KStream DSL로 작업하면 더 간결한 코드를 얻는 대신 특정 수준�
 - 레코드가 다운스트림에 전송될 때 완벽하게 제어
 - 특정 자식 노드에 레코드 전달
 - 카프카 스트림즈 API에 없는 기능 구현(크그룹 프로세서 생성 시)
+
+## 토폴로지를 만들기 위해 소스, 프로세서, 싱크와 함께 작업하기
+
+👉🏻 **소스 노드 추가**
+
+```java
+// PopsHopsApplication.java
+
+/** 소스 노드 추가 */
+Topology toplogy = new Topology();
+toplogy.addSource(LATEST,
+                purchaseSourceNodeName, // 노드 이름
+                new UsePreviousTimeOnInvalidTimestamp(), // 소스 사용을 위한 TimestampExtractor 명시
+                stringDeserializer, // 키 직렬화기 지정
+                beerPurchaseDeserializer, // 값 직렬화기 지정
+                Topics.POPS_HOPS_PURCHASES.topicName()) // 데이터를 소비할 토픽 이름 지정
+```
+
+- 카프카 스트림즈 DSL 사용 시 KStream 인스턴스가 노드 이름을 만들었으므로 이름을 지정할 필요가 없다.
+  - 그러나 `프로세서 API`를 사용한다면, 이 토폴로지에서 사용할 **노드 이름을 제공**해야 한다.
+  - 노드 이름은 자식 노드를 부모 노드에 묶기 위해 사용
+- 다음으로, 카프카 스트림즈 DSL과 또 하나의 차이점인 키 역직렬화기와 값 역직렬화기를 제공해야 한다.
+  - `프로세서 API`는 저수준 추상화이므로 **소스 노드를 만들 때는 역직렬화기**를, **싱크 노드를 만들 때는 직렬화기**를 직접 제공해야 한다.
