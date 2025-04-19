@@ -1388,3 +1388,67 @@ toplogy.addSource(LATEST,
 - 계산하기 전에 주식의 최소 샘플 20개 수집
 
 레코드 전송에 있어 이러한 제한은 카프카 스트림즈 API를 사용하지 않고는 이 흐름을 제어하기 위해 표준 커밋 방식이나 캐시 플러시에 의존할 수 없음을 의미
+
+.
+
+👉🏻 **주식 성과 프로세서 애플리케이션**
+
+```java
+// StockPerformanceApplication.java
+
+/** 사용자 정의 프로세서를 이용한 주식 성과 애플리케이션 */
+Topology topology = new Topology();
+String stocksStateStore = "stock-performance-store";
+double differentialThreshold = 0.02; // 다운스트림에 전달할 주식 정보에 대한 백분율 임곗값 설정
+
+KeyValueBytesStoreSupplier storeSupplier = 
+    Stores.inMemoryKeyValueStore(stocksStateStore); // 인메모리 키/값 상태 저장소 생성
+StoreBuilder<KeyValueStore<String, StockPerformance>> storeBuilder = 
+    Stores.keyValueStoreBuilder(storeSupplier, Serdes.String(), stockPerformanceSerde); // 토폴로지에 추가할 storeBuilder 생성
+
+
+topology.addSource("stocks-source", 
+                    stringDeserializer, 
+                    stockTransactionDeserializer, 
+                    "stock-transactions")
+        // 토폴로지에 프로세서 추가
+        .addProcessor("stocks-processor", 
+                    () -> new StockPerformanceProcessor(stocksStateStore, differentialThreshold), 
+                    "stocks-source") 
+        // stocks 프로세서에 상태 저장소 추가
+        .addStateStore(storeBuilder, 
+                    "stocks-processor")
+        .addSink("stocks-sink", 
+                  "stock-performance", 
+                  stringSerializer, 
+                  stockPerformanceSerializer, 
+                  "stocks-processor");
+```
+
+- 기존에는 `AbstractProcessor`.`init` 메소드에 의존했으므로 어떠한 셋업도 없었지만, 
+- 이번에는 상태 저장소를 사용해야 하고, 레코드를 받을 때마다 바로 전달하는 대신 전송할 레코드를 스케줄링할 필요도 있다.
+
+```java
+// StockPerformanceProcessor.java
+
+/** init 메소드 작업 */
+@Override
+public void init(ProcessorContext processorContext) {
+    super.init(processorContext); // AbstractProcessor 슈퍼클래스를 통해 ProcessorContext 초기화
+    keyValueStore = (KeyValueStore) context().getStateStore(stateStoreName); // 토폴로지 구축 시 생성된 상태 저장소 조회
+    // 스케줄링된 프로세싱을 처리하기 위한 punctuator 초기화
+    StockPerformancePunctuator punctuator = 
+          new StockPerformancePunctuator(
+              differentialThreshold,
+              context(),
+              keyValueStore
+          );
+    // 10초마다 Punctuator.punctutate() 호출하도록 스케줄링
+    context().schedule(10000, PunctuationType.WALL_CLOCK_TIME, punctuator);
+}
+```
+
+- `ProcessorContext`와 함께 `AbstractProcessor`를 초기화해야 하므로 슈퍼클래스에 있는 init() 메소드를 호출
+- 그런 다음, 토폴로지에서 생성한 상태 저장소에 대한 레퍼런스를 가져온다.
+- 나중에 사용하기 위해 여기서 필요한 모든 상태 저장소를 프로세서에 변수로 지정해야 한다.
+- `Punctuator`는 예약한 프로세서 로직의 실행을 처리하는 콜백 인터페이스이며, Punctuator.punctutate() 메소드로 캡슐화
