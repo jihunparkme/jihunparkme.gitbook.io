@@ -1452,3 +1452,5 @@ public void init(ProcessorContext processorContext) {
 - 그런 다음, 토폴로지에서 생성한 상태 저장소에 대한 레퍼런스를 가져온다.
 - 나중에 사용하기 위해 여기서 필요한 모든 상태 저장소를 프로세서에 변수로 지정해야 한다.
 - `Punctuator`는 예약한 프로세서 로직의 실행을 처리하는 콜백 인터페이스이며, Punctuator.punctutate() 메소드로 캡슐화
+  - `PunctuationType.WALL_CLOCK_TIME`는 punctutate를 10초마다 WALL_CLOCK_TIME에 기반해서 호출하도록 명시
+  - 다른 옵션으로 `STREAM_TIME`을 지정할 수 있는데, 10초마다 punctutate 호출 예약이 가능하지만 데이터에 있는 타임스탬프에 따라 경과된 시간으로 처리
