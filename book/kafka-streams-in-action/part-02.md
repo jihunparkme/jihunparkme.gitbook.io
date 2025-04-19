@@ -1454,3 +1454,21 @@ public void init(ProcessorContext processorContext) {
 - `Punctuator`는 예약한 프로세서 로직의 실행을 처리하는 콜백 인터페이스이며, Punctuator.punctutate() 메소드로 캡슐화
   - `PunctuationType.WALL_CLOCK_TIME`는 punctutate를 10초마다 WALL_CLOCK_TIME에 기반해서 호출하도록 명시
   - 다른 옵션으로 `STREAM_TIME`을 지정할 수 있는데, 10초마다 punctutate 호출 예약이 가능하지만 데이터에 있는 타임스탬프에 따라 경과된 시간으로 처리
+
+**펑추에이션 시맨틱**
+- (1) `StreamTask`는 가장 작은 타임스탬프를 `PartitionGroup`에서 가져온다.
+  - 이 PartitionGroup은 주어진 StreamThread를 위한 파티션의 집합이고, 이 그룹의 모든 파티션은 타임스탬프 정보를 가지고 있다.
+- (2) 레코드를 처리하는 동안, 이 `StreamThread`는 `StreamTask` 객체를 반복하고 각 태스크는 펑추에이션을 사용할 수 있는 개별 프로세서를 위해 punctuate 메소드를 호출할 것이다.
+  - 개별 주식의 성과를 조사하기 전 최소 20건의 거래를 수집한다는 것을 상기하자.
+- (3) 최근 실행한 punctuate() 메소드의 타임스탬프가 `PartitionGroup`에서 가져온 타임스탬프보다 작거나 같다면, 카프카 스트림즈는 프로세서의 punctuate() 메소드를 호출한다.
+
+여기서 핵심은 애플리케이션이 `TimestampExtractor`를 통해 타임스탬프를 증가시킨다는 것
+- 그래서 일정 주기로 데이터가 도달만 한다면 일관되게 punctuate()를 호출
+
+반면, `PunctuationType.WALL_CLOCK_TIME`에서 Punctuator.punctutate() 실행은 벽 시간을 사용하므로 더욱 예측이 가능
+- 즉, 벽 시간은 폴링 간격마다 전진하지만 실제 호출 간격은 얼마만큼의 폴링 주기가 완료에 소요되는지에 달려 있음을 알아두자.
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/punctuationScheduling.jpg?raw=true 'Result')
+
+정기적으로 수행되는 활동이 필요하다면 데이터 흐름에 무관하게 시스템 시간을 사용하는 것이 가장 좋은 방법
+- 반면, 유입 데이터에서만 연산을 처리하고 실행 중 지연 시간을 허용할 수 있다면 스트림 시간 시맨틱을 사용하자.
