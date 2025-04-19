@@ -1484,3 +1484,31 @@ public void init(ProcessorContext processorContext) {
   - (3) 20회 이상 거리가 있는 주식은 계산을 시작
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/stockProcess.jpg?raw=true 'Result')
+
+```java
+// StockPerformanceProcessor.java
+
+/** process() 구현 */
+@Override
+public void process(String symbol, StockTransaction transaction) {
+    if (symbol != null) {
+        StockPerformance stockPerformance = keyValueStore.get(symbol);
+
+        if (stockPerformance == null) {
+            // 상태 저장소에 없다면 새로운 객체 생성
+            stockPerformance = new StockPerformance();
+        }
+
+        stockPerformance.updatePriceStats(transaction.getSharePrice()); // 해당 주식 가격 통계 업데이트
+        stockPerformance.updateVolumeStats(transaction.getShares()); // 해당 주식 거래량 통걔 업데이트
+        stockPerformance.setLastUpdateSent(Instant.now()); // 최근 업데이트한 타임스탬프 설정
+
+        keyValueStore.put(symbol, stockPerformance); // 업데이트한 객체를 상태 저장소에 저장
+    }
+}
+```
+
+- 개별 주식에 대해 거래 20건이 되었을 때, 첫 번째 평균을 구한다.
+- 그런 다음, 현재 주식 가격 또는 주식 거래량을 가져와서 이동 평균으로 나누어 백분율로 결과를 반환
+- 최종 결과는 상태 저장소에 저장하고 전달할 레코드는 Punctuator.punctuate 메소드에 남긴다.
+  - [StockPerformance.java](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/model/StockPerformance.java) 에서 계산을 확인
