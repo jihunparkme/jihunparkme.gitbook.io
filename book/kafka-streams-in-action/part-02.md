@@ -1310,26 +1310,27 @@ public class BeerPurchaseProcessor extends AbstractProcessor<String, BeerPurchas
     private String domesticSalesNode;
     private String internationalSalesNode;
 
+    // 레코드가 전달될 각 노드 이름을 지정
     public BeerPurchaseProcessor(String domesticSalesNode, String internationalSalesNode) {
         this.domesticSalesNode = domesticSalesNode;
-        this.internationalSalesNode = internationalSalesNode; // 레코드가 전달될 각 노드 이름을 지정
+        this.internationalSalesNode = internationalSalesNode;
     }
 
     @Override
-    public void process(String key, BeerPurchase beerPurchase) { // 액션이 실행될 process() 메소드
-
+    public void process(String key, BeerPurchase beerPurchase) { // 토폴로지를 통해 흐르는 레코드에 대한 액션을 수행하는 메소드
         Currency transactionCurrency = beerPurchase.getCurrency();
         if (transactionCurrency != DOLLARS) {
-            BeerPurchase dollarBeerPurchase;
-            BeerPurchase.Builder builder = BeerPurchase.newBuilder(beerPurchase);
             double internationalSaleAmount = beerPurchase.getTotalSale();
+            
             String pattern = "###.##";
             DecimalFormat decimalFormat = new DecimalFormat(pattern);
+            
+            BeerPurchase.Builder builder = BeerPurchase.newBuilder(beerPurchase);
             builder.currency(DOLLARS);
             builder.totalSale(
                 Double.parseDouble(decimalFormat.format(transactionCurrency
                   .convertToDollars(internationalSaleAmount)))); // 해외 판매액을 달러로 환산
-            dollarBeerPurchase = builder.build();
+            BeerPurchase dollarBeerPurchase = builder.build();
             // context() 메소드가 반환하는 ProcessorContext를 사용해 레코드를 international 자식 노드에 전달
             context().forward(key, dollarBeerPurchase, internationalSalesNode); 
         } else {
@@ -1339,5 +1340,41 @@ public class BeerPurchaseProcessor extends AbstractProcessor<String, BeerPurchas
 
     }
 }
-
 ```
+
+.
+
+👉🏻 **싱크 노드 추가**
+- 소스를 추가하기 위해 addSource를 사용했고, 프로세서를 추가하기 위해 addProcessor를 사용했다.
+
+**싱크 노드를 추가하는 것으로 토폴로지 마무리**
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/addingSinkNodes.jpg?raw=true 'Result')
+
+```java
+// PopsHopsApplication.java
+
+/** 소스 노드 추가 */
+toplogy.addSource(LATEST,
+                purchaseSourceNodeName,
+                new UsePreviousTimeOnInvalidTimestamp(),
+                stringDeserializer,
+                beerPurchaseDeserializer,
+                Topics.POPS_HOPS_PURCHASES.topicName())
+        /** 프로세서 노드 추가 */
+        .addProcessor(purchaseProcessor,
+                () -> beerProcessor,
+                purchaseSourceNodeName)
+        /** 싱크 노드 추가 */
+        .addSink(internationalSalesSink, // 싱크 이름
+                "international-sales", // 이 싱크가 제공하는 토픽
+                stringSerializer, // 키에 대한 직렬화기
+                beerPurchaseSerializer, // 값에 대한 직렬화기
+                purchaseProcessor) // 이 싱크의 부모 노드 이름
+        .addSink(domesticSalesSink, 
+                "domestic-sales", 
+                stringSerializer, 
+                beerPurchaseSerializer, 
+                purchaseProcessor);
+```
+
