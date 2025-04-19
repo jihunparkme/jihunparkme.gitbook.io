@@ -1472,3 +1472,15 @@ public void init(ProcessorContext processorContext) {
 
 정기적으로 수행되는 활동이 필요하다면 데이터 흐름에 무관하게 시스템 시간을 사용하는 것이 가장 좋은 방법
 - 반면, 유입 데이터에서만 연산을 처리하고 실행 중 지연 시간을 허용할 수 있다면 스트림 시간 시맨틱을 사용하자.
+
+.
+
+👉🏻 **process() 메소드**
+
+- 레코드를 받을 몇 단계
+  - (1) 레코드가 주식 종목 코드에 관한 StockPerformance 객체와 관련이 있는지 상태 저장소를 확인
+  - (2) 이 저장소에 StockPerformance 객체가 없다면 생성
+    - 그런 다음 StockPerformance 인스턴스는 주식 가격과 거래량을 추가하고 계산을 업데이트
+  - (3) 20회 이상 거리가 있는 주식은 계산을 시작
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/stockProcess.jpg?raw=true 'Result')
