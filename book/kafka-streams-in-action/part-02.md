@@ -1512,3 +1512,33 @@ public void process(String symbol, StockTransaction transaction) {
 - 그런 다음, 현재 주식 가격 또는 주식 거래량을 가져와서 이동 평균으로 나누어 백분율로 결과를 반환
 - 최종 결과는 상태 저장소에 저장하고 전달할 레코드는 Punctuator.punctuate 메소드에 남긴다.
   - [StockPerformance.java](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/model/StockPerformance.java) 에서 계산을 확인
+
+**펑추에이터 실행**
+
+```java
+// StockPerformancePunctuator.java
+
+@Override
+public void punctuate(long timestamp) {
+    // 상태 저장소에 있는 모든 키와 값을 확인할 이터레이터를 조회
+    KeyValueIterator<String, StockPerformance> performanceIterator = keyValueStore.all();
+
+    while (performanceIterator.hasNext()) {
+        KeyValue<String, StockPerformance> keyValue = performanceIterator.next();
+        String key = keyValue.key;
+        StockPerformance stockPerformance = keyValue.value;
+
+        if (stockPerformance != null) {
+            // 현재 주식에 대한 임곗값 확인
+            if (stockPerformance.priceDifferential() >= differentialThreshold ||
+                    stockPerformance.volumeDifferential() >= differentialThreshold) {
+                // 임곗값에 도달했거나 초과했다면, 이 레코드를 전달
+                context.forward(key, stockPerformance);
+            }
+        }
+    }
+}
+```
+
+- 상태 저장소에 있는 키/값 쌍을 반복 조회해서, 이 값이 미리 정의해둔 임곗값을 넘어가면 이 레코드를 다운스트림에 전달
+  - 여기서 기억해야 할 중요한 개념은, 커밋이나 캐시 플러시의 조합을 사용해 레코드를 전달하기 전에 레코드 전달 시기를 사전에 정의할 수 있다는 것!
