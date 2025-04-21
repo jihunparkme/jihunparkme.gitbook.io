@@ -1550,3 +1550,14 @@ public void punctuate(long timestamp) {
 > 레코드가 토폴로지를 통해 진행할 때 각 노드에 깊이 우선 방식으로 방문할 뿐, 지정된 프로세서의 상태 저장소에 동시 접근하지 않는다는 뜻
 
 ## 코그룹 프로세서
+
+같은 키를 가지고 같은 타임 윈도에 도착한 레코드를 함께 가져와서 조인할 수 있다.
+- 조인할 때 스트림 A에서 스트림 B로의 레코드 매핑은 암묵적인 일대일 매핑이다.
+
+**레코드 A와 B는 공옹 키로 조인**
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/joins.jpg?raw=true 'Result')
+
+**키와 2개의 코그룹으로 만든 결과 데이터 컬렉션을 담고 있는 튜플**
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/cogrouping.jpg?raw=true 'Result')
