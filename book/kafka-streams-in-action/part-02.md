@@ -1561,3 +1561,29 @@ public void punctuate(long timestamp) {
 **키와 2개의 코그룹으로 만든 결과 데이터 컬렉션을 담고 있는 튜플**
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/cogrouping.jpg?raw=true 'Result')
+
+.
+
+👉🏻 **코그룹 프로세서 작성**
+
+코그룹 프로세서 작성을 위한 조각들
+- (1) 토픽 2개(주식 거래 내역, 이벤트)를 정의
+- (2) 토픽에서 레코드를 소비하는 프로세서 2개를 추가
+- (3) 2개의 선행 프로세서를 집계하고 공통 그룹 역할을 하는 세 번째 프로세서를 추가
+- (4) 두 이벤트 상태를 유지하는 집계 프로세서에 상태 저장소를 추가
+- (5) 결과를 기록하는 싱크 노드를 추가
+
+**소스 노드 정의**
+
+```java
+// CoGroupingApplication.java
+
+topology.addSource("Txn-Source", 
+                  stringDeserializer, 
+                  stockTransactionDeserializer, 
+                  "stock-transactions") // 주식 거래 내역 토픽의 소스 노드
+        .addSource("Events-Source", 
+                  stringDeserializer, 
+                  clickEventDeserializer, 
+                  "events") // 이벤트 토픽의 소스 노드
+```
