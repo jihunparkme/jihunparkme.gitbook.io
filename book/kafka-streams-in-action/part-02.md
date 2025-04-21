@@ -1573,11 +1573,10 @@ public void punctuate(long timestamp) {
 - (4) 두 이벤트 상태를 유지하는 집계 프로세서에 상태 저장소를 추가
 - (5) 결과를 기록하는 싱크 노드를 추가
 
-**소스 노드 정의**
-
 ```java
 // CoGroupingApplication.java
 
+/** 코그룹 프로세서를 위한 소스 노드 */
 topology.addSource("Txn-Source", 
                   stringDeserializer, 
                   stockTransactionDeserializer, 
@@ -1586,4 +1585,17 @@ topology.addSource("Txn-Source",
                   stringDeserializer, 
                   clickEventDeserializer, 
                   "events") // 이벤트 토픽의 소스 노드
+        /** 프로세서 노드 추가 */
+        .addProcessor("Txn-Processor", 
+                      StockTransactionProcessor::new,
+                      "Txn-Source")
+        .addProcessor("Events-Processor",
+                      ClickEventProcessor::new,
+                      "Events-Source")
+        .addProcessor("CoGrouping-Processor",
+                      CogroupingProcessor::new,
+                      "Txn-Processor",
+                       "Events-Processor") // 두 프로세서의 자식 노드에 있는 CogroupingProcessor
 ```
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/processorNodes.jpg?raw=true 'Result')
