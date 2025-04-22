@@ -1600,6 +1600,8 @@ topology.addSource("Txn-Source",
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/processorNodes.jpg?raw=true 'Result')
 
+**프로세서에 대한 코드**
+
 ```java
 // StockTransactionProcessor.java
 public class StockTransactionProcessor extends AbstractProcessor<String, StockTransaction> {
@@ -1675,3 +1677,32 @@ public class CogroupingProcessor extends AbstractProcessor<String, Tuple<ClickEv
 > 부모 프로세서는 자식 프로세서에게 깊이 우선 방식으로 레코드를 전달하므로 각 부모 프로세서는 자식 프로세서를 순차적으로 호출
 >
 > 또한 카프카 스트림즈는 태스크당 하나의 스레드만 사용하기 때문에 동시성 접근 문제가 발생하지 않는다.
+
+**펑추에이션이 처리되는 방식**
+
+```java
+// CogroupingPunctuator.java
+
+@Override
+public void punctuate(long timestamp) {
+    // 상태 저장소에서 코그룹 이터레이터 획득
+    KeyValueIterator<String, Tuple<List<ClickEvent>, List<StockTransaction>>> iterator = tupleStore.all();
+
+    while (iterator.hasNext()) {
+        KeyValue<String, Tuple<List<ClickEvent>, List<StockTransaction>>> cogrouped = iterator.next(); // 다음 코그룹 조회
+        // 두 리스트 객체 중 어디든 값이 있다면 결과를 전달
+        if (cogrouped.value != null && (!cogrouped.value._1.isEmpty() || !cogrouped.value._2.isEmpty())) {
+            List<ClickEvent> clickEvents = new ArrayList<>(cogrouped.value._1);
+            List<StockTransaction> stockTransactions = new ArrayList<>(cogrouped.value._2);
+            // 키와 집계된 코그룹을 전달
+            context.forward(cogrouped.key, Tuple.of(clickEvents, stockTransactions));
+            cogrouped.value._1.clear();
+            cogrouped.value._2.clear();
+            tupleStore.put(cogrouped.key, cogrouped.value); // 정리한 튜플을 상태 저장소에 다시 삽입
+        }
+    }
+    iterator.close();
+}
+```
+
+각 `punctuate` 호출 중에 `KeyValueIterator`
