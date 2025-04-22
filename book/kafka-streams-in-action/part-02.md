@@ -1599,3 +1599,79 @@ topology.addSource("Txn-Source",
 ```
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/processorNodes.jpg?raw=true 'Result')
+
+```java
+// StockTransactionProcessor.java
+public class StockTransactionProcessor extends AbstractProcessor<String, StockTransaction> {
+    @Override
+    public void init(ProcessorContext context) {
+        super.init(context);
+    }
+
+    @Override
+    public void process(String key, StockTransaction value) {
+        if (key != null) {
+            Tuple<ClickEvent, StockTransaction> tuple = Tuple.of(null, value);
+            context().forward(key, tuple); // Tuple을 ClickEventProcessor 전달
+        }
+    }
+}
+
+// ClickEventProcessor.java
+public class ClickEventProcessor extends AbstractProcessor<String, ClickEvent> {
+    @Override
+    public void init(ProcessorContext context) {
+        super.init(context);
+
+    }
+
+    @Override
+    public void process(String key, ClickEvent clickEvent) {
+        if (key != null) {
+            Tuple<ClickEvent, StockTransaction> tuple = Tuple.of(clickEvent, null);
+            context().forward(key, tuple); // Tuple을 CogroupingProcessor 전달
+        }
+    }
+}
+
+// CogroupingProcessor.java
+public class CogroupingProcessor extends AbstractProcessor<String, Tuple<ClickEvent, StockTransaction>> {
+
+    private KeyValueStore<String, Tuple<List<ClickEvent>, List<StockTransaction>>> tupleStore;
+    public static final String TUPLE_STORE_NAME = "tupleCoGroupStore";
+
+    @Override
+    public void init(ProcessorContext context) {
+        super.init(context);
+        tupleStore = (KeyValueStore) context().getStateStore(TUPLE_STORE_NAME);
+        CogroupingPunctuator punctuator = new CogroupingPunctuator(tupleStore, context());
+        context().schedule(15000L, STREAM_TIME, punctuator);
+    }
+
+    @Override
+    public void process(String key, Tuple<ClickEvent, StockTransaction> value) {
+
+        Tuple<List<ClickEvent>, List<StockTransaction>> cogroupedTuple = tupleStore.get(key);
+        if (cogroupedTuple == null) { // 아직 없을 경우 전체 집계를 초기화
+            cogroupedTuple = Tuple.of(new ArrayList<>(), new ArrayList<>());
+        }
+        if (value._1 != null) { // ClickEvent가 null이 아닌 경우, 클릭 이벤트 목록을 추가
+            cogroupedTuple._1.add(value._1);
+        }
+        if (value._2 != null) { // StockTransaction이 null이 아닌 경우, 주식 거래 내역을 추가
+            cogroupedTuple._2.add(value._2);
+        }
+        tupleStore.put(key, cogroupedTuple);
+    }
+}
+```
+
+✅ 참고
+
+> **동시성 문제에 대한 걱정**
+> 
+> 2개의 프로세서가 하나의 프로세서에 레코드를 전달하고 하나의 상태 저장소에 접근하는 경우에도 동시성 문제를 걱정할 필요가 없다.
+>
+> 부모 프로세서는 자식 프로세서에게 깊이 우선 방식으로 레코드를 전달하므로 각 부모 프로세서는 자식 프로세서를 순차적으로 호출
+>
+> 또한 카프카 스트림즈는 태스크당 하나의 스레드만 사용하기 때문에 동시성 접근 문제가 발생하지 않는다.
