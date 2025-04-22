@@ -1705,4 +1705,12 @@ public void punctuate(long timestamp) {
 }
 ```
 
-각 `punctuate` 호출 중에 `KeyValueIterator`
+각 `punctuate` 호출 중에 `KeyValueIterator`에 저장된 모든 레코드를 검색하고, 이터레이터에 포함된 개별 코그룹 결과를 추출하기 시작
+- 그 다음, 이 컬렉션의 방어적 복사본을 만들고 새 코그룹 튜플을 만들어 다운스트림에 전달
+- 이 경우, 코그룹 결과는 싱크 노드에 전송
+- 마지막으로, 현재 코그룹 결과는 제거하고 상태 저장소에 이 튜플을 다시 저장하고 도착하는 다음 레코드를 대기
+
+**상태 저장소 추가**
+- `CogroupingProcessor`가 정상적으로 기능하기 위해 상태 저장소를 추가해야 한다.
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/cogroupingAddStateStore.jpg?raw=true 'Result')
