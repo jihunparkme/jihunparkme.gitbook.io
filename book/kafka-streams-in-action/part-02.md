@@ -1747,3 +1747,30 @@ topology.addSource("Txn-Source", stringDeserializer, stockTransactionDeserialize
 - 인메모리와 LRU 기반 저장소를 사용하면 자주 사용되지 않는 키와 값은 삭제될 수 있고, 
   - 여기서 이전에 작업한 키에 대한 정보를 검색하는 기능이 필요
 - `CogroupingProcessor`가 이 저장소에 접근할 수 있는 유일한 프로세서로 지정
+
+.
+
+**싱크 노드 추가**
+- 코그룹 토폴로지를 사용하려면, 데이터를 토픽에 써야 한다
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/addingAFinalSinkNode.jpg?raw=true 'Result')
+
+코그룹 집계 결과는 추가 분석에 사용하기 위해 토픽에 쓴다.
+
+```java
+// CoGroupingApplication.java
+
+...
+.addSink("Tuple-Sink", 
+        "cogrouped-results", 
+        stringSerializer, 
+        tupleSerializer, 
+        "CoGrouping-Processor"); // 싱크 노드는 코그룹 튜플을 토픽에 쓴다.
+
+topology.addProcessor("Print", 
+                      new KStreamPrinter("Co-Grouping"), 
+                      "CoGrouping-Processor"); // 이 프로세서는 개발 시 사용하기 위해 결과를 표준 출력
+```
+
+- `CoGrouping-Processor`의 자식으로 코그룹 결과를 토픽에 쓰는 싱크 노드를 추가
+- 더 많은 코드를 포함하지만 프로세서 API를 사용하면 사실상 모든 유형의 스트리밍 토폴로지를 더 유연하게 만들 수 있다.
