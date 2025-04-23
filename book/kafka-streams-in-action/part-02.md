@@ -1774,3 +1774,7 @@ topology.addProcessor("Print",
 
 - `CoGrouping-Processor`의 자식으로 코그룹 결과를 토픽에 쓰는 싱크 노드를 추가
 - 더 많은 코드를 포함하지만 프로세서 API를 사용하면 사실상 모든 유형의 스트리밍 토폴로지를 더 유연하게 만들 수 있다.
+
+## 프로세서 API와 카프카 스트림즈 API 통합하기
+
+KStream과 프로세서 API를 결합하는 좋은 예제는 
