@@ -1714,3 +1714,36 @@ public void punctuate(long timestamp) {
 - `CogroupingProcessor`가 정상적으로 기능하기 위해 상태 저장소를 추가해야 한다.
 
 ![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/cogroupingAddStateStore.jpg?raw=true 'Result')
+
+```java
+// CoGroupingApplication.java
+
+Topology topology = new Topology();
+// 레코드를 유지하고, 정리를 위한 압축과 삭제 기간을 설정
+Map<String, String> changeLogConfigs = new HashMap<>();
+changeLogConfigs.put("retention.ms", "120000");
+changeLogConfigs.put("cleanup.policy", "compact,delete");
+
+KeyValueBytesStoreSupplier storeSupplier = Stores.persistentKeyValueStore(TUPLE_STORE_NAME); // 영구 저장소를 위한 저장소 서플라이어를 생성
+StoreBuilder<KeyValueStore<String, Tuple<List<ClickEvent>, List<StockTransaction>>>> storeBuilder = // 저장소 빌더 생성
+    Stores.keyValueStoreBuilder(storeSupplier,
+                Serdes.String(),
+                eventPerformanceTuple)
+    .withLoggingEnabled(changeLogConfigs); // 저장소 빌더에 변경 로그 구성을 추가
+
+...
+
+topology.addSource("Txn-Source", stringDeserializer, stockTransactionDeserializer, "stock-transactions")
+        .addSource("Events-Source", stringDeserializer, clickEventDeserializer, "events")
+        .addProcessor("Txn-Processor", StockTransactionProcessor::new, "Txn-Source")
+        .addProcessor("Events-Processor", ClickEventProcessor::new, "Events-Source")
+        .addProcessor("CoGrouping-Processor", CogroupingProcessor::new, "Txn-Processor", "Events-Processor")
+        .addStateStore(storeBuilder, "CoGrouping-Processor")
+        // 저장소에 접근할 프로세서 이름으로 토폴로지에 저장소를 추가
+        .addSink("Tuple-Sink", "cogrouped-results", stringSerializer, tupleSerializer, "CoGrouping-Processor");
+```
+
+- 키에 대한 업데이트가 자주 발생하지 않기 때문에 영구 저장소를 사용
+- 인메모리와 LRU 기반 저장소를 사용하면 자주 사용되지 않는 키와 값은 삭제될 수 있고, 
+  - 여기서 이전에 작업한 키에 대한 정보를 검색하는 기능이 필요
+- `CogroupingProcessor`가 이 저장소에 접근할 수 있는 유일한 프로세서로 지정
