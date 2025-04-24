@@ -17,3 +17,27 @@
 - `컨슈머`의 경우 브로커에서 얼마나 빠르게 메시지를 읽을 수 있느냐가 성능에 영향
   - 컨슈머 성능을 측정하는 또 다른 방법은 컨슈머 지연
 - 프로듀서가 브로커에 기록하는 속도와 컨슈머가 메시지를 읽는 속도 차이를 `컨슈머 지연`이라고 부른다
+
+.
+
+👉🏻 **컨슈머 지연 확인하기**
+- 컨슈머 지연을 확인하기 위해 카프카는 편리한 명령줄 도구를 제공
+  - kafka-consumer-groups.sh
+- 활성화 상태의 모든 컨슈머 그룹을 찾기 위해 `list` 명령을 사용
+  
+```bash
+kafka-installed-path/bin/kafka-consumer-groups.sh
+                --bootstrap-server localhost:9092
+                --list
+```
+
+- 조회할 컨슈머 그룹 이름을 선택하고 다음 명령을 실행
+
+```bash
+kafka-installed-path/bin/kafka-consumer-groups.sh
+            --bootstrap-server localhost:9092
+            --group GROUP-NAME
+            --describe
+```
+
+- 작은 지연이나 일정한 지연은 문제가 안 되지만, 시간이 지남에 따라 계속 증가하는 지연은 컨슈머에게 더 많은 리소스를 제공해야 한다
