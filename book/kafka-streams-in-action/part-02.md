@@ -1777,4 +1777,14 @@ topology.addProcessor("Print",
 
 ## 프로세서 API와 카프카 스트림즈 API 통합하기
 
-KStream과 프로세서 API를 결합하는 좋은 예제는 
+KStream과 프로세서 API를 결합하는 좋은 예제는 [StockPerformanceStreamsAndProcessorApplication.java](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_6/StockPerformanceStreamsAndProcessorApplication.java) 참고
+
+지마트 애플리케이션의 프로세서 API 버전은 [ZMartProcessorApp.java](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_6/ZMartProcessorApp.java) 참조
+
+📖 **요약**
+
+> 프로세서 API는 더 많은 코드 비용으로 더 높은 유연성을 제공
+>
+> 프로세서 API가 카프카 스트림즈 API보다 더 상세하지만, 여전히 카프카 스트림즈 API가 사용하기 쉽고, 카프카 스트림즈 API 자체가 내부적으로는 프로세서 API를 사용
+>
+> 사용할 API를 결정해야 할 때, 카프카 스트림즈 API를 사용하고 필요할 때 저수준 메소드(process(), transform(), transformValues()) 통합을 고려
