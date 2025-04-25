@@ -49,3 +49,19 @@ kafka-installed-path/bin/kafka-consumer-groups.sh
 - `인터셉터`는 디버깅을 위한 일반적인 제일선 도구는 아니지만 카프카 스트리밍 애플리케이션의 동작을 관찰하는 데 유용할 수 있으며, 자신만의 도구 세트에 추가할 만한 유용한 도구이다.
 - `인터셉터`를 사용하는 좋은 예제는 카프카 스트림즈 애플리케이션이 카프카 토픽으로 다시 생산하는 메시지 오프셋을 추적하는 데 사용
 
+**컨슈머 인터셉터**
+- 컨슈머 인터셉터는 가로채기를 위해 두 가지 접근점을 제공
+
+1️⃣ `ConsumerInterceptor.onConsume()`
+- 브로커에서 조회한 시점과 `Consumer.poll()` 메소드가 메시지를 반환하기 전 `ConsumerRecords`에서 읽는다.
+- `ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG`를 통해 하나 이상의 `ConsumerInterceptor` 구현자 클래스의 컬렉션으로 지정
+
+```java
+ConsumerRecords<String, String> poll(long timeout) {
+  ConsumerRecords<String, String> consumerRecords = 
+    ...consuming records
+  // 인터셉터 체인을 통해 레코드를 실행하고 결과를 반헌
+  return interceptors.onConsume(consumerRecords);
+}
+```
+  
