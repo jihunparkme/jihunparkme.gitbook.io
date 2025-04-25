@@ -65,3 +65,33 @@ ConsumerRecords<String, String> poll(long timeout) {
 }
 ```
   
+2️⃣ `ConsumerInterceptor.onCommit()`
+- 컨슈머가 브로커에게 오프셋을 커밋하면 브로커는 토픽, 파티션 및 커밋된 오프셋과 관련된 메타데이터와 함께 정보가 포함된 `Map<TopicPartition, OffsetAndMetadata>`를 반환
+
+**로깅 목적으로 사용되는 간단한 ConsumerInterceptor 예시**
+
+```java
+// StockTransactionConsumerInterceptor.java
+
+public class StockTransactionConsumerInterceptor implements ConsumerInterceptor<Object, Object> {
+    //...
+
+    /**
+     * 레코드가 처리되기 전에 컨슈머 레코드와 메타데이터를 로깅
+     */
+    @Override
+    public ConsumerRecords<Object, Object> onConsume(ConsumerRecords<Object, Object> consumerRecords) {
+        LOG.info("Intercepted ConsumerRecords {}", buildMessage(consumerRecords.iterator()));
+        return consumerRecords;
+    }
+
+    /**
+     * 카프카 스트림즈 컨슈머가 브로커에 오프셋을 커밋할 때 커밋 정보를 로깅
+     */
+    @Override
+    public void onCommit(Map<TopicPartition, OffsetAndMetadata> map) {
+        LOG.info("Commit information {}", map);
+    }
+    //...
+}
+```
