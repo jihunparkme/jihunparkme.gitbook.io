@@ -1,5 +1,11 @@
 # Part 3. 카프카 스트림즈 관리
 
+**Table of contents**
+- 기본적인 카프카 모니터링
+  - 인터셉터
+- 메트릭
+- 카프카 스트림즈 디버깅 기술
+
 # 7장. 모니터링과 성능
 
 ## 기본적인 카프카 모니터링
@@ -95,3 +101,50 @@ public class StockTransactionConsumerInterceptor implements ConsumerInterceptor<
     //...
 }
 ```
+
+**프로듀서 인터셉터**
+- `ProducerInterceptor.onSend()` 및 `ProducerInterceptor.onAcknowledgement()` 두 가지 접근 지점이 존재
+- 체인상에 있는 각 프로듀서 인터셉터는 이전 인터셉터에서 반환된 객체를 받는다.
+
+**간단히 로깅하는 ProducerInterceptor 예제**
+
+```java
+// ZMartProducerInterceptor.java
+
+public class ZMartProducerInterceptor implements ProducerInterceptor<Object, Object> {
+    /**
+     * 메시지를 브로커에 전송하기 바로 전에 로깅
+     */
+    @Override
+    public ProducerRecord<Object, Object> onSend(ProducerRecord<Object, Object> record) {
+        LOG.info("ProducerRecord being sent out {} ", record);
+        return record;
+    }
+
+    /**
+     * 브로커 수신 확인 또는 생산 단계 동안 브로커 측에서 오류가 발생했는지 로깅
+     */
+    @Override
+    public void onAcknowledgement(RecordMetadata metadata, Exception exception) {
+        if (exception != null) {
+            LOG.warn("Exception encountered producing record {}", exception);
+        } else {
+            LOG.info("record has been acknowledged {} ", metadata);
+        }
+    }
+}
+```
+
+- ProducerInterceptor는 ProducerConfig.INTERCEPTOR_CLASSES_CONFIG에 지정하고, 하나 이상의 ProducerInterceptor 클래스의 컬렉션으로 설정
+
+✅ 참고
+
+> 카프카 스트림즈 애플리케이션에서 인터셉터를 구성할 때 컨슈머와 프로듀서 인터셉터의 속성 이름의 프리픽스를
+>
+> `StreamsConfig.consumerPrefix(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG)` 와
+>
+> `StreamsConfig.producerPrefix(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG)` 로 지정해야 한다.
+
+부수적으로 인터셉터는 카프카 스트림즈 애플리케이션의 모든 레코드에서 작동하므로 로깅 인터셉터의 출력이 중요하다.
+- 인터셉터 결과는 소스 코드를 설치한 로그 디렉토리에 있는 consumer_interceptor.log 및 producer_interceptor.log 로 출력
+
