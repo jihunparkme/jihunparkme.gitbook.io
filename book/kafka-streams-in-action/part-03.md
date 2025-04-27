@@ -166,3 +166,20 @@ public class ZMartProducerInterceptor implements ProducerInterceptor<Object, Obj
   - put, get, flush 작업의 초당 평균 실행 횟수
 
 [Monitor Kafka Streams Applications in Confluent](https://docs.confluent.io/platform/current/streams/monitoring.html#)
+
+.
+
+👉🏻 **메트릭 구성**
+- 카프카 스트림즈는 이미 성능 메트릭을 수집하는 메커니즘을 제공
+
+설정한 레벨에 따른 간으한 메트릭
+- 메트릭 수집의 기본 레벨은 INFO
+
+|매트릭 카테고리|DEBUG|INFO|
+|---|---|---|
+|스레드|O|O|
+|태스크|O||
+|프로세서 노드|O||
+|상태 저장소|O||
+|레코드 캐시|O||
+
