@@ -148,3 +148,21 @@ public class ZMartProducerInterceptor implements ProducerInterceptor<Object, Obj
 부수적으로 인터셉터는 카프카 스트림즈 애플리케이션의 모든 레코드에서 작동하므로 로깅 인터셉터의 출력이 중요하다.
 - 인터셉터 결과는 소스 코드를 설치한 로그 디렉토리에 있는 consumer_interceptor.log 및 producer_interceptor.log 로 출력
 
+## 애플리케이션 메트릭
+
+메트릭 카테고리 살펴보기
+- 스레드 메트릭
+  - 평균 커밋, 폴링, 처리 작업 시간
+  - 초당 생성한 태스크 수, 초당 종료된 태스크 수
+- 태스크 메트릭
+  - 초당 평균 커밋 횟수
+  - 평균 커밋 시간
+- 프로세서 노드 메트릭
+  - 평균 및 최대 처리 시간
+  - 초당 평균 처리 작업 수
+  - 포워드 레이트
+- 상태 저장소 메트릭
+  - put, get, flush 작업의 평균 실행 시간
+  - put, get, flush 작업의 초당 평균 실행 횟수
+
+[Monitor Kafka Streams Applications in Confluent](https://docs.confluent.io/platform/current/streams/monitoring.html#)
