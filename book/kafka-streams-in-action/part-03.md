@@ -207,3 +207,11 @@ private static Properties getProperties() {
 - 기본 메트릭 리포터를 JMX(Java Management Extensions)를 통해 제공
 - 메트릭 접근 예제
   - [StockPerformanceStreamsAndProcessorMetricsApplication.java](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_7/StockPerformanceStreamsAndProcessorMetricsApplication.java)
+
+.
+
+👉🏻 **JMX(Java Management Extensions) 사용**
+- 자바 VM에서 실행되는 프로그램의 동작을 보는 표준 방법
+- JMX를 사용해 자바 VM 성능도 확인 가능
+- 즉, JMX는 실행 중인 프로그램의 일부를 노출하는 인프라를 제공
+- 모니터링 수행을 위해 [VisualVM](https://visualvm.github.io/), [JConsole](https://docs.oracle.com/en/java/javase/13/management/using-jconsole.html#GUID-77416B38-7F15-4E35-B3D1-34BFD88350B5), [JMC](https://docs.oracle.com/javacomponents/jmc-5-5/jmc-user-guide/jmc.htm#JMCCI111) 사용
