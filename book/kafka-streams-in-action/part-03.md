@@ -311,3 +311,14 @@ kafkaStreams.setGlobalStateRestoreListener(new LoggingStateRestoreListener()); /
 - 내부 컨슈머를 사용해 번경로그 토픽을 읽으므로 애플리케이션이 각 consumer.poll() 메소드 호출에서 레코드를 일괄적으로 복원
 - 복원 프로세스가 최근 배치를 상태 저장소에 로드한 후 `onBatchRestored` 메소드가 호출
 - 애플리케이션이 복구 프로세스를 완료하면 복원된 마지막 리스너를 총 레코드 수와 함께 호출
+
+**uncaught 예외 핸들러**
+- 예기치 않은 오류 처리를 위해 `KafkaStreams.setUncaughtExceptionHandler` 제공
+
+```java
+// CoGroupingListeningExampleApplication.java
+
+kafkaStreams.setUncaughtExceptionHandler((thread, exception) ->
+    LOG.error("Thread [{}] encountered [{}]", thread.getName(), exception.getMessage())
+);
+```
