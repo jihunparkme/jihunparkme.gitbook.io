@@ -225,3 +225,31 @@ private static Properties getProperties() {
 
 - 애플리케이션에서 실행 시간 정보를 보여주는 `StreamThread` 객체에 관한 정보를 얻는 것도 유용
   - KafkaStreams.localThreadsMetadata() 메소드 사용
+
+.
+
+👉🏻 **다양한 애플리케이션 상태 알림 받기**
+
+**StateListener 사용**
+- 카프카 스트림즈 애플리케이션에서 가능한 여섯 가지 유효한 상태를 보여준다.
+
+카프카 스트림즈 애플리케이션의 상태
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/updatedStates.jpg?raw=true 'Result')
+
+```java
+// ZMartKafkaStreamsAdvancedReqsMetricsApp.java
+
+KafkaStreams.StateListener stateListener = (newState, oldState) -> {
+    // REBALANCING 에서 RUNNING 으로 상태 전환
+    if (newState == KafkaStreams.State.RUNNING && oldState == KafkaStreams.State.REBALANCING) {
+        LOG.info("Application has gone from REBALANCING to RUNNING ");
+        LOG.info("Topology Layout {}", streamsBuilder.build().describe());
+    }
+
+    // REBALANCING 단계 진입 시 액션
+    if (newState == KafkaStreams.State.REBALANCING) {
+        LOG.info("Application is entering REBALANCING phase");
+    }
+};
+```
