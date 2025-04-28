@@ -215,3 +215,13 @@ private static Properties getProperties() {
 - JMX를 사용해 자바 VM 성능도 확인 가능
 - 즉, JMX는 실행 중인 프로그램의 일부를 노출하는 인프라를 제공
 - 모니터링 수행을 위해 [VisualVM](https://visualvm.github.io/), [JConsole](https://docs.oracle.com/en/java/javase/13/management/using-jconsole.html#GUID-77416B38-7F15-4E35-B3D1-34BFD88350B5), [JMC](https://docs.oracle.com/javacomponents/jmc-5-5/jmc-user-guide/jmc.htm#JMCCI111) 사용
+
+## 추가적인 카프카 스트림즈 디버깅 기술
+
+👉🏻 **애플리케이션 구조 조회**
+- `Topology.describe()` 메소드는 애플리케이션 구조에 관한 일반적인 정보를 제공
+
+![Result](https://github.com/jihunparkme/jihunparkme.gitbook.io/blob/main/.gitbook/assets/kafka-streams-in-action/toStringExample.jpg?raw=true 'Result')
+
+- 애플리케이션에서 실행 시간 정보를 보여주는 `StreamThread` 객체에 관한 정보를 얻는 것도 유용
+  - KafkaStreams.localThreadsMetadata() 메소드 사용
