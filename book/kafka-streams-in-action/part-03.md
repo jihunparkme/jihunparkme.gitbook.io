@@ -322,3 +322,11 @@ kafkaStreams.setUncaughtExceptionHandler((thread, exception) ->
     LOG.error("Thread [{}] encountered [{}]", thread.getName(), exception.getMessage())
 );
 ```
+
+📖 **요약**
+
+> 카프카 스트림즈를 모니터링하려면 카프카 브로커도 살펴봐야 한다.
+>
+> 애플리케이션의 성능이 어떻게 되는지 보고 싶다면 메트릭 리포팅을 수시로 활성화해야 한다.
+>
+> 내부를 살펴볼 필요가 있으며 가끔 `jstack`(스레드 덤프)과 `jmap/jhat`(힙 덤프) 같은 자바에 포함된 명령줄 도구를 사용해 좀 더 저 수준에서 애플리케이션 동작을 이해해야 한다.
