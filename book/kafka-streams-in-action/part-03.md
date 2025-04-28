@@ -200,3 +200,10 @@ private static Properties getProperties() {
 
 - 카프카 스트림즈 애플리케이션의 전체 범위를 측정하는 기본 메트릭이 있으며, DEBUG 레벨에서 메트릭 수집을 설정하려면 그 전에 성능 영향을 신중하게 고려해야 함
 
+.
+
+👉🏻 **수집한 메트릭 확인 방법**
+- 카프카 스트림즈 애플리케이션의 메트릭을 수집하면 메트릭 리포터에게 배포
+- 기본 메트릭 리포터를 JMX(Java Management Extensions)를 통해 제공
+- 메트릭 접근 예제
+  - [StockPerformanceStreamsAndProcessorMetricsApplication.java](https://github.com/bbejeck/kafka-streams-in-action/blob/master/src/main/java/bbejeck/chapter_7/StockPerformanceStreamsAndProcessorMetricsApplication.java)
