@@ -230,7 +230,7 @@ private static Properties getProperties() {
 
 👉🏻 **다양한 애플리케이션 상태 알림 받기**
 
-**StateListener 사용**
+**`StateListener` 사용**
 - 카프카 스트림즈 애플리케이션에서 가능한 여섯 가지 유효한 상태를 보여준다.
 
 카프카 스트림즈 애플리케이션의 상태
@@ -253,3 +253,61 @@ KafkaStreams.StateListener stateListener = (newState, oldState) -> {
     }
 };
 ```
+
+**상태 리스토어 리스너**
+- 카프카 스트림즈에서는 상태 저장소의 백업으로 `변경로그` 토픽을 사용
+- 변경로그는 변경이 발생한 상태 저장소의 업데이트를 기록
+- 카프카 스트림즈 애플리케이션이 실패하거나 재시작할 때, 상태 저장소는 로컬 상태 파일에서 복구 가능
+- StateListener와 흡사한 `StateRestoreListener` 인터페이스는 애플리케이션 내부에서 일어나는 일들에 대한 알림을 허용
+  - `onRestoreStart`, `onBatchRestored`, `onRestoreEnd` 세 가지 메소드 존재
+
+```java
+// LoggingStateRestoreListener.java
+
+public class LoggingStateRestoreListener implements StateRestoreListener {
+    private static final Logger LOG = LoggerFactory.getLogger(LoggingStateRestoreListener.class);
+    private final Map<TopicPartition, Long> totalToRestore = new ConcurrentHashMap<>();
+    private final Map<TopicPartition, Long> restoredSoFar = new ConcurrentHashMap<>();
+
+    /**
+     * 리스토어 리스너 로깅
+     */
+    @Override
+    public void onRestoreStart(TopicPartition topicPartition, String store, long start, long end) {
+        long toRestore = end - start;
+        totalToRestore.put(topicPartition, toRestore); // 복원할 주어진 topicPartition 총량 저장
+        LOG.info("Starting restoration for {} on topic-partition {} total to restore {}", store, topicPartition, toRestore);
+
+    }
+    /**
+     * 복원된 각 배치를 처리
+     */
+    @Override
+    public void onBatchRestored(TopicPartition topicPartition, String store, long start, long batchCompleted) {
+        NumberFormat formatter = new DecimalFormat("#.##");
+
+        long currentProgress = batchCompleted + restoredSoFar.getOrDefault(topicPartition, 0L); // 복원된 전체 레코드 개수 계산
+        double percentComplete = (double) currentProgress / totalToRestore.get(topicPartition); // 복원이 완료된 백분율을 결정
+
+        LOG.info("Completed {} for {}% of total restoration for {} on {}",
+                batchCompleted, formatter.format(percentComplete * 100.00), store, topicPartition); // 복원된 백분율을 출력
+        restoredSoFar.put(topicPartition, currentProgress); // 지금까지 복원된 레코드 개수 저장
+    }
+    /**
+     * 복원 프로세스가 완료될 때
+     */
+    @Override
+    public void onRestoreEnd(TopicPartition topicPartition, String store, long totalRestored) {
+        LOG.info("Restoration completed for {} on topic-partition {}", store, topicPartition);
+        restoredSoFar.put(topicPartition, 0L);
+    }
+}
+
+// CoGroupingListeningExampleApplication.java
+KafkaStreams kafkaStreams = new KafkaStreams(topology, streamsConfig);
+kafkaStreams.setGlobalStateRestoreListener(new LoggingStateRestoreListener()); // 글로벌 리스토어 리스너 정의
+```
+
+- 내부 컨슈머를 사용해 번경로그 토픽을 읽으므로 애플리케이션이 각 consumer.poll() 메소드 호출에서 레코드를 일괄적으로 복원
+- 복원 프로세스가 최근 배치를 상태 저장소에 로드한 후 `onBatchRestored` 메소드가 호출
+- 애플리케이션이 복구 프로세스를 완료하면 복원된 마지막 리스너를 총 레코드 수와 함께 호출
