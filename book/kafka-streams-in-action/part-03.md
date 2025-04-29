@@ -440,3 +440,23 @@ public class ZMartTopologyTest {
     }
 }
 ```
+
+.
+
+👉🏻 **토폴로지에서 상태 저장소 테스트**
+
+```java
+// StockPerformanceStreamsProcessorTopologyTest.java
+
+StockTransaction stockTransaction = DataGenerator.generateStockTransaction(); // 테스트 레코드 생성
+
+topologyTestDriver.process("stock-transactions", // 테스트 드라이버로 레코드 처리
+        stockTransaction.getSymbol(),
+        stockTransaction,
+        stringSerde.serializer(),
+        stockTransactionSerde.serializer());
+
+KeyValueStore<String, StockPerformance> store = topologyTestDriver.getKeyValueStore("stock-performance-store"); // 테스트 토폴로지로부터 상태 저장소 조회
+
+assertThat(store.get(stockTransaction.getSymbol()), notNullValue());
+```
