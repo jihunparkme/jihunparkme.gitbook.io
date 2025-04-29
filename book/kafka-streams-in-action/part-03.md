@@ -460,3 +460,48 @@ KeyValueStore<String, StockPerformance> store = topologyTestDriver.getKeyValueSt
 
 assertThat(store.get(stockTransaction.getSymbol()), notNullValue());
 ```
+
+.
+
+👉🏻 **프로세서와 트랜스포머 테스트**
+- `Processor`나 `Transformer`에 대한 단위 테스트 작성은 어렵지 않지만, 두 클래스 모두 상태 저장소를 얻고 펑추에이션 액션을 스케줄링하기 위해 `ProcessorContext`에 의존해야 한다.
+- `Mockito` 같은 모의 객체 프레임워크를 사용해 테스트에서 모의 객체를 생성하는 방법이 있다.
+- 또 다른 옵션은 `ProcessorTopologyTestDriver`와 동일한 테스트 라이브러리에 있는 `MockProcessorContext` 객체를 사용하는 것
+
+```java
+// CogroupingMethodHandleProcessorTest.java
+
+private ProcessorContext processorContext = mock(ProcessorContext.class);
+private MockKeyValueStore<String, Tuple<List<ClickEvent>, List<StockTransaction>>> keyValueStore = new MockKeyValueStore<>();
+
+private CogroupingMethodHandleProcessor processor = new CogroupingMethodHandleProcessor(); // 테스트할 클래스
+
+@Test
+@DisplayName("Processor should initialize correctly")
+public void testInitializeCorrectly() {
+    processor.init(processorContext); // ProcessorContext 에서 메소드 호출을 트리거하는 프로세서의 init 메서드 호출
+    verify(processorContext).schedule(eq(15000L), eq(STREAM_TIME), isA(Punctuator.class)); // 매개변수 검증
+    verify(processorContext).getStateStore(TUPLE_STORE_NAME); // 상태 저장소에서 받은 값 검증
+}
+
+@Test
+@DisplayName("Punctuate should forward records")
+public void testPunctuateProcess() {
+    when(processorContext.getStateStore(TUPLE_STORE_NAME)).thenReturn(keyValueStore);
+
+    processor.init(processorContext); // 프로세서의 init 메서드 호출
+    processor.process("ABC", Tuple.of(clickEvent, null));
+    processor.process("ABC", Tuple.of(null, transaction));
+
+    Tuple<List<ClickEvent>, List<StockTransaction>> tuple = keyValueStore.innerStore().get("ABC"); // process 메서드에서 상태 저장소에 있던 항목 꺼내기
+    List<ClickEvent> clickEvents = new ArrayList<>(tuple._1);
+    List<StockTransaction> stockTransactions = new ArrayList<>(tuple._2);
+
+    processor.cogroup(124722348947L); // punctuate 스케줄에 사용된 코그룹 메서드 호출
+
+    verify(processorContext).forward("ABC", Tuple.of(clickEvents, stockTransactions));
+
+    assertThat(tuple._1.size(), equalTo(0));
+    assertThat(tuple._2.size(), equalTo(0));
+}
+```
