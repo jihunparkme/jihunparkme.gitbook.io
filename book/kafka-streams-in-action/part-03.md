@@ -330,3 +330,113 @@ kafkaStreams.setUncaughtExceptionHandler((thread, exception) ->
 > 애플리케이션의 성능이 어떻게 되는지 보고 싶다면 메트릭 리포팅을 수시로 활성화해야 한다.
 >
 > 내부를 살펴볼 필요가 있으며 가끔 `jstack`(스레드 덤프)과 `jmap/jhat`(힙 덤프) 같은 자바에 포함된 명령줄 도구를 사용해 좀 더 저 수준에서 애플리케이션 동작을 이해해야 한다.
+
+# 8장. 카프카 스트림즈 애플리케이션 테스트
+
+## 토폴로지 테스트
+
+`ProcessorTopologyTestDriver`를 사용하면 테스트 실행을 위해 카프카 없이도 테스트 작성이 가능
+
+```properties
+testImplementation("org.apache.kafka:kafka-streams:1.0.0")
+testImplementation("org.apache.kafka:kafka-clients:1.0.0")
+```
+
+```java
+// ZMartTopology.java
+
+public class ZMartTopology {
+    public static Topology build() {
+        Serde<Purchase> purchaseSerde = StreamsSerdes.PurchaseSerde();
+        Serde<PurchasePattern> purchasePatternSerde = StreamsSerdes.PurchasePatternSerde();
+        Serde<RewardAccumulator> rewardAccumulatorSerde = StreamsSerdes.RewardAccumulatorSerde();
+        Serde<String> stringSerde = Serdes.String();
+
+        StreamsBuilder streamsBuilder = new StreamsBuilder();
+        KStream<String, Purchase> purchaseKStream = streamsBuilder.stream("transactions", Consumed.with(stringSerde, purchaseSerde))
+                .mapValues(p -> Purchase.builder(p).maskCreditCard().build());
+        KStream<String, PurchasePattern> patternKStream = purchaseKStream.mapValues(purchase -> PurchasePattern.builder(purchase).build());
+        patternKStream.to("patterns", Produced.with(stringSerde, purchasePatternSerde));
+        KStream<String, RewardAccumulator> rewardsKStream = purchaseKStream.mapValues(purchase -> RewardAccumulator.builder(purchase).build());
+
+        rewardsKStream.to("rewards", Produced.with(stringSerde, rewardAccumulatorSerde));
+        purchaseKStream.to("purchases", Produced.with(Serdes.String(), purchaseSerde));
+
+        return streamsBuilder.build();
+    }
+}
+```
+
+.
+
+👉🏻 **테스트 만들기**
+
+```java
+// ZMartTopologyTest.java
+
+public class ZMartTopologyTest {
+    private ProcessorTopologyTestDriver topologyTestDriver;
+
+    @BeforeEach
+    public void setUp() {
+        Properties props = new Properties();
+        props.put(StreamsConfig.CLIENT_ID_CONFIG, "FirstZmart-Kafka-Streams-Client");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "zmart-purchases");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "FirstZmart-Kafka-Streams-App");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);
+        props.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class);
+
+        StreamsConfig streamsConfig = new StreamsConfig(props);
+        Topology topology = ZMartTopology.build(); // 토폴로지 획득
+
+        // ProcessorTopologyTestDriver 생성
+        topologyTestDriver = new ProcessorTopologyTestDriver(streamsConfig, topology); 
+    }
+
+
+    @Test
+    @DisplayName("Testing the ZMart Topology Flow")
+    public void testZMartTopology() {
+        Serde<Purchase> purchaseSerde = StreamsSerdes.PurchaseSerde();
+        Serde<PurchasePattern> purchasePatternSerde = StreamsSerdes.PurchasePatternSerde();
+        Serde<RewardAccumulator> rewardAccumulatorSerde = StreamsSerdes.RewardAccumulatorSerde();
+        Serde<String> stringSerde = Serdes.String();
+
+        // 테스트 객체 생성
+        Purchase purchase = DataGenerator.generatePurchase();
+        // 토폴로지에 초기 레코드 전송
+        topologyTestDriver.process("transactions",
+                null,
+                purchase,
+                stringSerde.serializer(),
+                purchaseSerde.serializer());
+        // 레코드 읽기
+        ProducerRecord<String, Purchase> record = topologyTestDriver.readOutput("purchases",
+                stringSerde.deserializer(),
+                purchaseSerde.deserializer());
+        // 테스트 객체를 기대하는 형식으로 변환
+        Purchase expectedPurchase = Purchase.builder(purchase).maskCreditCard().build();
+        // 토폴로지로부터 레코드가 기대하는 레코드와 일치하는지 검사
+        assertThat(record.value(), equalTo(expectedPurchase));
+
+        RewardAccumulator expectedRewardAccumulator = RewardAccumulator.builder(expectedPurchase).build();
+
+        ProducerRecord<String, RewardAccumulator> accumulatorProducerRecord = 
+            topologyTestDriver.readOutput("rewards", // rewards 토픽에서 레코드 읽기
+                stringSerde.deserializer(),
+                rewardAccumulatorSerde.deserializer());
+
+        assertThat(accumulatorProducerRecord.value(), equalTo(expectedRewardAccumulator)); // rewards 토픽 출력과 기댓값을 비교
+
+        PurchasePattern expectedPurchasePattern = PurchasePattern.builder(expectedPurchase).build();
+
+        ProducerRecord<String, PurchasePattern> purchasePatternProducerRecord = 
+              topologyTestDriver.readOutput("patterns", // patterns 토픽에서 레코드 읽기
+                stringSerde.deserializer(),
+                purchasePatternSerde.deserializer());
+
+        assertThat(purchasePatternProducerRecord.value(), equalTo(expectedPurchasePattern)); // patterns 토픽 출력과 기댓값 비교
+    }
+}
+```
