@@ -541,3 +541,61 @@ public static void setUpAll() throws Exception {
     EMBEDDED_KAFKA.createTopic(OUT_TOPIC);
 }
 ```
+
+**내장 카프카 클러스터 추가**
+- 다음 단계에 따라 통합 테스트 실행
+  - (1) 카프카 스트림즈 애플리케이션 시작
+  - (2) 소스 토픽에 레코드를 쓰고 정확한 결과인지 검증
+  - (3) 패턴과 일치하는 새 토픽 생성
+  - (4) 추가적인 레코드를 새로 생성된 토픽에 쓰고 정확한 결과인지 검증
+
+```java
+// KafkaStreamsYellingIntegrationTest.java
+
+@Test
+public void shouldYellFromMultipleTopics() throws Exception {
+
+    StreamsBuilder streamsBuilder = new StreamsBuilder();
+
+    streamsBuilder.<String, String>stream(Pattern.compile("yell.*"))
+            .mapValues(String::toUpperCase)
+            .to(OUT_TOPIC);
+
+    kafkaStreams = new KafkaStreams(streamsBuilder.build(), streamsConfig);
+    kafkaStreams.start();
+
+    List<String> valuesToSendList = Arrays.asList("this", "should", "yell", "at", "you");
+    List<String> expectedValuesList = valuesToSendList.stream()
+            .map(String::toUpperCase)
+            .collect(Collectors.toList());
+
+    IntegrationTestUtils.produceValuesSynchronously(YELL_A_TOPIC,
+            valuesToSendList,
+            producerConfig,
+            mockTime);
+    int expectedNumberOfRecords = 5;
+    List<String> actualValues = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig,
+            OUT_TOPIC,
+            expectedNumberOfRecords);
+
+    assertThat(actualValues, equalTo(expectedValuesList));
+
+    EMBEDDED_KAFKA.createTopic(YELL_B_TOPIC);
+
+    valuesToSendList = Arrays.asList("yell", "at", "you", "too");
+    IntegrationTestUtils.produceValuesSynchronously(YELL_B_TOPIC,
+            valuesToSendList,
+            producerConfig,
+            mockTime);
+
+    expectedValuesList = valuesToSendList.stream().map(String::toUpperCase).collect(Collectors.toList());
+
+    expectedNumberOfRecords = 4;
+    actualValues = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig,
+            OUT_TOPIC,
+            expectedNumberOfRecords);
+
+    assertThat(actualValues, equalTo(expectedValuesList));
+
+}
+```
