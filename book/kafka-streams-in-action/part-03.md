@@ -562,23 +562,23 @@ public void shouldYellFromMultipleTopics() throws Exception {
             .to(OUT_TOPIC);
 
     kafkaStreams = new KafkaStreams(streamsBuilder.build(), streamsConfig);
-    kafkaStreams.start();
+    kafkaStreams.start(); // 카프카 스트림즈 애플리케이션 시작
 
-    List<String> valuesToSendList = Arrays.asList("this", "should", "yell", "at", "you");
+    List<String> valuesToSendList = Arrays.asList("this", "should", "yell", "at", "you"); // 전송할 값 목록
     List<String> expectedValuesList = valuesToSendList.stream()
             .map(String::toUpperCase)
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()); // 기댓값 목록
 
-    IntegrationTestUtils.produceValuesSynchronously(YELL_A_TOPIC,
+    IntegrationTestUtils.produceValuesSynchronously(YELL_A_TOPIC, // 내장 카프카로 값 생산
             valuesToSendList,
             producerConfig,
             mockTime);
+
     int expectedNumberOfRecords = 5;
-    List<String> actualValues = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig,
+    List<String> actualValues = IntegrationTestUtils.waitUntilMinValuesRecordsReceived(consumerConfig, // 카프카에서 레코드를 소비
             OUT_TOPIC,
             expectedNumberOfRecords);
-
-    assertThat(actualValues, equalTo(expectedValuesList));
+    assertThat(actualValues, equalTo(expectedValuesList)); // 읽은 값과 기댓값이 같은지 검증
 
     EMBEDDED_KAFKA.createTopic(YELL_B_TOPIC);
 
