@@ -519,14 +519,25 @@ public void testPunctuateProcess() {
 
 .
 
-👉🏻 **내장 카프카 클러스터 추가**
-- 테스트를 위한 내장 카프카 브로커 추가
+**내장 카프카 클러스터 추가**
 
 ```java
 // KafkaStreamsYellingIntegrationTest.java
 
+/**
+ * 테스트를 위한 내장 카프카 브로커 추가
+ */
 private static final int NUM_BROKERS = 1;
 
 @ClassRule
 public static final EmbeddedKafkaCluster EMBEDDED_KAFKA = new EmbeddedKafkaCluster(NUM_BROKERS);
+
+/**
+ * 토픽 만들기
+ */
+@BeforeClass
+public static void setUpAll() throws Exception {
+    EMBEDDED_KAFKA.createTopic(YELL_A_TOPIC);
+    EMBEDDED_KAFKA.createTopic(OUT_TOPIC);
+}
 ```
