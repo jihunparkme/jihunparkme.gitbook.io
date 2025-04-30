@@ -516,3 +516,17 @@ public void testPunctuateProcess() {
   - scala-library-2.12.4.jar 
   - kafka_2.12-1.0.0-test.jar
   - kafka_2.12-1.0.0.jar
+
+.
+
+👉🏻 **내장 카프카 클러스터 추가**
+- 테스트를 위한 내장 카프카 브로커 추가
+
+```java
+// KafkaStreamsYellingIntegrationTest.java
+
+private static final int NUM_BROKERS = 1;
+
+@ClassRule
+public static final EmbeddedKafkaCluster EMBEDDED_KAFKA = new EmbeddedKafkaCluster(NUM_BROKERS);
+```
