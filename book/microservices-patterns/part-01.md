@@ -108,6 +108,16 @@
 
 모놀리식 아키텍처: 애플리케이션을 실행/배포 가능한 단일 컴포넌트로 구성한 아키텍처 스타일
 
-마이크로서비스 아키텍처: 애플리케이션을 느슨하게 결합된, 독립적으로 배포 간으한 여러 서비스로 구성한 아키텍처 스타일
+마이크로서비스 아키텍처: 애플리케이션을 **느슨하게 결합된**, 독립적으로 배포 가능한 **여러 서비스로 구성한** 아키텍처 스타일
 
 <figure><img src="../../.gitbook/assets/microservices-patterns/2-3.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**서비스?**
+- 어떤 기능이 구현되어 단독 배포가 가능한 소프트웨어 컴포넌트
+- 클라이언트가 자신이 서비스하는 기능에 접근할 수 있도록 커맨드, 쿼리, 이벤트로 구성된 API를 제공
+- 서비스 API는 내부 구현 상세를 캡슐화
+- 대부분 육각형 아키텍처 형태
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/2-4.png" alt=""><figcaption></figcaption></figure>
