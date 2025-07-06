@@ -170,6 +170,8 @@
 
 <figure><img src="../../.gitbook/assets/microservices-patterns/2-6.png" alt=""><figcaption></figcaption></figure>
 
+.
+
 **고수준 도메인 모델 생성**
 - 도메인 모델은 스토리에 포함된 명사를 분석하고 도메인 전문가와 상담하는 등 표준 기법을 활용하여 생성
   - 사용자 시나리오에 포함된 명사를 통해 `Consumer`, `Order`, `Restaurant`, `CreditCard` 등 다양한 클래스가 필요할 것을 확인
@@ -194,3 +196,26 @@ Then
 배달 서비스 도메인 모델의 주요 클래스
 
 <figure><img src="../../.gitbook/assets/microservices-patterns/2-7.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**시스템 작업 정의**
+
+- 애플리케이션이 어떤 요청을 처리할지 식별하는 단계
+- 시스템 작업은 크게 두 종류로 나뉨
+  - Command: 데이터 생성, 수정, 삭제
+  - Query: 데이터 읽기
+- 시스템 커맨드를 식별하려면 사용자 스토리/시나리오에 포함된 동사를 먼저 분석
+
+배달 애플리케이션의 주요 시스템 커맨드
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/table-2-1.png" alt=""><figcaption></figcaption></figure>
+
+createOrder() 시스템 작업의 명세 정의
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/table-2-2.png" alt=""><figcaption></figcaption></figure>
+
+- 선행 조건은 주문하기 시나리오의 전제(given)를, 후행 조건은 주문하기 시나리오의 결과(then)
+
+고수준 도메인  모델과 시스템 작업을 보면 애플리케이션이 무슨 일을 하는지 알 수 있기 떄문에 아키텍처를 정의하는 데 대단히 유용
+- 시스템 작업을 정의한 후에는 애플리케이션 서비스를 식별
