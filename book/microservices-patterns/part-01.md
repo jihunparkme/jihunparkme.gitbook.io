@@ -249,3 +249,14 @@ createOrder() 시스템 작업의 명세 정의
 <figure><img src="../../.gitbook/assets/microservices-patterns/2-8.png" alt=""><figcaption></figcaption></figure>
 
 서비스를 거의 변하지 않는 비즈니스 능력에 따라 구성하면 비교적 안정적인 아키텍처를 구축 가능
+
+### 서비스 정의: 하위 도메인 패턴별 분해
+
+DDD에는 마이크로서비스 아키텍처에 적용하면 정말 유용한 하위 도메인과 경계 컨텍스트 개념이 있음
+- DDD는 도메인을 구성하는 각 하위 도메인마다 도메인 모델을 따로 정의
+- 배달 서비스의 하위 도메인은 주문 접수, 주문 관리, 주방 관리, 배달, 재무 등
+- **도메인 모델의 범위**를 DDD용어로는 `경계 컨텍스트`라고 함
+
+하위 도메인을 서비스에 매핑 (각 하위 도메인은 자체 도메인 모델을 가진 서비스로 매핑)
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/2-9.png" alt=""><figcaption></figcaption></figure>
