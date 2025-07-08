@@ -292,3 +292,31 @@ DDD에는 마이크로서비스 아키텍처에 적용하면 정말 유용한 �
   - 사가는 메시징을 이용한 일련의 로컬 트랜잭션
 - 한 가지 단점은 최종 일관성을 보장한다는 것인데, 
   - 어떤 데이터를 원자적으로 업데이트해야 한다면 그 데이터를 하나의 서비스 내부에 두어야 하는데, 이는 결국 분해의 걸림돌이 된다.
+
+**일관된 데이터 뷰 확보**
+- 어떤 데이터를 일관된 뷰로 바라보려면 하나의 서비스 내부에 두어야 하는데, 이 역시 분해의 걸림돌
+
+.
+
+**만능 클래스느 분해의 걸림돌**
+- 만능 클래스는 애플리케이션의 여러 측면의 상태/동작을 보이지 않게 감싸고 있기 때문에 이 클래스를 사용하는 전체 비즈니스 로직을 서비스로 분리하려면 골치가 아픕니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/2-10.png" alt=""><figcaption></figcaption></figure>
+
+가장 좋은 방법은 DDD를 적용하여 각 서비스를 자체 도메인 모델을 갖고 있는 **개별 하위 도메인**으로 취급하는 것
+- Order 대신 Delivery라는 더 적절한 이름의 모델을 사용
+
+배달 서비스 도메인 모델
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/2-11.png" alt=""><figcaption></figcaption></figure>
+
+주방 서비스 도메인 모델
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/2-12.png" alt=""><figcaption></figcaption></figure>
+
+주문 서비스 도메인 모델
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/2-13.png" alt=""><figcaption></figcaption></figure>
+
+이런 서비스 간 일관성은 이벤트 주도 메커니즘인 사가(4장)를 활용해서 유지 가능
+- UX 구현 시에는 소비자가 조회한 주문 상태는 여러 서비스에 저장된 Order 정보에서 비롯된 것이므로 보통 API 게이트웨이를 통해 처리(8장)
