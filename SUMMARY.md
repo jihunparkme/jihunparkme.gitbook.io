@@ -55,7 +55,8 @@
 ## Book
 
 * [Microservices Patterns](book/microservices-patterns/README.md)
-  * [01.모놀리식 지옥](book/microservices-patterns/part-01.md)
+  * [01-02.모놀리식 지옥과 분해 전략](book/microservices-patterns/part-01.md)
+  * [03.프로세스 간 통신](book/microservices-patterns/part-03.md)
 * [Kafka Streams in Action](book/kafka-streams-in-action/README.md)
   * [01.카프카 스트림즈](book/kafka-streams-in-action/part-01.md)
   * [02.카프카 스트림즈 개발](book/kafka-streams-in-action/part-02.md)
