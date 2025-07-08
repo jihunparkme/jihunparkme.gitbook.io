@@ -320,3 +320,22 @@ DDD에는 마이크로서비스 아키텍처에 적용하면 정말 유용한 �
 
 이런 서비스 간 일관성은 이벤트 주도 메커니즘인 사가(4장)를 활용해서 유지 가능
 - UX 구현 시에는 소비자가 조회한 주문 상태는 여러 서비스에 저장된 Order 정보에서 비롯된 것이므로 보통 API 게이트웨이를 통해 처리(8장)
+
+### 서비스 API 정의
+
+서비스 API 작업은 외부 클라이언트 또는 타 서비스가 호출하는 시스템 작업과 서비스 간 협동을 지원하기 위해 타 서비스 호출 전용으로 만든 작업, 둘 중 하나입니다.
+
+.
+
+**시스템 작업을 서비스로 배정**
+- 어떤 작업이 제공하는 정보가 필요한 서비스에 그 작업을 배정하는 것이 더 합리적
+
+시스템 작업을 애플리케이션 서비스에 매핑
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/table-2-3.png" alt=""><figcaption></figcaption></figure>
+
+**서비스 간 협동 지원에 필요한 API 확정**
+- 서비스 API를 온전하게 정의하려면 각 시스템 작업을 면밀히 분석해서 서로 어떻게 협동해야 할지 결정해야 한다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/table-2-4.png" alt=""><figcaption></figcaption></figure>
+
