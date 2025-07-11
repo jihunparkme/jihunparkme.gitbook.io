@@ -86,7 +86,34 @@ RPI의 동작 방식
 
 <figure><img src="../../.gitbook/assets/microservices-patterns/3-1.png" alt=""><figcaption></figcaption></figure>
 
+### 동기 RPI 패턴: REST
 
+**Rest 성숙도 모델**
 
+현재, RESTful 스타일로 API를 개발하는 것이 유행입니다. REST는 **HTTP를 사용하는 IPC 메커니즘**입니다.
+- REST의 핵심 개념은 일반적으로 고객이나 제품과 같은 단일 비즈니스 객체 또는 비즈니스 객체의 컬렉션을 나타내는 리소스입니다. 
+  - REST는 URL을 사용하여 참조되는 리소스를 조작하기 위해 HTTP 동사를 사용합니다.
+- Leonard Richardson은 REST에 대한 매우 유용한 [성숙도 모델](http://martinfowler.com/articles/richardsonMaturityModel.html)을 정의했는데, 이는 다음과 같은 수준으로 구성됩니다.
+  - **레벨 0**: 레벨 0 서비스의 클라이언트는 유일한 URL 엔드포인트에 HTTP POST 요청을 함으로써 서비스를 호출
+    - 각 요청은 수행할 작업, 작업의 대상(ex. 비즈니스 객체), 그리고 모든 매개변수를 지정
+  - **레벨 1**: 레벨 1 서비스는 리소스 개념을 지원합니다. 
+    - 리소스에 대한 작업을 수행하기 위해 클라이언트는 수행할 작업과 모든 매개변수를 지정하는 POST 요청을 합니다.
+  - **레벨 2**: 레벨 2 서비스는 HTTP 동사를 사용하여 작업을 수행합니다
+    - 검색에는 GET, 생성에는 POST, 업데이트에는 PUT을 사용합니다. 
+    - 요청 쿼리 매개변수와 본문은 작업의 매개변수를 지정합니다. 
+    - 이를 통해 서비스는 GET 요청에 대해 캐싱과 같은 웹 인프라를 사용할 수 있습니다.
+  - **레벨 3**: 레벨 3 서비스의 설계는 이름이 좋지 못한 HATEOAS(Hypertext As The Engine Of Application State) 원칙을 기반으로 합니다. 
+    - 기본 아이디어는 GET 요청이 반환하는 리소스의 표현이 해당 리소스에 대한 작업을 수행하기 위한 링크를 포함한다는 것입니다. 
+    - 예를 들어, 클라이언트는 주문을 검색한 GET 요청이 반환한 표현의 링크를 사용하여 주문을 취소할 수 있습니다. 
+    - HATEOAS의 이점은 클라이언트 코드에 URL을 하드와이어링할 필요가 없다는 것입니다 .
+    - <www.infoq.com/news/2009/04/hateoas-restful-api-advantages>
 
+**REST API**
 
+- REST API의 가장 인기 있는 IDL은 Swagger 오픈 소스 프로젝트에서 발전한 [Open API Specification](www.openapis.org)입니다.
+
+**요청 한 번으로 많은 리소스를 가져오기 어렵다**
+
+- API가 클라이언트가 리소스를 가져올 때 관련 리소스를 검색할 수 있도록 허용하는 해결책이 있습니다. 
+- 예를 들어, 클라이언트는 `GET /orders/order-id-1345?expand=consumer`를 사용하여 주문과 그 소비자를 검색할 수 있습니다. 
+- 이는 [GraphQL](http://graphql.org) 및 [Netflix Falcor](http://netflix.github.io/falcor/)와 같은 대체 API 기술의 인기를 증가시켰으며, 이들은 효율적인 데이터 페치를 지원하도록 설계되었습니다.
