@@ -298,20 +298,32 @@ RPI의 동작 방식
 
 ### 중복 메시지 처리
 
-대부분의 메시지 브로커는 **최소 한 번 (at least once)** 메시지 전달을 보장합니다.
-- 해결책으로는 **멱등성 (idempotent) 메시지 핸들러**를 작성하는 것이 있습니다. 
-  - 멱등성 애플리케이션 로직은 동일한 입력 값으로 여러 번 호출되어도 추가적인 효과가 없습니다.
-- 다른 해결책은 **메시지 소비자가 처리된 메시지의 ID를 추적하고 중복을 폐기**하는 것입니다.
+대부분의 메시지 브로커는 **최소 한 번 (at least once)** 메시지 전달을 보장합니다.  
+
+해결책으로는 **멱등성 (idempotent) 메시지 핸들러**를 작성하는 것이 있습니다. 
+- 멱등성 애플리케이션 로직은 동일한 입력 값으로 여러 번 호출되어도 추가적인 효과가 없습니다.
+
+다른 해결책은 **메시지 소비자가 처리된 메시지의 ID를 추적하고 중복을 폐기**하는 것입니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/3-12.png" alt=""><figcaption></figcaption></figure>
 
 ### 트랜잭셔널 메시징
 
 서비스가 데이터베이스 업데이트와 메시지 전송을 **하나의 트랜잭션**으로 처리해야 합니다.
 * 분산 트랜잭션은 현대 애플리케이션에 적합하지 않으므로, 애플리케이션은 다른 메커니즘을 사용해야 합니다.
-* **트랜잭션 아웃박스 (Transactional Outbox) 패턴**: 
-  * 데이터베이스 테이블을 임시 메시지 큐로 사용하여, 데이터베이스 트랜잭션의 일부로 메시지를 OUTBOX 테이블에 삽입합니다. 
-  * 이는 로컬 ACID 트랜잭션으로 원자성을 보장합니다.
-* **트랜잭션 로그 테일링 (Transaction Log Tailing)**: 
-  * 데이터베이스 트랜잭션 로그를 읽고 각 관련 로그 항목을 메시지로 변환하여 메시지 브로커에 발행하는 방법입니다.
+
+**트랜잭션 아웃박스 (Transactional Outbox) 패턴**: 
+
+* 데이터베이스 테이블을 임시 메시지 큐로 사용하여, 데이터베이스 트랜잭션의 일부로 메시지를 OUTBOX 테이블에 삽입합니다. 
+* 이는 로컬 ACID 트랜잭션으로 원자성을 보장합니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/3-13.png" alt=""><figcaption></figcaption></figure>
+
+**트랜잭션 로그 테일링 (Transaction Log Tailing)**: 
+
+* 데이터베이스 트랜잭션 로그를 읽고 각 관련 로그 항목을 메시지로 변환하여 메시지 브로커에 발행하는 방법입니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/3-14.png" alt=""><figcaption></figcaption></figure>
 
 
 
