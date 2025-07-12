@@ -340,6 +340,28 @@ RPI의 동작 방식
 **REST와 같은 동기 통신 프로토콜을 사용하면 애플리케이션의 가용성이 감소합니다**. 
 - 이는 클라이언트가 서비스가 응답할 때까지 기다려야 하기 때문입니다.
 
+<figure><img src="../../.gitbook/assets/microservices-patterns/3-15.png" alt=""><figcaption></figcaption></figure>
+
 하나의 시스템 작업이 여러 서비스를 **동기적으로 호출할 때, 전체 가용성은 관련된 모든 서비스의 가용성 곱으로 나타납니다**. 
 - 예를 들어, Order Service가 Consumer Service와 Restaurant Service를 모두 99.5%의 가용성으로 동기적으로 호출하는 경우, 
 - 전체 가용성은 99.5% x 99.5% x 99.5% = 98.5%로 크게 감소합니다.
+
+### 비동기 메시징을 통한 가용성 개선
+
+**가능한 한 모든 서비스 상호작용은 비동기 상호작용 스타일을 사용하여 설계해야 합니다**. 
+- 이렇게 하면 서비스 간의 동기 호출을 제거하여 가용성을 높일 수 있습니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/3-16.png" alt=""><figcaption></figcaption></figure>
+
+**데이터 복제(Replicate Data)**
+- 서비스가 요청을 처리할 때 필요한 데이터를 자체적으로 복제하여 유지함으로써 동기 요청을 최소화할 수 있습니다.
+- 예를 들어, Order Service는 Consumer Service 및 Restaurant Service가 소유한 데이터의 복제본을 유지하여 해당 서비스와 상호작용할 필요 없이 주문 생성 요청을 처리할 수 있습니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/3-17.png" alt=""><figcaption></figcaption></figure>
+
+**응답 반환 후 마무리**
+- 서비스가 클라이언트에게 응답을 보낸 후에 나머지 요청 처리를 비동기적으로 수행함으로써 동기 통신을 없앨 수 있습니다. 
+- 이는 **사가(Saga) 패턴**을 사용하여 구현되는 경우가 많으며, 사가는 로컬에서만 데이터를 검증하고 업데이트한 후, 다른 서비스들과는 비동기적으로 메시지를 교환하여 전체 작업을 완료합니다. 
+- 이 방식을 사용하면 다른 서비스 중 하나가 다운되더라도 클라이언트에게는 즉시 응답할 수 있어 가용성이 높아집니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/3-18.png" alt=""><figcaption></figcaption></figure>
