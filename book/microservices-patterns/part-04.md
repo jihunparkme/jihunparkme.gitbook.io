@@ -36,3 +36,24 @@
 - (4) 회계 서비스: 소비자 신용카드를 승인
 - (5) 주방 서비스: 티켓 상태를 AWAITING_ACCEPTANCE로 변경
 - (6) 주문 서비스: 주문 상태를 APPROVED로 변경
+
+**사가는 보상 트랜잭션으로 변경분을 롤백**
+
+- 사가는 ACID 트랜잭션과 달리 **격리성(Isolation) 속성이 부족**합니다.
+- 각 로컬 트랜잭션이 변경 사항을 즉시 커밋하기 때문에, 오류 발생 시 **사가의 변경 사항을 되돌리기 위해 보상 트랜잭션**(Compensating Transactions)을 명시적으로 실행해야 합니다.
+  - 예를 들어, "주문 생성 사가(Create Order Saga)"는 여러 서비스의 로컬 트랜잭션으로 구성되며, 신용 카드 승인이 실패하면 이전 단계에서 수행된 변경을 되돌리는 보상 트랜잭션을 실행합니다. 
+  - 보상 트랜잭션은 순방향 트랜잭션과 역순으로 실행됩니다.
+- 사가의 트랜잭션은 세 가지 유형으로 분류될 수 있습니다.
+  - **보상 가능한 트랜잭션(Compensatable Transactions)**: 실패할 가능성이 있는 단계 다음에 있는 1~3번째 단계
+  - **피봇 트랜잭션(Pivot Transaction)**: 절대로 실패하지 않는 단계 다음에 있는 4단계
+  - **재시도 가능한 트랜잭션(Retriable Transactions)**: 항상 성공하는 5~6단계
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/table-4-1.png" alt=""><figcaption></figcaption></figure>
+
+소비자의 신용카드 승인이 실패하면 실행되는 보상 트랜잭션 순서
+- (1) 주문 서비스: 주문을 APPROVAL_PENDING 상태로 생성
+- (2) 소비자 서비스: 주문 가능한 소비자인지 확인
+- (3) 주방 서비스: 주문 내역을 확인하고 티켓을 CREATE_PENDING 상태로 생성
+- (4) 회계 서비스: 소비자의 신용카드 승인 요청이 거부
+- (5) 주방 서비스: 티켓 상태를 CREATE_REJECTED로 변경
+- (6) 주문 서비스: 주문 상태를 REJECTED로 변경
