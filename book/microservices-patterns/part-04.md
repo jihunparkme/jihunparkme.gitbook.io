@@ -235,6 +235,8 @@
 * 주문을 생성하고 관리하는 주요 역할을 하며, `OrderRepository`를 통해 주문을 영속화하고, `SagaManager`를 사용하여 **사가를 시작**합니다.
 * 또한, 주문 상태 변경 시 관련 **도메인 이벤트를 발행**합니다.
 
+[OrderService.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-order-service/src/main/java/net/chrisrichardson/ftgo/orderservice/domain/OrderService.java)
+
 ```java
 @Transactional //
 public class OrderService {
@@ -276,5 +278,27 @@ public class OrderService {
 **CreateOrderSaga 및 관련 클래스**
 
 <figure><img src="../../.gitbook/assets/microservices-patterns/4-11.png" alt=""><figcaption></figcaption></figure>
+
+### 주문 생성 사가 구현
+
+**`CreateOrderSaga` 오케스트레이터**:
+* `CreateOrderSaga` 클래스는 **주문 생성 사가를 오케스트레이션**하는 역할을 합니다.
+* 이는 `SimpleSaga` 인터페이스를 구현하며, `eventuate.tram.sagas` 프레임워크가 제공하는 **DSL(Domain-Specific Language)**을 사용하여 사가의 상태 머신을 정의합니다.
+* `step()`, `invokeParticipant()`, `onReply()`, `withCompensation()`과 같은 메서드를 통해 **정방향 트랜잭션, 응답 처리, 보상 트랜잭션** 등을 정의하여 사가의 각 단계를 조율합니다.
+
+> [CreateOrderSaga.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-order-service/src/main/java/net/chrisrichardson/ftgo/orderservice/sagas/createorder/CreateOrderSaga.java)
+
+**`CreateOrderSagaState` 클래스**:
+* 이 클래스는 **사가 인스턴스의 지속적인 상태**를 나타냅니다.
+* 주요 책임은 사가 참여자에게 전송될 **명령 메시지(command messages)를 생성**하는 것입니다.
+* `eventuate.tram.sagas` 프레임워크에 의해 데이터베이스에 영속화됩니다.
+
+> [CreateOrderSagaState.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-order-service/src/main/java/net/chrisrichardson/ftgo/orderservice/sagas/createorder/CreateOrderSagaState.java)
+
+**사가 참여자 프록시 클래스 (예: `KitchenServiceProxy`)**:
+* `KitchenServiceProxy`와 같은 프록시 클래스는 사가 참여자(예: Kitchen Service)의 **메시징 API를 정의**합니다.
+* 여기에는 명령 채널, 명령 메시지 유형, 응답 유형 등이 포함됩니다.
+
+> [KitchenServiceProxy.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-order-service/src/main/java/net/chrisrichardson/ftgo/orderservice/sagaparticipants/KitchenServiceProxy.java)
 
 
