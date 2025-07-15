@@ -216,3 +216,65 @@
 - 예를 들어, 낮은 위험 요청은 사가를 사용하고, 큰 금액과 관련된 높은 위험 요청은 분산 트랜잭션을 사용할 수 있습니다.
 
 > 이러한 대응책을 통해 사가 모델의 격리성 부족 문제를 완화하고 애플리케이션의 데이터 일관성을 효과적으로 유지할 수 있습니다.
+
+## 주문 서비스 및 주문 생성 사가 설계
+
+**주문 서비스와 사가 설계**
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/4-9.png" alt=""><figcaption></figcaption></figure>
+
+**주문 서비스의 전반적인 설계**:
+* 주문 서비스는 `OrderService`, `Order`, `OrderRepository`와 같은 **전통적인 비즈니스 로직 클래스**로 구성됩니다.
+* 동시에, 이 서비스는 **사가 관련 클래스**들도 포함하여 **사가 오케스트레이터(saga orchestrator)**이자 **사가 참여자(saga participant)**의 역할을 모두 수행합니다.
+
+### OrderService 클래스
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/4-10.png" alt=""><figcaption></figcaption></figure>
+
+* 이 클래스는 서비스의 API 계층에서 호출되는 **도메인 서비스**입니다.
+* 주문을 생성하고 관리하는 주요 역할을 하며, `OrderRepository`를 통해 주문을 영속화하고, `SagaManager`를 사용하여 **사가를 시작**합니다.
+* 또한, 주문 상태 변경 시 관련 **도메인 이벤트를 발행**합니다.
+
+```java
+@Transactional //
+public class OrderService {
+
+  private SagaManager<CreateOrderSagaState> createOrderSagaManager;
+
+  private OrderRepository orderRepository;
+
+  private OrderDomainEventPublisher orderAggregateEventPublisher;
+
+  // ...
+
+
+  public Order createOrder(long consumerId, long restaurantId, List<MenuItemIdAndQuantity> lineItems) {
+    
+    // ...
+    ResultWithDomainEvents<Order, OrderDomainEvent> orderAndEvents = // Order 생성
+            Order.createOrder(consumerId, restaurant, orderLineItems);
+
+    Order order = orderAndEvents.result;
+    orderRepository.save(order); // DB에 Order 저장
+
+    orderAggregateEventPublisher.publish(order, orderAndEvents.events); // 도메인 이벤트 발행
+
+    OrderDetails orderDetails = new OrderDetails(consumerId, restaurantId, orderLineItems, order.getOrderTotal());
+
+    CreateOrderSagaState data = new CreateOrderSagaState(order.getId(), orderDetails); // CreateOrdersaga 생성
+    createOrderSagaManager.create(data, Order.class, order.getId());
+
+    meterRegistry.ifPresent(mr -> mr.counter("placed_orders").increment());
+
+    return order;
+  }
+
+  // ...
+}
+```
+
+**CreateOrderSaga 및 관련 클래스**
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/4-11.png" alt=""><figcaption></figcaption></figure>
+
+
