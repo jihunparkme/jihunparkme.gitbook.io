@@ -301,4 +301,40 @@ public class OrderService {
 
 > [KitchenServiceProxy.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-order-service/src/main/java/net/chrisrichardson/ftgo/orderservice/sagaparticipants/KitchenServiceProxy.java)
 
+**`eventuate.tram.sagas` 프레임워크**:
+* 이 프레임워크는 사가 오케스트레이터 및 참여자를 작성하기 위한 주요 도구입니다.
+* DSL을 제공하고, 사가의 상태 머신을 실행하며, **사가 참여자들과 메시지를 교환**합니다.
+* 특히 `SagaManager`는 사가 인스턴스 영속화, 명령 메시지 전송, 응답 메시지 구독, 응답 처리를 위한 사가 호출 등을 담당합니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/4-12.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**`OrderService`가 주문 생성 사가 인스턴스를 생성할 때 발생하는 이벤트**
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/4-13.png" alt=""><figcaption></figcaption></figure>
+
+- (1) OrderService는 CreateOrderSagaState를 생성
+- (2) OrserService는 SagaManager를 호출하여 사가 인스턴스를 생성
+- (3) SagaManager는 사가 테피니션의 첫 번째 단계를 실행
+- (4) CreateOrderSagaState를 호출하여 커맨드 메시지를 생성
+- (5) SagaManager는 커맨드 메시지를 사가 참여자(소비자 서비스)에게 보냄
+- (6) SagaManager는 사가 인스턴스를 DB에 저장
+
+.
+
+**`sagaManager`가 사가 참여자의 응답 메시지를 수신할 때 발생하는 이벤트**
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/4-14.png" alt=""><figcaption></figcaption></figure>
+
+- (1) 이벤추에이트 트램은 소비자 서비스의 응답을 SagaManager에 전달
+- (2) SagaManager는 DB에서 사가 인스턴스를 조회
+- (3) SagaManager는 그다음 사가 데피니션 단계를 실행
+- (4) CreateOrderSagaState를 호출하여 커맨드 메시지를 생성
+- (5) SagaManager는 커맨드 메시지를 사가 참여자(주방 서비스)에게 보냄
+- (6) SagaManager는 업데이트 사가 인스턴스를 DB에 저장
+
+사가 참여자가 실패하면 SagaManager는 보상 트랜잭션을 역순으로 실행
+
+
 
