@@ -316,7 +316,7 @@ public class OrderService {
 
 - (1) OrderService는 CreateOrderSagaState를 생성
 - (2) OrserService는 SagaManager를 호출하여 사가 인스턴스를 생성
-- (3) SagaManager는 사가 테피니션의 첫 번째 단계를 실행
+- (3) SagaManager는 사가 데피니션의 첫 번째 단계를 실행
 - (4) CreateOrderSagaState를 호출하여 커맨드 메시지를 생성
 - (5) SagaManager는 커맨드 메시지를 사가 참여자(소비자 서비스)에게 보냄
 - (6) SagaManager는 사가 인스턴스를 DB에 저장
@@ -336,5 +336,20 @@ public class OrderService {
 
 사가 참여자가 실패하면 SagaManager는 보상 트랜잭션을 역순으로 실행
 
+### OrderCommandHandlers 클래스
 
+<figure><img src="../../.gitbook/assets/microservices-patterns/4-15.png" alt=""><figcaption></figcaption></figure>
 
+* 주문 서비스가 다른 사가의 **사가 참여자 역할**을 수행하는 부분입니다.
+* 이 클래스는 다른 사가들(예: `CreateOrderSaga`)로부터 전송되는 **명령 메시지를 처리하는 핸들러 메서드를 정의**합니다.
+* 이 메서드들은 주문 서비스의 비즈니스 로직을 호출하여 주문을 업데이트하고(예: 승인 또는 거부), 응답 메시지를 생성하여 반환합니다.
+
+> [OrderCommandHandlers.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-order-service/src/main/java/net/chrisrichardson/ftgo/orderservice/service/OrderCommandHandlers.java)
+
+### OrderServiceConfiguration 클래스
+
+`OrderServiceConfiguration` 클래스는 위에 언급된 모든 주문 서비스 관련 컴포넌트(예: `OrderService`, `SagaManager`, `CreateOrderSaga`, `OrderCommandHandlers`, 각종 프록시)를 Spring 빈으로 정의하여 애플리케이션 컨텍스트에 등록합니다.
+
+이러한 요소들이 유기적으로 결합하여 주문 서비스가 복잡한 분산 트랜잭션인 `Create Order Saga`를 효과적으로 관리하고 실행할 수 있도록 합니다.
+
+> [OrderServiceConfiguration.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-order-service/src/main/java/net/chrisrichardson/ftgo/orderservice/domain/OrderServiceConfiguration.java)
