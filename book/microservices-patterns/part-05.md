@@ -144,20 +144,33 @@
   * 사용자 행동을 모델링하기 위해 이벤트를 분석합니다.
 * 모든 시나리오에서 알림의 트리거는 애플리케이션 데이터베이스 내 애그리거트의 상태 변화입니다.
 
+### 도메인 이벤트란 무엇인가?
+
+* 과거 분사, 동사 형태로 이름을 짓습니다 (예: `OrderCreated`).
+* 이벤트의 의미를 효과적으로 전달하는 속성(기본 값 또는 값 객체)을 가집니다.
+* 일반적으로 이벤트 ID, 타임스탬프, 변경을 수행한 사용자 ID와 같은 **메타데이터**를 포함합니다.
+* 메타데이터는 이벤트 객체의 일부이거나, 이벤트 객체를 감싸는 **envelope object**에 포함될 수 있습니다. 
+  * 이벤트를 발행한 애그리거트의 ID도 **envelope object**에 포함될 수 있습니다.
+
+```java
+interface DomainEvent
+
+public interface OrderDomainEvent extends DomainEvent {}
+
+public interface OrderCreatedEvent extends OrderDomainEvent {}
+
+interface DomainEventEnvelop<T extends DomainEvent> {
+    String getAggregateId();
+    Message getMessage();
+    String getAggregateType();
+}
+```
 
 
 
 
 
 
-
-
-
-*   **도메인 이벤트의 구조 (5.3.2 What is a domain event?)**
-    *   과거 분사 동사 형태로 이름을 짓습니다 (예: `OrderCreated`).
-    *   이벤트의 의미를 효과적으로 전달하는 속성(기본 값 또는 값 객체)을 가집니다.
-    *   일반적으로 이벤트 ID, 타임스탬프, 변경을 수행한 사용자 ID (감사 목적)와 같은 **메타데이터**를 포함합니다.
-    *   메타데이터는 이벤트 객체의 일부이거나, 이벤트 객체를 감싸는 **봉투(envelope) 객체**에 포함될 수 있습니다. 이벤트를 발행한 애그리거트의 ID도 봉투에 포함될 수 있습니다.
 
 *   **이벤트 풍부화(Event Enrichment) (5.3.3 Event enrichment)**
     *   이벤트 소비자가 이벤트 처리 시 추가 정보(예: `OrderCreated` 이벤트 처리 시 주문 상세 정보)가 필요할 때, 해당 정보를 발행 서비스에 다시 질의하는 것은 오버헤드를 발생시킵니다.
