@@ -240,6 +240,28 @@ public class KitchenService {
 
 ## 주방 서비스 비즈니스 로직
 
+* **주방 서비스의 목적**
+  * 이 서비스는 레스토랑이 주문을 관리할 수 있도록 합니다.
+* **주요 애그리거트**
+  * 주방 서비스의 두 가지 주요 애그리거트는 **Restaurant** 애그리거트와 **Ticket** 애그리거트입니다.
+      * **Restaurant**: 레스토랑의 메뉴와 영업시간을 알고 주문을 검증할 수 있습니다.
+      * **Ticket**: 레스토랑이 배달원을 위해 준비해야 할 주문을 나타냅니다.
+* **비즈니스 로직의 주요 구성 요소**
+  * 애그리거트 외에, 주방 서비스의 주요 비즈니스 로직은 **KitchenService**, **TicketRepository**, **RestaurantRepository**로 구성됩니다.
+      * **KitchenService**: 비즈니스 로직의 진입점 역할을 하며, Restaurant 및 Ticket 애그리거트를 생성하고 업데이트하는 메서드를 정의합니다.
+      * **TicketRepository 및 RestaurantRepository**: 각각 Ticket과 Restaurant을 영속화하는 메서드를 정의합니다.
+* **어댑터**
+  * **인바운드 어댑터 (Inbound adapters)**:
+      * **REST API**: 레스토랑 직원이 사용하는 UI에 의해 호출되며, Ticket을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
+      * **KitchenServiceCommandHandler**: 사가에 의해 호출되는 비동기 요청/응답 기반 API로, Ticket을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
+      * **KitchenServiceEventConsumer**: Restaurant Service가 발행하는 이벤트를 구독하여 Kitchen Service의 레스토랑 데이터 복제본을 최신 상태로 유지하며, Restaurant을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
+  * **아웃바운드 어댑터 (Outbound adapters)**:
+      * **DB adapter**: TicketRepository 및 RestaurantRepository 인터페이스를 구현하고 데이터베이스에 접근합니다.
+      * **DomainEventPublishingAdapter**: DomainEventPublisher 인터페이스를 구현하고 Ticket 도메인 이벤트를 발행합니다.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/5-11.png" alt=""><figcaption></figcaption></figure>
+
+
 ## 주문 서비스 비즈니스 로직
 
 ## 마치며
