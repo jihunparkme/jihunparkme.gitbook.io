@@ -212,7 +212,7 @@ public class Ticket {
 
 public class KitchenService {
     ...
-
+ 
     public void accept(long ticketId, LocalDateTime readyBy) {
         Ticket ticket = ticketRepository.findById(ticketId)
             .orElseThrow(() ->
@@ -223,6 +223,20 @@ public class KitchenService {
     }
 }
 ```
+
+.
+
+**신뢰할 수 있는 이벤트 발행**
+* 이벤트는 **애그리거트의 데이터베이스 업데이트 트랜잭션의 일부로 발행**되어야 합니다.
+* **Eventuate Tram 프레임워크**는 `OUTBOX` 테이블에 이벤트를 삽입하여 이를 보장합니다. 트랜잭션이 커밋되면, `OUTBOX` 테이블의 이벤트가 메시지 브로커로 발행됩니다.
+* `DomainEventPublisher` 인터페이스를 제공하며, `AbstractAggregateDomainEventPublisher`와 같은 추상 상위 클래스를 통해 **타입 안전한 이벤트 발행**을 지원합니다.
+
+### 도메인 이벤트 소비
+
+* 도메인 이벤트는 결국 Apache Kafka와 같은 메시지 브로커에 메시지로 발행됩니다.
+* Eventuate Tram 프레임워크의 `DomainEventDispatcher`를 사용하면 이벤트를 적절한 핸들러 메서드로 디스패치하여 편리하게 소비할 수 있습니다.
+* 예를 들어, `KitchenServiceEventConsumer`는 `음식점 서비스`가 발행하는 `RestaurantMenuRevised` 이벤트를 구독하여 `주방 서비스`의 레스토랑 메뉴 복제본을 최신 상태로 유지합니다.
+  * `@EventSubscriber`와 `@EventHandlerMethod` 어노테이션을 사용하여 이벤트 핸들러를 정의합니다.
 
 ## 주방 서비스 비즈니스 로직
 
