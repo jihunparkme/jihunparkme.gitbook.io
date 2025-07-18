@@ -240,27 +240,75 @@ public class KitchenService {
 
 ## 주방 서비스 비즈니스 로직
 
-* **주방 서비스의 목적**
-  * 이 서비스는 레스토랑이 주문을 관리할 수 있도록 합니다.
-* **주요 애그리거트**
-  * 주방 서비스의 두 가지 주요 애그리거트는 **Restaurant** 애그리거트와 **Ticket** 애그리거트입니다.
-      * **Restaurant**: 레스토랑의 메뉴와 영업시간을 알고 주문을 검증할 수 있습니다.
-      * **Ticket**: 레스토랑이 배달원을 위해 준비해야 할 주문을 나타냅니다.
-* **비즈니스 로직의 주요 구성 요소**
-  * 애그리거트 외에, 주방 서비스의 주요 비즈니스 로직은 **KitchenService**, **TicketRepository**, **RestaurantRepository**로 구성됩니다.
-      * **KitchenService**: 비즈니스 로직의 진입점 역할을 하며, Restaurant 및 Ticket 애그리거트를 생성하고 업데이트하는 메서드를 정의합니다.
-      * **TicketRepository 및 RestaurantRepository**: 각각 Ticket과 Restaurant을 영속화하는 메서드를 정의합니다.
-* **어댑터**
-  * **인바운드 어댑터 (Inbound adapters)**:
-      * **REST API**: 레스토랑 직원이 사용하는 UI에 의해 호출되며, Ticket을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
-      * **KitchenServiceCommandHandler**: 사가에 의해 호출되는 비동기 요청/응답 기반 API로, Ticket을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
-      * **KitchenServiceEventConsumer**: Restaurant Service가 발행하는 이벤트를 구독하여 Kitchen Service의 레스토랑 데이터 복제본을 최신 상태로 유지하며, Restaurant을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
-  * **아웃바운드 어댑터 (Outbound adapters)**:
-      * **DB adapter**: TicketRepository 및 RestaurantRepository 인터페이스를 구현하고 데이터베이스에 접근합니다.
-      * **DomainEventPublishingAdapter**: DomainEventPublisher 인터페이스를 구현하고 Ticket 도메인 이벤트를 발행합니다.
+**주방 서비스의 목적**
+* 이 서비스는 레스토랑이 주문을 관리할 수 있도록 합니다.
+
+**주요 애그리거트**
+* 주방 서비스의 두 가지 주요 애그리거트는 **Restaurant** 애그리거트와 **Ticket** 애그리거트입니다.
+    * **Restaurant**: 레스토랑의 메뉴와 영업시간을 알고 주문을 검증할 수 있습니다.
+    * **Ticket**: 레스토랑이 배달원을 위해 준비해야 할 주문을 나타냅니다.
+
+**비즈니스 로직의 주요 구성 요소**
+* 애그리거트 외에, 주방 서비스의 주요 비즈니스 로직은 **KitchenService**, **TicketRepository**, **RestaurantRepository**로 구성됩니다.
+    * **KitchenService**: 비즈니스 로직의 진입점 역할을 하며, Restaurant 및 Ticket 애그리거트를 생성하고 업데이트하는 메서드를 정의합니다.
+    * **TicketRepository 및 RestaurantRepository**: 각각 Ticket과 Restaurant을 영속화하는 메서드를 정의합니다.
+
+**어댑터**
+* **인바운드 어댑터 (Inbound adapters)**:
+    * **REST API**: 레스토랑 직원이 사용하는 UI에 의해 호출되며, Ticket을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
+    * **KitchenServiceCommandHandler**: 사가에 의해 호출되는 비동기 요청/응답 기반 API로, Ticket을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
+    * **KitchenServiceEventConsumer**: Restaurant Service가 발행하는 이벤트를 구독하여 Kitchen Service의 레스토랑 데이터 복제본을 최신 상태로 유지하며, Restaurant을 생성하고 업데이트하기 위해 KitchenService를 호출합니다.
+* **아웃바운드 어댑터 (Outbound adapters)**:
+    * **DB adapter**: TicketRepository 및 RestaurantRepository 인터페이스를 구현하고 데이터베이스에 접근합니다.
+    * **DomainEventPublishingAdapter**: DomainEventPublisher 인터페이스를 구현하고 Ticket 도메인 이벤트를 발행합니다.
 
 <figure><img src="../../.gitbook/assets/microservices-patterns/5-11.png" alt=""><figcaption></figcaption></figure>
 
+### Ticket 애그리거트
+
+**관점**: 
+* Ticket 애그리거트는 Bounded Context 개념처럼, 레스토랑 주방의 주문 보기를 나타냅니다. 
+* 소비자 정보, 배달 정보, 결제 세부 정보 등은 포함하지 않으며, 레스토랑 주방이 주문을 픽업 준비하는 데 중점을 둡니다. 
+* 이 애그리거트는 OrderService에서 제공하는 ID를 사용하며 자체 고유 ID를 생성하지 않습니다.
+
+**구조**:
+* JPA를 통해 `tickets` 테이블에 영속화됩니다.
+* 다른 애그리거트(Restaurant)에 대한 참조는 객체 참조 대신 기본 키(restaurantId)를 사용합니다.
+* `readyBy`, `acceptTime`, `preparingTime`, `pickedUpTime`, `readyForPickupTime` 등 주문의 이력을 추적하는 필드를 가집니다.
+
+**동작 (메서드)**:
+* `create()`: Ticket을 생성하는 **정적 팩토리 메서드**입니다.
+* `accept()`: 레스토랑이 주문을 수락할 때 호출됩니다.
+* `preparing()`: 레스토랑이 주문 준비를 시작할 때 호출되며, 주문 상태를 `PREPARING`으로 변경하고 `TicketPreparationStartedEvent`를 발행합니다.
+* `readyForPickup()`: 주문이 픽업 준비가 되었을 때 호출됩니다.
+* `cancel()`: 주문 취소 시 호출되며, 취소가 허용되면 상태를 `CANCELLED`로 변경하고 `TicketCancelled` 이벤트를 반환합니다.
+* 이 메서드들은 REST API 요청, 이벤트, 커맨드 메시지에 대한 응답으로 호출됩니다.
+* 이벤트 발행 방식은 메서드가 `List<DomainEvent>`를 반환하도록 하여, 서비스가 이 이벤트를 받아 발행하도록 합니다.
+
+> [Ticket.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-kitchen-service/src/main/java/net/chrisrichardson/ftgo/kitchenservice/domain/Ticket.java)
+
+.
+
+**KitchenService 도메인 서비스**
+
+*   **역할**: 서비스의 인바운드 어댑터에 의해 호출됩니다.
+*   **메서드**: `accept()`, `reject()`, `preparing()` 등 주문의 상태를 변경하는 다양한 메서드를 정의합니다.
+*   **동작**: 각 메서드는 지정된 애그리거트를 로드하고, 애그리거트 루트의 해당 메서드를 호출하며, 생성된 도메인 이벤트를 발행합니다.
+    *   예를 들어, `accept()` 메서드는 `TicketRepository`를 통해 `Ticket`을 로드하고, `ticket.accept(readyBy)`를 호출하여 `Ticket`을 업데이트한 다음, `Ticket`이 반환한 이벤트를 `TicketDomainEventPublisher`를 통해 발행합니다.
+
+> [KitchenService.jav](https://github.com/gilbutITbook/007035/blob/master/ftgo-kitchen-service/src/main/java/net/chrisrichardson/ftgo/kitchenservice/domain/KitchenService.java)
+
+.
+
+**KitchenServiceCommandHandler 클래스**
+
+* **역할**: Order Service가 구현하는 다양한 사가에 의해 전송되는 커맨드 메시지를 처리하는 어댑터입니다.
+* **동작**: 이 클래스는 각 커맨드에 대한 핸들러 메서드를 정의하며, 이 메서드들은 `KitchenService`를 호출하여 Ticket을 생성하거나 업데이트합니다.
+  * 예를 들어, `createTicket` 핸들러는 `CreateTicket` 커맨드를 받아 `kitchenService.createTicket()`을 호출하고, 성공 또는 실패 응답 메시지를 반환합니다.
+  * `confirmCreateTicket` 핸들러는 `ConfirmCreateTicket` 커맨드를 받아 `kitchenService.confirmCreateTicket()`을 호출하고 성공 응답을 반환합니다.
+  * 모든 커맨드 핸들러 메서드는 `KitchenService`를 호출하고 성공 또는 실패 응답으로 회신합니다.
+
+> [KitchenServiceCommandHandler.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-kitchen-service/src/main/java/net/chrisrichardson/ftgo/kitchenservice/messagehandlers/KitchenServiceCommandHandler.java)
 
 ## 주문 서비스 비즈니스 로직
 
