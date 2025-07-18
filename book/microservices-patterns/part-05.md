@@ -184,33 +184,45 @@ interface DomainEventEnvelop<T extends DomainEvent> {
 
 <figure><img src="../../.gitbook/assets/microservices-patterns/5-10.png" alt=""><figcaption></figcaption></figure>
 
+### 도메인 이벤트 생성 및 발행
 
+도메인 이벤트 통신은 비동기 메시징의 한 형태입니다.
 
+**이벤트 생성**
+* 개념적으로 애그리거트가 이벤트를 발행하지만, 애그리거트 내에서 직접 메시징 API를 호출하는 것은 인프라와 비즈니스 로직을 얽히게 하므로 바람직하지 않습니다.
+* 더 나은 방법은 **책임을 애그리거트와 서비스로 분리**하는 것입니다.
+    * **애그리거트**: 상태 변경 시 이벤트를 생성하여 서비스로 반환합니다.
+    * **서비스**: 애그리거트로부터 이벤트를 받아 종속성 주입을 통해 메시징 API를 사용하여 이벤트를 발행합니다.
+* 애그리거트가 이벤트를 서비스로 반환하는 두 가지 주요 방법:
+    1.**메서드 반환 값에 이벤트 목록 포함**: 예를 들어 `Ticket` 애그리거트의 `accept()` 메서드가 `List<DomainEvent>`를 반환하면, 서비스가 이를 받아 발행합니다.
+    2.**애그리거트 루트 필드에 이벤트 누적**: `AbstractAggregateRoot`와 같은 상위 클래스를 확장하여 `registerDomainEvent()`를 통해 이벤트를 기록하고, 서비스가 `getDomainEvents()`로 이벤트를 검색하여 발행합니다.
 
+```java
+// Ticket 애그리거트의 accept() 메서드
+public class Ticket {
+    public List<TicketDomainEvent> accept(LocalDateTime readyBy) {
+        ...
+        this.acceptTime = LocalDateTime.now(); // update Ticket
+        this.readyBy = readyBy;
+        return singletonList(new TicketAcceptedEvent(readyBy)); // return event
+    }
+}
 
+...
 
+public class KitchenService {
+    ...
 
+    public void accept(long ticketId, LocalDateTime readyBy) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+            .orElseThrow(() ->
+                new TicketNotFoundException(ticketId));
+        List<TicketDomainEvent> events = ticket.accept(readyBy);
 
-
-*   **도메인 이벤트 생성 및 발행 (5.3.5 Generating and publishing domain events)**
-    *   도메인 이벤트 통신은 비동기 메시징의 한 형태입니다.
-    *   **이벤트 생성**:
-        *   개념적으로 애그리거트가 이벤트를 발행하지만, 애그리거트 내에서 직접 메시징 API를 호출하는 것은 인프라와 비즈니스 로직을 얽히게 하므로 바람직하지 않습니다.
-        *   더 나은 방법은 **책임을 애그리거트와 서비스(또는 상응하는 클래스)로 분리**하는 것입니다.
-            *   **애그리거트**: 상태 변경 시 이벤트를 생성하여 서비스로 반환합니다.
-            *   **서비스**: 애그리거트로부터 이벤트를 받아 종속성 주입(dependency injection)을 통해 메시징 API를 사용하여 이벤트를 발행합니다.
-        *   애그리거트가 이벤트를 서비스로 반환하는 두 가지 주요 방법:
-            1.  **메서드 반환 값에 이벤트 목록 포함**: 예를 들어 `Ticket` 애그리거트의 `accept()` 메서드가 `List<DomainEvent>`를 반환하면, 서비스가 이를 받아 발행합니다.
-            2.  **애그리거트 루트 필드에 이벤트 누적**: `AbstractAggregateRoot`와 같은 상위 클래스를 확장하여 `registerDomainEvent()`를 통해 이벤트를 기록하고, 서비스가 `getDomainEvents()`로 이벤트를 검색하여 발행합니다.
-    *   **신뢰할 수 있는 이벤트 발행**:
-        *   이벤트는 **애그리거트의 데이터베이스 업데이트 트랜잭션의 일부로 발행**되어야 합니다.
-        *   **Eventuate Tram 프레임워크**는 `OUTBOX` 테이블에 이벤트를 삽입하여 이를 보장합니다. 트랜잭션이 커밋되면, `OUTBOX` 테이블의 이벤트가 메시지 브로커로 발행됩니다.
-        *   `DomainEventPublisher` 인터페이스를 제공하며, `AbstractAggregateDomainEventPublisher`와 같은 추상 상위 클래스를 통해 **타입 안전한 이벤트 발행**을 지원합니다.
-
-*   **도메인 이벤트 소비 (5.3.6 Consuming domain events)**
-    *   도메인 이벤트는 결국 Apache Kafka와 같은 메시지 브로커에 메시지로 발행됩니다.
-    *   Eventuate Tram 프레임워크의 `DomainEventDispatcher`를 사용하면 이벤트를 적절한 핸들러 메서드로 디스패치하여 편리하게 소비할 수 있습니다.
-    *   예를 들어, `KitchenServiceEventConsumer`는 `Restaurant Service`가 발행하는 `RestaurantMenuRevised` 이벤트를 구독하여 `Kitchen Service`의 레스토랑 메뉴 복제본을 최신 상태로 유지합니다. `@EventSubscriber`와 `@EventHandlerMethod` 어노테이션을 사용하여 이벤트 핸들러를 정의합니다.
+        domainEventPublisher.public(Ticket.class, orderId, events); // publish domain event
+    }
+}
+```
 
 ## 주방 서비스 비즈니스 로직
 
