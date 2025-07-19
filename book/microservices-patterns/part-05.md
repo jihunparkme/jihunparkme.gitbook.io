@@ -335,6 +335,36 @@ Order Service는 외부 애플리케이션 및 다른 서비스와 상호작용�
   * **DomainEventPublishingAdapter**: Order 도메인 이벤트를 발행합니다.
   * **OutboundCommandMessageAdapter**: 사가 참여자에게 커맨드 메시지를 보냅니다.
 
+### Order 애그리거트
+
+Order 애그리거트는 소비자가 주문한 내용을 나타냅니다.
+
+**구조**:
+* **`Order` 클래스는 Order 애그리거트의 루트**입니다.
+* Order 애그리거트는 `OrderLineItem`, `DeliveryInfo`, `PaymentInfo`와 같은 **값 객체(Value Object)로 구성**됩니다.
+* `Consumer`와 `Restaurant`와 같은 **다른 애그리거트를 기본 키(Primary Key) 값으로 참조**합니다.
+* JPA를 사용하여 ORDERS 테이블에 매핑되며, `id`, 낙관적 락킹을 위한 `version`, `state`, `consumerId`, `restaurantId` 등의 필드를 가집니다.
+
+.
+
+**상태 머신(State Machine)**:
+* 주문을 생성하거나 업데이트하려면 Order Service는 **사가를 통해 다른 서비스와 협업**해야 합니다.
+* `OrderService`나 사가의 첫 번째 단계는 Order 메서드를 호출하여 작업 가능 여부를 확인하고 Order의 상태를 `APPROVAL_PENDING`, `CANCEL_PENDING`, `REVISION_PENDING`과 같은 **대기(pending) 상태로 변경**합니다. 
+  * 이는 사가 간의 격리를 돕는 **의미론적 락(semantic lock)의 예시**입니다.
+* 사가는 모든 참여 서비스를 호출한 후 Order의 상태를 `APPROVED` 또는 `REJECTED`와 같은 최종 결과 상태로 업데이트합니다. 
+  * 작업이 거부되면 Order는 이전 상태로 되돌아갑니다.
+
+.
+
+**메서드**:
+* **`createOrder()`**: Order를 생성하는 **정적 팩토리 메서드**이며, 생성과 함께 OrderDetails(라인 아이템, 총 금액, 레스토랑 ID/이름 등)가 포함된 **`OrderCreatedEvent`를 발행**합니다. 
+  * Order의 초기 상태는 `APPROVAL_PENDING`입니다.
+* **`noteApproved()`**: `CreateOrderSaga`가 완료되어 소비자의 신용 카드 승인이 성공했을 때 호출되며, Order의 상태를 `APPROVAL_PENDING`에서 **`APPROVED`로 변경**하고 `OrderAuthorized` 이벤트를 발행합니다.
+* **`noteRejected()`**: 서비스가 주문을 거부하거나 승인이 실패했을 때 호출되며, Order의 상태를 `APPROVAL_PENDING`에서 **`REJECTED`로 변경**하고 `OrderRejected` 이벤트를 발행합니다.
+* **`revise()`**: 주문 수정을 시작하는 메서드로, 수정된 주문이 최소 주문 금액을 위반하지 않는지 등 유효성을 검사하고 Order의 상태를 `REVISION_PENDING`으로 변경합니다.
+* **`confirmRevision()`**: Revise Order Saga가 성공적으로 Kitchen Service 및 Accounting Service를 업데이트한 후 호출되며, 주문 라인 항목 및 배송 정보 등을 업데이트하고 Order의 상태를 `APPROVED`로 변경합니다.
+
+
 ## 마치며
 
 
