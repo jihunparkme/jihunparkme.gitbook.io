@@ -312,6 +312,29 @@ public class KitchenService {
 
 ## 주문 서비스 비즈니스 로직
 
+<figure><img src="../../.gitbook/assets/microservices-patterns/5-12.png" alt=""><figcaption></figcaption></figure>
+
+주문 서비스는 FTGO 애플리케이션에서 **주문을 생성, 업데이트, 취소하는 API를 제공**하며, 주로 소비자가 이 API를 호출합니다.  
+이 서비스의 핵심 비즈니스 로직은 다음과 같은 요소들로 구성됩니다:
+
+* **Order 애그리거트**: Order Service의 **중심 애그리거트**입니다.
+* **Restaurant 애그리거트**: Restaurant Service가 소유한 데이터의 **부분적인 복제본**으로, 주문 항목의 유효성을 검사하고 가격을 책정하는 데 사용됩니다.
+* **OrderService**: 비즈니스 로직의 **주요 진입점**이며, 주문과 레스토랑을 생성 및 업데이트하는 메서드를 정의합니다.
+* **OrderRepository 및 RestaurantRepository**: 각각 주문과 레스토랑을 영속화하는 메서드를 정의합니다.
+* **다양한 사가**: CreateOrderSaga와 같이 여러 서비스에 걸친 데이터 일관성을 유지하기 위해 사용됩니다.
+
+Order Service는 외부 애플리케이션 및 다른 서비스와 상호작용하기 위해 다양한 **인바운드 어댑터**와 **아웃바운드 어댑터**를 사용합니다:
+
+* **인바운드 어댑터**:
+  * **REST API**: 소비자 UI에서 호출되어 `OrderService`를 통해 주문을 생성하고 업데이트합니다.
+  * **OrderEventConsumer**: Restaurant Service에서 발행하는 이벤트를 구독하여 레스토랑 데이터 복제본을 업데이트합니다.
+  * **OrderCommandHandlers**: 사가에서 호출되는 비동기 요청/응답 API로, `OrderService`를 호출하여 주문을 업데이트합니다.
+  * **SagaReplyAdapter**: 사가 응답 채널을 구독하고 사가를 호출합니다.
+* **아웃바운드 어댑터**:
+  * **DB adapter**: `OrderRepository` 인터페이스를 구현하고 Order Service 데이터베이스에 접근합니다.
+  * **DomainEventPublishingAdapter**: Order 도메인 이벤트를 발행합니다.
+  * **OutboundCommandMessageAdapter**: 사가 참여자에게 커맨드 메시지를 보냅니다.
+
 ## 마치며
 
 
