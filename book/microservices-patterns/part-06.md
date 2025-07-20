@@ -149,12 +149,20 @@ WHERE VERSION = <원본 버전>
 
 ### Eventuate Local 이벤트 스토어의 작동 방식
 
+<figure><img src="../../.gitbook/assets/microservices-patterns/6-9.png" alt=""><figcaption></figcaption></figure>
+
 **Eventuate Local**은 MySQL과 Apache Kafka를 기반으로 하는 오픈 소스 이벤트 스토어입니다. 그 아키텍처는 다음과 같은 주요 구성 요소로 이루어져 있습니다:
-*   **이벤트 데이터베이스 (Event database)**: 이벤트를 저장하며, MySQL과 같은 RDBMS를 사용합니다.
-    *   **스키마**: `events` 테이블은 이벤트를 저장하고, `entities` 테이블은 각 엔티티의 현재 버전을 저장하여 **낙관적 잠금(optimistic locking)**을 구현하는 데 사용됩니다. `snapshots` 테이블은 엔티티의 스냅샷을 저장합니다.
-    *   **지원 작업**: `find()`, `create()`, `update()` 세 가지 작업이 지원됩니다. `find()`는 최신 스냅샷과 그 이후의 이벤트를 조회하여 애그리게이트의 상태를 재구성합니다. `create()`는 `entities` 테이블과 `events` 테이블에 행을 삽입합니다. `update()`는 `events` 테이블에 이벤트를 삽입하고, `entities` 테이블의 `entity_version`을 업데이트하여 낙관적 잠금 검사를 수행합니다. 이러한 업데이트는 트랜잭션 내에서 원자적으로(atomically) 수행됩니다.
-*   **이벤트 브로커 (Event broker)**: 이벤트를 구독자에게 전달하는 역할을 하며, Apache Kafka를 사용하여 구현됩니다. 각 애그리게이트 타입별로 토픽(topic)을 가지며, 애그리게이트 ID는 메시지 순서를 보존하는 파티션 키로 사용됩니다.
-*   **이벤트 릴레이 (Event relay)**: 이벤트 데이터베이스에 삽입된 이벤트를 이벤트 브로커로 전파하는 역할을 합니다. 이는 주로 **트랜잭션 로그 테일링(transaction log tailing)**(예: MySQL binlog)을 사용하며, 필요한 경우 폴링 방식을 사용하기도 합니다. Eventuate Local의 이벤트 릴레이는 독립 실행형 프로세스로 배포되며, 재시작 시 올바른 위치에서 이벤트를 읽기 위해 현재 위치를 Apache Kafka 토픽에 주기적으로 저장합니다.
+* **이벤트 데이터베이스**: 이벤트를 저장하며, MySQL과 같은 RDBMS를 사용합니다.
+  * **스키마**: `events` 테이블은 이벤트를 저장하고, `entities` 테이블은 각 엔티티의 현재 버전을 저장하여 **낙관적 잠금(optimistic locking)**을 구현하는 데 사용됩니다. `snapshots` 테이블은 엔티티의 스냅샷을 저장합니다.
+  * **지원 작업**: `find()`, `create()`, `update()` 세 가지 작업이 지원됩니다. 
+    * `find()`는 최신 스냅샷과 그 이후의 이벤트를 조회하여 애그리게이트의 상태를 재구성합니다. 
+    * `create()`는 `entities` 테이블과 `events` 테이블에 행을 삽입합니다. 
+    * `update()`는 `events` 테이블에 이벤트를 삽입하고, `entities` 테이블의 `entity_version`을 업데이트하여 낙관적 잠금 검사를 수행합니다. 이러한 업데이트는 트랜잭션 내에서 원자적으로(atomically) 수행됩니다.
+* **이벤트 브로커**: 이벤트를 구독자에게 전달하는 역할을 하며, Apache Kafka를 사용하여 구현됩니다. 
+  * 각 애그리게이트 타입별로 토픽(topic)을 가지며, 애그리게이트 ID는 메시지 순서를 보존하는 파티션 키로 사용됩니다.
+* **이벤트 릴레이**: 이벤트 데이터베이스에 삽입된 이벤트를 이벤트 브로커로 전파하는 역할을 합니다. 
+  * 이는 주로 **트랜잭션 로그 테일링**(ex: MySQL binlog)을 사용하며, 필요한 경우 폴링 방식을 사용하기도 합니다. 
+  * Eventuate Local의 이벤트 릴레이는 독립 실행형 프로세스로 배포되며, 재시작 시 올바른 위치에서 이벤트를 읽기 위해 현재 위치를 Apache Kafka 토픽에 주기적으로 저장합니다.
 
 ### Eventuate 클라이언트 프레임워크 (Java)
 
