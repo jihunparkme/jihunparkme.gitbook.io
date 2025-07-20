@@ -166,10 +166,14 @@ WHERE VERSION = <원본 버전>
 
 ### Eventuate 클라이언트 프레임워크 (Java)
 
+<figure><img src="../../.gitbook/assets/microservices-patterns/6-10.png" alt=""><figcaption></figcaption></figure>
+
 **Eventuate 클라이언트 프레임워크**는 Java 개발자가 Eventuate Local 이벤트 스토어를 사용하여 이벤트 소싱 기반 애플리케이션을 쉽게 개발할 수 있도록 돕습니다.
-*   **기본 클래스 및 인터페이스**: 애그리게이트를 위한 `ReflectiveMutableCommandProcessingAggregate` 클래스를 제공하며, 이는 리플렉션을 사용하여 커맨드(`process()` 메서드)와 이벤트(`apply()` 메서드)를 적절한 메서드로 디스패치합니다. 커맨드 클래스는 `Command` 인터페이스를 확장해야 하며, 이벤트 클래스는 `Event` 인터페이스를 확장해야 합니다.
-*   **AggregateRepository**: 애그리게이트의 생성(save()), 조회(find()), 업데이트(update()) 기능을 제공하는 제네릭 클래스입니다. 이 클래스는 애그리게이트를 생성하거나 업데이트하는 데 필요한 **상용구 코드(boilerplate code)를 캡슐화**하여 편리함을 제공합니다.
-*   **도메인 이벤트 구독**: `@EventSubscriber` 및 `@EventHandlerMethod` 어노테이션을 사용하여 이벤트 핸들러를 작성할 수 있는 API를 제공합니다.
+* **기본 클래스 및 인터페이스**: 애그리게이트를 위한 `ReflectiveMutableCommandProcessingAggregate` 클래스를 제공하며, 이는 리플렉션을 사용하여 커맨드(`process()` 메서드)와 이벤트(`apply()` 메서드)를 적절한 메서드로 디스패치합니다. 
+  * 커맨드 클래스는 `Command` 인터페이스를 확장해야 하며, 이벤트 클래스는 `Event` 인터페이스를 확장해야 합니다.
+* **AggregateRepository**: 애그리게이트의 생성(save()), 조회(find()), 업데이트(update()) 기능을 제공하는 제네릭 클래스입니다. 
+  * 이 클래스는 애그리게이트를 생성하거나 업데이트하는 데 필요한 **상용구 코드(boilerplate code)를 캡슐화**하여 편리함을 제공합니다.
+* **도메인 이벤트 구독**: `@EventSubscriber` 및 `@EventHandlerMethod` 어노테이션을 사용하여 이벤트 핸들러를 작성할 수 있는 API를 제공합니다.
 
 이벤트 소싱은 애그리게이트의 전체 이력(history)을 보존하고, 정확한 감사 로그(audit log)를 제공하며, 도메인 이벤트를 안정적으로 발행하는 등의 여러 이점을 제공합니다. 이러한 이점 덕분에 이벤트 소싱은 마이크로서비스 아키텍처에서 특히 유용하게 사용될 수 있습니다.
 
