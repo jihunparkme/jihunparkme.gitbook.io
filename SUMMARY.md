@@ -60,6 +60,7 @@
   * [04.사가](book/microservices-patterns/part-04.md)
   * [05.비즈니스 로직 설계](book/microservices-patterns/part-05.md)
   * [06.이벤트 소싱](book/microservices-patterns/part-06.md)
+  * [08.외부 API 패턴](book/microservices-patterns/part-08.md)
 * [Kafka Streams in Action](book/kafka-streams-in-action/README.md)
   * [01.카프카 스트림즈](book/kafka-streams-in-action/part-01.md)
   * [02.카프카 스트림즈 개발](book/kafka-streams-in-action/part-02.md)
