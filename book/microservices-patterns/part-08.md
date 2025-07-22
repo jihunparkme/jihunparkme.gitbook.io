@@ -218,22 +218,57 @@ API 게이트웨이를 구현하는 두 가지 주요 방법이 있습니다
 
 ### 기성 API 게이트웨이 제품/서비스 활용
 
-**장점**: 개발 노력이 거의 또는 전혀 필요하지 않습니다.
-
+**장점**: 개발 노력이 거의 또는 전혀 필요하지 않습니다.  
 **단점**: 유연성이 가장 낮고, 일반적으로 API 구성 기능을 지원하지 않습니다.
 
-**예시**:
-* **AWS API Gateway**: 
-  * API 배포 및 관리를 위한 서비스로, REST 리소스를 백엔드 서비스(Lambda, HTTP 서비스, AWS 서비스)로 라우팅하고, 요청/응답 변환 및 인증을 지원합니다. 
-  * AWS에서 호스팅되므로 설치 및 운영 책임이 줄어듭니다. 하지만 **API 구성을 지원하지 않으며**, HTTP(S) 및 JSON에 중점을 둡니다.
-* **AWS Application Load Balancer**: 
-  * HTTP, HTTPS, WebSocket, HTTP/2를 위한 로드 밸런서입니다. 
-  * 기본적인 라우팅 기능은 제공하지만, HTTP 메서드 기반 라우팅, API 구성 또는 인증을 구현하지 않아 API 게이트웨이의 모든 요구사항을 충족하지 못합니다.
-* **Kong 또는 Traefik 같은 API 게이트웨이 제품**: 
-  * 오픈 소스이며 직접 설치 및 운영해야 합니다. 
-  * HTTP 메서드, 헤더, 경로 등을 사용하여 유연한 라우팅 규칙을 구성할 수 있으며, Kong은 인증과 같은 엣지 기능을 플러그인으로 제공합니다. 하지만 **API 구성을 지원하지 않습니다**.
+.
 
+**AWS API Gateway**: 
+* API 배포 및 관리를 위한 서비스로, REST 리소스를 백엔드 서비스(Lambda, HTTP 서비스, AWS 서비스)로 라우팅하고, 요청/응답 변환 및 인증을 지원합니다. 
+* AWS에서 호스팅되므로 설치 및 운영 책임이 줄어듭니다. 하지만 **API 구성을 지원하지 않으며**, HTTP(S) 및 JSON에 중점을 둡니다.
 
+.
+
+**AWS Application Load Balancer**: 
+* HTTP, HTTPS, WebSocket, HTTP/2를 위한 로드 밸런서입니다. 
+* 기본적인 라우팅 기능은 제공하지만, HTTP 메서드 기반 라우팅, API 구성 또는 인증을 구현하지 않아 API 게이트웨이의 모든 요구사항을 충족하지 못합니다.
+
+.
+
+**Kong 또는 Traefik 같은 API 게이트웨이 제품**: 
+* 오픈 소스이며 직접 설치 및 운영해야 합니다. 
+* HTTP 메서드, 헤더, 경로 등을 사용하여 유연한 라우팅 규칙을 구성할 수 있으며, Kong은 인증과 같은 엣지 기능을 플러그인으로 제공합니다. 하지만 **API 구성을 지원하지 않습니다**.
+
+### API 게이트웨이 자체 개발
+
+**장점**: 가장 유연한 접근 방식이지만 개발 노력이 필요합니다.  
+**주요 설계 문제**: 복잡한 코딩을 최소화하기 위한 라우팅 규칙 정의 메커니즘 구현, HTTP 헤더 처리 포함한 HTTP 프록시 동작의 올바른 구현이 필요합니다.  
+**프레임워크 활용**: 이러한 문제를 해결하기 위해 목적에 맞게 설계된 프레임워크를 사용하는 것이 좋습니다.
+
+.
+
+**Netflix Zuul**: 
+* 라우팅, 속도 제한, 인증과 같은 엣지 기능 구현을 위해 개발된 프레임워크입니다. 
+* `필터(filters)` 개념을 사용하여 요청을 가로채고 변환하며 백엔드 서비스를 호출합니다. 
+* 하지만 **경로 기반 라우팅만 지원하며**, `GET /orders`와 `POST /orders`를 다른 서비스로 라우팅하는 것과 같은 HTTP 메서드 기반 라우팅은 불가능하여 CQRS(Command Query Responsibility Segregation) 아키텍처를 지원하지 못합니다.
+
+**Spring Cloud Gateway**: 
+* Spring Framework 5, Spring Boot 2, Spring Webflux를 기반으로 구축된 API 게이트웨이 프레임워크입니다.
+* **주요 기능**: 백엔드 서비스로의 요청 라우팅, API 구성 수행을 위한 요청 핸들러 구현, 인증과 같은 엣지 기능 처리가 용이합니다.
+* **아키텍처**: API 계층(각 클라이언트에 대한 API 모듈)과 공통 계층(인증과 같은 공유 기능)으로 구성된 계층화된 모듈식 아키텍처를 가집니다. 
+  * API 모듈은 요청을 라우팅하거나, 여러 서비스를 호출하여 결과를 결합하는 API 구성을 구현할 수 있습니다.
+* **구현 상세**: `OrderConfiguration` 클래스는 라우팅 규칙을 정의하고, `OrderHandlers` 클래스는 API 구성 로직을 구현합니다. 
+  * 특히 `OrderHandlers`의 `getOrderDetails()` 메서드는 **`Mono` 추상화를 사용하여 여러 서비스를 병렬로 호출하고 결과를 결합함으로써 확장 가능하고 반응형 방식으로 API 구성을 처리**하며, 부분 실패(`onErrorReturn()`)도 처리합니다. 이는 복잡하고 읽기 어려운 콜백(callback) 방식의 단점을 피하게 해줍니다. 
+  * `OrderService`와 같은 프록시 클래스는 `WebClient`를 사용하여 백엔드 서비스에 대한 비동기 HTTP 요청을 수행합니다.
+* **장점**: 사용하기 쉽고, 간단하고 간결한 라우팅 규칙 DSL(Domain Specific Language)을 제공하며, API 구성 및 프로토콜 변환을 위한 핸들러 메서드로의 라우팅이 간단합니다.
+
+> [OrderConfiguration.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-api-gateway/src/main/java/net/chrisrichardson/ftgo/apiagateway/orders/OrderConfiguration.java)
+>
+> [OrderDestinations.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-api-gateway/src/main/java/net/chrisrichardson/ftgo/apiagateway/orders/OrderDestinations.java)
+>
+> [OrderHandlers.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-api-gateway/src/main/java/net/chrisrichardson/ftgo/apiagateway/orders/OrderHandlers.java)
+>
+> [OrderServiceProxy.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-api-gateway/src/main/java/net/chrisrichardson/ftgo/apiagateway/proxies/OrderServiceProxy.java)
 
 
 
