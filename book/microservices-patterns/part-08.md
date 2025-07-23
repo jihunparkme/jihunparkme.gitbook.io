@@ -299,4 +299,24 @@ GraphQL 기반으로 설계한 FTGO API 게이트웨이
 
 <figure><img src="../../.gitbook/assets/microservices-patterns/8-10.png" alt=""><figcaption></figcaption></figure>
 
+이 아키텍처는 클라이언트의 GraphQL 쿼리를 받아 여러 마이크로서비스(소비자, 주문, 음식점, 배달)에 분산된 데이터를 통합하여 응답하는 역할을 수행
+
+**1. 클라이언트 (아폴로 GraphQL 클라이언트)**
+* 가장 상단에 위치하며, API 게이트웨이에 쿼리를 요청하는 주체
+* `http://.../graphql?query={orders(consumerId:1){orderId,restaurant{id}}}` 와 같은 형태로 GraphQL 쿼리를 전송
+* 이 예시 쿼리는 `consumerId`가 1인 주문들을 조회하고, 각 주문의 `orderId`와 연관된 `restaurant`의 `id`를 요청
+
+**2. FTGO API 게이트웨이**
+* 전체 시스템의 진입점 역할을 하는 API 게이트웨이. 클라이언트의 모든 요청은 이 게이트웨이를 통과
+* 내부적으로 `익스프레스 웹 프레임워크`와 `아폴로 GraphQL 엔진`을 사용
+
+    **2.1. 익스프레스 웹 프레임워크 (Express Web Framework)**
+    * Node.js 기반의 웹 애플리케이션 프레임워크로, HTTP 요청을 처리하고 라우팅하는 기본적인 웹 서버 기능을 제공
+    * 클라이언트로부터 GraphQL 쿼리를 포함한 HTTP 요청을 가장 먼저 받음
+
+    **2.2. 아폴로 GraphQL 엔진 (Apollo GraphQL Engine)**
+    * 익스프레스 프레임워크 위에 구축되어 GraphQL 쿼리를 파싱하고 실행하는 핵심 엔진
+    * GraphQL 스키마를 기반으로 쿼리를 해석하고, 데이터를 가져오기 위해 '리졸버(Resolvers)' 함수를 호출
+인 통신을 위해 GraphQL을 활용하는 모범적인 사례를 보여줍니다.
+
 ## 마치며
