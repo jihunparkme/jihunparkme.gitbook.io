@@ -270,6 +270,25 @@ API 게이트웨이를 구현하는 두 가지 주요 방법이 있습니다
 >
 > [OrderServiceProxy.java](https://github.com/gilbutITbook/007035/blob/master/ftgo-api-gateway/src/main/java/net/chrisrichardson/ftgo/apiagateway/proxies/OrderServiceProxy.java)
 
+### API 게이트웨이 구현: GraphQL
+
+**문제 해결**: 
+- 다양한 클라이언트의 요구사항을 충족하고 효율적인 데이터 가져오기를 지원하는 REST API 구현의 어려움을 해결합니다.
+
+**핵심 아이디어**: 
+- 서버의 API가 **그래프 기반 스키마로 구성**되어 클라이언트가 필요한 데이터를 그래프의 노드와 속성, 관계를 통해 쿼리할 수 있도록 합니다. 
+- 이를 통해 클라이언트는 **단 한 번의 API 게이트웨이 왕복으로 필요한 데이터를 모두 가져올 수 있습니다**.
+
+<figure><img src="../../.gitbook/assets/microservices-patterns/8-9.png" alt=""><figcaption></figcaption></figure>
+
+API 게이트웨이의 API는 서비스에 매핑된 그래프 기반의 스키마로 구성
+- 클라이언트는 여러 크래프 노드를 조회하는 쿼리를 전송하며, 그래프 기반 API 프레임워크는 하나 이상의 서비스 데이터를 조회
+
+
+**그래프 기반의 API 기술 장점**: 
+- 클라이언트가 반환되는 데이터를 세밀하게 제어할 수 있게 하여 단일 API로 다양한 클라이언트를 지원하는 것이 가능해집니다. 
+- 또한 API 구성 및 프로젝션을 지원하는 쿼리 실행 프레임워크를 사용하기 때문에 개발 노력을 크게 줄입니다.
+
 
 
 
