@@ -317,6 +317,42 @@ GraphQL 기반으로 설계한 FTGO API 게이트웨이
     **2.2. 아폴로 GraphQL 엔진 (Apollo GraphQL Engine)**
     * 익스프레스 프레임워크 위에 구축되어 GraphQL 쿼리를 파싱하고 실행하는 핵심 엔진
     * GraphQL 스키마를 기반으로 쿼리를 해석하고, 데이터를 가져오기 위해 '리졸버(Resolvers)' 함수를 호출
-인 통신을 위해 GraphQL을 활용하는 모범적인 사례를 보여줍니다.
+
+**3. GraphQL 스키마 정의**
+* 이미지 왼쪽에 `type Query { ... }` 와 `type Order { ... }` 로 표시된 부분은 이 API 게이트웨이가 제공하는 GraphQL 스키마 정의
+* **`type Query`**: 클라이언트가 수행할 수 있는 최상위 쿼리 작업을 정의
+    * `orders(consumerId: Int!): [Order]` : 특정 `consumerId`에 해당하는 주문 목록(`[Order]`)을 반환하는 쿼리
+    * `order(orderId: Int!): Order` : 특정 `orderId`에 해당하는 단일 주문(`Order`)을 반환하는 쿼리
+    * `consumer(consumerId: Int!): Consumer` : 특정 `consumerId`에 해당하는 소비자 정보(`Consumer`)를 반환하는 쿼리
+* **`type Order`**: `Order` 객체의 구조와 포함될 수 있는 필드를 정의
+    * `orderId: ID`, `consumerId: Int` 등 기본 필드와 함께,
+    * `consumer: Consumer`, `restaurant: Restaurant`, `deliveryInfo: DeliveryInfo` 와 같이 다른 타입의 객체를 포함할 수 있어 관계형 데이터를 표현
+
+**4. 리졸버 (Resolvers)**
+* 리졸버는 GraphQL 스키마의 각 필드에 대해 데이터를 실제로 어떻게 가져올지 정의하는 함수들의 집합
+* 클라이언트의 쿼리가 들어오면, 아폴로 GraphQL 엔진은 스키마를 통해 어떤 데이터가 필요한지 파악하고, 해당 필드에 매핑된 리졸버 함수를 호출하여 데이터를 조회
+* **`Query` 리졸버:**
+    * `orders: resolveOrders` : `orders` 쿼리가 요청되면 `resolveOrders` 함수를 호출하여 주문 목록을 조회
+    * `order: resolveOrder` : `order` 쿼리가 요청되면 `resolveOrder` 함수를 호출하여 단일 주문을 조회
+* **`Order` 타입 리졸버:**
+    * `consumer: resolveOrderConsumer` : `Order` 타입 내에서 `consumer` 필드가 요청되면 `resolveOrderConsumer` 함수를 호출하여 해당 주문과 관련된 소비자 정보를 조회
+    * `restaurant: resolveOrderRestaurant` : `Order` 타입 내에서 `restaurant` 필드가 요청되면 `resolveOrderRestaurant` 함수를 호출하여 해당 주문과 관련된 음식점 정보를 조회
+    * `deliveryInfo: resolveOrderDeliveryInfo` : `Order` 타입 내에서 `deliveryInfo` 필드가 요청되면 `resolveOrderDeliveryInfo` 함수를 호출하여 해당 주문과 관련된 배달 정보를 조회
+
+**5. 리졸버 함수 예시**
+* `function resolveOrder()`
+    * `order` 쿼리 또는 `Order` 타입의 기본 `order` 필드를 해결하는 함수
+    * `orderId`를 인자로 받아 `OrderServiceProxy`를 통해 `OrderService`에서 주문 데이터를 조회
+* `function resolveOrderDeliveryInfo()`
+    * `Order` 타입 내의 `deliveryInfo` 필드를 해결하는 함수
+    * `orderId`를 인자로 받아 `DeliveryServiceProxy`를 통해 `DeliveryService`에서 배달 정보를 조회
+
+**6. 서비스 프록시**
+* `ConsumerServiceProxy`, `OrderServiceProxy`, `RestaurantServiceProxy`, `DeliveryServiceProxy`는 각각 해당 마이크로서비스와 통신하기 위한 중간 계층 또는 클라이언트 라이브러리 역할
+* 리졸버 함수는 이 프록시를 통해 실제 마이크로서비스에 요청을 전송
+
+**7. 마이크로서비스 (호출 대상)**
+* 가장 하단에 위치한 실제 비즈니스 로직과 데이터를 처리하는 개별 서비스들
+
 
 ## 마치며
