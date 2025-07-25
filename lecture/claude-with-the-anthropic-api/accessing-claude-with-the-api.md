@@ -37,3 +37,49 @@ Cluade에서 가장 빠른 모델
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/pick-model.png" alt=""><figcaption></figcaption></figure>
 
 # Accessing Claude with the API
+
+## Accessing the API
+
+사용자가 채팅 인터페이스에서 "보내기"를 클릭하는 순간부터 Claude의 응답이 화면에 나타날 때까지 어떤 일이 일어나는지의 과정
+
+**5단계 요청 흐름**
+
+Claude와의 모든 상호작용은 **서버에 대한 요청**, **Anthropic API에 대한 요청**, **모델 처리**, **서버에 대한 응답**, **클라이언트에 대한 응답**이라는 5가지 단계로 구성된 예측 가능한 패턴을 따릅니다.
+
+
+### 서버에 대한 요청
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-1.png" alt=""><figcaption></figcaption></figure>
+
+**서버가 필요한 이유**  
+클라이언트 측 코드에서 Anthropic API에 직접 요청을 보내면 안 되므로 서버가 필요
+- API 요청에는 인증을 위한 비밀 API 키가 필요
+- 클라이언트 코드에서 이 키를 노출하면 심각한 보안 취약점이 발생
+- 누구든지 키를 추출하고 허가 없이 요청 가능
+
+대신, 서버에 요청을 보내고, 해당 서버는 안전하게 저장된 키를 사용하여 Anthropic API와 통신
+
+### Anthropic API에 대한 요청
+
+### 모델 처리
+
+### 서버에 대한 응답
+
+### 클라이언트에 대한 응답
+
+
+
+
+
+
+
+
+
+
+**서버가 필요한 이유**
+- 클라이언트 측 코드에서 Anthropic API에 직접 요청을 보내면 안 됩니다. 이유는 다음과 같습니다.
+
+API 요청에는 인증을 위한 비밀 API 키가 필요합니다.
+클라이언트 코드에서 이 키를 노출하면 심각한 보안 취약점이 발생합니다.
+누구든지 키를 추출하고 허가 없이 요청할 수 있습니다.
+대신, 귀하의 웹이나 모바일 앱은 귀하의 서버에 요청을 보내고, 해당 서버는 안전하게 저장된 키를 사용하여 Anthropic API와 통신합니다.
