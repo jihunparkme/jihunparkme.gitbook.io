@@ -1,4 +1,4 @@
-# Claude with the Anthropic API
+# Anthropic overview
 
 ## Overview of Claude models
 
@@ -35,3 +35,5 @@ Cluade에서 가장 빠른 모델
 - 실시간 상호 작용이 필요한 사용자 대면 앱에 매우 좋은 선택
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/pick-model.png" alt=""><figcaption></figcaption></figure>
+
+# Accessing Claude with the API
