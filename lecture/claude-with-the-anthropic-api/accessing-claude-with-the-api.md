@@ -61,6 +61,19 @@ Claude와의 모든 상호작용은 **서버에 대한 요청**, **Anthropic API
 
 ### Anthropic API에 대한 요청
 
+서버가 Anthropic API에 접속하면 공식 SDK를 사용하거나 일반 HTTP 요청을 가능
+- Anthropic은 `Python`, `TypeScript`, `JavaScript`, `Go`, `Ruby`용 SDK를 제공
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-2.png" alt=""><figcaption></figcaption></figure>
+
+
+모든 요청에는 다음과 같은 필수 필드가 포함
+- API 키: Anthropic에 대한 개발자의 요청을 식별
+- 모델: 사용할 모델의 이름(ex: "claude-3-sonnet")
+- 메시지: 사용자 입력 텍스트가 포함된 목록
+- 최대 토큰: Claude가 생성할 수 있는 토큰 수 제한
+
+
 ### 모델 처리
 
 ### 서버에 대한 응답
