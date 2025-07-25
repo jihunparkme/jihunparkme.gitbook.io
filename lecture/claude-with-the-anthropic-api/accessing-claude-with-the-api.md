@@ -73,8 +73,53 @@ Claude와의 모든 상호작용은 **서버에 대한 요청**, **Anthropic API
 - 메시지: 사용자 입력 텍스트가 포함된 목록
 - 최대 토큰: Claude가 생성할 수 있는 토큰 수 제한
 
-
 ### 모델 처리
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-3.png" alt=""><figcaption></figcaption></figure>
+
+**토큰화**  
+클로드는 먼저 입력 텍스트를 토큰이라는 작은 단위로 나눔
+- 토큰은 단어 전체, 단어의 일부, 공백 또는 기호일 수 있음
+- 편의상 `각 단어를 하나의 토큰`이라고 생각하면 됨
+
+**임베딩**  
+- 각 토큰은 임베딩으로 변환
+- 임베딩은 해당 단어의 모든 가능한 의미를 나타내는 긴 숫자 목록
+- 임베딩은 `의미적 관계를 포착하는 숫자 정의`라고 생각하면 됨
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-3-1.png" alt=""><figcaption></figcaption></figure>
+
+단어는 종종 여러 의미를 갖습니다. 예를 들어, "quantum"은 다음과 같은 의미를 가질 수 있습니다.
+- 물리량의 이산적인 단위(물리학)
+- 양자 역학 또는 양자 물리학 개념
+- 매우 작거나 아원자적인 것
+- 양자 컴퓨팅 응용 프로그램
+
+**문맥화**
+- Claude는 주변 단어를 기반으로 각 임베딩을 세분화하여 맥락에서 가장 가능성 있는 의미를 파악
+- 이 과정을 통해 수치적 표현을 조정하여 적절한 정의를 강조
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-3-2.png" alt=""><figcaption></figcaption></figure>
+
+**세대**
+- 문맥화된 임베딩은 다음 단어가 나올 확률을 계산하는 출력 계층을 통과
+- Claude는 항상 확률이 가장 높은 단어를 선택하는 것은 아님
+- 확률과 통제된 무작위성을 혼합하여 자연스럽고 다양한 반응을 생성
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-3-3.png" alt=""><figcaption></figcaption></figure>
+
+Claude는 각 단어를 선택한 후 이를 시퀀스에 추가하고 다음 단어에 대해 전체 과정을 반복
+
+**클로드가 생성을 멈추면**
+- 각 토큰 후에 Claude는 계속할지 여부를 결정하기 위해 여러 조건을 확인
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-3-4.png" alt=""><figcaption></figcaption></figure>
+
+- 최대 토큰에 도달했습니다. 지정한 한도에 도달했습니까?
+- 자연스러운 결말. 시퀀스 끝 토큰을 생성했나요?
+- 정지 시퀀스. 미리 정의된 정지 문구를 만났나요?
+
+
 
 ### 서버에 대한 응답
 
@@ -85,14 +130,3 @@ Claude와의 모든 상호작용은 **서버에 대한 요청**, **Anthropic API
 
 
 
-
-
-
-
-**서버가 필요한 이유**
-- 클라이언트 측 코드에서 Anthropic API에 직접 요청을 보내면 안 됩니다. 이유는 다음과 같습니다.
-
-API 요청에는 인증을 위한 비밀 API 키가 필요합니다.
-클라이언트 코드에서 이 키를 노출하면 심각한 보안 취약점이 발생합니다.
-누구든지 키를 추출하고 허가 없이 요청할 수 있습니다.
-대신, 귀하의 웹이나 모바일 앱은 귀하의 서버에 요청을 보내고, 해당 서버는 안전하게 저장된 키를 사용하여 Anthropic API와 통신합니다.
