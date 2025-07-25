@@ -127,13 +127,11 @@ Claude는 각 단어를 선택한 후 이를 시퀀스에 추가하고 다음 �
 - 사용: 입력 및 출력 토큰 수
 - 정지 이유: 세대가 종료된 이유
 
-
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-4.png" alt=""><figcaption></figcaption></figure>
 
-### 클라이언트에 대한 응답
+### Request to Client
 
+개발자의 서버는 이 응답을 받고 생성된 텍스트를 개발자의 클라이언트 애플리케이션으로 다시 전달
+- 클라이언트 애플리케이션에서는 이 텍스트가 사용자 인터페이스에 표시
 
-
-
-
-
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-5.png" alt=""><figcaption></figcaption></figure>
