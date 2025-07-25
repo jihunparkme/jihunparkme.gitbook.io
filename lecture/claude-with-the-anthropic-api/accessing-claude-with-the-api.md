@@ -47,7 +47,7 @@ Cluade에서 가장 빠른 모델
 Claude와의 모든 상호작용은 **서버에 대한 요청**, **Anthropic API에 대한 요청**, **모델 처리**, **서버에 대한 응답**, **클라이언트에 대한 응답**이라는 5가지 단계로 구성된 예측 가능한 패턴을 따릅니다.
 
 
-### 서버에 대한 요청
+### Request to Server
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-1.png" alt=""><figcaption></figcaption></figure>
 
@@ -59,7 +59,7 @@ Claude와의 모든 상호작용은 **서버에 대한 요청**, **Anthropic API
 
 대신, 서버에 요청을 보내고, 해당 서버는 안전하게 저장된 키를 사용하여 Anthropic API와 통신
 
-### Anthropic API에 대한 요청
+### Request to Anthropic API
 
 서버가 Anthropic API에 접속하면 공식 SDK를 사용하거나 일반 HTTP 요청을 가능
 - Anthropic은 `Python`, `TypeScript`, `JavaScript`, `Go`, `Ruby`용 SDK를 제공
@@ -73,7 +73,7 @@ Claude와의 모든 상호작용은 **서버에 대한 요청**, **Anthropic API
 - 메시지: 사용자 입력 텍스트가 포함된 목록
 - 최대 토큰: Claude가 생성할 수 있는 토큰 수 제한
 
-### 모델 처리
+### Model Processing
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-3.png" alt=""><figcaption></figcaption></figure>
 
@@ -119,9 +119,16 @@ Claude는 각 단어를 선택한 후 이를 시퀀스에 추가하고 다음 �
 - 자연스러운 결말. 시퀀스 끝 토큰을 생성했나요?
 - 정지 시퀀스. 미리 정의된 정지 문구를 만났나요?
 
+### Response to Server
+
+**API 응답**  
+생성이 완료되면 API는 다음을 포함하는 구조화된 응답을 다시 보냅니다.
+- 메시지: 생성된 텍스트
+- 사용: 입력 및 출력 토큰 수
+- 정지 이유: 세대가 종료된 이유
 
 
-### 서버에 대한 응답
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-4.png" alt=""><figcaption></figcaption></figure>
 
 ### 클라이언트에 대한 응답
 
