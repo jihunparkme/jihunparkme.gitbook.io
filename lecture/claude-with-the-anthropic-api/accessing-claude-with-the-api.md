@@ -237,3 +237,31 @@ message = client.messages.create(
 # 깨끗하고 읽기 쉬운 출력을 얻는 방법
 message.content[0].text
 ```
+
+## Multi-Turn conversations
+
+Anthropic API와 Claude를 사용할 때 이해해야 할 중요한 개념  
+Claude는 사용자의 대화 기록을 저장하지 않음. 사용자가 요청하는 각 요청은 이전 교환에 대한 기억 없이 완전히 독립적
+- 즉, Claude가 이전 메시지의 맥락을 기억하는 multi-turn 대화를 원한다면 대화 상태를 직접 처리해야 함.
+
+**상태 비저장 대화의 문제**
+
+클로드에게 "양자 컴퓨팅이란 무엇인가요?"라고 물어보고 좋은 반응을 얻었다고 가정
+- 그런 다음 "다른 문장을 써보세요"로 후속작을 요청
+- Claude는 당신이 무엇을 가리키는지 전혀 모르는 상태
+- 양자 컴퓨팅 논의에 대한 기억이 없기 때문에 완전히 무작위적인 내용의 문장을 작성
+
+.
+
+**Multi-Turn 대화 작동 방식**  
+대화 맥락을 유지하려면 두 가지를 해야 합니다.
+- 코드의 모든 메시지 목록을 수동으로 유지 관리
+- 모든 요청에 전체 메시지 기록 보내기
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/multi-turn.png" alt=""><figcaption></figcaption></figure>
+
+실제로 작동하는 흐름
+- 클로드에게 초기 사용자 메시지 보내기
+- 클로드의 답변을 받아 메시지 목록에 보조 메시지로 추가
+- 후속 질문을 다른 사용자 메시지로 추가
+- 전체 대화 기록을 클로드에게 전송
