@@ -135,3 +135,38 @@ Claude는 각 단어를 선택한 후 이를 시퀀스에 추가하고 다음 �
 - 클라이언트 애플리케이션에서는 이 텍스트가 사용자 인터페이스에 표시
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/api-step-5.png" alt=""><figcaption></figcaption></figure>
+
+## Making a request
+
+**API 키 받기**
+
+1️⃣ [Getting an API key](https://console.anthropic.com/)
+
+.
+
+**환경 설정**
+
+1️⃣ 필요한 종속성을 설치
+
+```bash
+pip install anthropic python-dotenv
+```
+
+2️⃣ 동일 디렉토리에 `.env` 파일을 만들어 API 키를 안전하게 저장
+- `.gitignore` 파일에 `.env` 저장 
+
+```python
+ANTHROPIC_API_KEY="your-api-key-here"
+```
+
+3️⃣ 환경 변수를 로드하고 API 클라이언트 생성
+
+```python
+from dotenv import load_dotenv
+load_dotenv()
+
+from anthropic import Anthropic
+
+client = Anthropic()
+model = "claude-sonnet-4-0"
+```
