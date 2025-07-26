@@ -179,7 +179,7 @@ model = "claude-sonnet-4-0"
 client.messages.create(
   model=model,
   max_tokens=1000,
-  message=[
+  messages=[
     # List of message to send
   ]
 )
@@ -205,3 +205,24 @@ API 요청의 핵심은 `client.messages.create()함`
 - Assistant messages: 클로드가 생성한 응답
 
 각 메시지는 역할("User" 또는 "Assistant")과 내용(실제 텍스트)이 포함된 사전
+
+.
+
+**첫 번째 요청하기**
+
+클로드에게 요청하는 예시
+
+```python
+message = client.messages.create(
+  model=model,
+  max_tokens=1000,
+  messages=[
+    {
+      "role": "user",
+      "content": "What is quantum computing? Answer in one sentence"
+    }
+  ]
+)
+```
+
+이 코드를 실행하면 클로드가 요청을 처리하고 요청에 대한 메타데이터와 함께 생성된 텍스트가 포함된 응답 객체를 반환
