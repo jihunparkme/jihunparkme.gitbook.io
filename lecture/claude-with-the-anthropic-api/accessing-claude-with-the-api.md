@@ -170,3 +170,27 @@ from anthropic import Anthropic
 client = Anthropic()
 model = "claude-sonnet-4-0"
 ```
+
+.
+
+**생성 함수**
+
+```python
+client.messages.create(
+  model=model,
+  max_tokens=1000,
+  message=[
+    # List of message to send
+  ]
+)
+```
+
+API 요청의 핵심은 `client.messages.create()함`
+- 이 함수에는 세 가지 주요 매개변수가 필요
+  - 모델: 사용하려는 클로드 모델의 이름
+  - max_tokens: 응답 길이에 대한 안전 제한(목표가 아님)
+  - 메시지: 클로드에게 보내는 대화 기록
+
+`max_tokens` 매개변수는 안전 메커니즘으로 작용
+- 1000으로 설정하면 더 많은 토큰이 있어도 1000개 이후에는 생성을 중지
+- Claud는 이 한계에 도달하려고 하지 않고 적절하다고 생각하는 것을 작성하고 최대값에 도달하면 중지
