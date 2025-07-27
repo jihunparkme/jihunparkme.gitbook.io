@@ -484,7 +484,7 @@ def chat(messages, system=None, temperature=1.0):
         "model": model,
         "max_tokens": 1000,
         "messages": messages,
-        "temperature": temperature
+        "temperature": temperature # temperature 지원
     }
     
     if system:
@@ -573,3 +573,24 @@ answer = chat(messages, temperature=1.0)
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/response-streaming-5.png" alt=""><figcaption></figcaption></figure>
 
 ContentBlockDelta 이벤트에는 사용자에게 표시하려는 실제 생성된 텍스트가 포함
+
+.
+
+**Basic Streaming Implementation**
+
+스트리밍을 활성화하려면 메시지에 `stream=True` 추가하기
+
+```python
+messages = []
+add_user_message(messages, "Write a 1 sentence description of a fake database")
+
+stream = client.messages.create(
+    model=model,
+    max_tokens=1000,
+    messages=messages,
+    stream=True # 스트리밍을 활성화
+)
+
+for event in stream:
+    print(event)
+```
