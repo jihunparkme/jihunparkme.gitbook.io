@@ -265,3 +265,53 @@ Claude는 사용자의 대화 기록을 저장하지 않음. 사용자가 요청
 - 클로드의 답변을 받아 메시지 목록에 보조 메시지로 추가
 - 후속 질문을 다른 사용자 메시지로 추가
 - 전체 대화 기록을 클로드에게 전송
+
+.
+
+**Building Helper Functions**  
+대화 관리를 더 쉽게 하기 위해 세 가지 도우미 기능을 만들 수 있습니다:
+
+```python
+def add_user_message(messages, text):
+    user_message = {"role": "user", "content": text}
+    messages.append(user_message)
+
+def add_assistant_message(messages, text):
+    assistant_message = {"role": "assistant", "content": text}
+    messages.append(assistant_message)
+
+def chat(messages):
+    message = client.messages.create(
+        model=model,
+        max_tokens=1000,
+        messages=messages,
+    )
+    return message.content[0].text
+```
+
+**Putting It All Together**  
+다음은 이러한 기능을 사용하여 대화를 유지하는 방법입니다:
+
+
+```python
+# Start with an empty message list
+messages = []
+
+# Add the initial user question
+add_user_message(messages, "Define quantum computing in one sentence")
+
+# Get Claude's response
+answer = chat(messages)
+
+# Add Claude's response to the conversation history
+add_assistant_message(messages, answer)
+
+# Add a follow-up question
+add_user_message(messages, "Write another sentence")
+
+# Get the follow-up response with full context
+final_answer = chat(messages)
+```
+
+이제 클로드는 "Write another sentence"가 양자 컴퓨팅 정의를 확장하는 것을 의미한다는 것을 이해하게 될 것입니다. 왜냐하면 당신이 완전한 대화 맥락을 제공했기 때문
+- 이러한 도우미 기능은 클로드와의 작업 전반에 걸쳐 유용할 것이며, 여러 교환을 통해 의미 있는 대화를 유지할 수 있는 애플리케이션을 훨씬 쉽게 구축 가능
