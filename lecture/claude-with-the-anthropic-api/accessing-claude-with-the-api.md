@@ -540,8 +540,19 @@ answer = chat(messages, temperature=1.0)
 
 **The Problem with Standard Responses**
 
-일반적인 채팅 설정에서는 서버가 클로드에게 사용자 메시지를 보내고 응답이 완료될 때까지 기다렸다가 클라이언트에게 무언가를 다시 보냅니다. 이렇게 하면 사용자가 아무런 피드백도 받지 못하는 어색한 지연이 발생합니다.
+일반적인 채팅 설정에서는 서버가 클로드에게 사용자 메시지를 보내고 응답이 완료될 때까지 기다렸다가 클라이언트에게 무언가를 다시 보냅니다. 
+- 이렇게 하면 사용자가 아무런 피드백도 받지 못하는 어색한 지연이 발생합니다.
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/response-streaming-2.png" alt=""><figcaption></figcaption></figure>
 
+.
 
+**How Streaming Works**
+
+스트리밍이 활성화되면 클로드는 요청을 수신했음을 나타내는 초기 응답을 즉시 전송하고 텍스트를 생성하기 시작했음을 알립니다. 
+- 그런 다음 각 이벤트에는 전체 응답의 작은 부분이 포함된 일련의 이벤트가 표시됩니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/response-streaming-3.png" alt=""><figcaption></figcaption></figure>
+
+서버는 이러한 텍스트 청크가 도착하면 클라이언트 애플리케이션으로 전달하여 사용자가 응답이 한 단어씩 쌓이는 것을 확인할 수 있습니다.
+- 이 모든 이벤트는 클로드에 대한 단일 요청의 일부입니다.
