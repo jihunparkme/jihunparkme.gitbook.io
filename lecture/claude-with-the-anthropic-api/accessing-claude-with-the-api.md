@@ -594,3 +594,21 @@ stream = client.messages.create(
 for event in stream:
     print(event)
 ```
+
+.
+
+**Simplified Text Streaming**
+
+이벤트를 수동으로 구문 분석하는 대신 텍스트 콘텐츠만 추출하는 SDK의 간소화된 스트리밍 인터페이스를 사용할 수 있습니다:
+
+```python
+with client.messages.stream(
+    model=model,
+    max_tokens=1000,
+    messages=messages
+) as stream:
+    for text in stream.text_stream:
+        print(text, end="")
+```
+
+이 접근 방식은 일반적으로 사용자에게 응답을 표시하는 데 필요한 실제 텍스트 내용을 제외한 모든 내용을 자동으로 필터링합니다.
