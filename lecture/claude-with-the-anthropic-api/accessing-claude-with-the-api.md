@@ -354,3 +354,52 @@ client.messages.create(
     system=system_prompt
 )
 ```
+
+.
+
+**Seeing the Difference**
+
+시스템 프롬프트가 없으면 클로드는 즉시 완전한 단계별 솔루션을 제공
+- 도움이 될 수 있지만 학생이 직접 문제를 생각하도록 장려하지는 않음.
+- 수학 튜터 시스템 프롬프트를 통해 클로드의 반응은 극적으로 변화
+  - 클로드는 전체 솔루션을 제공하는 대신 "x를 분리하는 좋은 첫 번째 단계는 무엇이라고 생각하시나요? 용어 이동을 시작하려면 양쪽에서 어떤 작업을 수행해야 할지 고려해 보세요."와 같은 안내 질문을 던짐.
+
+.
+
+**Building a Flexible Chat Function**
+
+시스템 프롬프트를 하드코딩하는 대신, 시스템 프롬프트를 매개변수로 받아 채팅 기능을 더 재사용할 수 있게 만들기
+
+```python
+def chat(messages, system=None):
+    params = {
+        "model": model,
+        "max_tokens": 1000,
+        "messages": messages,
+    }
+    
+    if system:
+        params["system"] = system
+    
+    message = client.messages.create(**params)
+    return message.content[0].text
+```
+
+이 접근 방식은 중요한 세부 사항을 처리
+- Claude의 API는 `system=none`를 허용하지 않으므로 시스템 매개변수가 제공될 때만 조건부로 포함
+
+```python
+# Without system prompt
+answer = chat(messages)
+
+# With system prompt
+system = """
+You are a patient math tutor.
+Do not directly answer a student's questions.
+Guide them to a solution step by step.
+"""
+answer = chat(messages, system=system)
+```
+
+시스템 프롬프트는 의도한 목적에 맞게 일관되고 적절하게 작동하는 AI 애플리케이션을 만드는 데 필수적
+- 일반적인 AI 응답을 전문화되고 역할에 적합한 상호 작용으로 변환
