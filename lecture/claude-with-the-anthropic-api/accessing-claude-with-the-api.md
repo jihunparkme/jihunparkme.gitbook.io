@@ -299,19 +299,58 @@ messages = []
 
 # Add the initial user question
 add_user_message(messages, "Define quantum computing in one sentence")
-
 # Get Claude's response
 answer = chat(messages)
-
 # Add Claude's response to the conversation history
 add_assistant_message(messages, answer)
-
 # Add a follow-up question
 add_user_message(messages, "Write another sentence")
-
 # Get the follow-up response with full context
 final_answer = chat(messages)
 ```
 
 이제 클로드는 "Write another sentence"가 양자 컴퓨팅 정의를 확장하는 것을 의미한다는 것을 이해하게 될 것입니다. 왜냐하면 당신이 완전한 대화 맥락을 제공했기 때문
 - 이러한 도우미 기능은 클로드와의 작업 전반에 걸쳐 유용할 것이며, 여러 교환을 통해 의미 있는 대화를 유지할 수 있는 애플리케이션을 훨씬 쉽게 구축 가능
+
+## System prompts
+
+`System prompts`는 클로드가 사용자 입력에 어떻게 반응하는지 사용자 지정하는 강력한 방법  
+일반적인 답변 대신 클로드의 톤, 스타일, 접근 방식을 구체적인 사용 사례에 맞게 조정
+
+**Why System Prompts Matter**
+
+수학 과외 챗봇을 만드는 것을 고려해 보세요. 한 학생이 "x의 5x + 2 = 3을 어떻게 풀 수 있나요?"라고 물으면 클로드가 답을 뱉는 것이 아니라 실제 과외 선생님처럼 행동하기를 원합니다. 좋은 수학 과외 선생님은 이렇게 해야 합니다:
+- 처음에는 완전한 해결책보다는 힌트를 제공
+- 인내심을 가지고 학생들이 문제를 차근차근 해결해 나감
+- 유사한 문제에 대한 해결책을 예제로 보여줌
+
+클로드가 아래와 같이 하는 것을 절대 원하지 않을 것임
+- 즉시 직접 답변 제공
+- 학생들에게 계산기만 사용하라고 말함
+
+.
+
+**How System Prompts Work**
+
+시스템 프롬프트는 클로드에게 응답 방법에 대한 지침을 제공
+- 이를 일반 문자열로 정의하고 생성 함수 호출에 전달
+- 주요 이점
+  - 시스템 프롬프트는 클로드에게 응답 방법에 대한 지침을 제공
+  - 클로드는 특정 역할을 맡은 사람이 응답하는 것과 같은 방식으로 응답하려고 노력
+  - 클로드를 계속 과정을 수행하는 데 도움
+
+```python
+# 기본 구조
+system_prompt = """
+You are a patient math tutor.
+Do not directly answer a student's questions.
+Guide them to a solution step by step.
+"""
+
+client.messages.create(
+    model=model,
+    messages=messages,
+    max_tokens=1000,
+    system=system_prompt
+)
+```
