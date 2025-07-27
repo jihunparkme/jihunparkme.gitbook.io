@@ -634,3 +634,36 @@ with client.messages.stream(
 ```
 
 이는 사용자를 위한 실시간 스트리밍과 애플리케이션 로직을 위한 완전한 메시지 객체라는 두 가지 장점을 모두 제공합니다.
+
+## Controlling model output
+
+더 나은 프롬프트를 만드는 것 외에도 클로드의 출력을 제어하는 두 가지 강력한 기술이 있습니다:
+- 미리 채워진 어시스턴트 메시지와 중지 시퀀스입니다. 
+- 이러한 방법을 사용하면 클로드가 응답하는 방식과 텍스트 생성을 중지하는 시점을 정확하게 제어할 수 있습니다.
+
+**Prefilled Assistant Messages**
+
+메시지 prefilling을 통해 클로드의 응답을 시작할 수 있으며, 그 시작 지점부터 계속됩니다. 
+- 이 기술은 클로드를 특정 방향으로 조종하는 데 매우 유용합니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/controlling-model-output.png" alt=""><figcaption></figcaption></figure>
+
+사용자 메시지만 보내는 대신 메시지 목록 끝에 어시스턴트 메시지를 추가합니다. 클로드는 이 어시스턴트 메시지를 보고 "이미 이 질문에 답하기 시작했으니 중단했던 부분부터 계속해야 한다"고 생각합니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/controlling-model-output-1.png" alt=""><figcaption></figcaption></figure>
+
+예를 들어, 미리 채우지 않고 "아침 식사에 차가 더 나을까요, 커피가 더 나을까요?"라고 물으면 클로드는 일반적으로 두 가지 옵션을 모두 언급하며 균형 잡힌 답변을 내립니다. 하지만 "커피가 더 낫기 때문에"라는 어시스턴트 메시지를 추가하면 클로드는 거기서부터 커피를 위한 케이스를 만들 수 있습니다.
+
+이해해야 할 중요한 점은 클로드가 미리 채워진 텍스트(prefilling)가 정확히 끝나는 지점부터 계속된다는 것입니다. "커피가 더 낫기 때문에"라고 쓰면 클로드는 그 텍스트를 반복하지 않고 "왜냐하면" 직후에 생각을 완성합니다.
+
+```python
+messages = []
+add_user_message(messages, "Is tea or coffee better at breakfast?")
+add_assistant_message(messages, "Coffee is better because")
+answer = chat(messages)
+```
+
+이 기술을 사용하면 클로드를 어느 방향으로든 조종할 수 있습니다
+- 커피를 선호합니다: "커피가 더 좋은 이유는"
+- 좋아하는 차: "차가 더 좋은 이유는"
+- 반대 입장을 취하세요: "둘 다 별로 좋지 않은 이유는 다음과 같습니다."
