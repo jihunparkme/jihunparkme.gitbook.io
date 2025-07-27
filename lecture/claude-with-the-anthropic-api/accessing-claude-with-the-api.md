@@ -403,3 +403,23 @@ answer = chat(messages, system=system)
 
 시스템 프롬프트는 의도한 목적에 맞게 일관되고 적절하게 작동하는 AI 애플리케이션을 만드는 데 필수적
 - 일반적인 AI 응답을 전문화되고 역할에 적합한 상호 작용으로 변환
+
+## Temperature
+
+`Temperature`는 클로드의 반응이 얼마나 예측 가능하거나 창의적일지를 제어하는 강력한 매개변수
+- 효과적으로 사용하는 방법을 이해하면 AI 애플리케이션을 획기적으로 개선 가능
+
+**How Claude Generates Text**
+
+`Temperature`로 들어가기 전에 클로드의 텍스트 생성 과정을 이해하기
+- 클로드에게 "What do you think?"와 같은 프롬프트를 보내면 세 가지 주요 단계를 거칩니다
+  1. 토큰화: 입력을 더 작은 덩어리로 나누기
+  2. 예측: 가능한 다음 단어에 대한 확률 계산
+  3. 샘플링: 해당 확률을 기반으로 토큰 선택
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/temperature-1.png" alt=""><figcaption></figcaption></figure>
+
+이 예제에서 클로드는 30% 확률을 "about", 20% 확률을 "would", 10% 확률을 "of" 등으로 할당할 수 있습니다. 그런 다음 모델은 하나의 토큰을 선택하고 이 전체 과정을 반복하여 완전한 문장을 만듭니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/temperature-2.png" alt=""><figcaption></figcaption></figure>
+
