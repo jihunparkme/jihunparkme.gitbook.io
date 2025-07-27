@@ -495,3 +495,20 @@ def chat(messages, system=None, temperature=1.0):
 ```
 
 주요 변경 사항은 `temperature=1.0`을 매개변수로 추가하고 `temperature`를 포함
+
+.
+
+**Testing Temperature Effects**
+
+작동 중인 `temperature`를 확인하려면 다양한 설정으로 영화 아이디어를 만들어 보자
+
+```python
+# Low temperature - more predictable
+answer = chat(messages, temperature=0.0)
+
+# High temperature - more creative  
+answer = chat(messages, temperature=1.0)
+```
+
+- `temperature=0.0`에서는 "시간 여행을 하는 고고학자는 고대 유물이 도난당하는 것을 막아야 한다"와 같은 반응을 지속적으로 얻을 수 있습니다. 
+- `temperature=1.0`에서는 테마, 캐릭터, 플롯 요소에서 훨씬 더 다양한 것을 볼 수 있습니다.
