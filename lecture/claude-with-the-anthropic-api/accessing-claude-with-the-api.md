@@ -445,3 +445,29 @@ answer = chat(messages, system=system)
 
 - `Temperature` 0.0에서 "about"은 100% 확률로 완전히 결정론적
 - `Temperature` 1.0에서는 확률이 모든 가능한 토큰에 더 고르게 분포되어 무작위성과 창의성을 도입
+
+.
+
+**Choosing the Right Temperature**
+
+다양한 작업은 서로 다른 온도 범위를 요구
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/temperature-5.png" alt=""><figcaption></figcaption></figure>
+
+Low Temperature (0.0 - 0.3)
+- 사실적 응답
+- 코딩 지원
+- 데이터 추출
+- 콘텐츠 중재
+
+Medium Temperature (0.4 - 0.7)
+- 요약
+- 교육 콘텐츠
+- 문제 해결
+- 제약이 있는 창의적인 글쓰기
+
+High Temperature (0.8 - 1.0)
+- 브레인스토밍
+- 창의적 글쓰기
+- 마케팅 콘텐츠
+- 농담 생성
