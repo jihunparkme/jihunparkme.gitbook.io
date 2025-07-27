@@ -535,3 +535,13 @@ answer = chat(messages, temperature=1.0)
 - 솔루션은 응답 스트리밍으로, 클로드가 텍스트를 생성할 때 사용자가 텍스트를 청크 단위로 표시하여 훨씬 더 반응적인 느낌을 줄 수 있습니다.
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/response-streaming-1.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**The Problem with Standard Responses**
+
+일반적인 채팅 설정에서는 서버가 클로드에게 사용자 메시지를 보내고 응답이 완료될 때까지 기다렸다가 클라이언트에게 무언가를 다시 보냅니다. 이렇게 하면 사용자가 아무런 피드백도 받지 못하는 어색한 지연이 발생합니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/response-streaming-2.png" alt=""><figcaption></figcaption></figure>
+
+
