@@ -667,3 +667,34 @@ answer = chat(messages)
 - 커피를 선호합니다: "커피가 더 좋은 이유는"
 - 좋아하는 차: "차가 더 좋은 이유는"
 - 반대 입장을 취하세요: "둘 다 별로 좋지 않은 이유는 다음과 같습니다."
+
+.
+
+**Stop Sequences**
+
+중지 시퀀스는 특정 문자열을 생성하면 클로드가 즉시 응답을 종료하도록 강제합니다. 이는 응답의 길이나 끝점을 제어하는 데 완벽합니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/controlling-model-output-2.png" alt=""><figcaption></figcaption></figure>
+
+개념은 간단합니다: 문자열 목록을 제공하면 클로드가 해당 문자열을 생성하자마자 즉시 응답을 멈춥니다. 정지 시퀀스 자체는 최종 응답에 포함되지 않습니다.
+
+예를 들어, 클로드에게 정지 순서가 "5"인 "1에서 10까지 세기"를 요청하면 다음과 같은 결과를 얻을 수 있습니다:
+
+```text
+1, 2, 3, 4, 
+```
+
+생성은 "5" 바로 앞에서 멈춥니다. 왜냐하면 그것이 당신의 정지 순서이기 때문입니다.
+
+중지 시퀀스를 구현하려면 채팅 기능을 수정하여 중지 시퀀스 매개변수를 허용해야 합니다:
+
+```python
+def chat(messages, stop_sequences=[]):
+    # Add stop_sequences to your API call parameters
+
+messages = []
+add_user_message(messages, "Count from 1 to 10")
+answer = chat(messages, stop_sequences=["5"])
+```
+
+정지가 발생하는 위치를 정확하게 미세 조정할 수 있습니다. 후행 구두점을 피하려면 "5" 대신 ", 5"와 같은 보다 구체적인 정지 시퀀스를 사용하세요.
