@@ -556,3 +556,20 @@ answer = chat(messages, temperature=1.0)
 
 서버는 이러한 텍스트 청크가 도착하면 클라이언트 애플리케이션으로 전달하여 사용자가 응답이 한 단어씩 쌓이는 것을 확인할 수 있습니다.
 - 이 모든 이벤트는 클로드에 대한 단일 요청의 일부입니다.
+
+.
+
+**Understanding Stream Events**
+
+스트리밍을 활성화하면 클로드는 여러 유형의 이벤트를 전송
+
+- MessageStart: 새 메시지가 전송
+- ContentBlockStart: 텍스트, 도구 사용 또는 기타 콘텐츠를 포함하는 새 블록 시작
+- ContentBlockDelta: 실제 생성된 텍스트의 일부
+- ContentBlockStop: 현재 콘텐츠 블록이 완료
+- MessageDelta: 현재 메시지가 완료
+- MessageStop: 현재 메시지에 대한 정보 종료
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/response-streaming-5.png" alt=""><figcaption></figcaption></figure>
+
+ContentBlockDelta 이벤트에는 사용자에게 표시하려는 실제 생성된 텍스트가 포함
