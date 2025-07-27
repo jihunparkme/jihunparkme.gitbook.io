@@ -471,3 +471,27 @@ High Temperature (0.8 - 1.0)
 - 창의적 글쓰기
 - 마케팅 콘텐츠
 - 농담 생성
+
+.
+
+**Implementing Temperature in Code**
+
+채팅 기능에 `Temperature` 지원을 추가하는 것은 간단
+
+```python
+def chat(messages, system=None, temperature=1.0):
+    params = {
+        "model": model,
+        "max_tokens": 1000,
+        "messages": messages,
+        "temperature": temperature
+    }
+    
+    if system:
+        params["system"] = system
+    
+    message = client.messages.create(**params)
+    return message.content[0].text
+```
+
+주요 변경 사항은 `temperature=1.0`을 매개변수로 추가하고 `temperature`를 포함
