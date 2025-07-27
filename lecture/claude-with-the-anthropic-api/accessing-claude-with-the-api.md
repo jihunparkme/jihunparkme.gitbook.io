@@ -423,3 +423,14 @@ answer = chat(messages, system=system)
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/temperature-2.png" alt=""><figcaption></figcaption></figure>
 
+.
+
+**What Temperature Does**
+
+`Temperature`는 0과 1 사이의 소수점 값으로 이러한 선택 확률에 직접적인 영향을 미칩니다. 
+- 마치 클로드의 응답에 대한 `creativity dial`을 조정하는 것과 같다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/temperature-3.png" alt=""><figcaption></figcaption></figure>
+
+- 낮은 온도(0에 가까운)에서 클로드는 항상 거의 가장 높은 확률의 토큰을 선택할 정도로 매우 결정론적이 됩니다. 
+- 높은 온도(1에 가까운 온도)에서 클로드는 옵션 간에 확률을 더 고르게 분배하여 더 다양하고 창의적인 결과를 도출합니다.
