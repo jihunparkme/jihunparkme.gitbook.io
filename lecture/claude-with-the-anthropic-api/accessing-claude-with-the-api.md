@@ -434,3 +434,14 @@ answer = chat(messages, system=system)
 
 - 낮은 온도(0에 가까운)에서 클로드는 항상 거의 가장 높은 확률의 토큰을 선택할 정도로 매우 결정론적이 됩니다. 
 - 높은 온도(1에 가까운 온도)에서 클로드는 옵션 간에 확률을 더 고르게 분배하여 더 다양하고 창의적인 결과를 도출합니다.
+
+.
+
+**Interactive Temperature Demo**
+
+클로드의 Interactive demo를 통해 `Temperature`가 작동하는 것을 볼 수 있습니다. - 온도 슬라이더를 조정할 때 확률 분포가 어떻게 변하는지 지켜보자.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/temperature-4.png" alt=""><figcaption></figcaption></figure>
+
+- `Temperature` 0.0에서 "about"은 100% 확률로 완전히 결정론적
+- `Temperature` 1.0에서는 확률이 모든 가능한 토큰에 더 고르게 분포되어 무작위성과 창의성을 도입
