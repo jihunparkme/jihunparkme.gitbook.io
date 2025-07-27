@@ -525,3 +525,13 @@ answer = chat(messages, temperature=1.0)
   - 중간 정도? 중간 온도는 대부분의 일반적인 작업에 잘 작동
 
 > `temperature`는 클로드의 행동을 특정 요구에 맞게 미세 조정하기 위해 조정할 수 있는 가장 실용적인 매개변수 중 하나
+
+.
+
+## Response streaming
+
+클로드와 채팅 애플리케이션을 구축할 때는 상당한 사용자 경험 문제가 있습니다. 
+- 응답을 생성하는 데 10~30초가 걸릴 수 있어 사용자가 loading spinner를 응시하게 됩니다. 
+- 솔루션은 응답 스트리밍으로, 클로드가 텍스트를 생성할 때 사용자가 텍스트를 청크 단위로 표시하여 훨씬 더 반응적인 느낌을 줄 수 있습니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/response-streaming-1.png" alt=""><figcaption></figcaption></figure>
