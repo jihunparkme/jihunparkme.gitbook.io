@@ -612,3 +612,25 @@ with client.messages.stream(
 ```
 
 이 접근 방식은 일반적으로 사용자에게 응답을 표시하는 데 필요한 실제 텍스트 내용을 제외한 모든 내용을 자동으로 필터링합니다.
+
+.
+
+**Getting the Complete Message**
+
+개별 청크를 스트리밍하는 것은 사용자 경험에 큰 도움이 되지만, 저장 또는 추가 처리를 위해 전체 메시지가 필요한 경우가 많습니다. 스트리밍이 완료되면 조립된 최종 메시지를 받을 수 있습니다:
+
+```python
+with client.messages.stream(
+    model=model,
+    max_tokens=1000,
+    messages=messages
+) as stream:
+    for text in stream.text_stream:
+        # Send each chunk to your client
+        pass
+    
+    # Get the complete message for database storage
+    final_message = stream.get_final_message()
+```
+
+이는 사용자를 위한 실시간 스트리밍과 애플리케이션 로직을 위한 완전한 메시지 객체라는 두 가지 장점을 모두 제공합니다.
