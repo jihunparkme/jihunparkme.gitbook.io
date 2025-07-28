@@ -719,3 +719,23 @@ AWS EventBridge 규칙을 생성하는 웹 앱을 만드는 것을 고려해 보
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/structured-data.png" alt=""><figcaption></figcaption></figure>
 
+.
+
+**The Problem with Default Responses**
+
+기본적으로 클로드에게 JSON을 생성하라고 요청하면 다음과 같은 결과가 나올 수 있습니다:
+
+```json
+{
+  "source": ["aws.ec2"],
+  "detail-type": ["EC2 Instance State-change Notification"],
+  "detail": {
+    "state": ["running"]
+  }
+}
+```
+
+이 규칙은 인스턴스가 실행되기 시작할 때 EC2 인스턴스 상태 변경 사항을 캡처합니다.
+- JSON은 맞지만 마크다운 형식으로 포장되어 있으며 설명 텍스트가 포함되어 있습니다. 
+- 사용자가 원본 JSON을 복사해야 하는 웹 앱의 경우 사용자 경험에 마찰이 발생합니다.
+
