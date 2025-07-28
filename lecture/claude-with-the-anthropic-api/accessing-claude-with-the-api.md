@@ -726,6 +726,49 @@ AWS EventBridge 규칙을 생성하는 웹 앱을 만드는 것을 고려해 보
 기본적으로 클로드에게 JSON을 생성하라고 요청하면 다음과 같은 결과가 나올 수 있습니다:
 
 ```json
+// ```json
+{
+  "source": ["aws.ec2"],
+  "detail-type": ["EC2 Instance State-change Notification"],
+  "detail": {
+    "state": ["running"]
+  }
+// ```
+```
+
+이 규칙은 인스턴스가 실행되기 시작할 때 EC2 인스턴스 상태 변경 사항을 캡처합니다.
+- JSON은 맞지만 마크다운 형식으로 포장되어 있으며 설명 텍스트가 포함되어 있습니다. 
+- 사용자가 원본 JSON을 복사해야 하는 웹 앱의 경우 사용자 경험에 마찰이 발생합니다.
+
+.
+
+**The Solution: Assistant Message Prefilling + Stop Sequences**
+
+`assistant message prefilling`과  `stop sequences`를 결합하여 원하는 콘텐츠를 정확하게 얻을 수 있습니다. 
+
+작동 방식은 다음과 같습니다:
+
+```python
+messages = []
+
+add_user_message(messages, "Generate a very short event bridge rule as json")
+add_assistant_message(messages, "```json")
+
+text = chat(messages, stop_sequences=["```"])
+```
+
+이 기술은 다음을 통해 작동합니다:
+
+1. 사용자 메시지는 클로드에게 생성할 내용을 알려줍니다
+2. 미리 채워진 어시스턴트 메시지는 클로드가 이미 마크다운 코드 블록을 시작했다고 생각하게 만듭니다
+3. 클로드는 JSON 콘텐츠만 작성하여 계속합니다
+4. 클로드가 코드 블록을 "```"로 닫으려고 하면 중지 시퀀스가 즉시 생성을 종료합니다
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/structured-data-1.png" alt=""><figcaption></figcaption></figure>
+
+결과적으로 추가 포맷 없이 깨끗한 JSON이 생성됩니다.
+
+```python
 {
   "source": ["aws.ec2"],
   "detail-type": ["EC2 Instance State-change Notification"],
@@ -734,8 +777,3 @@ AWS EventBridge 규칙을 생성하는 웹 앱을 만드는 것을 고려해 보
   }
 }
 ```
-
-이 규칙은 인스턴스가 실행되기 시작할 때 EC2 인스턴스 상태 변경 사항을 캡처합니다.
-- JSON은 맞지만 마크다운 형식으로 포장되어 있으며 설명 텍스트가 포함되어 있습니다. 
-- 사용자가 원본 JSON을 복사해야 하는 웹 앱의 경우 사용자 경험에 마찰이 발생합니다.
-
