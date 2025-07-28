@@ -63,3 +63,21 @@
 - 이러한 워크플로우를 구성하는 방법은 다양하며 다양한 오픈 소스 및 유료 도구를 사용할 수 있지만, 핵심 프로세스를 이해하면 작은 규모로 시작하고 필요에 따라 확장 가능
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/A-typical-eval-workflow-1.png" alt=""><figcaption></figcaption></figure>
+
+.
+
+**Step 1: Draft a Prompt**
+
+개선할 초기 프롬프트를 작성하는 것부터 시작. 이 예제에서는 간단한 프롬프트를 사용:
+
+```python
+prompt = f"""
+Please answer the user's question:
+
+{question}
+"""
+```
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/A-typical-eval-workflow-2.png" alt=""><figcaption></figcaption></figure>
+
+이 기본 프롬프트는 테스트 및 개선의 기준이 될 것입니다.
