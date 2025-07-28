@@ -81,3 +81,18 @@ Please answer the user's question:
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/A-typical-eval-workflow-2.png" alt=""><figcaption></figcaption></figure>
 
 이 기본 프롬프트는 테스트 및 개선의 기준이 될 것입니다.
+
+.
+
+**Step 2: Create an Eval Dataset**
+
+평가 데이터셋에는 프롬프트가 프로덕션에서 처리할 질문 또는 요청 유형을 나타내는 샘플 입력이 포함. 데이터셋에는 프롬프트 템플릿에 보간될 질문이 포함되어야 합니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/A-typical-eval-workflow-3.png" alt=""><figcaption></figcaption></figure>
+
+예를 들어, 데이터셋에는 세 가지 질문이 포함되어 있습니다:
+- 2+2는 무엇인가요?
+- 오트밀은 어떻게 만드나요?
+- 달은 얼마나 멀리 있나요?
+
+실제 평가에서는 수십, 수백, 심지어 수천 개의 레코드가 있을 수 있습니다. 이러한 데이터 세트를 수작업으로 조립하거나 클로드를 사용하여 생성할 수 있습니다.
