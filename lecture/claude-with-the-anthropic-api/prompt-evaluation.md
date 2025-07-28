@@ -150,3 +150,16 @@ Answer the question with ample detail
 예를 들어, 프롬프트에 더 많은 안내를 추가할 수 있습니다:
 
 동일한 평가 과정을 통해 개선된 프롬프트를 실행한 후, 평균 점수가 8.7점 더 높아질 수 있으며, 이는 추가 지침이 클로드가 더 나은 응답을 제공하는 데 도움이 되었음을 나타냅니다.
+
+.
+
+**Prompt Scoring**
+
+이 워크플로우의 주요 이점은 신속한 성능을 객관적으로 측정할 수 있다는 점
+- 다양한 프롬프트 버전을 수치적으로 비교하기
+- 가장 좋은 점수를 받은 버전 사용하기
+- 더 나은 접근 방식을 찾기 위해 계속 반복하기
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/A-typical-eval-workflow-7.png" alt=""><figcaption></figcaption></figure>
+
+이 체계적인 접근 방식은 신속한 엔지니어링에서 추측을 제거하고, 당신의 변화가 단순한 다양한 변형이 아니라 오히려 개선된 것이라는 확신을 줍니다.
