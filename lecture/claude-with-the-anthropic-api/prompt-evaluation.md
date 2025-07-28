@@ -128,3 +128,25 @@ What's 2+2?
 - 문 질문: 9 (매우 좋은 답변)
 
 모든 질문의 평균 점수는 객관적인 측정을 제공합니다: (10 + 4 + 9) ÷ 3 = 7.66
+
+.
+
+**Step 5: Change Prompt and Repeat**
+
+이제 기본 점수를 얻었으니 프롬프트를 수정하고 전체 프로세스를 다시 실행하여 변경 사항이 성능을 향상시키는지 확인할 수 있습니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/A-typical-eval-workflow-6.png" alt=""><figcaption></figcaption></figure>
+
+```python
+prompt = f"""
+Please answer the user's question:
+
+{question}
+
+Answer the question with ample detail
+"""
+```
+
+예를 들어, 프롬프트에 더 많은 안내를 추가할 수 있습니다:
+
+동일한 평가 과정을 통해 개선된 프롬프트를 실행한 후, 평균 점수가 8.7점 더 높아질 수 있으며, 이는 추가 지침이 클로드가 더 나은 응답을 제공하는 데 도움이 되었음을 나타냅니다.
