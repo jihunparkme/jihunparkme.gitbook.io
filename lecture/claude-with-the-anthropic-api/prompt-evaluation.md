@@ -96,3 +96,20 @@ Please answer the user's question:
 - 달은 얼마나 멀리 있나요?
 
 실제 평가에서는 수십, 수백, 심지어 수천 개의 레코드가 있을 수 있습니다. 이러한 데이터 세트를 수작업으로 조립하거나 클로드를 사용하여 생성할 수 있습니다.
+
+.
+
+**Step 3: Feed Through Claude**
+
+데이터셋에서 각 질문을 가져와 프롬프트 템플릿과 병합하여 완전한 프롬프트를 만듭니다. 그런 다음 각 질문을 클로드에게 보내 응답을 얻습니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/A-typical-eval-workflow-4.png" alt=""><figcaption></figcaption></figure>
+
+예를 들어, 첫 번째 질문은 다음과 같습니다:
+
+```python
+Please answer the user's question:
+What's 2+2?
+```
+
+클로드는 수학 문제에 대해 "2 + 2 = 4"로 대답하고, 두 번째 질문에는 오트밀 요리 지침을 제공하며, 세 번째 질문에는 달까지의 거리를 제공할 수 있습니다.
