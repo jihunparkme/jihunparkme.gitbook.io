@@ -710,3 +710,12 @@ answer = chat(messages, stop_sequences=["5"])
 - 구조화된 출력: 두 가지 기법을 결합하여 특정 템플릿에 맞는 응답을 생성
 
 > 미리 채워진 메시지와 중지 시퀀스는 모두 클로드의 행동을 세밀하게 제어할 수 있게 해주며, 신뢰할 수 있는 AI 애플리케이션을 구축하는 데 필수적인 도구가 됩니다.
+
+## Structured data
+
+Claude가 JSON, Python 코드 또는 글머리 기호 목록과 같은 구조화된 데이터를 생성해야 할 때, 종종 공통적인 문제에 직면하게 됩니다: Claude는 도움을 주고 콘텐츠에 설명 텍스트를 추가하고 싶어 합니다. 이는 일반적으로 훌륭하지만, 때로는 다른 정보 없이 원시 데이터만 필요할 때도 있습니다.
+
+AWS EventBridge 규칙을 생성하는 웹 앱을 만드는 것을 고려해 보세요. 사용자는 설명을 입력하고 생성 버튼을 클릭하면 깨끗한 JSON을 즉시 복사하고 사용할 수 있습니다. Claude가 설명 텍스트가 포함된 마크다운 코드 블록으로 감싼 JSON을 반환하면 사용자는 전체 응답을 단순히 복사할 수 없으며, JSON 부분만 수동으로 선택해야 합니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/structured-data.png" alt=""><figcaption></figcaption></figure>
+
