@@ -271,3 +271,31 @@ add_assistant_message(messages, "```json")
 text = chat(messages, stop_sequences=["```"])
 return json.loads(text)
 ```
+
+.
+
+**Testing the Dataset Generation**
+
+기능을 실행하여 어떤 종류의 테스트 케이스가 나오는지 확인해 보자.
+
+```python
+dataset = generate_dataset()
+print(dataset)
+```
+
+이렇게 하면 Python 함수, JSON 구성, AWS 전용 작업에 대한 정규 표현식 등 목표 출력을 다루는 세 가지 테스트 케이스가 반환
+
+.
+
+**Saving the Dataset**
+
+데이터셋이 확보되면 나중에 평가 중에 쉽게 로드할 수 있도록 파일에 저장
+
+```python
+with open('dataset.json', 'w') as f:
+    json.dump(dataset, f, indent=2)
+```
+
+이렇게 하면 노트북과 동일한 디렉토리에 `data.json` 파일이 생성되며, 신속한 평가를 위해 준비된 작업 목록이 포함
+
+이 기반이 마련됨에 따라 이제 다양한 유형의 AWS 관련 코딩 작업에서 프롬프트가 얼마나 잘 수행되는지 평가하기 위한 테스트 데이터를 체계적으로 생성할 수 있게 되었습니다.
