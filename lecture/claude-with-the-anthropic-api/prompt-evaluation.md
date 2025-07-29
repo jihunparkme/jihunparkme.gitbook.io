@@ -205,3 +205,69 @@ Please provide a solution to the following task:
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/Generating-test-datasets-2.png" alt=""><figcaption></figcaption></figure>
 
 테스트 데이터를 생성하고 있기 때문에 전체 클로드 모델 대신 Haiku와 같은 더 빠른 모델을 사용할 수 있는 완벽한 기회
+
+.
+
+**Generating Test Data with Code**
+
+테스트 데이터셋을 자동으로 생성하는 함수를 만들어 보자.  
+먼저 클로드와 함께 작업하려면 도우미 함수가 필요:
+
+```python
+def add_user_message(messages, text):
+    user_message = {"role": "user", "content": text}
+    messages.append(user_message)
+
+def add_assistant_message(messages, text):
+    assistant_message = {"role": "assistant", "content": text}
+    messages.append(assistant_message)
+
+def chat(messages, system=None, temperature=1.0, stop_sequences=[]):
+    params = {
+        "model": model,
+        "max_tokens": 1000,
+        "messages": messages,
+        "temperature": temperature
+    }
+    if system:
+        params["system"] = system
+    if stop_sequences:
+        params["stop_sequences"] = stop_sequences
+    
+    response = client.messages.create(**params)
+    return response.content[0].text
+```
+
+데이터셋 생성 함수 생성하기
+
+```python
+def generate_dataset():
+    prompt = """
+Generate an evaluation dataset for a prompt evaluation. The dataset will be used to evaluate prompts that generate Python, JSON, or Regex specifically for AWS-related tasks. Generate an array of JSON objects, each representing task that requires Python, JSON, or a Regex to complete.
+
+Example output:
+// ```json
+[
+  {
+    "task": "Description of task",
+  },
+  ...additional
+]
+// ```
+
+* Focus on tasks that can be solved by writing a single Python function, a single JSON object, or a single regex
+* Focus on tasks that do not require writing much code
+
+Please generate 3 objects.
+"""
+```
+
+JSON 응답을 올바르게 구문 분석하려면 prefilling 및 중지 시퀀스를 사용
+
+```python
+messages = []
+add_user_message(messages, prompt)
+add_assistant_message(messages, "```json")
+text = chat(messages, stop_sequences=["```"])
+return json.loads(text)
+```
