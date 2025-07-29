@@ -190,3 +190,18 @@ Please provide a solution to the following task:
 {task}
 """
 ```
+
+.
+
+**Creating an Evaluation Dataset**
+
+평가 데이터셋에는 프롬프트에 입력할 입력이 포함
+- 프롬프트와 입력의 각 조합에 대해 프롬프트를 실행하고 결과를 분석
+
+우리의 데이터셋은 JSON 객체들의 배열
+- 각 객체는 Claude가 무엇을 성취하기를 원하는지 설명하는 "작업" 속성을 포함
+- 우리는 이 데이터셋을 손으로 만들거나 Claude를 사용하여 자동으로 생성 가능
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/Generating-test-datasets-2.png" alt=""><figcaption></figcaption></figure>
+
+테스트 데이터를 생성하고 있기 때문에 전체 클로드 모델 대신 Haiku와 같은 더 빠른 모델을 사용할 수 있는 완벽한 기회
