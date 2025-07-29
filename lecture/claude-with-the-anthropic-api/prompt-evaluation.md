@@ -163,3 +163,30 @@ Answer the question with ample detail
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/A-typical-eval-workflow-7.png" alt=""><figcaption></figcaption></figure>
 
 이 체계적인 접근 방식은 신속한 엔지니어링에서 추측을 제거하고, 당신의 변화가 단순한 다양한 변형이 아니라 오히려 개선된 것이라는 확신을 줍니다.
+
+## Generating test datasets
+
+사용자 지정 프롬프트 평가 워크플로우를 구축하는 것은 견고한 프롬프트를 만든 다음 테스트 데이터를 생성하여 얼마나 잘 작동하는지 확인하는 것으로 시작.  
+사용자가 AWS 전용 코드를 작성하는 데 도움이 되는 프롬프트 평가 시스템을 설정하는 과정을 살펴보자.
+
+.
+
+**Setting Up the Goal**
+
+프롬프트는 사용자가 AWS 사용 사례에 대한 세 가지 특정 유형의 출력을 작성하는 데 도움이 필요
+- 파이썬 코드
+- JSON 구성 파일
+- 정규 표현식
+
+핵심 요구 사항은 사용자가 작업에 대한 도움을 요청할 때 추가 설명, 헤더 또는 바닥글 없이 다음 형식 중 하나로 깨끗한 출력을 반환해야 한다는 것
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/Generating-test-datasets.png" alt=""><figcaption></figcaption></figure>
+
+시작 프롬프트(버전 1)
+
+```python
+prompt = f"""
+Please provide a solution to the following task:
+{task}
+"""
+```
