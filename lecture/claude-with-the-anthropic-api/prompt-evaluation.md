@@ -384,3 +384,20 @@ def run_eval(dataset):
 ```
 
 이 기능은 데이터셋의 모든 테스트 케이스를 처리하고 모든 결과를 하나의 목록으로 수집합니다.
+
+.
+
+**Running the Evaluation**
+
+평가 파이프라인을 실행하기 위해 데이터셋을 로드하고 함수를 통해 실행합니다:
+
+```python
+with open("dataset.json", "r") as f:
+    dataset = json.load(f)
+
+results = run_eval(dataset)
+```
+
+처음 실행할 때는 클로드 하이쿠를 사용하더라도 전체 데이터 세트를 처리하는 데 약 30초 정도 걸릴 수 있습니다. 최적화 기법에 대해서는 나중에 설명하겠습니다.
+
+
