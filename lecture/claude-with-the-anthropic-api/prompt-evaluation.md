@@ -318,4 +318,25 @@ with open('dataset.json', 'w') as f:
 평가 파이프라인은 각각 특정 책임이 있는 세 가지 주요 기능으로 구성  
 가장 간단한 기능인 개별 프롬프트를 처리하는 기능부터 시작해 보자.
 
+.
 
+**The run_prompt Function**
+
+이 함수는 테스트 케이스를 가져와서 프롬프트 템플릿과 병합
+
+```python
+def run_prompt(test_case):
+    """Merges the prompt and test case input, then returns the result"""
+    prompt = f"""
+Please solve the following task:
+
+{test_case["task"]}
+"""
+    
+    messages = []
+    add_user_message(messages, prompt)
+    output = chat(messages)
+    return output
+```
+
+지금은 프롬프트를 매우 간단하게 유지하고 있습니다. 형식 지정 지침을 포함하지 않기 때문에 클로드는 필요 이상의 장황한 출력을 반환할 가능성이 높습니다. 이는 나중에 프롬프트 디자인을 반복하면서 개선할 것입니다.
