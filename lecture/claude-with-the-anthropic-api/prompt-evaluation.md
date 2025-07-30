@@ -400,4 +400,20 @@ results = run_eval(dataset)
 
 처음 실행할 때는 클로드 하이쿠를 사용하더라도 전체 데이터 세트를 처리하는 데 약 30초 정도 걸릴 수 있습니다. 최적화 기법에 대해서는 나중에 설명하겠습니다.
 
+.
 
+**Examining the Results**
+
+평가는 각 객체가 하나의 테스트 사례 결과를 나타내는 구조화된 JSON 배열을 반환합니다:
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/running-the-eval-1.png" alt=""><figcaption></figcaption></figure>
+
+각 결과에는 세 가지 주요 정보가 포함되어 있습니다:
+
+- output: 클로드의 완전한 응답
+- test_case: 처리된 원래 테스트 케이스
+- score: 평가 점수(현재 하드코딩됨)
+
+출력에서 볼 수 있듯이 클로드는 아직 구체적인 형식 지정 지침을 제공하지 않았기 때문에 매우 장황한 응답을 생성합니다. 프롬프트를 세분화하면서 바로 이런 종류의 문제를 다룰 것입니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/running-the-eval-2.png" alt=""><figcaption></figcaption></figure>
