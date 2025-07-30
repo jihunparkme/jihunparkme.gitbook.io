@@ -320,7 +320,7 @@ with open('dataset.json', 'w') as f:
 
 .
 
-**The run_prompt Function**
+**The `run_prompt` Function**
 
 이 함수는 테스트 케이스를 가져와서 프롬프트 템플릿과 병합
 
@@ -340,3 +340,47 @@ Please solve the following task:
 ```
 
 지금은 프롬프트를 매우 간단하게 유지하고 있습니다. 형식 지정 지침을 포함하지 않기 때문에 클로드는 필요 이상의 장황한 출력을 반환할 가능성이 높습니다. 이는 나중에 프롬프트 디자인을 반복하면서 개선할 것입니다.
+
+.
+
+**The `run_test_case` Function**
+
+이 함수는 단일 테스트 케이스를 실행하고 결과를 평가하는 오케스트레이션을 수행
+
+```python
+def run_test_case(test_case):
+    """Calls run_prompt, then grades the result"""
+    output = run_prompt(test_case)
+    
+    # TODO - Grading
+    score = 10
+    
+    return {
+        "output": output,
+        "test_case": test_case,
+        "score": score
+    }
+```
+
+현재로서는 하드코딩된 10점을 사용하고 있습니다.  
+채점 논리는 다가오는 섹션에서 상당한 시간을 할애할 수 있지만, 이 `placeholder`를 통해 전체 파이프라인을 테스트할 수 있습니다.
+
+.
+
+**The `run_eval` Function**
+
+이 기능은 전체 평가 과정을 조정합니다:
+
+```python
+def run_eval(dataset):
+    """Loads the dataset and calls run_test_case with each case"""
+    results = []
+    
+    for test_case in dataset:
+        result = run_test_case(test_case)
+        results.append(result)
+    
+    return results
+```
+
+이 기능은 데이터셋의 모든 테스트 케이스를 처리하고 모든 결과를 하나의 목록으로 수집합니다.
