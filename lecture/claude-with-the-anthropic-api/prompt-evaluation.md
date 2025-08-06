@@ -431,3 +431,12 @@ results = run_eval(dataset)
 
 ## Model based grading
 
+신속한 평가 워크플로우를 구축할 때, 채점 시스템은 출력 품질에 대한 객관적인 신호를 제공합니다. 채점자는 모델 출력을 받아 측정 가능한 피드백(일반적으로 1 ~ 10 사이의 숫자)을 반환합니다. 여기서 10은 높은 품질을, 1은 낮은 품질을 나타냅니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/type-of-graders.png" alt=""><figcaption></figcaption></figure>
+
+모델 출력을 평가하는 데는 세 가지 주요 접근 방식이 있습니다:
+- Code graders - 맞춤형 논리를 사용하여 출력을 프로그래밍적으로 평가
+- Model graders - 다른 AI 모델을 사용하여 품질을 평가
+- Human graders - 사람들이 수동으로 결과물을 검토하고 채점
+
