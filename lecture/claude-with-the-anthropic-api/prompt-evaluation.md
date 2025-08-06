@@ -481,3 +481,32 @@ Human Graders는 유연성을 가장 많이 제공하지만 시간이 많이 걸
 
 처음 두 가지 기준은 `Code graders`와 잘 작동하며, Task Following는 유연성 덕분에 `Model Graders`에게 더 적합합니다.
 
+### Implementing a Model Grader
+
+`Model Grader` 함수를 만드는 방법
+
+```python
+def grade_by_model(test_case, output):
+    # Create evaluation prompt
+    eval_prompt = """
+    You are an expert code reviewer. Evaluate this AI-generated solution.
+    
+    Task: {task}
+    Solution: {solution}
+    
+    Provide your evaluation as a structured JSON object with:
+    - "strengths": An array of 1-3 key strengths
+    - "weaknesses": An array of 1-3 key areas for improvement  
+    - "reasoning": A concise explanation of your assessment
+    - "score": A number between 1-10
+    """
+    
+    messages = []
+    add_user_message(messages, eval_prompt)
+    add_assistant_message(messages, "```json")
+    
+    eval_text = chat(messages, stop_sequences=["```"])
+    return json.loads(eval_text)
+```
+
+핵심 인사이트는 점수와 함께 강점, 약점, 추론을 묻는 것입니다. 이러한 맥락이 없으면 모델은 기본적으로 6점 내외의 중간 점수를 받는 경향이 있습니다.
