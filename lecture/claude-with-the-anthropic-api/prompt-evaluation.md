@@ -433,6 +433,8 @@ results = run_eval(dataset)
 
 신속한 평가 워크플로우를 구축할 때, 채점 시스템은 출력 품질에 대한 객관적인 신호를 제공합니다. 채점자는 모델 출력을 받아 측정 가능한 피드백(일반적으로 1 ~ 10 사이의 숫자)을 반환합니다. 여기서 10은 높은 품질을, 1은 낮은 품질을 나타냅니다.
 
+### Types of Graders
+
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/type-of-graders.png" alt=""><figcaption></figcaption></figure>
 
 모델 출력을 평가하는 데는 세 가지 주요 접근 방식이 있습니다:
@@ -440,7 +442,7 @@ results = run_eval(dataset)
 - `Model graders`: 다른 AI 모델을 사용하여 품질을 평가
 - `Human graders`: 사람들이 수동으로 결과물을 검토하고 채점
 
-### Code graders
+#### Code graders
 
 Code graders를 사용하면 상상할 수 있는 모든 프로그래밍 검사를 구현할 수 있습니다. 일반적인 용도는 다음과 같습니다:
 - 출력 길이 확인
@@ -450,7 +452,7 @@ Code graders를 사용하면 상상할 수 있는 모든 프로그래밍 검사�
 
 유일한 요구 사항은 코드가 사용 가능한 신호(보통 1 ~ 10 사이의 숫자)를 반환하는 것입니다.
 
-### Model Graders
+#### Model Graders
 
 Model Graders는 원본 출력물 평가를 위한 또 다른 API 호출에 입력합니다. 이 접근 방식은 평가에 엄청난 유연성을 제공합니다:
 - 응답 품질
@@ -459,7 +461,7 @@ Model Graders는 원본 출력물 평가를 위한 또 다른 API 호출에 입�
 - 유용성
 - 안전
 
-### Human Graders
+#### Human Graders
 
 Human Graders는 유연성을 가장 많이 제공하지만 시간이 많이 걸리고 지루합니다. 평가하는 데 유용합니다:
 - 일반 응답 품질
@@ -467,3 +469,15 @@ Human Graders는 유연성을 가장 많이 제공하지만 시간이 많이 걸
 - 깊이
 - 간결함
 - 관련성
+
+### Defining Evaluation Criteria
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/defining-evaluation-criteria.png" alt=""><figcaption></figcaption></figure>
+
+채점기를 구현하기 전에 명확한 평가 기준이 필요합니다. 코드 생성 프롬프트를 보려면 다음에 집중할 수 있습니다:
+- `Format`: 설명 없이 Python, JSON 또는 Regex만 반환해야 합니다
+- `Valid Syntax`: 생성된 코드는 유효한 구문을 가져야 합니다
+- `Task Following`: 응답은 사용자의 작업을 정확한 코드로 직접 처리해야 합니다
+
+처음 두 가지 기준은 `Code graders`와 잘 작동하며, Task Following는 유연성 덕분에 `Model Graders`에게 더 적합합니다.
+
