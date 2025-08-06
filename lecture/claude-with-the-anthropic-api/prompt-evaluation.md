@@ -436,7 +436,34 @@ results = run_eval(dataset)
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/type-of-graders.png" alt=""><figcaption></figcaption></figure>
 
 모델 출력을 평가하는 데는 세 가지 주요 접근 방식이 있습니다:
-- Code graders - 맞춤형 논리를 사용하여 출력을 프로그래밍적으로 평가
-- Model graders - 다른 AI 모델을 사용하여 품질을 평가
-- Human graders - 사람들이 수동으로 결과물을 검토하고 채점
+- `Code graders`: 맞춤형 논리를 사용하여 출력을 프로그래밍적으로 평가
+- `Model graders`: 다른 AI 모델을 사용하여 품질을 평가
+- `Human graders`: 사람들이 수동으로 결과물을 검토하고 채점
 
+### Code graders
+
+Code graders를 사용하면 상상할 수 있는 모든 프로그래밍 검사를 구현할 수 있습니다. 일반적인 용도는 다음과 같습니다:
+- 출력 길이 확인
+- 출력에 특정 단어가 있는지 확인하기
+- JSON, Python 또는 regex에 대한 구문 검증
+- 가독성 점수
+
+유일한 요구 사항은 코드가 사용 가능한 신호(보통 1 ~ 10 사이의 숫자)를 반환하는 것입니다.
+
+### Model Graders
+
+Model Graders는 원본 출력물 평가를 위한 또 다른 API 호출에 입력합니다. 이 접근 방식은 평가에 엄청난 유연성을 제공합니다:
+- 응답 품질
+- 교육 품질 팔로우
+- 완전성
+- 유용성
+- 안전
+
+### Human Graders
+
+Human Graders는 유연성을 가장 많이 제공하지만 시간이 많이 걸리고 지루합니다. 평가하는 데 유용합니다:
+- 일반 응답 품질
+- 포괄성
+- 깊이
+- 간결함
+- 관련성
