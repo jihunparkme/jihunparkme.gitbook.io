@@ -510,3 +510,42 @@ def grade_by_model(test_case, output):
 ```
 
 핵심 인사이트는 점수와 함께 강점, 약점, 추론을 묻는 것입니다. 이러한 맥락이 없으면 모델은 기본적으로 6점 내외의 중간 점수를 받는 경향이 있습니다.
+
+### Integrating Grading into Your Workflow
+
+```python
+def run_test_case(test_case):
+    output = run_prompt(test_case)
+    
+    # Grade the output
+    model_grade = grade_by_model(test_case, output)
+    score = model_grade["score"]
+    reasoning = model_grade["reasoning"]
+    
+    return {
+        "output": output, 
+        "test_case": test_case, 
+        "score": score,
+        "reasoning": reasoning
+    }
+```
+
+마지막으로, 모든 시험 사례에서 평균 점수를 계산합니다:
+
+```python
+from statistics import mean
+
+def run_eval(dataset):
+    results = []
+    
+    for test_case in dataset:
+        result = run_test_case(test_case)
+        results.append(result)
+    
+    average_score = mean([result["score"] for result in results])
+    print(f"Average score: {average_score}")
+    
+    return results
+```
+
+이렇게 하면 프롬프트를 반복하면서 추적할 수 있는 객관적인 지표가 제공됩니다. `Model Graders`은 다소 변덕스러울 수 있지만 개선 사항을 측정하기 위한 일관된 기준선을 제공합니다.
