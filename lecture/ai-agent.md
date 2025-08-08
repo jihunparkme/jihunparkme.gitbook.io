@@ -29,6 +29,8 @@ docker run -d -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docke
 
 ### Basic LLM Chain
 
+#### 답장 여부 판단
+
 **모델 연결 → Prompt →**
 
 ```text
@@ -53,3 +55,29 @@ docker run -d -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docke
 	}
 }
 ```
+
+#### 이메일 답장 작성
+
+**Prompt**
+
+```text
+"=아래 이메일을 보고 답장을 작성해주세요\n\n최근 메일:\n{{ $('Gmail Trigger').item.json.text }}\n\n이메일 히스토리:\n{{ $json.messages.filter(item => item.snippet) }}",
+```
+
+**Require Specific Output Format**
+
+```json
+{
+	"type": "object",
+	"properties": {
+		"title": {
+			"type": "string"
+		},
+        "content": {
+			"type": "string"
+		}
+	}
+}
+```
+
+<figure><img src="../.gitbook/assets/ai-agent/sample-1.png" alt=""><figcaption></figcaption></figure>
