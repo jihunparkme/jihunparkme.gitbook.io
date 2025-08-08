@@ -9,3 +9,47 @@
 > Flexible AI workflow automation
 >
 > 다양한 웹 서비스, 앱, API들을 연결하여 자동화 워크플로우를 만드는 오픈소스 통합 플랫폼
+
+n8n 컨테이너 구동
+
+```bash
+docker volume create n8n_data
+
+docker run -d -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
+```
+
+### Gmail Trigger
+
+> On message received
+
+**Gmail API 활성화**
+
+- [GCP console](https://cloud.google.com/cloud-console) → API 및 서비스 → API 및 서비스 사용 설정 → Gmail API
+- 사용자 인증 정보 만들기 → OAuth 클라이언트 ID 만들기 
+
+### Basic LLM Chain
+
+**모델 연결 → Prompt →**
+
+```text
+"=아래 이메일 내용을 보고, 답장이 필요한 이메일인지 판단해주세요. 만약 당신의 오판으로 제가 이메일에 답장을 하지 못하게되면 업무상 차질이 생길 수 있으니 주의해주세요.\n\n1. 업무 협업 메일에는 가급적이면 답장을 해야합니다. \n2. 마케팅이나 뉴스레터의 경우에는 답장을 할 필요가 없습니다.\n\n이메일 내용:\n {{ $json.text }}",
+```
+
+**Chat Messages**
+
+```text
+"당신의 업무는 이메일에 답장을 해야하는지 말아야하는지 결정하는 것입니다. 답장이 필요하다면 true, 답장이 필요 없다면 false를 리턴해주세요"
+```
+
+**Require Specific Output Format**
+
+```json
+{
+	"type": "object",
+	"properties": {
+		"need_reply": {
+			"type": "boolean"
+		}
+	}
+}
+```
