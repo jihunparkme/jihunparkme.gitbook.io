@@ -18,7 +18,7 @@ docker volume create n8n_data
 docker run -d -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
 ```
 
-### Gmail Trigger
+### Gmail Actions
 
 > On message received
 
@@ -26,6 +26,10 @@ docker run -d -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docke
 
 - [GCP console](https://cloud.google.com/cloud-console) → API 및 서비스 → API 및 서비스 사용 설정 → Gmail API
 - 사용자 인증 정보 만들기 → OAuth 클라이언트 ID 만들기 
+
+Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가능
+
+<figure><img src="../.gitbook/assets/ai-agent/gmail.png" alt=""><figcaption></figcaption></figure>
 
 ### Basic LLM Chain
 
