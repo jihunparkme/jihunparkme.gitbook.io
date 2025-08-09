@@ -81,3 +81,11 @@ docker run -d -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docke
 ```
 
 <figure><img src="../.gitbook/assets/ai-agent/sample-1.png" alt=""><figcaption></figcaption></figure>
+
+#### 이메일 작성 봇
+
+**System Messages**
+
+```text
+"당신은 이메일 작성 도우미입니다. 사용자의 질문을 바탕으로, 사용자에게 필요한 이메일을 작성해주세요 \n\n당신이 이메일을 작성하는데 필요한 모든 정보를 얻을 때까지 사용자에게 질문을 한 후에, 필요한 정보를 모두 얻고 나서 이메일을 작성해주세요"
+```
