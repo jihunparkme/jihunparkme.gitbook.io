@@ -98,6 +98,16 @@ Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가
 
 ## News Agent
 
+#### 👉🏻 **Schedule Trigger**
+
+#### 👉🏻 **Brave Search**
+
+#### 👉🏻 **Code**
+
+#### 👉🏻 **Loop Over Items**
+
+#### 👉🏻 **Basic LLM Chain**
+
 **Prompt**
 
 ```text
@@ -110,7 +120,16 @@ Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가
 "Your job is to analyze the sentiment of a news article from a user every morning and report to the executives and share with my colleagues\n\nAfter analyzing the sentiment, use the Google Sheet Tool provided to you to insert the analysis into the spreadsheet for other colleagues to see"
 ```
 
+#### 👉🏻 **Append row in sheet**
+
+시트에 헤더 추가
+
 **Google Sheets API**
 
 - [GCP console](https://cloud.google.com/cloud-console) → API 및 서비스 → API 및 서비스 사용 설정 → Gmail API
 - 사용자 인증 정보 만들기 → OAuth 클라이언트 ID 만들기 
+
+#### Result
+
+<figure><img src="../.gitbook/assets/ai-agent/news-sample.png" alt=""><figcaption></figcaption></figure>
+
