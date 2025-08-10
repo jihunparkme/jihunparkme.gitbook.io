@@ -18,6 +18,8 @@ docker volume create n8n_data
 docker run -d -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
 ```
 
+## Email Agent
+
 ### Gmail Actions
 
 > On message received
@@ -93,3 +95,22 @@ Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가
 ```text
 "당신은 이메일 작성 도우미입니다. 사용자의 질문을 바탕으로, 사용자에게 필요한 이메일을 작성해주세요 \n\n당신이 이메일을 작성하는데 필요한 모든 정보를 얻을 때까지 사용자에게 질문을 한 후에, 필요한 정보를 모두 얻고 나서 이메일을 작성해주세요"
 ```
+
+## News Agent
+
+**Prompt**
+
+```text
+"=Categorize below news article by reading the description into \"positive,\" \"negative,\", \"neutral\":\n\nNews Article:\nTitle: {{ $json.title }}\nDescription: {{ $json.description }}\nURL: {{ $json.url }}",
+```
+
+**Chat Messages**
+
+```text
+"Your job is to analyze the sentiment of a news article from a user every morning and report to the executives and share with my colleagues\n\nAfter analyzing the sentiment, use the Google Sheet Tool provided to you to insert the analysis into the spreadsheet for other colleagues to see"
+```
+
+**Google Sheets API**
+
+- [GCP console](https://cloud.google.com/cloud-console) → API 및 서비스 → API 및 서비스 사용 설정 → Gmail API
+- 사용자 인증 정보 만들기 → OAuth 클라이언트 ID 만들기 
