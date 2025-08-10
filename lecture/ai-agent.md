@@ -10,7 +10,9 @@
 >
 > 다양한 웹 서비스, 앱, API들을 연결하여 자동화 워크플로우를 만드는 오픈소스 통합 플랫폼
 
-n8n 컨테이너 구동
+n8n은 워크플로우를 구성하는 노드(Node)들로 이루어져 있으며, 각 노드는 특정 작업을 수행합니다.
+
+👉🏻 **n8n 컨테이너 구동**
 
 ```bash
 docker volume create n8n_data
@@ -20,20 +22,18 @@ docker run -d -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docke
 
 ## Email Agent
 
-### Gmail Actions
+### 👉🏻 Gmail Actions
 
-> On message received
+**Gmail API 사용하기**
 
-**Gmail API 활성화**
-
-- [GCP console](https://cloud.google.com/cloud-console) → API 및 서비스 → API 및 서비스 사용 설정 → Gmail API
+- [GCP console](https://cloud.google.com/cloud-console) → API 및 서비스 → API 및 서비스 사용 설정 → Gmail API -> 활성화
 - 사용자 인증 정보 만들기 → OAuth 클라이언트 ID 만들기 
 
 Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가능
 
 <figure><img src="../.gitbook/assets/ai-agent/gmail.png" alt=""><figcaption></figcaption></figure>
 
-### Basic LLM Chain
+### 👉🏻 Basic LLM Chain
 
 #### 답장 여부 판단
 
@@ -98,15 +98,15 @@ Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가
 
 ## News Agent
 
-#### 👉🏻 **Schedule Trigger**
+### 👉🏻 **Schedule Trigger**
 
-#### 👉🏻 **Brave Search**
+### 👉🏻 **Brave Search**
 
-#### 👉🏻 **Code**
+### 👉🏻 **Code**
 
-#### 👉🏻 **Loop Over Items**
+### 👉🏻 **Loop Over Items**
 
-#### 👉🏻 **Basic LLM Chain**
+### 👉🏻 **Basic LLM Chain**
 
 **Prompt**
 
@@ -120,7 +120,7 @@ Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가
 "Your job is to analyze the sentiment of a news article from a user every morning and report to the executives and share with my colleagues\n\nAfter analyzing the sentiment, use the Google Sheet Tool provided to you to insert the analysis into the spreadsheet for other colleagues to see"
 ```
 
-#### 👉🏻 **Append row in sheet**
+### 👉🏻 **Append row in sheet**
 
 시트에 헤더 추가
 
@@ -129,7 +129,13 @@ Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가
 - [GCP console](https://cloud.google.com/cloud-console) → API 및 서비스 → API 및 서비스 사용 설정 → Gmail API
 - 사용자 인증 정보 만들기 → OAuth 클라이언트 ID 만들기 
 
-#### Result
+### Result
 
 <figure><img src="../.gitbook/assets/ai-agent/news-sample.png" alt=""><figcaption></figcaption></figure>
+
+
+
+
+
+
 
