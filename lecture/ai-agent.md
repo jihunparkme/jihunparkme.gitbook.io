@@ -102,22 +102,29 @@ Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가
 
 워크플로우를 특정 시간에 자동으로 시작시키는 노드
 - 지정된 시간 간격(예: 매일 오전 9시, 매주 월요일, 15분마다 등)에 맞춰 다음 노드로 데이터를 전달하며 워크플로우를 실행
+- America/New_York Timezone 이므로 한국 시간대 계산이 필요
 
 ### 👉🏻 **Brave Search**
 
 Brave Search 엔진을 이용해 웹 검색을 수행하고, 그 결과를 n8n 워크플로우로 가져오는 노드
 - 검색 결과를 JSON 형태로 받아와서 다른 노드에서 활용
+- [Brave Search API](https://brave.com/search/api/)
 
 ### 👉🏻 **Code**
 
 워크플로우 내에서 JavaScript 코드를 직접 실행할 수 있는 노드
 - n8n의 기본 노드만으로는 해결하기 어려운 복잡한 로직을 구현하거나, 데이터를 특정 형태로 가공해야 할 때 유용
 - n8n의 모든 노드에서 전달받은 데이터를 코드 노드에서 처리 가능
+	
+	```javascript
+	return $input.first().json.results
+	```
 
 ### 👉🏻 **Loop Over Items**
 
 워크플로우가 배열(리스트) 형태의 데이터 아이템들을 하나씩 순회하며 반복 작업을 수행하도록 하는 노드
 - 각 아이템에 대해 동일한 일련의 작업을 적용 가능
+- Batch Size 지정
 
 ### 👉🏻 **Basic LLM Chain**
 
@@ -127,7 +134,7 @@ LangChainJS 라이브러리를 기반으로 LLM과 상호작용하는 노드
 **Prompt**
 
 ```text
-"=Categorize below news article by reading the description into \"positive,\" \"negative,\", \"neutral\":\n\nNews Article:\nTitle: {{ $json.title }}\nDescription: {{ $json.description }}\nURL: {{ $json.url }}",
+"Categorize below news article by reading the description into \"positive,\" \"negative,\", \"neutral\":\n\nNews Article:\nTitle: {{ $json.title }}\nDescription: {{ $json.description }}\nURL: {{ $json.url }}",
 ```
 
 **Chat Messages**
@@ -136,18 +143,42 @@ LangChainJS 라이브러리를 기반으로 LLM과 상호작용하는 노드
 "Your job is to analyze the sentiment of a news article from a user every morning and report to the executives and share with my colleagues\n\nAfter analyzing the sentiment, use the Google Sheet Tool provided to you to insert the analysis into the spreadsheet for other colleagues to see"
 ```
 
+**Require Specific Output Format**
+
+```json
+{
+	"type": "object",
+	"properties": {
+		"sentiment": {
+			"type": "string"
+		},
+      "title": {
+			"type": "string"
+		},
+      "description": {
+			"type": "string"
+		},
+      "url": {
+			"type": "string"
+		}
+	}
+}
+```
+
 ### 👉🏻 **Append row in sheet**
 
 Google Sheets, Excel 등 스프레드시트 서비스에 새로운 행을 추가하는 노드
 - 워크플로우에서 처리된 데이터를 최종적으로 스프레드시트에 정리할 때 사용
 
-**Google Sheets API**
+**Google Drive & Google Sheets API**
 
 - [GCP console](https://cloud.google.com/cloud-console) → API 및 서비스 → API 및 서비스 사용 설정
   - Google Drive API
   - Google Sheets API
-- 사용자 인증 정보 만들기 → OAuth 클라이언트 ID 만들기 (기존꺼 사용 가능)
-- 시트에 헤더 추가
+- 사용자 인증 정보 만들기 → OAuth 클라이언트 ID 만들기 (기존 ID 사용 가능)
+- 시트에 헤더 추가 → Document & Sheet 선택 → 헤더 정보 입력
+
+<figure><img src="../.gitbook/assets/ai-agent/sheets.png" alt=""><figcaption></figcaption></figure>
 
 ### Result
 
