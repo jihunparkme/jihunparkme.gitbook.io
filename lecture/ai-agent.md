@@ -96,7 +96,7 @@ Gmail API로 이용할 수 있는 다양한 action, trigger 기능을 연동 가
 "당신은 이메일 작성 도우미입니다. 사용자의 질문을 바탕으로, 사용자에게 필요한 이메일을 작성해주세요 \n\n당신이 이메일을 작성하는데 필요한 모든 정보를 얻을 때까지 사용자에게 질문을 한 후에, 필요한 정보를 모두 얻고 나서 이메일을 작성해주세요"
 ```
 
-## News Agent
+## News Agent (Brave Search API)
 
 ### 👉🏻 **Schedule Trigger**
 
@@ -180,17 +180,28 @@ Google Sheets, Excel 등 스프레드시트 서비스에 새로운 행을 추가
 
 <figure><img src="../.gitbook/assets/ai-agent/sheets.png" alt=""><figcaption></figcaption></figure>
 
-### Result (Brave Search API)
+### Result
 
 <figure><img src="../.gitbook/assets/ai-agent/news-sample.png" alt=""><figcaption></figcaption></figure>
 
-### Result (Naver HTTP Request)
+## News Agent (Naver HTTP Request)
 
+### 👉🏻 HTTP Request
 
+### 👉🏻 HTML
 
+### 👉🏻 Filter
 
+### 👉🏻 Notion
 
+**Notion Credential**
 
+[notion integration](https://developers.notion.com/docs/create-a-notion-integration) → 
+View my integrations → New API integration → Notion 옵션 → 연결 → API integration 연결
+
+### Result
+
+<figure><img src="../.gitbook/assets/ai-agent/naver-news.png" alt=""><figcaption></figcaption></figure>
 
 
 
