@@ -180,9 +180,11 @@ Google Sheets, Excel 등 스프레드시트 서비스에 새로운 행을 추가
 
 <figure><img src="../.gitbook/assets/ai-agent/sheets.png" alt=""><figcaption></figcaption></figure>
 
-### Result
+### Result (Brave Search API)
 
 <figure><img src="../.gitbook/assets/ai-agent/news-sample.png" alt=""><figcaption></figcaption></figure>
+
+### Result (Naver HTTP Request)
 
 
 
