@@ -184,6 +184,8 @@ Google Sheets, Excel 등 스프레드시트 서비스에 새로운 행을 추가
 
 <figure><img src="../.gitbook/assets/ai-agent/news-sample.png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/ai-agent/news-sample-result.png" alt=""><figcaption></figcaption></figure>
+
 ## News Agent (Naver HTTP Request)
 
 ### 👉🏻 HTTP Request
@@ -202,6 +204,8 @@ View my integrations → New API integration → Notion 옵션 → 연결 → AP
 ### Result
 
 <figure><img src="../.gitbook/assets/ai-agent/naver-news.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/ai-agent/naver-news-result.png" alt=""><figcaption></figcaption></figure>
 
 
 
