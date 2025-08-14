@@ -190,11 +190,26 @@ Google Sheets, Excel 등 스프레드시트 서비스에 새로운 행을 추가
 
 ### 👉🏻 HTTP Request
 
+웹에서 데이터를 가져오거나 보내는 가장 기본적인 노드
+- 특정 URL로 HTTP 요청(GET, POST, PUT, DELETE 등)을 보내고, 그 응답을 받아 워크플로우에 통합
+- API와의 상호작용은 대부분 이 노드를 통해 이루어짐
+
 ### 👉🏻 HTML
+
+HTML 문서에서 특정 데이터를 추출하는 데 사용
+- 웹 스크래핑(Web Scraping)의 핵심 노드
+- CSS 셀렉터(Selector)를 이용해 원하는 태그나 클래스, 아이디를 가진 요소를 선택하고 그 안의 텍스트나 속성 값을 추출
 
 ### 👉🏻 Filter
 
+데이터를 특정 조건에 따라 걸러내는 노드
+- 입력 데이터가 설정된 조건을 만족하는지 확인하여, 조건을 만족하는 데이터만 다음 노드로 전달
+- 조건은 등호, 부등호, 포함 여부, 정규식 등 다양하게 설정
+
 ### 👉🏻 Notion
+
+Notion 데이터베이스 또는 페이지와 상호작용하는 노드
+- Notion 계정과 연결하여 데이터베이스에 새로운 항목을 추가하거나, 기존 페이지의 내용을 업데이트하거나, 특정 데이터를 검색하는 등의 작업을 수행
 
 **Notion Credential**
 
@@ -205,8 +220,9 @@ View my integrations → New API integration → Notion 옵션 → 연결 → AP
 
 <figure><img src="../.gitbook/assets/ai-agent/naver-news.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src="../.gitbook/assets/ai-agent/naver-news-result.png" alt=""><figcaption></figcaption></figure>
 
+
+<figure><img src="../.gitbook/assets/ai-agent/naver-news-result.png" alt=""><figcaption></figcaption></figure>
 
 
 
