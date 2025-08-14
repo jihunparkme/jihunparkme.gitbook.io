@@ -184,6 +184,12 @@ Google Sheets, Excel 등 스프레드시트 서비스에 새로운 행을 추가
 
 <figure><img src="../.gitbook/assets/ai-agent/news-sample.png" alt=""><figcaption></figcaption></figure>
 
+- Brave News 추출 (Brave Search)
+- 추출된 정보를 JSON 형태로 변환 (Code)
+- Loop Over Items
+- 뉴스 감정 분석 (Basic LLM Chain)
+- 결과를 시트에 추가 (Sheets)
+
 <figure><img src="../.gitbook/assets/ai-agent/news-sample-result.png" alt=""><figcaption></figcaption></figure>
 
 ## News Agent (Naver HTTP Request)
