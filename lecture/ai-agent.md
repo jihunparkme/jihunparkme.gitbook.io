@@ -220,7 +220,17 @@ View my integrations → New API integration → Notion 옵션 → 연결 → AP
 
 <figure><img src="../.gitbook/assets/ai-agent/naver-news.png" alt=""><figcaption></figcaption></figure>
 
-
+- 기사 목록 요청 (HTTP Request)
+- Loop Over Items
+- 기사 제목 & URL 추출 (HTML)
+- 추출된 정보를 JSON 형태로 변환 (Code)
+- Loop Over Items
+- 기사 URL 요청 (HTTP Request)
+- 기사 내용 추출 (HTML)
+- 연관성 파악 (Basic LLM Chain)
+- 연관성이 있는지 필터링 (Filter)
+- 뉴스 감정 분석 (Basic LLM Chain)
+- 노션 데이터베이스에 추가 (Notion)
 
 <figure><img src="../.gitbook/assets/ai-agent/naver-news-result.png" alt=""><figcaption></figcaption></figure>
 
