@@ -302,20 +302,12 @@ Google Sheets, Excel 등 스프레드시트에서 특정 행들을 읽어오는 
 
 <figure><img src="../.gitbook/assets/ai-agent/QnA-bot-ai-chain.png" alt=""><figcaption></figcaption></figure>
 
+### Bot using AI Agent
 
+#### 👉🏻 AI Agent
 
-
-
-
-
-<figure><img src="../.gitbook/assets/ai-agent/QnA-bot-ai-agent.png" alt=""><figcaption></figcaption></figure>
-
-
-
-
-
-
-AI Agent
+LLM을 이용해 복잡한 작업을 스스로 계획하고 실행하게 하는 고급 노드
+- 단순히 텍스트를 생성하는 것을 넘어, 여러 도구를 조합하고 순차적으로 실행하여 목표를 달성
 
 System Message
 
@@ -323,9 +315,17 @@ System Message
 You are a helpful assistant. Use the tools that are available to you in order to answer the user's question
 ```
 
+**Pinecone Vector Store tool**
+- AI Agent가 Pinecone 벡터 데이터베이스를 '도구'로 사용
+- AI Agent는 이 도구를 이용해 데이터베이스에서 특정 정보를 검색하거나, 새로운 데이터를 저장하는 등의 작업을 워크플로우 내에서 수행
 
-tool description
+tool Description
 
 ```text
 The documents within this knowledge base contains information about company's policy such as HR, IT Support, and so on
 ```
+
+<figure><img src="../.gitbook/assets/ai-agent/QnA-bot-ai-agent.png" alt=""><figcaption></figcaption></figure>
+
+
+
