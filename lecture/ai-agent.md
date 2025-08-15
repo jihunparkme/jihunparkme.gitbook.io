@@ -240,5 +240,35 @@ View my integrations → New API integration → Notion 옵션 → 연결 → AP
 
 <figure><img src="../.gitbook/assets/ai-agent/naver-news-result.png" alt=""><figcaption></figcaption></figure>
 
+## n8n을 활용한 사내 QnA Bot
 
+### 👉🏻 Get rows in sheet
 
+Google Sheets, Excel 등 스프레드시트에서 특정 행들을 읽어오는 노드
+- 필터링 조건을 설정하여 특정 행만 선택적으로 가져올 수 있으며, 가져온 데이터는 워크플로우의 다음 노드로 전달되어 가공되거나 활용
+- ex) 파일 링크 목록 가져오기
+
+### 👉🏻 Download file
+
+특정 URL에서 파일을 다운로드하여 워크플로우로 가져오는 노드
+- 다운로드된 파일은 다음 노드에서 처리할 수 있는 형태로 변환
+- ex) 추출된 파일 링크를 읽고 해당 파일을 다운로드
+
+### 👉🏻 Pinecone Vector Store
+
+전문 벡터 데이터베이스에 데이터를 저장하거나 검색
+- LLM 애플리케이션에서 방대한 양의 비정형 데이터를 효율적으로 검색하고 관리하는 데 사용
+- [create API Key](https://app.pinecone.io/)
+
+**Gemini**
+- Pinecone Vector Store 노드와 함께 사용되는 Gemini 노드는 Google의 Gemini AI 모델을 사용하여 텍스트 데이터를 벡터로 변환하는 역할을
+- 벡터화된 데이터는 Pinecone 데이터베이스에 저장되어 유사도 검색에 사용
+
+**Default Data Loader**
+- 다양한 소스(웹사이트, PDF, CSV 파일 등)에서 데이터를 불러와서 처리 가능한 형태로 변환하는 역할
+- 이 노드는 특히 LLM 워크플로우에서 외부 데이터를 모델에 입력하기 전에 전처리하는 데 사용
+- Recursive Character Text Splitter
+  - 길고 복잡한 텍스트를 LLM이 한 번에 처리하기 적합한 크기의 '덩어리(chunk)'로 나누는 역할
+  - 특정 문자(예: '\n\n', '\n', '.' 등)를 기준으로 텍스트를 재귀적으로 분할하여, 의미 있는 단위가 손상되지 않도록 함
+
+<figure><img src="../.gitbook/assets/ai-agent/QnA-bot.png" alt=""><figcaption></figcaption></figure>
