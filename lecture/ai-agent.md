@@ -242,19 +242,21 @@ View my integrations → New API integration → Notion 옵션 → 연결 → AP
 
 ## n8n을 활용한 사내 QnA Bot
 
-### 👉🏻 Get rows in sheet
+### 데이터 저장
+
+#### 👉🏻 Get rows in sheet
 
 Google Sheets, Excel 등 스프레드시트에서 특정 행들을 읽어오는 노드
 - 필터링 조건을 설정하여 특정 행만 선택적으로 가져올 수 있으며, 가져온 데이터는 워크플로우의 다음 노드로 전달되어 가공되거나 활용
 - ex) 파일 링크 목록 가져오기
 
-### 👉🏻 Download file
+#### 👉🏻 Download file
 
 특정 URL에서 파일을 다운로드하여 워크플로우로 가져오는 노드
 - 다운로드된 파일은 다음 노드에서 처리할 수 있는 형태로 변환
 - ex) 추출된 파일 링크를 읽고 해당 파일을 다운로드
 
-### 👉🏻 Pinecone Vector Store
+#### 👉🏻 Pinecone Vector Store
 
 전문 벡터 데이터베이스에 데이터를 저장하거나 검색
 - LLM 애플리케이션에서 방대한 양의 비정형 데이터를 효율적으로 검색하고 관리하는 데 사용
@@ -272,3 +274,58 @@ Google Sheets, Excel 등 스프레드시트에서 특정 행들을 읽어오는 
   - 특정 문자(예: '\n\n', '\n', '.' 등)를 기준으로 텍스트를 재귀적으로 분할하여, 의미 있는 단위가 손상되지 않도록 함
 
 <figure><img src="../.gitbook/assets/ai-agent/QnA-bot.png" alt=""><figcaption></figcaption></figure>
+
+### Bot using LLM Chain
+
+#### 👉🏻 When Chat message received
+- 텔레그램, 슬랙 등 특정 메신저 채널에서 새로운 메시지가 수신되었을 때 워크플로우를 자동으로 시작하는 트리거 노드
+- 채팅 기반의 자동화 워크플로우를 구축하는 데 필수적
+
+#### 👉🏻 Basic LLM Chain
+- 복잡한 문서나 데이터 소스를 바탕으로 질문에 대한 답변을 생성하는 고급 노드
+- 사용자의 질문을 입력으로 받아, 연결된 데이터 소스에서 관련 정보를 찾아내고, 이를 바탕으로 LLM이 자연어 답변을 생성
+- RAG(Retrieval Augmented Generation) 기술을 구현하는 데 사용
+
+**Vector Store Retriever**
+- 질문과 관련된 정보를 벡터 데이터베이스에서 효율적으로 검색하는 역할
+- 사용자의 질문을 벡터로 변환한 후, 이 벡터와 유사한 의미를 가진 기존 문서 벡터들을 데이터베이스에서 탐색
+- 이 노드를 통해 LLM은 방대한 데이터 속에서 필요한 정보만 '검색'
+
+**Pinecone Vector Store**
+- 벡터 데이터베이스의 한 종류로, Vector Store Retriever 노드와 함께 사용
+- 이곳에 저장된 문서 벡터들을 기반으로 검색
+- LLM이 학습하지 않은 최신 데이터나 전문 문서에 대한 질의응답 기능을 구현할 때 주로 활용
+
+**Embeddings Google Gemini**
+- 텍스트 데이터를 구글의 Gemini AI 모델을 사용하여 벡터로 변환하는 역할
+- 질문과 문서 모두 이 노드를 거쳐 벡터화되며, 이 벡터는 Vector Store Retriever 노드를 통해 Pinecone 데이터베이스에 저장되거나 검색에 사용
+
+<figure><img src="../.gitbook/assets/ai-agent/QnA-bot-ai-chain.png" alt=""><figcaption></figcaption></figure>
+
+
+
+
+
+
+
+<figure><img src="../.gitbook/assets/ai-agent/QnA-bot-ai-agent.png" alt=""><figcaption></figcaption></figure>
+
+
+
+
+
+
+AI Agent
+
+System Message
+
+```text
+You are a helpful assistant. Use the tools that are available to you in order to answer the user's question
+```
+
+
+tool description
+
+```text
+The documents within this knowledge base contains information about company's policy such as HR, IT Support, and so on
+```
