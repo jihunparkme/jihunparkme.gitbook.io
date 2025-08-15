@@ -327,5 +327,12 @@ The documents within this knowledge base contains information about company's po
 
 <figure><img src="../.gitbook/assets/ai-agent/QnA-bot-ai-agent.png" alt=""><figcaption></figcaption></figure>
 
+## Reference
 
-
+- [uv Libeary](https://github.com/astral-sh/uv)
+  - An extremely fast Python package and project manager, written in Rust.
+- [zerox](https://github.com/getomni-ai/zerox)
+  - A dead simple way of OCR-ing a document for AI ingestion. Documents are meant to be a visual representation after all. With weird layouts, tables, charts, etc. The vision models just make sense!
+- Lecture Materials
+  - [inflearn-agent-use-cases-lecture](https://github.com/jasonkang14/inflearn-agent-use-cases-lecture)
+  - [agent-use-cases-with-n8n-and-langgraph](https://www.kangsium.com/agent-use-cases-with-n8n-and-langgraph)
