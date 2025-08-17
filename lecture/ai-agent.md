@@ -329,7 +329,8 @@ The documents within this knowledge base contains information about company's po
 
 ## Text-to-SQL
 
-
+- 자연어(영어나 한국어)를 SQL로 변환하는 기술
+- AI를 통한 데이터베이스 접근
 
 
 
