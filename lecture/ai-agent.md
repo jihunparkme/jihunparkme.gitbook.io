@@ -329,8 +329,97 @@ The documents within this knowledge base contains information about company's po
 
 ## Text-to-SQL
 
+**Text-to-SQL**
 - 자연어(영어나 한국어)를 SQL로 변환하는 기술
 - AI를 통한 데이터베이스 접근
+
+### Bot using LLM Chain
+
+#### 👉🏻 Create Query
+
+System prompt
+
+```text
+DATABASE SCHEMA:
+
+# Users/Customers table
+"""
+CREATE TABLE IF NOT EXISTS users (
+	user_id SERIAL PRIMARY KEY,
+	email VARCHAR(255) UNIQUE NOT NULL,
+	first_name VARCHAR(100) NOT NULL,
+	last_name VARCHAR(100) NOT NULL,
+	phone VARCHAR(20),
+	date_of_birth DATE,
+	registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	last_login TIMESTAMP,
+	is_active BOOLEAN DEFAULT TRUE,
+	customer_tier VARCHAR(20) DEFAULT 'bronze' CHECK (customer_tier IN ('bronze', 'silver', 'gold', 'platinum')),
+	UNIQUE(first_name, last_name)
+);
+""",
+
+# Addresses table
+"""
+CREATE TABLE IF NOT EXISTS addresses (
+	address_id SERIAL PRIMARY KEY,
+	user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+	address_type VARCHAR(20) CHECK (address_type IN ('billing', 'shipping')) DEFAULT 'shipping',
+	street_address VARCHAR(255) NOT NULL,
+	city VARCHAR(100) NOT NULL,
+	state VARCHAR(100),
+	postal_code VARCHAR(20) NOT NULL,
+	country VARCHAR(100) NOT NULL DEFAULT 'United States',
+	is_default BOOLEAN DEFAULT FALSE,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE(street_address, city, state, postal_code, country)
+);
+""",
+
+# Categories table
+"""
+CREATE TABLE IF NOT EXISTS categories (
+	category_id SERIAL PRIMARY KEY,
+	name VARCHAR(100) NOT NULL UNIQUE,
+	description TEXT,
+	parent_category_id INTEGER REFERENCES categories(category_id),
+	is_active BOOLEAN DEFAULT TRUE,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+""",
+
+...
+
+Looking at the database schema above, convert a user's question into a SQL query to fetch data from the database. return the SQL query only
+```
+
+#### 👉🏻 Trim Query Result
+
+prompt
+
+```text
+QUERY RESULT:
+{{ JSON.stringify($json) }}
+
+
+Original Question:  
+{{ $('When chat message received').item.json.chatInput }}
+```
+
+system message
+
+```text
+Look at the query result and the user's question and return a user friendly message
+```
+
+<figure><img src="../.gitbook/assets/ai-agent/text-to-sql.png" alt=""><figcaption></figcaption></figure>
+
+
+
+
+
+
+
 
 
 
