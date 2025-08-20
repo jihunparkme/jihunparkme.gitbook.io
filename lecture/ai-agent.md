@@ -333,69 +333,170 @@ The documents within this knowledge base contains information about company's po
 - 자연어(영어나 한국어)를 SQL로 변환하는 기술
 - AI를 통한 데이터베이스 접근
 
-### Bot using LLM Chain
+#### 👉🏻 When chat message received
 
-#### 👉🏻 Create Query
+#### 👉🏻 테이블 이름 가져오기
 
-System prompt
+**Postgres Execute a SQL query**
+
+```sql
+SELECT 
+    col.table_name,
+    COALESCE(obj_description(c.oid), 'No description available') AS table_description,
+    string_agg(col.column_name, ', ' ORDER BY col.ordinal_position) AS all_columns
+FROM information_schema.columns col
+LEFT JOIN pg_class c ON c.relname = col.table_name
+LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
+WHERE col.table_schema = 'public'
+AND n.nspname = 'public'
+GROUP BY col.table_name, c.oid
+ORDER BY col.table_name;
+```
+
+#### 👉🏻 테이블 정보 합치기
+
+**Code**
+
+```javascript
+let schema = '';
+
+for (const item of $input.all()) {
+  schema += `tableName: ${item.json.table_name}
+tableDescription: ${item.json.table_description}
+columnList: ${item.json.all_columns}`;
+}
+
+return [{schema}];
+```
+
+#### 👉🏻 테이블 리스트 추출
+
+**Basic LLM Chain**
+
+Prompt
+
+```text
+{{ $('When chat message received').first().json.chatInput }}
+```
+
+System Message
+
+```text
+TABLE DESCRIPTION:
+{{ $json.schema }}
+
+
+By looking at the table description above, which contains information about the name of tables and their relative descriptions along with the list of columns, return the list of names of the tables that you need to access in order to retrieve data related to the user's question
+```
+
+structured Output Parser
+
+```json
+{
+	"type": "object",
+	"properties": {
+		"tables": {
+			"type": "array",
+			"table": {
+				"type": "string"
+			}
+		}
+	}
+}
+```
+
+#### 👉🏻 스키마 조회
+
+**Postgres Execute a SQL query**
+
+```sql
+SELECT
+    'CREATE TABLE ' || table_name || ' (' || E'\n' ||
+    -- 각 컬럼에 대한 정보를 조합합니다.
+    string_agg(
+        '    ' || column_name || ' ' || 
+        CASE 
+            WHEN data_type = 'character varying' THEN 'VARCHAR(' || character_maximum_length || ')'
+            WHEN data_type = 'integer' AND column_default LIKE 'nextval%' THEN 'SERIAL PRIMARY KEY'
+            WHEN data_type = 'numeric' THEN 'DECIMAL(' || numeric_precision || ',' || numeric_scale || ')'
+            WHEN data_type = 'timestamp without time zone' THEN 'TIMESTAMP'
+            WHEN data_type = 'boolean' THEN 'BOOLEAN'
+            ELSE UPPER(data_type)
+        END ||
+        CASE WHEN is_nullable = 'NO' AND column_default NOT LIKE 'nextval%' THEN ' NOT NULL' ELSE '' END ||
+        CASE WHEN column_default IS NOT NULL AND column_default NOT LIKE 'nextval%' 
+             THEN ' DEFAULT ' || column_default ELSE '' END,
+        E',\n' ORDER BY ordinal_position
+    ) || E'\n' || ');' || E'\n\n' AS create_statement
+FROM 
+    information_schema.columns 
+WHERE 
+    table_schema = 'public'
+AND TABLE_NAME IN ({{  $json.output.tables.map((tableName) => `'${tableName}'`) }})
+GROUP BY 
+    table_name
+ORDER BY 
+    table_name;
+```
+
+#### 👉🏻 스키마 정보 합치기
+
+**Code**
+
+```javascript
+let schema = ''
+for (const item of $input.all()) {
+  schema += `${item.json.create_statement}\n\n`
+}
+
+return [{schema}]
+```
+
+#### 👉🏻 쿼리 생성
+
+**Basic LLM Chain**
+
+Prompt
+
+```text
+{{ $('When chat message received').first().json.chatInput }}
+```
+
+System message
 
 ```text
 DATABASE SCHEMA:
+{{ $json.schema }}
 
-# Users/Customers table
-"""
-CREATE TABLE IF NOT EXISTS users (
-	user_id SERIAL PRIMARY KEY,
-	email VARCHAR(255) UNIQUE NOT NULL,
-	first_name VARCHAR(100) NOT NULL,
-	last_name VARCHAR(100) NOT NULL,
-	phone VARCHAR(20),
-	date_of_birth DATE,
-	registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	last_login TIMESTAMP,
-	is_active BOOLEAN DEFAULT TRUE,
-	customer_tier VARCHAR(20) DEFAULT 'bronze' CHECK (customer_tier IN ('bronze', 'silver', 'gold', 'platinum')),
-	UNIQUE(first_name, last_name)
-);
-""",
-
-# Addresses table
-"""
-CREATE TABLE IF NOT EXISTS addresses (
-	address_id SERIAL PRIMARY KEY,
-	user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-	address_type VARCHAR(20) CHECK (address_type IN ('billing', 'shipping')) DEFAULT 'shipping',
-	street_address VARCHAR(255) NOT NULL,
-	city VARCHAR(100) NOT NULL,
-	state VARCHAR(100),
-	postal_code VARCHAR(20) NOT NULL,
-	country VARCHAR(100) NOT NULL DEFAULT 'United States',
-	is_default BOOLEAN DEFAULT FALSE,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	UNIQUE(street_address, city, state, postal_code, country)
-);
-""",
-
-# Categories table
-"""
-CREATE TABLE IF NOT EXISTS categories (
-	category_id SERIAL PRIMARY KEY,
-	name VARCHAR(100) NOT NULL UNIQUE,
-	description TEXT,
-	parent_category_id INTEGER REFERENCES categories(category_id),
-	is_active BOOLEAN DEFAULT TRUE,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-""",
-
-...
-
-Looking at the database schema above, convert a user's question into a SQL query to fetch data from the database. return the SQL query only
+Looking at the database schema above, convert a user's question into a SQL query to fetch data from the database. return the SQL query only 
 ```
 
-#### 👉🏻 Trim Query Result
+Structured Output Parser
 
-prompt
+```json
+{
+	"type": "object",
+	"properties": {
+		"query": {
+			"type": "string"
+		}
+	}
+}
+```
+
+#### 👉🏻 쿼리 실행
+
+**Postgres Execute a SQL query**
+
+```text
+{{ $json.output.query }}
+```
+
+#### 👉🏻 쿼리 결과 다듬기
+
+**Basic LLM Chain**
+
+Prompt
 
 ```text
 QUERY RESULT:
@@ -403,16 +504,16 @@ QUERY RESULT:
 
 
 Original Question:  
-{{ $('When chat message received').item.json.chatInput }}
+{{ $('When chat message received').first().json.chatInput }}
 ```
 
-system message
+System Message
 
 ```text
 Look at the query result and the user's question and return a user friendly message
 ```
 
-<figure><img src="../.gitbook/assets/ai-agent/text-to-sql.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/ai-agent/text-to-sql-2.png" alt=""><figcaption></figcaption></figure>
 
 
 
