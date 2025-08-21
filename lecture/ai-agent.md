@@ -549,11 +549,13 @@ USB-C 포트 비유
 - 공식 문서에서 "AI 애플리케이션을 위한 USB-C 포트"로 표현
 - 어댑터를 통해 모든 MCP 서버와 모든 MCP 클라이언트 연결 가능
 
-### MCP를 활용한 코드리뷰 에이전트 생성하기
+### Code Review Agent with MCP
 
 [github-mcp-server](https://github.com/github/github-mcp-server)
 
 [Slack MCP Server](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/slack)
+
+ref. [MCP를 활용한 코드리뷰 에이전트 생성하기](https://github.com/jasonkang14/inflearn-agent-use-cases-lecture/blob/main/24.%20MCP%EB%A5%BC%20%ED%99%9C%EC%9A%A9%ED%95%9C%20%EC%BD%94%EB%93%9C%EB%A6%AC%EB%B7%B0%20%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%20%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0.ipynb)
 
 ```python
 ##########################################
@@ -680,18 +682,9 @@ if all_chunks:
     print("\nFinal result:", final_result)
 ```
 
-
-
-
-
-
-
-
-
-
-## Code Review Agent
-
 ## Video Summary Agent
+
+[OpenAI Whisper를 활용한 영상 요약](https://github.com/jasonkang14/inflearn-agent-use-cases-lecture/blob/main/25.%20OpenAI%20Whisper%EB%A5%BC%20%ED%99%9C%EC%9A%A9%ED%95%9C%20%EC%98%81%EC%83%81%20%EC%9A%94%EC%95%BD.ipynb)
 
 ## Reference
 
