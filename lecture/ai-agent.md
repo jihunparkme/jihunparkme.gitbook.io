@@ -515,9 +515,39 @@ Look at the query result and the user's question and return a user friendly mess
 
 <figure><img src="../.gitbook/assets/ai-agent/text-to-sql-2.png" alt=""><figcaption></figcaption></figure>
 
+## MCP
 
+[Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
 
+[MCP Doc.](https://modelcontextprotocol.io/docs/getting-started/intro)
 
+### MCP 용어
+
+**Protocol** 
+- 통신 계약서
+- 웹 개발의 HTTP 통신과 유사
+- HTTP = Hypertext Transfer Protocol (웹 통신 계약)
+- MCP = 모델과 컨텍스트 간의 통신 계약
+
+**Model**
+- LLM 모델을 의미
+- GPT, Anthropic의 Claude, Gemini 등
+- 한국의 Upstage Solar 모델 등 포함
+
+**Context**
+- LLM에 원하는 결과를 얻기 위해 잘 전달해야 하는 정보
+- MCP를 통해 프롬프트와 툴 관리 가능
+- 한국어로는 "AI에게 컨텍스트를 전달하는 프로토콜"
+
+**MCP의 장점**
+
+프로토콜의 범용성
+- HTTP 통신처럼 서버 언어(Java, Python, Node)에 관계없이 통신 가능
+- 다양한 모델 지원 가능
+
+USB-C 포트 비유
+- 공식 문서에서 "AI 애플리케이션을 위한 USB-C 포트"로 표현
+- 어댑터를 통해 모든 MCP 서버와 모든 MCP 클라이언트 연결 가능
 
 
 
