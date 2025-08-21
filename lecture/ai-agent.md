@@ -549,6 +549,12 @@ USB-C 포트 비유
 - 공식 문서에서 "AI 애플리케이션을 위한 USB-C 포트"로 표현
 - 어댑터를 통해 모든 MCP 서버와 모든 MCP 클라이언트 연결 가능
 
+### MCP를 활용한 코드리뷰 에이전트 생성하기
+
+[github-mcp-server](https://github.com/github/github-mcp-server)
+
+[Slack MCP Server](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/slack)
+
 ```python
 ##########################################
 # 환경변수 불러오기
