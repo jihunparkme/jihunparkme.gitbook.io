@@ -611,6 +611,24 @@ def validate_regex(text):
     "task": "Create a Python function to validate an AWS IAM username",
     "format": "python"
 }
-``
+```
 
 예시 출력 구조에 이 형식 필드를 추가하여 자동으로 포함하도록 데이터셋 생성 프롬프트를 업데이트할 수 있습니다.
+
+### Improving Prompt Clarity
+
+
+AI 모델에서 더 나은 결과를 얻으려면 예상 출력 형식에 대한 프롬프트 지침을 보다 구체적으로 작성하세요:
+
+```text
+* Respond only with Python, JSON, or a plain Regex
+* Do not add any comments or commentary or explanation
+```
+
+코드 블록이 포함된 미리 채워진 어시스턴트 메시지를 사용하여 모델이 원시 코드만 반환하도록 유도할 수도 있습니다:
+
+```text
+add_assistant_message(messages, "```code")
+```
+
+이것은 클로드에게 미리 파이썬인지 JSON인지 Regex인지 지정할 필요 없이 코드 콘텐츠 생성을 시작하라고 지시합니다.
