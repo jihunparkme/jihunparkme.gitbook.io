@@ -600,3 +600,17 @@ def validate_regex(text):
 ```
 
 각 함수는 텍스트를 각자의 형식으로 구문 분석하려고 합니다. 구문 분석에 성공하면 10점 만점을 반환합니다. 오류로 실패하면 구문이 잘못되어 0을 반환합니다.
+
+### Dataset Format Requirements
+
+`code grader`가 어떤 검증기를 사용할지 알기 위해서는 테스트 케이스에 예상 출력 형식을 지정해야 합니다.
+
+
+```json
+{
+    "task": "Create a Python function to validate an AWS IAM username",
+    "format": "python"
+}
+``
+
+예시 출력 구조에 이 형식 필드를 추가하여 자동으로 포함하도록 데이터셋 생성 프롬프트를 업데이트할 수 있습니다.
