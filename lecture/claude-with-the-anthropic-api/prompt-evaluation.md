@@ -568,3 +568,35 @@ def run_eval(dataset):
 - 응답은 요청된 내용을 직접 다루고 정확해야 합니다
 
 처음 두 가지 기준은 코드 채점자가 처리하고, Task Following는 모델 채점자가 평가하여 함께 종합적인 평가를 제공
+
+### Syntax Validation Functions
+
+생성된 코드에 유효한 구문이 있는지 확인하려면 출력을 구문 분석하려고 시도하는 세 가지 도우미 함수를 만들 수 있습니다.
+
+```python
+# Parse output as JSON
+def validate_json(text):
+    try:
+        json.loads(text.strip())
+        return 10
+    except json.JSONDecodeError:
+        return 0
+
+# Parse output to a Python Abstract Syntax Tree
+def validate_python(text):
+    try:
+        ast.parse(text.strip())
+        return 10
+    except SyntaxError:
+        return 0
+
+# Compile output as Regex
+def validate_regex(text):
+    try:
+        re.compile(text.strip())
+        return 10
+    except re.error:
+        return 0
+```
+
+각 함수는 텍스트를 각자의 형식으로 구문 분석하려고 합니다. 구문 분석에 성공하면 10점 만점을 반환합니다. 오류로 실패하면 구문이 잘못되어 0을 반환합니다.
