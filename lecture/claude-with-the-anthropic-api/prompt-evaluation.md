@@ -632,3 +632,17 @@ add_assistant_message(messages, "```code")
 ```
 
 이것은 클로드에게 미리 파이썬인지 JSON인지 Regex인지 지정할 필요 없이 코드 콘텐츠 생성을 시작하라고 지시합니다.
+
+### Combining Scores
+
+마지막 단계는 모델 채점자 점수와 코드 채점자 점수를 병합하는 것입니다. 간단한 접근 방식은 평균을 구하는 것입니다:
+
+```python
+model_grade = grade_by_model(test_case, output)
+model_score = model_grade["score"]
+syntax_score = grade_syntax(output, test_case)
+
+score = (model_score + syntax_score) / 2
+```
+
+이렇게 하면 콘텐츠 품질과 기술적 정확성 모두에 동일한 가중치를 부여할 수 있습니다. 특정 사용 사례에 더 중요한 것이 무엇인지에 따라 이러한 가중치를 조정할 수 있습니다.
