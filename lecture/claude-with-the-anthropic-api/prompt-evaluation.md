@@ -654,3 +654,24 @@ code grading을 구현한 후에는 평가를 실행하여 기본 점수를 얻�
 - 이렇게 하면 주관적인 평가에 의존하지 않고 신속한 엔지니어링 진행 상황을 정량적으로 측정할 수 있습니다.
 
 ## Exercise on prompt evals
+
+모델 채점자에게 좋은 솔루션이 무엇인지에 대한 더 많은 문맥을 제공하기
+- Step #1: 각 테스트 케이스에 "solution_criteria"이 포함되도록 **데이터셋 생성 프롬프트를 업데이트**
+
+    ```json
+    {
+        task: "Create a JSON configuration for an AWS Lambda function that sets up a basic Python runtime with a memory allocation of 512MB and a timeout of 10 seconds",
+        format: "json",
+        solution_criteria: "Must include runtime, memory size, timeout, and basic structure for AWS Lambda configuration"
+    ```
+
+- Step #2: 해당 솔루션 기준을 포함하도록 'grade_by_model' **프롬프트를 업데이트**
+
+    ```json
+    Solution to Evaluate: 
+    <solution> 
+    {output}
+    </solution>
+
+    <-- Add in the newly generated solution_criteria here -->
+    ```
