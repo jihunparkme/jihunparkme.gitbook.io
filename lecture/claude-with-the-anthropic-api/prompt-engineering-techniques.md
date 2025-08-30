@@ -55,3 +55,25 @@ dataset = evaluator.generate_dataset(
 ```
 
 개발 중 테스트 케이스 수를 낮게 유지(2~3개)하여 반복 주기를 단축하세요. 최종 검증을 위해 이를 늘릴 수 있습니다.
+
+### Writing Your Initial Prompt
+
+간단하고 순진한 프롬프트로 시작하여 기준선을 설정하세요. 의도적으로 기본적인 첫 번째 시도의 예는 다음과 같습니다:
+
+```json
+def run_prompt(prompt_inputs):
+    prompt = f"""
+What should this person eat?
+
+- Height: {prompt_inputs["height"]}
+- Weight: {prompt_inputs["weight"]}
+- Goal: {prompt_inputs["goal"]}
+- Dietary restrictions: {prompt_inputs["restrictions"]}
+"""
+    
+    messages = []
+    add_user_message(messages, prompt)
+    return chat(messages)
+```
+
+이 기본 프롬프트는 좋지 않은 결과를 초래할 가능성이 높지만, 개선을 측정할 수 있는 출발점을 제공합니다.
