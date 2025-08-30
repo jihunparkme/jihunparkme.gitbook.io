@@ -77,3 +77,22 @@ What should this person eat?
 ```
 
 이 기본 프롬프트는 좋지 않은 결과를 초래할 가능성이 높지만, 개선을 측정할 수 있는 출발점을 제공합니다.
+
+### Adding Evaluation Criteria
+
+평가를 실행할 때 채점 모델이 고려해야 할 추가 기준을 지정할 수 있습니다:
+
+```json
+results = evaluator.run_evaluation(
+    run_prompt_function=run_prompt,
+    dataset_file="dataset.json",
+    extra_criteria="""
+The output should include:
+- Daily caloric total
+- Macronutrient breakdown  
+- Meals with exact foods, portions, and timing
+"""
+)
+```
+
+이는 사용 사례에 중요한 특정 요구 사항에 대해 프롬프트를 평가하는 데 도움이 됩니다.
