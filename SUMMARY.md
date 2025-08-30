@@ -9,6 +9,7 @@
 * [Claude](lecture/claude-with-the-anthropic-api/README.md)
   * [Accessing Claude with the API](lecture/claude-with-the-anthropic-api/accessing-claude-with-the-api.md)
   * [Prompt evaluation](lecture/claude-with-the-anthropic-api/prompt-evaluation.md)
+  * [Prompt engineering techniques](lecture/claude-with-the-anthropic-api/prompt-engineering-techniques.md)
 * [Kubernetes](lecture/kubernetes/README.md)
   * [Begin Kubernetes](lecture/kubernetes/begin-kubernetes.md)
 * [Kafka](lecture/kafka/README.md)
