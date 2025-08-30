@@ -6,7 +6,7 @@
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/prompt-enginerring.png" alt=""><figcaption></figcaption></figure>
 
-## The Iterative Improvement Process
+### The Iterative Improvement Process
 
 이 접근 방식은 원하는 결과를 얻을 때까지 반복할 수 있는 명확한 주기를 따릅니다:
 
@@ -22,3 +22,16 @@
 
 성능에 만족할 때까지 마지막 두 단계(4-5)를 반복합니다. 각 반복마다 평가 점수가 눈에 띄게 향상되어야 합니다.
 
+### Setting Up Your Evaluation Pipeline
+
+이 과정을 시연하기 위해 운동선수를 위한 일일 식단을 생성하는 프롬프트를 만드는 실용적인 예를 들어보겠습니다. 프롬프트는 운동선수의 키, 체중, 목표 및 식이 제한을 고려한 다음 종합적인 식단을 작성해야 합니다.
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/setting-up-your-evaluation-pipeline.png" alt=""><figcaption></figcaption></figure>
+
+평가 설정은 **데이터셋 생성** 및 **모델 등급을 처리**하는 `PromptEvaluator` 클래스를 사용합니다. 평가자 인스턴스를 생성할 때 `max_concurrent_tasks` 매개변수와의 동시성을 제어할 수 있습니다:
+
+```python
+evaluator = PromptEvaluator(max_concurrent_tasks=5)
+```
+
+속도 제한 오류를 방지하려면 낮은 동시성 값(like 3)부터 시작하세요. API 할당량이 더 빠른 처리를 가능하게 한다면 이 값을 늘릴 수 있습니다.
