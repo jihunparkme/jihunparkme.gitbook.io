@@ -35,3 +35,23 @@ evaluator = PromptEvaluator(max_concurrent_tasks=5)
 ```
 
 속도 제한 오류를 방지하려면 낮은 동시성 값(like 3)부터 시작하세요. API 할당량이 더 빠른 처리를 가능하게 한다면 이 값을 늘릴 수 있습니다.
+
+### Generating Test Data
+
+평가 시스템은 프롬프트 요구 사항에 따라 테스트 케이스를 자동으로 생성할 수 있습니다. 프롬프트에 필요한 입력을 정의합니다:
+
+```python
+dataset = evaluator.generate_dataset(
+    task_description="Write a compact, concise 1 day meal plan for a single athlete",
+    prompt_inputs_spec={
+        "height": "Athlete's height in cm",
+        "weight": "Athlete's weight in kg", 
+        "goal": "Goal of the athlete",
+        "restrictions": "Dietary restrictions of the athlete"
+    },
+    output_file="dataset.json",
+    num_cases=3
+)
+```
+
+개발 중 테스트 케이스 수를 낮게 유지(2~3개)하여 반복 주기를 단축하세요. 최종 검증을 위해 이를 늘릴 수 있습니다.
