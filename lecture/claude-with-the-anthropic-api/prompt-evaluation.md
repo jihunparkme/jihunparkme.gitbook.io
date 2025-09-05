@@ -678,16 +678,16 @@ code grading을 구현한 후에는 평가를 실행하여 기본 점수를 얻�
 
 ## 요약
 
-| **섹션 제목**                | **요약 내용**                                                                                                                                                                                                 |
-|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Prompt evaluation**        | Prompt engineering과 evaluation의 차이를 설명. Engineering은 더 나은 프롬프트를 작성하는 기술, Evaluation은 프롬프트의 효과를 측정하는 과정.                                                                 |
-| **Prompt Engineering vs Prompt Evaluation** | Prompt engineering은 효과적인 프롬프트를 만드는 기술, Evaluation은 자동화된 테스트를 통해 프롬프트의 성능을 측정.                                                                                     |
-| **Three Paths After Writing a Prompt** | 프롬프트 작성 후 테스트 옵션 3가지: 1) 간단한 테스트, 2) 코너 케이스 처리, 3) 평가 파이프라인을 통한 체계적 반복.                                                                                     |
-| **Why Most Engineers Fall Into Testing Traps** | 제한된 테스트로 인해 예상치 못한 입력에 취약한 프롬프트가 프로덕션에서 실패할 가능성이 높음.                                                                                                     |
-| **The Evaluation-First Approach** | 평가 파이프라인을 통해 프롬프트의 약점을 사전에 파악하고, 다양한 버전을 비교하며, 신뢰할 수 있는 애플리케이션을 구축.                                                                                 |
-| **A typical eval workflow** | 프롬프트 평가 워크플로우의 5단계: 1) 초기 프롬프트 작성, 2) 평가 데이터셋 생성, 3) Claude에 입력, 4) 채점, 5) 프롬프트 수정 및 반복.                                                                          |
-| **Generating test datasets** | 평가 데이터셋 생성 방법: Claude를 사용해 자동으로 테스트 데이터를 생성하고, JSON 형식으로 저장하여 평가에 활용.                                                                                           |
-| **Running the eval**         | 평가 파이프라인 실행: 테스트 케이스를 프롬프트와 병합해 Claude에 입력하고, 결과를 채점하여 구조화된 JSON으로 반환.                                                                                         |
-| **Model based grading**      | 모델 기반 채점: Claude의 출력물을 평가하는 데 AI 모델을 사용. 강점, 약점, 점수를 포함한 구조화된 피드백 제공.                                                                                             |
-| **Code based grading**       | 코드 채점: 생성된 코드의 형식, 구문 유효성, 작업 준수 여부를 평가. Python, JSON, Regex에 대한 구문 검증 함수 제공.                                                                                       |
-| **Exercise on prompt evals** | 데이터셋에 "solution_criteria"를 추가해 평가 기준을 명확히 하고, Claude의 평가 프롬프트를 업데이트하여 더 나은 솔루션을 생성하도록 유도.                                                                   |
+| **섹션 제목**                                  | **요약 내용**                                                                                                                                |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Prompt evaluation**                          | Prompt engineering과 evaluation의 차이를 설명. Engineering은 더 나은 프롬프트를 작성하는 기술, Evaluation은 프롬프트의 효과를 측정하는 과정. |
+| **Prompt Engineering vs Prompt Evaluation**    | Prompt engineering은 효과적인 프롬프트를 만드는 기술, Evaluation은 자동화된 테스트를 통해 프롬프트의 성능을 측정.                            |
+| **Three Paths After Writing a Prompt**         | 프롬프트 작성 후 테스트 옵션 3가지: 1) 간단한 테스트, 2) 코너 케이스 처리, 3) 평가 파이프라인을 통한 체계적 반복.                            |
+| **Why Most Engineers Fall Into Testing Traps** | 제한된 테스트로 인해 예상치 못한 입력에 취약한 프롬프트가 프로덕션에서 실패할 가능성이 높음.                                                 |
+| **The Evaluation-First Approach**              | 평가 파이프라인을 통해 프롬프트의 약점을 사전에 파악하고, 다양한 버전을 비교하며, 신뢰할 수 있는 애플리케이션을 구축.                        |
+| **A typical eval workflow**                    | 프롬프트 평가 워크플로우의 5단계: 1) 초기 프롬프트 작성, 2) 평가 데이터셋 생성, 3) Claude에 입력, 4) 채점, 5) 프롬프트 수정 및 반복.         |
+| **Generating test datasets**                   | 평가 데이터셋 생성 방법: Claude를 사용해 자동으로 테스트 데이터를 생성하고, JSON 형식으로 저장하여 평가에 활용.                              |
+| **Running the eval**                           | 평가 파이프라인 실행: 테스트 케이스를 프롬프트와 병합해 Claude에 입력하고, 결과를 채점하여 구조화된 JSON으로 반환.                           |
+| **Model based grading**                        | 모델 기반 채점: Claude의 출력물을 평가하는 데 AI 모델을 사용. 강점, 약점, 점수를 포함한 구조화된 피드백 제공.                                |
+| **Code based grading**                         | 코드 채점: 생성된 코드의 형식, 구문 유효성, 작업 준수 여부를 평가. Python, JSON, Regex에 대한 구문 검증 함수 제공.                           |
+| **Exercise on prompt evals**                   | 데이터셋에 "solution_criteria"를 추가해 평가 기준을 명확히 하고, Claude의 평가 프롬프트를 업데이트하여 더 나은 솔루션을 생성하도록 유도.     |
