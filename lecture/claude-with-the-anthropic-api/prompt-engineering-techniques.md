@@ -229,3 +229,9 @@ The output should include:
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/when-to-provide-step.png" alt=""><figcaption></figcaption></figure>
 
 예를 들어, 클로드에게 영업팀의 성과가 하락한 이유를 분석해 달라고 요청하는 경우, 영업팀이 하나의 잠재적 원인에만 집중하기보다는 시장 지표, 업계 변화, 개인 성과, 조직 변화, 고객 피드백을 검토하도록 안내하는 것이 좋습니다.
+
+### Combining Both Approaches
+
+전문적인 프롬프트에서는 두 가지 기법을 함께 사용하는 경우가 많습니다. **출력 형식과 내용을 제어하는 가이드라인**과 **클로드가 응답하기 전에 문제를 철저히 생각할 수 있도록 하는 단계**가 있을 수 있습니다.
+
+이 조합은 결과의 일관성과 클로드가 결론에 도달하는 데 중요한 모든 요소를 고려했다는 자신감을 제공합니다.
