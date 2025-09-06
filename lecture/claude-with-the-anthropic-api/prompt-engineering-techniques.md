@@ -240,18 +240,15 @@ The output should include:
 
 많은 콘텐츠가 포함된 프롬프트를 만들 때 클로드는 때때로 어떤 텍스트 조각이 서로 속하는지 또는 어떤 섹션을 나타내야 하는지 이해하는 데 어려움을 겪을 수 있습니다. **XML 태그는 특히 대량의 데이터를 보간할 때 프롬프트에 구조와 명확성을 추가하는 간단한 방법을 제공**합니다.
 
+### Why Structure Matters
 
+20페이지에 달하는 판매 기록을 분석해야 하는 프롬프트를 고려해 보세요. 명확한 경계가 없으면 클로드는 사용자의 지침과 분석하고자 하는 실제 데이터를 구분하는 데 어려움을 겪을 수 있습니다.
 
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/why-structure-matters.png" alt=""><figcaption></figcaption></figure>
 
+위의 예는 경계가 불분명하면 클로드가 의도를 분석하기가 얼마나 어려울 수 있는지 보여줍니다. 판매 기록을 <sales_records> 및 </sales_records>와 같은 XML 태그로 감싸면 클로드가 프롬프트의 구조를 이해하는 데 도움이 되는 명확한 구분 기호를 만들 수 있습니다.
 
-
-
-
-
-
-
-
-
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/why-structure-matters-2.png" alt=""><figcaption></figcaption></figure>
 
 
 
