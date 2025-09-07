@@ -302,6 +302,14 @@ Generate a meal plan based on the athlete information above.
 
 **프롬프트에 예제를 제공하는 것은 가장 효과적인 프롬프트 엔지니어링 기법 중 하나**입니다. '원샷' 또는 '멀티샷' 프롬프트라고 하는 이 접근 방식은 클로드에게 샘플 입력/출력 쌍을 제공하여 응답을 안내하는 것입니다.
 
+### How Examples Work
+
+감정 분석 예시를 살펴보겠습니다. 클로드가 트윗이 긍정적인지 부정적인지 분류하기를 원한다고 가정해 보겠습니다:
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/how-examples-work.png" alt=""><figcaption></figcaption></figure>
+
+여기서 도전 과제는 풍자입니다. "네, 물론이죠. '우주에서 온 플랜 9' 이후 제가 본 영화 중 최고였어요."와 같은 트윗은 겉으로는 긍정적으로 보이지만, 사실은 비꼬고 부정적입니다 (플랜 9는 최악의 영화 중 하나로 유명합니다).
+
 
 
 
