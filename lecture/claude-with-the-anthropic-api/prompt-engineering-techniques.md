@@ -279,6 +279,32 @@ XML 태그는 다음과 같은 경우에 가장 유용합니다:
 
 **짧은 내용이라도 XML 태그는 클로드에게 프롬프트 구조를 더 명확하게 보여주는 구분자 역할**을 할 수 있습니다.
 
+### Real-World Application
+
+실제로 다음과 같은 프롬프트를 구성할 수 있습니다:
+
+```xml
+<athlete_information>
+- Height: 6'2"
+- Weight: 180 lbs
+- Goal: Build muscle
+- Dietary restrictions: Vegetarian
+</athlete_information>
+
+Generate a meal plan based on the athlete information above.
+```
+
+이는 식단을 작성할 때 키, 몸무게, 목표 및 제한 사항이 모두 관련된 운동선수 데이터임을 분명히 합니다.
+
+간단한 프롬프트만으로는 극적인 개선을 보지 못할 수도 있지만, 프**롬프트가 점점 더 복잡해지고 다양한 콘텐츠가 더 많이 포함될수록 XML 태그의 가치는 점점 더 높아**집니다.
+
+
+
+
+
+
+
+
 
 
 
