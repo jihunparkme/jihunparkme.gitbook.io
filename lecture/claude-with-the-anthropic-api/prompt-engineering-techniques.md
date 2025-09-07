@@ -246,15 +246,17 @@ The output should include:
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/why-structure-matters.png" alt=""><figcaption></figcaption></figure>
 
-위의 예는 경계가 불분명하면 클로드가 의도를 분석하기가 얼마나 어려울 수 있는지 보여줍니다. 판매 기록을 <sales_records> 및 </sales_records>와 같은 XML 태그로 감싸면 클로드가 프롬프트의 구조를 이해하는 데 도움이 되는 명확한 구분 기호를 만들 수 있습니다.
+위의 예는 경계가 불분명하면 클로드가 의도를 분석하기가 얼마나 어려울 수 있는지 보여줍니다. 판매 기록을 `<sales_records>` 및 `</sales_records>`와 같은 XML 태그로 감싸면 클로드가 프롬프트의 구조를 이해하는 데 도움이 되는 명확한 구분 기호를 만들 수 있습니다.
 
 <figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/why-structure-matters-2.png" alt=""><figcaption></figcaption></figure>
 
+### Practical Example
 
+XML 태그가 중요한 이유에 대한 더 극적인 예는 다음과 같습니다. 클로드에게 제공된 문서를 사용하여 코드를 디버깅하도록 요청하면 모든 것을 함께 섞으면 혼란이 생깁니다:
 
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/practical-example.png" alt=""><figcaption></figcaption></figure>
 
-
-
+"Not Great" 버전은 코드와 문서를 구분하는 것이 거의 불가능합니다. "Better" 버전은 명확한 경계를 만들기 위해 `<my_code>`와 `<docs>` 태그를 사용합니다.
 
 
 
