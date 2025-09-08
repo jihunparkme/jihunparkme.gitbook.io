@@ -310,7 +310,18 @@ Generate a meal plan based on the athlete information above.
 
 여기서 도전 과제는 풍자입니다. "네, 물론이죠. '우주에서 온 플랜 9' 이후 제가 본 영화 중 최고였어요."와 같은 트윗은 겉으로는 긍정적으로 보이지만, 사실은 비꼬고 부정적입니다 (플랜 9는 최악의 영화 중 하나로 유명합니다).
 
+### Adding Examples to Handle Corner Cases
 
+이 문제를 해결하기 위해 클로드가 까다로운 사건을 처리하는 방법을 보여주는 예제를 추가할 수 있습니다:
+
+<figure><img src="../../.gitbook/assets/claude-with-the-anthropic-api/adding-examples.png" alt=""><figcaption></figcaption></figure>
+
+개선된 프롬프트에는 다음이 포함됩니다:
+- 명확한 긍정적인 예: "오늘 밤 좋은 경기!" → "긍정적"
+- 비꼬는 예입니다: "아, 네, 오늘 밤 비행기 지연이 정말 필요했어요! 훌륭해요!" → "부정적입니다" 
+- 풍자를 신중하게 다뤄야 하는 이유를 설명하는 맥락
+
+예제가 `<sample_input>` 및 `<ideal_output>`과 같은 XML 태그로 어떻게 감싸지는지 주목하세요. 이 구조는 클로드가 각 부분이 무엇을 나타내는지 명확하게 보여줍니다.
 
 
 
