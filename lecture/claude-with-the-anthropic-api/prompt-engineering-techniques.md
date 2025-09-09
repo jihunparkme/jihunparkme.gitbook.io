@@ -323,7 +323,13 @@ Generate a meal plan based on the athlete information above.
 
 예제가 `<sample_input>` 및 `<ideal_output>`과 같은 XML 태그로 어떻게 감싸지는지 주목하세요. 이 구조는 클로드가 각 부분이 무엇을 나타내는지 명확하게 보여줍니다.
 
+### When to Use Examples
 
+예제는 특히 유용합니다:
+- 코너 케이스 또는 엣지 시나리오 캡처
+- 복잡한 출력 형식 정의(예: 특정 JSON 구조)
+- 원하는 스타일이나 톤을 정확하게 보여주기
+- 모호한 입력을 처리하는 방법 시연
 
 
 
