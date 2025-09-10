@@ -331,7 +331,13 @@ Generate a meal plan based on the athlete information above.
 - 원하는 스타일이나 톤을 정확하게 보여주기
 - 모호한 입력을 처리하는 방법 시연
 
+### One-Shot vs Multi-Shot
 
+One-Shot: 패턴을 설정하기 위한 단일 예제 제공
+
+Multi-Shot: 다양한 시나리오를 다룰 수 있는 여러 예제 제공
+
+다양한 엣지 케이스를 다루거나 다양한 유형의 유효한 응답을 보여주고 싶을 때는 멀티샷을 사용하세요.
 
 
 
