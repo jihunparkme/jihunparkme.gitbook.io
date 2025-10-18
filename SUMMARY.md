@@ -9,7 +9,7 @@
 * [Claude](lecture/claude-with-the-anthropic-api/README.md)
   * [Accessing Claude with the API](lecture/claude-with-the-anthropic-api/accessing-claude-with-the-api.md)
   * [Prompt evaluation](lecture/claude-with-the-anthropic-api/prompt-evaluation.md)
-  * [Prompt engineering techniques](lecture/claude-with-the-anthropic-api/prompt-engineering-techniques.md)
+  * [f](lecture/claude-with-the-anthropic-api/prompt-engineering-techniques.md)
 * [Kubernetes](lecture/kubernetes/README.md)
   * [Begin Kubernetes](lecture/kubernetes/begin-kubernetes.md)
 * [Kafka](lecture/kafka/README.md)
@@ -59,6 +59,8 @@
 
 ## Book
 
+* [대규모 시스템 설계 기초 2nd](book/system-design-interview-2nd/README.md)
+  * [05.지표 모니터링 및 경보 시스템](book/system-design-interview-2nd/05.md)
 * [Microservices Patterns](book/microservices-patterns/README.md)
   * [01-02.모놀리식 지옥과 분해 전략](book/microservices-patterns/part-01.md)
   * [03.프로세스 간 통신](book/microservices-patterns/part-03.md)
