@@ -59,6 +59,7 @@
 
 ## Book
 
+* [요즘 당근 AI 개발](book/development-of-carrot-AI.md)
 * [대규모 시스템 설계 기초 2nd](book/system-design-interview-2nd/README.md)
   * [05.지표 모니터링 및 경보 시스템](book/system-design-interview-
   * [11.결제 시스템](book/system-design-interview-2nd/11.md)
