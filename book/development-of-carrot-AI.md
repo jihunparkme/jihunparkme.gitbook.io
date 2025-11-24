@@ -15,3 +15,5 @@
 |적용 기술|LLM (Large Language Model)<br/>물품의 특징과 거래 전후의 맥락을 이해하고, 이를 바탕으로 사용자가 마치 물품과 정서적으로 연결되어 있다는 느낌을 받을 수 있도록 프롬프트를 작성하여 편지를 생성|
 |효과|거래 후기 작성률이 크게 증가|
 |인사이트|- 사용자에게 후기를 쓰도록 부탁하거나 유도하는 것보다, **스스로 동기를 가질 수 있도록** 하는 것이 더 중요<br/>- 금전적인 보상보다 **정서적 동기**가 충분한 동기 부여가 될 수 있음|
+
+<figure><img src="../.gitbook/assets/development-of-carrot-AI/part-2.png" alt=""><figcaption></figcaption></figure>
