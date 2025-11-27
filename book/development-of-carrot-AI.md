@@ -112,5 +112,20 @@ LLM이 실제 업무를 처리할 수 있도록, 5가지 기능을 수행하는 
 
 <figure><img src="../.gitbook/assets/development-of-carrot-AI/part-7-2.png" alt=""><figcaption></figcaption></figure>
 
+## 연간 LLM 호출 비용 25% 절감. 시맨틱 캐싱 도입
+
+||내용|
+|---|---|
+|서비스 소개||
+|목표||
+|적용 기술||
+|효과||
+
+<figure><img src="../.gitbook/assets/development-of-carrot-AI/part-8-1.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/development-of-carrot-AI/part-8-2.png" alt=""><figcaption></figcaption></figure>
+
+
+
 
 
