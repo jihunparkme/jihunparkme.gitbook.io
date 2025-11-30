@@ -153,3 +153,4 @@ LLM이 실제 업무를 처리할 수 있도록, 5가지 기능을 수행하는 
 |적용 기술|**AI Agent**<br/>- **모델(Model):** **LLM** 활용<br/>- **도구(Tool):** REST API, gRPC, GraphQL<br/>- **지시사항(Instructions, Prompt):** 에이전트의 목표를 설정하고 동작을 제어<br/><br/>**멀티 AI 에이전트 시스템** 적용<br/>- 이를 구현하기 위해 **KAMP (Karrot Agent Management Platform)** 플랫폼을 구축<br/>- AI 에이전트를 **노코드/로코드(No-code/Low-code)** 방식으로 구성할 수 있도록 지원|
 |효과|- **자체 해결률 향상 및 부하 감소:** AI 에이전트가 사용자가 스스로 문의를 해결할 수 있도록 강화<br/>- **신뢰성 있는 운영 환경 구축:** C2C 도메인에서 멀티 AI 에이전트 시스템이 **CS 전문가 역할**을 수행할 수 있는 강점을 활용하여, 전체 시스템에 영향을 최소화하면서 일관된 운영이 가능|
 
+<figure><img src="../.gitbook/assets/development-of-carrot-AI/part-10.png" alt=""><figcaption></figcaption></figure>
