@@ -154,3 +154,5 @@ LLM이 실제 업무를 처리할 수 있도록, 5가지 기능을 수행하는 
 |효과|- **자체 해결률 향상 및 부하 감소:** AI 에이전트가 사용자가 스스로 문의를 해결할 수 있도록 강화<br/>- **신뢰성 있는 운영 환경 구축:** C2C 도메인에서 멀티 AI 에이전트 시스템이 **CS 전문가 역할**을 수행할 수 있는 강점을 활용하여, 전체 시스템에 영향을 최소화하면서 일관된 운영이 가능|
 
 <figure><img src="../.gitbook/assets/development-of-carrot-AI/part-10.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/development-of-carrot-AI/part-10-2.png" alt=""><figcaption></figcaption></figure>
