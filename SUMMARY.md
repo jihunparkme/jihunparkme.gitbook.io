@@ -64,6 +64,7 @@
   * [05.지표 모니터링 및 경보 시스템](book/system-design-interview-
   * [11.결제 시스템](book/system-design-interview-2nd/11.md)
   * [12.전자 지갑](book/system-design-interview-2nd/12.md)
+  * [13.증권 거래소](book/system-design-interview-2nd/13.md)
 * [Microservices Patterns](book/microservices-patterns/README.md)
   * [01-02.모놀리식 지옥과 분해 전략](book/microservices-patterns/part-01.md)
   * [03.프로세스 간 통신](book/microservices-patterns/part-03.md)
