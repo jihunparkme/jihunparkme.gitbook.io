@@ -46,3 +46,6 @@ description: Reviews pull requests for code quality. Use when reviewing PRs or c
 - 특정 프레임워크용 디버깅 체크리스트
 
 간단한 원칙: 만약 클로드에게 같은 내용을 반복해서 설명하고 있다면, 그것은 스킬로 쓰여져야 할 가능성이 높다.
+
+## Skills vs. CLAUDE.md vs. Slash Commands
+
