@@ -49,3 +49,8 @@ description: Reviews pull requests for code quality. Use when reviewing PRs or c
 
 ## Skills vs. CLAUDE.md vs. Slash Commands
 
+클로드 코드는 행동을 사용자 지정하는 여러 가지 방법이 있습니다. 스킬은 자동적이고 작업에 특화되어 있기 때문에 독특합니다. 두 기술을 비교하는 방법은 다음과 같습니다.
+
+- `CLAUDE.md` 파일은 모든 대화에 로드됩니다. 클로드가 항상 TypeScript의 엄격한 모드를 사용하도록 하려면 `CLAUDE.md`로 이동합니다.
+- `스킬`은 요청과 일치할 때 필요에 따라 로드됩니다. 클로드는 처음에 이름과 설명만 로드하므로 전체 컨텍스트 창을 채우지 않습니다. 디버깅할 때는 PR 리뷰 체크리스트가 컨텍스트에 있을 필요가 없으며, 실제로 리뷰를 요청할 때 로드됩니다.
+- `Slash commands`은 명시적으로 입력해야 합니다. 스킬은 그렇지 않습니다. 클로드는 상황을 인식할 때 이를 적용합니다.
