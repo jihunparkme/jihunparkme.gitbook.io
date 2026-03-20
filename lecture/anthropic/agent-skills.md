@@ -68,3 +68,17 @@ description: Reviews pull requests for code quality. Use when reviewing PRs or c
 - 특정 프레임워크용 디버깅 체크리스트
 
 간단한 원칙은 이렇습니다. 만약 클로드에게 같은 내용을 반복해서 설명하고 있다면, 그것은 쓰여질 스킬일 가능성이 높습니다.
+
+🎬
+
+# Cㅊ
+
+## Creating a Skill
+
+클로드가 일관된 형식으로 PR 설명 작성법을 익힐 수 있도록 개인 스킬을 만들어 보자. 이 스킬은 개인 스킬 목록에 저장되어 모든 프로젝트에서 활용할 수 있습니다.
+
+먼저, skills 폴더 안에 스킬용 디렉토리를 생성하세요. 디렉토리 이름은 스킬 이름과 일치해야 합니다.
+
+```shell
+mkdir -p ~/.claude/skills/pr-description
+```
