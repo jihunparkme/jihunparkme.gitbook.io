@@ -71,7 +71,7 @@ description: Reviews pull requests for code quality. Use when reviewing PRs or c
 
 🎬
 
-# Cㅊ
+# Creating your first skill
 
 ## Creating a Skill
 
@@ -82,3 +82,30 @@ description: Reviews pull requests for code quality. Use when reviewing PRs or c
 ```shell
 mkdir -p ~/.claude/skills/pr-description
 ```
+
+그다음 해당 디렉토리 안에 `SKILL.md` 파일을 생성합니다. 파일은 대시(-)로 구분된 두 부분으로 구성됩니다.
+
+```md
+---
+name: pr-description
+description: Writes pull request descriptions. Use when creating a PR, writing a PR, or when the user asks to summarize changes for a pull request.
+---
+
+When writing a PR description:
+
+1. Run `git diff main...HEAD` to see all changes on this branch
+2. Write a description following this format:
+
+## What
+One sentence explaining what this PR does.
+
+## Why
+Brief context on why this change is needed
+
+## Changes
+- Bullet points of specific changes made
+- Group related changes together
+- Mention any files deleted or renamed
+```
+
+이름은 스킬을 식별하는 데 사용됩니다. 설명은 클로드에게 언제 스킬을 사용해야 하는지 알려주는데, 이것이 매칭 기준입니다. 두 번째 대시(-) 쌍 이후의 내용은 스킬이 활성화될 때 클로드가 따르는 지침입니다.
