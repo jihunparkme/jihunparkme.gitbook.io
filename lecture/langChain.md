@@ -7,14 +7,52 @@
 로컬 모델로 [ollama](https://ollama.com/) 활용하기
 - [models](https://ollama.com/search) 메뉴에서 모델 확인
 
-1️⃣ 먼저 가상환경 만들기
+### 1️⃣ 가상환경 만들기
 
 ```shell
+$ brew install pyenv
+
+$ pyenv install 3.11
+
 $ pyenv virtualenv 3.11 langchain-basics
 
-$ 
+$ mkdir langchain-basics
+
+$ cd langchain-basics
+
+$ pyenv local langchain-basics
+
+# 해당 경로에서 jupyter notebook 실행
+
+$ ollama pull llama3.2:1b
 ```
+
+### 2️⃣ 가상환경 안에서 ollam 실행시키기
+
+```shell
+%pip install -q langchain-ollama
+```
+
+```python
+from langchain_ollama import ChatOllama
+
+llm = ChatOllama(model="llama3.2:1b")
+
+llm.invoke("What is the capital of France?")
+```
+
+<https://github.com/jihunparkme/this-and-that-py/blob/main/llm/langchain-basic-01.ipynb>
+
+### 랭체인 스타일로 프롬프트 작성하는 방법
+
+
+
+
+
+
 
 ## Reference
 
-[LangChain Docs](https://docs.langchain.com/oss/python/deepagents/overview)
+- [LangChain Docs](https://docs.langchain.com/oss/python/deepagents/overview)
+- [pyenv, virtualenv 설치 및 사용법](https://dandyrilla.github.io/2024-06-05/pyenv-virtualenv/)
+- [OpenAI integrations](https://docs.langchain.com/oss/python/integrations/providers/openai)
