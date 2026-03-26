@@ -5,6 +5,7 @@
 
 ## Lecture
 
+* [LangChain](lecture/langChain.md)
 * [AI agent](lecture/ai-agent.md)
 * [Anthropic](lecture/anthropic/README.md)
   * [Introduction to agent skills](lecture/anthropic/agent-skills.md)
