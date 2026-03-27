@@ -43,9 +43,37 @@ llm.invoke("What is the capital of France?")
 
 <https://github.com/jihunparkme/this-and-that-py/blob/main/llm/langchain-basic-01.ipynb>
 
-### 랭체인 스타일로 프롬프트 작성하는 방법
+## 랭체인 스타일로 프롬프트 작성하기
 
+```python
+from langchain_ollama import ChatOllama
 
+llm = ChatOllama(model="llama3.2:1b")
+
+llm.invoke(0)
+```
+
+[ChatOllama](https://reference.langchain.com/python/langchain-ollama/chat_models/ChatOllama)의 invoke 메서드 파라미터로는 `PromptValue`, `str`, or `list of BaseMessages` 타입이 들어가야 합니다.
+
+> ValueError: Invalid input type <class 'int'>. Must be a PromptValue, str, or list of BaseMessages.
+
+### PromptValue
+
+[PromptTemplate](https://reference.langchain.com/python/langchain-core/prompts/prompt/PromptTemplate)의 invoke 메서드를 통해 [PromptValue](https://reference.langchain.com/python/langchain-core/prompt_values/PromptValue) 생성
+
+```python
+from langchain_core.prompts import PromptTemplate
+
+prompt_template = PromptTemplate(
+    template="What is the capital of {country}?",
+    input_variables=["country"],
+)
+prompt = prompt_template.invoke({"country": "France"})
+
+print(prompt)
+
+llm.invoke(prompt)
+```
 
 
 
