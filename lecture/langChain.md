@@ -62,7 +62,10 @@ llm.invoke(0)
 [PromptTemplate](https://reference.langchain.com/python/langchain-core/prompts/prompt/PromptTemplate)의 invoke 메서드를 통해 [PromptValue](https://reference.langchain.com/python/langchain-core/prompt_values/PromptValue) 생성
 
 ```python
+from langchain_ollama import ChatOllama
 from langchain_core.prompts import PromptTemplate
+
+llm = ChatOllama(model="llama3.2:1b")
 
 prompt_template = PromptTemplate(
     template="What is the capital of {country}?",
@@ -74,6 +77,50 @@ print(prompt)
 
 llm.invoke(prompt)
 ```
+
+### BaseMessages
+
+`BaseMessage`를 상속받는 대표적인 클래스
+- SystemMessage
+  - LLM Application의 목적(할 일)
+- HumanMessage
+  - 사용자 메시지
+- AIMessage
+  - LLM
+- ToolMessage
+  - 에이전트 생성 시 사용
+
+```python
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+
+# few shots > 답변 예
+# 대화 이력이 있던 것처럼 LLM을 속여서 답변을 우리가 원하는 형태로 유도
+# 복잡한 애플리케이션 구현 시 예시를 주는 것이 정확도를 높이는 방법
+message_list = [
+    SystemMessage(content="You are a helpful assistant!"),
+    HumanMessage(content="What is the capital of France?"),
+    AIMessage(content="The capital of France is Paris."),
+    HumanMessage(content="What is the capital of Germany?"),
+    AIMessage(content="The capital of France is Berlin."),
+    HumanMessage(content="What is the capital of Italy?"),
+    AIMessage(content="The capital of Italy is Rome."),
+]
+
+llm.invoke(message_list)
+```
+
+[Language Models are Few-Shot Learners](https://arxiv.org/pdf/2005.14165)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
