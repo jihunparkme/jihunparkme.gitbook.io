@@ -111,9 +111,33 @@ llm.invoke(message_list)
 
 [Language Models are Few-Shot Learners](https://arxiv.org/pdf/2005.14165)
 
+⚠️ 하지만, **이 방식은 LangChain스럽지 않은 방식**
 
+### ChatPromptTemplate
 
+`LangChain`은 `ChatPromptTemplate` 사용을 권장합니다.
+- `LCEL`이라는 LangChain 구성 요소를 연결시키는 기능에서 연동이 가능하므로 확장성에서 유리합니다.
 
+```python
+from langchain_core.prompts import ChatPromptTemplate
+
+chat_prompt_template = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful assistant!"),
+    ("human", "What is the capital of {country}?"),
+])
+
+chat_prompt = chat_prompt_template.invoke({"country": "France"})
+
+print(chat_prompt)
+# messages=[SystemMessage(content='You are a helpful assistant!', additional_kwargs={}, response_metadata={}), HumanMessage(content='What is the capital of France?', additional_kwargs={}, response_metadata={})]
+
+chat_prompt.messages
+# [SystemMessage(content='You are a helpful assistant!', ...),
+#  HumanMessage(content='What is the capital of France?', ...]
+
+llm.invoke(chat_prompt)
+# AIMessage(content='The capital of France is Paris.', ...)
+```
 
 
 
