@@ -41,7 +41,7 @@ llm = ChatOllama(model="llama3.2:1b")
 llm.invoke("What is the capital of France?")
 ```
 
-<https://github.com/jihunparkme/this-and-that-py/blob/main/llm/langchain-basic-01.ipynb>
+[source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/langchain-basic-01.ipynb)
 
 ## 랭체인 스타일로 프롬프트 작성하기
 
@@ -139,7 +139,7 @@ llm.invoke(chat_prompt)
 # AIMessage(content='The capital of France is Paris.', ...)
 ```
 
-
+[source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/prompt.ipynb)
 
 
 
