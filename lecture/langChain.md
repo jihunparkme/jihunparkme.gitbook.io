@@ -141,8 +141,44 @@ llm.invoke(chat_prompt)
 
 [source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/prompt.ipynb)
 
+## 답변 형식 컨트롤하기
 
+`llm.invoke()`의 결과는 기본적으로 `AIMessage` 타입으로 응답하므로, String 타입으로 반환을 해주어야 다른 언어에서도 쉽게 파싱이 가능합니다.
 
+### StrOutputParser
+
+```python
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+prompt_template = PromptTemplate(
+    template="What is the capital of {country}? Return the name of the city only",
+    input_variables=["country"],
+)
+
+prompt = prompt_template.invoke({"country": "France"})
+
+print(prompt)
+# text='What is the capital of France? Return the name of the city only'
+
+ai_message = llm.invoke(prompt_template.invoke({"country": "France"}))
+
+output_parser = StrOutputParser()
+
+answer = output_parser.invoke(llm.invoke(prompt_template.invoke({"country": "France"})))
+```
+
+응답 결과 확인.
+
+```python
+ai_message
+# AIMessage(content='Paris.', additional_kwargs={}, response_metadata={'model': 'llama3.2:1b', 'created_at': '2026-03-29T10:27:27.973169Z', 'done': True, 'done_reason': 'stop', 'total_duration': 410026625, 'load_duration': 124092416, 'prompt_eval_count': 39, 'prompt_eval_duration': 259093083, 'eval_count': 3, 'eval_duration': 23268708, 'logprobs': None, 'model_name': 'llama3.2:1b', 'model_provider': 'ollama'}, id='lc_run--019d3922-60c6-7523-b86e-9f5474e692f3-0', tool_calls=[], invalid_tool_calls=[], usage_metadata={'input_tokens': 39, 'output_tokens': 3, 'total_tokens': 42})
+```
+
+```python
+answer
+# 'Paris.'
+```
 
 
 
