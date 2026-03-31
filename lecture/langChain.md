@@ -182,8 +182,39 @@ answer
 
 ### JsonOutputParser
 
-`JsonOutputParser`는 형식이 오락가락하기 때문에 사용을 권장하지 않습니다.
+`JsonOutputParser`는 형식이 오락가락하기 때문에 사용을 권장하지 않습니다.  
+대신 `pydantic` 모델을 설정하여 사용할 것을 권장합니다.
 
+```python
+from pydantic import BaseModel, Field
+
+# PromptTemplate 대체
+# 모델 설정
+class CountryDetail(BaseModel):
+    # 타입 설정
+    capital: str = Field(description="The capital city of the country")
+    population: int = Field(description="The population of the country")
+    language: str = Field(description="The official language of the country")
+    currency: str = Field(description="The currency used in the country")
+
+structured_llm = llm.with_structured_output(CountryDetail)
+
+#
+
+country_detail_prompt = PromptTemplate(
+    template="""Give following information about {country}:
+    - Capital
+    - Population
+    - Language
+    - Currency
+
+    return it in JSON format. and return the JSON dictionary only
+    """,
+    input_variables=["country"],
+)
+
+json_ai_message = structured_llm.invoke(country_detail_prompt.invoke({"country": "France"}))
+```
 
 
 
