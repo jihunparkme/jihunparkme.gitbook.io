@@ -233,7 +233,7 @@ output_parser.invoke(llm.invoke(prompt_template.invoke({"country": "France"})))
 prompt_template | llm | output_parser
 ```
 
-
+[source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/04.lcel.ipynb)
 
 ## Reference
 
