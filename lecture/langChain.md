@@ -218,7 +218,20 @@ json_ai_message = structured_llm.invoke(country_detail_prompt.invoke({"country":
 
 [source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/03.output_parser.ipynb)
 
+### LCEL을 활용한 랭'체인' 생성 방법
 
+**Runnable 메서드**들을 파이프로 연결해주는 기능
+- ChatOllama
+- PromptTemplate
+- StrOutputParser
+
+```python
+# AS-IS
+output_parser.invoke(llm.invoke(prompt_template.invoke({"country": "France"})))
+
+# TO-BE
+prompt_template | llm | output_parser
+```
 
 
 
