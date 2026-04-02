@@ -132,28 +132,10 @@ llm.invoke(message_list)
 
 ⚠️ 하지만, **이 방식은 LangChain스럽지 않은 방식**
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### ChatPromptTemplate
 
-`LangChain`은 `ChatPromptTemplate` 사용을 권장합니다.
-- `LCEL`이라는 LangChain 구성 요소를 연결시키는 기능에서 연동이 가능하므로 확장성에서 유리합니다.
+LangChain은 `ChatPromptTemplate`을 적극적으로 활용하길 권장합니다.  
+이 방식은 여러 구성요소(프롬프트, LLM, 파서 등)를 체이닝해서 복잡한 파이프라인을 만들 때 특히 유용합니다.
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate
@@ -178,11 +160,11 @@ llm.invoke(chat_prompt)
 
 [source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/02.prompt.ipynb)
 
-## 답변 형식 컨트롤하기
+## 답변 형식 컨트롤: OutputParser
 
 `llm.invoke()`의 결과는 기본적으로 `AIMessage` 타입으로 응답하므로, String 타입으로 반환을 해주어야 다른 언어에서도 쉽게 파싱이 가능합니다.
 
-### StrOutputParser
+LLM의 답변을 원하는 형태로 가공하려면 OutputParser를 활용합니다. 예를 들어, 문자열만 추출하거나, JSON 등 구조화된 데이터로 변환할 수 있습니다.
 
 ```python
 from langchain_core.prompts import PromptTemplate
@@ -216,6 +198,8 @@ ai_message
 answer
 # 'Paris.'
 ```
+
+더 복잡한 구조가 필요하다면, pydantic 모델과 함께 사용할 수도 있습니다.
 
 ### JsonOutputParser
 
@@ -255,12 +239,10 @@ json_ai_message = structured_llm.invoke(country_detail_prompt.invoke({"country":
 
 [source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/03.output_parser.ipynb)
 
-### LCEL을 활용한 랭'체인' 생성 방법
+## 체이닝(LCEL): LangChain의 진짜 힘
 
-**Runnable 메서드**들을 파이프로 연결해주는 기능
-- ChatOllama
-- PromptTemplate
-- StrOutputParser
+LangChain의 진가는 여러 컴포넌트를 파이프처럼 연결할 수 있다는 점입니다.  
+아래처럼 프롬프트 → LLM → 파서 순서로 자연스럽게 이어집니다.
 
 ```python
 # AS-IS
@@ -272,8 +254,26 @@ prompt_template | llm | output_parser
 
 [source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/04.lcel.ipynb)
 
-## Reference
+이런 방식은 복잡한 워크플로우를 단순하게 만들고, 유지보수도 쉬워집니다.
+
+**Runnable 메서드**들을 파이프로 연결해주는 기능
+- ChatOllama
+- PromptTemplate
+- StrOutputParser
+
+## 마치며
+
+LangChain은 LLM을 활용한 서비스 개발의 진입장벽을 크게 낮춰줍니다.  
+처음에는 다소 생소할 수 있지만, 프롬프트 관리, 대화 이력, 체이닝 등 핵심 개념만 익혀두면 다양한 AI 서비스를 빠르게 만들 수 있습니다.  
+공식 문서와 예제 코드를 참고하며, 직접 여러 시도를 해보는 것이 가장 좋은 학습 방법입니다.
+
+## 참고 자료
 
 - [LangChain Docs](https://docs.langchain.com/oss/python/deepagents/overview)
 - [pyenv, virtualenv 설치 및 사용법](https://dandyrilla.github.io/2024-06-05/pyenv-virtualenv/)
 - [OpenAI integrations](https://docs.langchain.com/oss/python/integrations/providers/openai)
+
+---
+
+이 글이 LangChain을 시작하는 데 도움이 되었길 바랍니다!  
+궁금한 점이나 추가로 다뤄줬으면 하는 내용이 있다면 댓글로 남겨주세요.
