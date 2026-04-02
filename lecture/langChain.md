@@ -37,23 +37,20 @@ pip install langchain-ollama
 ollama pull llama3.2:1b
 ```
 
+## LLM 호출: 가장 기본적인 사용법
 
-
-
-
-
-
-### 2️⃣ 가상환경 안에서 ollam 실행시키기
+LangChain에서 LLM을 호출하는 기본 코드는 아래와 같습니다.
 
 ```python
 from langchain_ollama import ChatOllama
 
 llm = ChatOllama(model="llama3.2:1b")
-
 llm.invoke("What is the capital of France?")
 ```
 
 [source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/01.langchain-basic.ipynb)
+
+여기서 `invoke` 메서드는 LLM에게 질문을 던지고, 답변을 받아오는 역할을 합니다.
 
 ## 랭체인 스타일로 프롬프트 작성하기
 
@@ -68,6 +65,24 @@ llm.invoke(0)
 [ChatOllama](https://reference.langchain.com/python/langchain-ollama/chat_models/ChatOllama)의 invoke 메서드 파라미터로는 `PromptValue`, `str`, or `list of BaseMessages` 타입이 들어가야 합니다.
 
 > ValueError: Invalid input type <class 'int'>. Must be a PromptValue, str, or list of BaseMessages.
+
+실제 서비스에서는 단순 문자열이 아니라, 다양한 입력값을 조합해 프롬프트를 만들어야 할 때가 많습니다.  
+이럴 때 `PromptTemplate`을 활용하면, 코드의 재사용성과 가독성이 크게 올라갑니다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### PromptValue
 
