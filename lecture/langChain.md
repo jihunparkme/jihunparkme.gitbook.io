@@ -69,21 +69,6 @@ llm.invoke(0)
 실제 서비스에서는 단순 문자열이 아니라, 다양한 입력값을 조합해 프롬프트를 만들어야 할 때가 많습니다.  
 이럴 때 `PromptTemplate`을 활용하면, 코드의 재사용성과 가독성이 크게 올라갑니다.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### PromptValue
 
 [PromptTemplate](https://reference.langchain.com/python/langchain-core/prompts/prompt/PromptTemplate)의 invoke 메서드를 통해 [PromptValue](https://reference.langchain.com/python/langchain-core/prompt_values/PromptValue) 생성
@@ -107,6 +92,8 @@ llm.invoke(prompt)
 
 ### BaseMessages
 
+> 대화 이력과 Few-shot Learning
+
 `BaseMessage`를 상속받는 대표적인 클래스
 - SystemMessage
   - LLM Application의 목적(할 일)
@@ -116,6 +103,9 @@ llm.invoke(prompt)
   - LLM
 - ToolMessage
   - 에이전트 생성 시 사용
+
+LangChain에서는 대화 이력(메시지 리스트)을 직접 구성할 수 있습니다.  
+이 기능을 활용하면, LLM에게 "이전 대화가 있었던 것처럼" 맥락을 제공할 수 있습니다.
 
 ```python
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
@@ -138,7 +128,27 @@ llm.invoke(message_list)
 
 [Language Models are Few-Shot Learners](https://arxiv.org/pdf/2005.14165)
 
+이런 방식은 LLM의 답변 품질을 높이는 데 매우 효과적입니다.
+
 ⚠️ 하지만, **이 방식은 LangChain스럽지 않은 방식**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### ChatPromptTemplate
 
