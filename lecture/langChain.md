@@ -12,49 +12,38 @@
 
 즉, **LLM을 활용한 서비스**를 만들 때 반복적으로 부딪히는 문제들을 미리 잘 정리해둔 도구라고 볼 수 있습니다.
 
+## 시작하기: 환경 세팅
 
-
-
-
-
-
-
-
-
-
-
-
-
-## LLM을 활용해서 답변 생성하기
+LangChain을 제대로 활용하려면, 파이썬 가상환경과 LLM 모델(로컬 또는 클라우드)이 필요합니다.  
+로컬에서 Ollama와 LangChain을 연동하는 방법을 소개합니다.
 
 로컬 모델로 [ollama](https://ollama.com/) 활용하기
 - [models](https://ollama.com/search) 메뉴에서 모델 확인
 
-### 1️⃣ 가상환경 만들기
-
 ```shell
-$ brew install pyenv
+# pyenv, virtualenv 설치
+brew install pyenv
+pyenv install 3.11
+pyenv virtualenv 3.11 langchain-basics
 
-$ pyenv install 3.11
+# 프로젝트 폴더 생성 및 진입
+mkdir langchain-basics
+cd langchain-basics
+pyenv local langchain-basics
 
-$ pyenv virtualenv 3.11 langchain-basics
-
-$ mkdir langchain-basics
-
-$ cd langchain-basics
-
-$ pyenv local langchain-basics
-
-# 해당 경로에서 jupyter notebook 실행
-
-$ ollama pull llama3.2:1b
+# 필요한 패키지 설치
+pip install langchain-ollama
+# ollama 모델 다운로드
+ollama pull llama3.2:1b
 ```
+
+
+
+
+
+
 
 ### 2️⃣ 가상환경 안에서 ollam 실행시키기
-
-```shell
-%pip install -q langchain-ollama
-```
 
 ```python
 from langchain_ollama import ChatOllama
