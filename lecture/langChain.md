@@ -261,6 +261,25 @@ prompt_template | llm | output_parser
 - PromptTemplate
 - StrOutputParser
 
+## Practice
+
+레시피 찾기
+
+```python
+from langchain_core.prompts import ChatPromptTemplate
+
+recipe_prompt = ChatPromptTemplate.from_messages([
+    ('system', 'Provide the recipe of the food that the user wants. Please return the recipe only as a numbered list.'),
+    ('human', 'Can you give me the recipe for making {food}?')
+])
+
+recipe_chain = recipe_prompt | llm | StrOutputParser()
+
+recipe_chain.invoke({'food': 'bibimbap'})
+```
+
+[source code]([source code](https://github.com/jihunparkme/this-and-that-py/blob/main/llm/04.lcel.ipynb))
+
 ## 마치며
 
 LangChain은 LLM을 활용한 서비스 개발의 진입장벽을 크게 낮춰줍니다.  
