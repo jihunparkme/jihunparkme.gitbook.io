@@ -6,6 +6,8 @@
 ## Lecture
 
 * [LangChain](lecture/langChain.md)
+  * [LangChain Basics](lecture/langChain/basic.md)
+  * [RAG & Vector](lecture/langChain/rag-vector.md)
 * [AI agent](lecture/ai-agent.md)
 * [Anthropic](lecture/anthropic/README.md)
   * [Introduction to agent skills](lecture/anthropic/agent-skills.md)
@@ -64,7 +66,7 @@
 
 * [요즘 당근 AI 개발](book/development-of-carrot-AI.md)
 * [대규모 시스템 설계 기초 2nd](book/system-design-interview-2nd/README.md)
-  * [05.지표 모니터링 및 경보 시스템](book/system-design-interview-
+  * [05.지표 모니터링 및 경보 시스템](book/system-design-interview-2nd/05.md)
   * [11.결제 시스템](book/system-design-interview-2nd/11.md)
   * [12.전자 지갑](book/system-design-interview-2nd/12.md)
   * [13.증권 거래소](book/system-design-interview-2nd/13.md)
