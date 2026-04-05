@@ -6,18 +6,18 @@
 
 - 단어를 그대로 해석하면 '검색', '증강', '생성'
 
-**Retrieval**
+ℹ️ **Retrieval**
 
 - 언어모델이 가지고 있지 않은 **데이터를를 가져오는 것**
 - 보안이 걸려있는 사내자료를 가져오는 역할을 할 수 있음
 - LLM 모델들은 최신 정보를 가지고 있지 않음
   - GPT4는 23년 12월까지 정보를 가지고 있음
 
-**Augmented**
+ℹ️ **Augmented**
 - AR/VR에 사용되는 것과 같은 단어(**마치 사실인 것 처럼**)
 - Retrieval 된 데이터를 LLM에게 주면서, “마치 이 정보를 아는 것 처럼” 생성하라고 지시
 
-**Generation**
+ℹ️ **Generation**
 - 생성
 
 > Retrieval: "내가 가져온 데이터를 제공할테니"
@@ -34,7 +34,13 @@
 
 [Build a RAG agent with LangChain](https://docs.langchain.com/oss/python/langchain/rag#overview)
 
+## Vector Database & Embedding Model
 
+ℹ️ **Vector**
+- 관련성 파악을 위해 `vector`를 활용
+  - 단어 또는 문장의 유사도를 파악해서 관련성을 측정
+- Vector 생성 방법
+  - Embedding 모델을 활용해서 vector 생성
+  - [Embedding Proejctor](https://projector.tensorflow.org/)
 
-
-
+ℹ️ **Vector Database**
