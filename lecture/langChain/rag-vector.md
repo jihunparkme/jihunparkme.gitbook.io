@@ -44,3 +44,17 @@
   - [Embedding Proejctor](https://projector.tensorflow.org/)
 
 ℹ️ **Vector Database**
+- Embedding 모델을 활용해 생성된 **vector(+metadata) 저장**
+  - 문서 이름, 페이지 번호 등을 같이 저장하면 LLM이 생성하는 답변 퀄리티가 상승
+- Vector 대상으로 **유사도 검색** 실시
+  - 사용자 질문과 가장 비슷한 문서 가져오기 (Retrieval)
+  - 가져온 문서를 prompt를 통해 LLM에 제공 (Augmented)
+  - LLM은 prompt를 활용해 답변 생성 (Generation)
+- 문서 전체를 활용하면 속도도 느리고, 토큰 수 초과로 답변 생성이 안될 수 있으므로 **문서를 나눠서 저장**하는게 필요
+
+📚 주요 용어
+- `Vector` : 텍스트를 수학적으로 변경한 상태 
+- `Embedding` : 텍스트를 Vector로 변경하는 방법
+- `Vector Database` : Embedding을 통해 생성된 Vector를 저장하는 데이터베이스
+- 유사도 검색: 두 개의 Vector가 얼마나 "가까운지"를 계산하는 방법
+- [Vector Similarity Explained](https://www.pinecone.io/learn/vector-similarity/)
