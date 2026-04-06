@@ -58,3 +58,5 @@
 - `Vector Database` : Embedding을 통해 생성된 Vector를 저장하는 데이터베이스
 - 유사도 검색: 두 개의 Vector가 얼마나 "가까운지"를 계산하는 방법
 - [Vector Similarity Explained](https://www.pinecone.io/learn/vector-similarity/)
+
+> 참고. 한국말 인베딩을 사용할 경우 [업스테이지 임베딩](https://console.upstage.ai/docs/capabilities/embed) 추천
