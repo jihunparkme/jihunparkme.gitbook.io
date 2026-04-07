@@ -67,3 +67,21 @@
 
 ## 환경설정
 
+```python
+# 가상환경 생성
+$ pyenv virtualenv 3.11 llm-application
+
+# 추가된 가상환경 확인
+pyenv virtualenvs
+
+# 디렉토리에 가상환경 적용
+$ pyenv local llm-application
+```
+
+
+
+
+
+
+
+<https://dandyrilla.github.io/2024-06-05/pyenv-virtualenv/>
