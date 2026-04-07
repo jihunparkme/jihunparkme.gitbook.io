@@ -1,5 +1,7 @@
 # RAG & Vector Database
 
+# Before we get started
+
 ## Retrieval Augmented Generation(RAG)
 
 > LLM Application 개발에서 중요한 개념
@@ -34,7 +36,7 @@
 
 [Build a RAG agent with LangChain](https://docs.langchain.com/oss/python/langchain/rag#overview)
 
-## Vector Database & Embedding Model
+# Vector Database & Embedding Model
 
 ℹ️ **Vector**
 - 관련성 파악을 위해 `vector`를 활용
@@ -60,3 +62,8 @@
 - [Vector Similarity Explained](https://www.pinecone.io/learn/vector-similarity/)
 
 > 참고. 한국말 인베딩을 사용할 경우 [업스테이지 임베딩](https://console.upstage.ai/docs/capabilities/embed) 추천
+
+# LangChain 활용 RAG 구성
+
+## 환경설정
+
