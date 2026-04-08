@@ -113,7 +113,7 @@ ai_message.content
 
 [source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/1_langchain_llm_test.ipynb)
 
-참고.
+📚 참고.
 - [Google integrations](https://docs.langchain.com/oss/python/integrations/providers/google)
   - [ChatGoogleGenerativeAI](https://docs.langchain.com/oss/python/integrations/chat/google_generative_ai)
 - [OpenAI integrations](https://docs.langchain.com/oss/python/integrations/providers/openai)
@@ -121,7 +121,7 @@ ai_message.content
 
 
 
+# 📚 Reference.
 
-
-<https://dandyrilla.github.io/2024-06-05/pyenv-virtualenv/>
+- [pyenv, virtualenv 설치 및 사용법](https://dandyrilla.github.io/2024-06-05/pyenv-virtualenv/)
 
