@@ -78,10 +78,50 @@ pyenv virtualenvs
 $ pyenv local llm-application
 ```
 
+## LLM 답변 생성
 
+```python
+###
+# 패키지 설치
+%pip install -q python-dotenv langchain-openai langchain-google-genai
+
+###
+# 환경변수 불러오기
+from dotenv import load_dotenv
+
+load_dotenv()
+
+###
+# LLM 답변 생성 (ChatGoogleGenerativeAI 사용)
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash"
+)
+
+# LLM 답변 생성 (ChatOpenAI 사용)
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model_name='gpt-4o-mini')
+
+###
+# 답변 환인
+ai_message = llm.invoke("인프런에 어떤 강의가 있나요?")
+
+ai_message.content
+```
+
+[source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/1_langchain_llm_test.ipynb)
+
+참고.
+- [Google integrations](https://docs.langchain.com/oss/python/integrations/providers/google)
+  - [ChatGoogleGenerativeAI](https://docs.langchain.com/oss/python/integrations/chat/google_generative_ai)
+- [OpenAI integrations](https://docs.langchain.com/oss/python/integrations/providers/openai)
+  - [ChatOpenAI](https://docs.langchain.com/oss/python/integrations/chat/openai)
 
 
 
 
 
 <https://dandyrilla.github.io/2024-06-05/pyenv-virtualenv/>
+
