@@ -120,6 +120,20 @@ ai_message.content
 - [OpenAI integrations](https://docs.langchain.com/oss/python/integrations/providers/openai)
   - [ChatOpenAI](https://docs.langchain.com/oss/python/integrations/chat/openai)
 
+## Chroma 활용 RAG 구성
+
+[소득세법 양식 다운로드](https://law.go.kr/%EB%B2%95%EB%A0%B9/%EC%86%8C%EB%93%9D%EC%84%B8%EB%B2%95)
+- Word 다운로드
+- 파일 형식 변경(.docs)
+
+
+
+
+
+
+
+
+
 
 
 # 📚 Reference.
