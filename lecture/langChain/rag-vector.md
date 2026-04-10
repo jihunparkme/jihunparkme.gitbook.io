@@ -142,6 +142,7 @@ ai_message.content
 - 임베딩 모델
   - [GoogleGenerativeAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/google_generative_ai) ➜ [Gemini API Embeddings](https://ai.google.dev/gemini-api/docs/embeddings)
   - [OpenAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/openai)
+  - [UpstageEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/upstage)
 - 벡터 데이터베이스
   - [Vector store integrations](https://docs.langchain.com/oss/javascript/integrations/vectorstores)
   - [Chroma](https://docs.langchain.com/oss/javascript/integrations/vectorstores/chroma)
