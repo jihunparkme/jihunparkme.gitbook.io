@@ -126,12 +126,31 @@ ai_message.content
 - Word 다운로드
 - 파일 형식 변경(.docs)
 
+**RAG 구성 단계**
+
+1️⃣. 문서의 내용 읽기
+- [Document loader integrations](https://docs.langchain.com/oss/python/integrations/document_loaders)
+
+2️⃣. 문서 쪼개기
+- 토큰 수 초과로 답변을 생성하지 못할 수 있고,
+- 문서가 길면 답변 생성에 많은 시간 소요
+- package
+  - [Splitting by character](https://docs.langchain.com/oss/python/integrations/splitters/character_text_splitter)
+  - [Text splitter](https://docs.langchain.com/oss/python/integrations/splitters/recursive_text_splitter)
+
+3️⃣. 임베딩 및 벡터 데이터베이스에 저장
+- 임베딩 모델
+  - [GoogleGenerativeAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/google_generative_ai) ➜ [Gemini API Embeddings](https://ai.google.dev/gemini-api/docs/embeddings)
+  - [OpenAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/openai)
+- 벡터 데이터베이스
+  - [Vector store integrations](https://docs.langchain.com/oss/javascript/integrations/vectorstores)
+  - [Chroma](https://docs.langchain.com/oss/javascript/integrations/vectorstores/chroma)
+1. 질문이 있을 때, 벡터 데이터베이스에 유사도 검색
+2. 유사도 검색으로 가져온 문서를 LLM에 질문과 같이 전달
 
 
 
-
-
-
+  
 
 
 
