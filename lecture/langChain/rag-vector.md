@@ -218,6 +218,7 @@ qa_chain = RetrievalQA.from_chain_type(
 )
 ```
 
+[source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/2_rag_with_chroma.ipynb)
   
 
 
