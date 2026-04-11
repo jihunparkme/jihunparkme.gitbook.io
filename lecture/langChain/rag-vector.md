@@ -131,12 +131,32 @@ ai_message.content
 1️⃣. 문서의 내용 읽기
 - [Document loader integrations](https://docs.langchain.com/oss/python/integrations/document_loaders)
 
+```python
+from langchain_community.document_loaders import Docx2txtLoader
+
+loader = Docx2txtLoader('../tax.docx')
+document = loader.load()
+```
+
 2️⃣. 문서 쪼개기
 - 토큰 수 초과로 답변을 생성하지 못할 수 있고,
 - 문서가 길면 답변 생성에 많은 시간 소요
 - package
   - [Splitting by character](https://docs.langchain.com/oss/python/integrations/splitters/character_text_splitter)
   - [Text splitter](https://docs.langchain.com/oss/python/integrations/splitters/recursive_text_splitter)
+
+```python
+from langchain_community.document_loaders import Docx2txtLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1500, # 문서를 쪼갤 때 하나의 청크가 가질 수 있는 토큰 수
+    chunk_overlap=200, # 문서를 겹치게 해서 유사도 검색을 통해 원하는 문서를 가져올 수 있는 확률 높이는 방식
+)
+
+loader = Docx2txtLoader('../tax.docx')
+document_list = loader.load_and_split(text_splitter=text_splitter)
+```
 
 3️⃣. 임베딩 및 벡터 데이터베이스에 저장
 - 임베딩 모델
@@ -146,10 +166,57 @@ ai_message.content
 - 벡터 데이터베이스
   - [Vector store integrations](https://docs.langchain.com/oss/javascript/integrations/vectorstores)
   - [Chroma](https://docs.langchain.com/oss/javascript/integrations/vectorstores/chroma)
-1. 질문이 있을 때, 벡터 데이터베이스에 유사도 검색
-2. 유사도 검색으로 가져온 문서를 LLM에 질문과 같이 전달
 
+```python
+###
+# 임베딩
+from dotenv import load_dotenv
+from langchain_upstage import UpstageEmbeddings
 
+load_dotenv()
+
+# OpenAI에서 제공하는 Embedding Model을 활용해서 `chunk`를 vector화
+embedding = UpstageEmbeddings(model='embedding-query')
+
+###
+# 벡터 데이터베이스에 저장
+from langchain_chroma import Chroma
+
+# 데이터를 처음 저장할 때
+database = Chroma.from_documents(
+    documents=document_list,
+    embedding=embedding,
+    collection_name='chroma-tax',
+    persist_directory="./chroma",
+)
+
+# 이미 저장된 데이터를 사용할 때
+database = Chroma(
+    collection_name='chroma-tax',
+    persist_directory="./chroma", # 임베딩 결과를 파일로 저장
+    embedding_function=embedding
+)
+```
+
+4️⃣. 질문이 있을 때, 벡터 데이터베이스에 유사도 검색
+
+```python
+query = "연봉 5천만원인 직장인의 소득세는 얼마인가요?"
+# 유사도 검색: 데이터베이스 생성 시 사용한 임베딩을 활용해서 유사고 검색 후 답변 생성
+retrieved_docs = database.similarity_search(query, k=3)
+```
+
+5️⃣. 유사도 검색으로 가져온 문서를 LLM에 질문과 같이 전달
+
+```python
+from langchain_classic.chains import RetrievalQA
+
+qa_chain = RetrievalQA.from_chain_type(
+    llm,
+    retriever=database.as_retriever(),
+    chain_type_kwargs={"prompt": rag_prompt}
+)
+```
 
   
 
