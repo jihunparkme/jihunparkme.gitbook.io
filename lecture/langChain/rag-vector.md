@@ -126,7 +126,7 @@ ai_message.content
 - Word 다운로드
 - 파일 형식 변경(.docs)
 
-**RAG 구성 단계**
+### RAG 구성 단계
 
 1️⃣. 문서의 내용 읽기
 - [Document loader integrations](https://docs.langchain.com/oss/python/integrations/document_loaders)
@@ -162,7 +162,7 @@ document_list = loader.load_and_split(text_splitter=text_splitter)
 - 임베딩 모델
   - [GoogleGenerativeAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/google_generative_ai) ➜ [Gemini API Embeddings](https://ai.google.dev/gemini-api/docs/embeddings)
   - [OpenAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/openai)
-  - [UpstageEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/upstage)
+  - [UpstageEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/upstage) ➜ [Upstage Embeddings](https://console.upstage.ai/docs/capabilities/embed)
 - 벡터 데이터베이스
   - [Vector store integrations](https://docs.langchain.com/oss/javascript/integrations/vectorstores)
   - [Chroma](https://docs.langchain.com/oss/javascript/integrations/vectorstores/chroma)
