@@ -164,8 +164,9 @@ document_list = loader.load_and_split(text_splitter=text_splitter)
   - [OpenAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/openai)
   - [UpstageEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/upstage) ➜ [Upstage Embeddings](https://console.upstage.ai/docs/capabilities/embed)
 - 벡터 데이터베이스
-  - [Vector store integrations](https://docs.langchain.com/oss/javascript/integrations/vectorstores)
-  - [Chroma](https://docs.langchain.com/oss/javascript/integrations/vectorstores/chroma)
+  - [langchain Vector store integrations](https://docs.langchain.com/oss/javascript/integrations/vectorstores)
+  - [langchain Chroma](https://docs.langchain.com/oss/javascript/integrations/vectorstores/chroma)
+  - [chroma getting started](https://docs.trychroma.com/docs/overview/getting-started)
 
 ```python
 ###
