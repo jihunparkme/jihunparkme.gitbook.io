@@ -220,8 +220,9 @@ qa_chain = RetrievalQA.from_chain_type(
 ```
 
 [source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/2_rag_with_chroma.ipynb)
-  
-[LangChain 없는 RAG 구성의 불편함.. example]()
+
+📖 참고.
+- [LangChain 없는 RAG 구성의 불편함.. example](https://github.com/jasonkang14/inflearn-rag-notebook/blob/main/3.3%20LangChain%20%EC%97%86%EC%9D%B4%20%EA%B5%AC%EC%84%B1%ED%95%98%EB%8A%94%20RAG%EC%9D%98%20%EB%B6%88%ED%8E%B8%ED%95%A8.ipynb)
 
 
 
