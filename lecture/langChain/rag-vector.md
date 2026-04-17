@@ -111,7 +111,7 @@ ai_message = llm.invoke("인프런에 어떤 강의가 있나요?")
 ai_message.content
 ```
 
-[source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/1_langchain_llm_test.ipynb)
+📝 [source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/1_langchain_llm_test.ipynb)
 
 📚 참고.
 - [Chat model integrations](https://docs.langchain.com/oss/python/integrations/chat)
@@ -128,7 +128,7 @@ ai_message.content
 
 ### RAG 구성 단계
 
-1️⃣. 문서의 내용 읽기
+#### 1️⃣. 문서의 내용 읽기
 - [Document loader integrations](https://docs.langchain.com/oss/python/integrations/document_loaders)
 
 ```python
@@ -138,7 +138,7 @@ loader = Docx2txtLoader('../tax.docx')
 document = loader.load()
 ```
 
-2️⃣. 문서 쪼개기
+#### 2️⃣. 문서 쪼개기
 - 토큰 수 초과로 답변을 생성하지 못할 수 있고,
 - 문서가 길면 답변 생성에 많은 시간 소요
 - package
@@ -158,7 +158,7 @@ loader = Docx2txtLoader('../tax.docx')
 document_list = loader.load_and_split(text_splitter=text_splitter)
 ```
 
-3️⃣. 임베딩 및 벡터 데이터베이스에 저장
+#### 3️⃣. 임베딩 및 벡터 데이터베이스에 저장
 - 임베딩 모델
   - [GoogleGenerativeAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/google_generative_ai) ➜ [Gemini API Embeddings](https://ai.google.dev/gemini-api/docs/embeddings)
   - [OpenAIEmbeddings](https://docs.langchain.com/oss/python/integrations/embeddings/openai)
@@ -199,7 +199,7 @@ database = Chroma(
 )
 ```
 
-4️⃣. 질문이 있을 때, 벡터 데이터베이스에 유사도 검색
+#### 4️⃣. 질문이 있을 때, 벡터 데이터베이스에 유사도 검색
 
 ```python
 query = "연봉 5천만원인 직장인의 소득세는 얼마인가요?"
@@ -207,7 +207,7 @@ query = "연봉 5천만원인 직장인의 소득세는 얼마인가요?"
 retrieved_docs = database.similarity_search(query, k=3)
 ```
 
-5️⃣. 유사도 검색으로 가져온 문서를 LLM에 질문과 같이 전달
+#### 5️⃣. 유사도 검색으로 가져온 문서를 LLM에 질문과 같이 전달
 
 ```python
 from langchain_classic.chains import RetrievalQA
@@ -219,17 +219,52 @@ qa_chain = RetrievalQA.from_chain_type(
 )
 ```
 
-[source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/2_rag_with_chroma.ipynb)
+📝 [source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/2_rag_with_chroma.ipynb)
 
 📖 참고.
 - [LangChain 없는 RAG 구성의 불편함.. example](https://github.com/jasonkang14/inflearn-rag-notebook/blob/main/3.3%20LangChain%20%EC%97%86%EC%9D%B4%20%EA%B5%AC%EC%84%B1%ED%95%98%EB%8A%94%20RAG%EC%9D%98%20%EB%B6%88%ED%8E%B8%ED%95%A8.ipynb)
 
+## LangChain & Pinecone 활용 RAG 구성
 
+[Chroma](https://www.trychroma.com/)는 인메모리인 반면, [Pinecone](https://www.pinecone.io/)은 클라우드를 활용
 
+**Pinecone**: [Pinecone integration](https://docs.langchain.com/oss/python/integrations/vectorstores/pinecone)
 
+`Chroma`를 활용한 코드에서 `Pinecone`로 적용하기 위해 단 몇 줄의 코드만 수정
 
+AS-IS: **Chroma**
 
+```python
+from langchain_chroma import Chroma
 
+database = Chroma.from_documents(
+    documents=document_list,
+    embedding=embedding,
+    collection_name='chroma-tax',
+    persist_directory="./chroma",
+)
+```
+
+TO-BE: **Pinecone**
+
+```python
+import os
+
+from pinecone import Pinecone
+from langchain_pinecone import PineconeVectorStore
+
+index_name = 'tax-index'
+pinecone_api_key = os.environ.get("PINECONE_API_KEY")
+pc = Pinecone(api_key=pinecone_api_key)
+
+database = PineconeVectorStore.from_documents(document_list, embedding, index_name=index_name)
+```
+
+> 그밖에도 다양한 vectorstores 제공
+>
+> [Vector store integrations](https://docs.langchain.com/oss/javascript/integrations/vectorstores)
+
+📝 [source code](https://github.com/jihunparkme/study-ai/blob/main/3-langchain-rag/4_rag_with_pinecone.ipynb)
 
 
 
