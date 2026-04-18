@@ -229,6 +229,8 @@ qa_chain = RetrievalQA.from_chain_type(
 [Chroma](https://www.trychroma.com/)는 인메모리인 반면, [Pinecone](https://www.pinecone.io/)은 클라우드를 활용
 
 **Pinecone**: [Pinecone integration](https://docs.langchain.com/oss/python/integrations/vectorstores/pinecone)
+- UpstageEmbeddings 사용 시 Vector dimension: 4096
+- [Upstage Embeddings API](https://console.upstage.ai/docs/for-agents/api-reference#2-embeddings-api)
 
 `Chroma`를 활용한 코드에서 `Pinecone`로 적용하기 위해 단 몇 줄의 코드만 수정
 
