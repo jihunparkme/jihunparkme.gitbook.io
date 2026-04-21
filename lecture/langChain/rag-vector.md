@@ -270,8 +270,7 @@ database = PineconeVectorStore.from_documents(document_list, embedding, index_na
 
 
 
-
-
+co
 
 
 
