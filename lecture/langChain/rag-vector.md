@@ -292,10 +292,6 @@ dictionary_chain = prompt | llm | StrOutputParser()
 # tax_chain = {"query": dictionary_chain} | qa_chain
 ```
 
-
-
-
-
 # 📚 Reference.
 
 - [pyenv, virtualenv 설치 및 사용법](https://dandyrilla.github.io/2024-06-05/pyenv-virtualenv/)

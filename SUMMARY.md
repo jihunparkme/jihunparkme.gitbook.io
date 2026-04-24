@@ -8,6 +8,7 @@
 * [LangChain](lecture/langChain.md)
   * [LangChain Basics](lecture/langChain/basic.md)
   * [RAG & Vector](lecture/langChain/rag-vector.md)
+  * [ChatBot](lecture/langChain/chat-bot.md)
 * [AI agent](lecture/ai-agent.md)
 * [Anthropic](lecture/anthropic/README.md)
   * [Introduction to agent skills](lecture/anthropic/agent-skills.md)
