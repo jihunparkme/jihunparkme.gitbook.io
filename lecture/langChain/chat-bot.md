@@ -19,3 +19,15 @@
  $ pip install streamlit
  $ streamlit hello
 ```
+
+
+
+코드 작성
+
+```python
+
+```
+
+```shell
+streamlit run chat.py 
+```
