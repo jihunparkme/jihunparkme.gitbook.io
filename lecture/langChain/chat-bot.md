@@ -54,3 +54,11 @@ if user_question := st.chat_input(placeholder="소득세에 관련된 궁금한 
 ```shell
 streamlit run chat.py 
 ```
+
+## LangChain ChatBot
+
+LangChain으로 작성한 코드를 활용한 LLM 답변 생성
+
+<figure><img src="https://raw.githubusercontent.com/jihunparkme/study-ai/refs/heads/main/4-chatbot/result.png" alt=""><figcaption></figcaption></figure>
+
+<https://github.com/jihunparkme/study-ai/tree/main/4-chatbot>
