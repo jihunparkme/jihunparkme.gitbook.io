@@ -63,3 +63,8 @@ LangChain으로 작성한 코드를 활용한 LLM 답변 생성
 
 <https://github.com/jihunparkme/study-ai/tree/main/4-chatbot>
 
+## Few Shot을 활용한 답변 정확도 향상과 포맷 수정
+
+`Few Shot`을 제공하면 LLM의 답변 정확도가 올라감
+- [Few-shot examples](https://docs.langchain.com/langsmith/prompt-template-format#few-shot-examples)
+- [Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
