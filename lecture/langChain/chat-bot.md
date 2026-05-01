@@ -71,3 +71,8 @@ LangChain으로 작성한 코드를 활용한 LLM 답변 생성
 
 ## LangSmith를 활용한 LLM Evaluation
 
+> `LLM Evaluation`의 중요성
+>
+> 사용자가 환각(할루시네이션)이 없는 정확한 정보를 받을 수 있는지.
+
+[LangSmith](https://www.langchain.com/langsmith/observability)를 활용한 Large Language Model (LLM) 평가
