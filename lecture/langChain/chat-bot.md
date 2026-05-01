@@ -69,3 +69,5 @@ LangChain으로 작성한 코드를 활용한 LLM 답변 생성
 - [Few-shot examples](https://docs.langchain.com/langsmith/prompt-template-format#few-shot-examples)
 - [Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
 
+## LangSmith를 활용한 LLM Evaluation
+
