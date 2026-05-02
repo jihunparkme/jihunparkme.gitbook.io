@@ -80,3 +80,8 @@ LangChain으로 작성한 코드를 활용한 LLM 답변 생성
 - 대시보드를 제공해서 트렌드를 보기 수월
 - LLM Evaluation을 통해서 쉬운 검증과 롤백이 가능
 
+
+# 📚 Reference.
+
+- [streamlit-lecture](https://github.com/jasonkang14/inflearn-streamlit-lecture)
+- [rag-notebook](https://github.com/jasonkang14/inflearn-rag-notebook/tree/main)
