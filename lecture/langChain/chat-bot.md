@@ -73,15 +73,19 @@ LangChain으로 작성한 코드를 활용한 LLM 답변 생성
 
 > `LLM Evaluation`의 중요성
 >
-> 사용자가 환각(할루시네이션)이 없는 정확한 정보를 받을 수 있는지.
+> 사용자가 환각(할루시네이션)이 없는 정확한 정보를 받도록 서비스를 안정적으로 운영하기 위해
 
 [LangSmith](https://www.langchain.com/langsmith/observability)를 활용한 Large Language Model (LLM) 평가
 - `LangChain`에서 만든 평가 tool
 - 대시보드를 제공해서 트렌드를 보기 수월
 - LLM Evaluation을 통해서 쉬운 검증과 롤백이 가능
 
+<center><img src="../../.gitbook/assets/langChain/langsmith.png"></center>
+
+[source code](https://github.com/jihunparkme/study-ai/blob/main/5-etc/1_LangSmith%EB%A5%BC%20%ED%99%9C%EC%9A%A9%ED%95%9C_LLM_Evaluation.ipynb)
 
 # 📚 Reference.
 
 - [streamlit-lecture](https://github.com/jasonkang14/inflearn-streamlit-lecture)
 - [rag-notebook](https://github.com/jasonkang14/inflearn-rag-notebook/tree/main)
+
