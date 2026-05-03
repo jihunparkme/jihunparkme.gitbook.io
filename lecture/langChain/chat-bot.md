@@ -82,6 +82,10 @@ LangChain으로 작성한 코드를 활용한 LLM 답변 생성
 
 <center><img src="../../.gitbook/assets/langChain/langsmith.png"></center>
 
+**Dataset**
+- 도메인 전문가가 작성한 정답지
+- 특정 질문이 들어오면 이러한 답변을 해야 한다는 공식을 제공
+
 [source code](https://github.com/jihunparkme/study-ai/blob/main/5-etc/1_LangSmith%EB%A5%BC%20%ED%99%9C%EC%9A%A9%ED%95%9C_LLM_Evaluation.ipynb)
 
 # 📚 Reference.
