@@ -88,6 +88,8 @@ LangChain으로 작성한 코드를 활용한 LLM 답변 생성
 
 [source code](https://github.com/jihunparkme/study-ai/blob/main/5-etc/1_LangSmith%EB%A5%BC%20%ED%99%9C%EC%9A%A9%ED%95%9C_LLM_Evaluation.ipynb)
 
+## 이제는 AI Agent의 시대
+
 # 📚 Reference.
 
 - [streamlit-lecture](https://github.com/jasonkang14/inflearn-streamlit-lecture)
