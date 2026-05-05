@@ -90,8 +90,65 @@ LangChain으로 작성한 코드를 활용한 LLM 답변 생성
 
 ## 이제는 AI Agent의 시대
 
+[What are AI Agents?](https://aws.amazon.com/ko/what-is/ai-agents/)
+
+AI 에이전트는 사람이 설정한 목표를 달성하기 위해 환경과 상호작용하며 최적의 조치를 스스로 결정하고 실행하는 자기 주도형 지능형 소프트웨어
+
+**핵심 포인트**
+
+✅ **자율성**: 사람이 일일이 명령하지 않아도 독립적으로 판단하여 작업을 수행
+
+✅ **상호작용**: 데이터 수집 및 환경 분석을 통해 실시간으로 대응
+
+✅ **협업 가능**: 여러 에이전트가 오케스트레이터의 조정 아래 데이터를 교환하며 복잡한 워크플로를 완성
+
 # 📚 Reference.
 
 - [streamlit-lecture](https://github.com/jasonkang14/inflearn-streamlit-lecture)
 - [rag-notebook](https://github.com/jasonkang14/inflearn-rag-notebook/tree/main)
+- [DeepLearning.AI](https://www.deeplearning.ai/courses/)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+퇴직연금 DC형 ETF 상품을 추천해 주세요.
+수익률 순 3년기준 높은 순 상위 몇개를 보면 아래와 같이 나열되고 있습니다.
+이거 말고도 다른 추천 상품이 있다면 추천해 주고, 퇴직연금 DC형 투자 전략을 세워주세요.
+
+수익률 3년 기준
+- HANARO 원자력iSelect
+- ACE 원자력TOP10
+- PLUS 글로벌HBM반도체
+- PLUS K방산
+- TIGER 200 중공업
+- RISE 네트워크인프라
+- ACE 글로벌반도체TOP4 PLUS
+- HANANO Fn K-반도체
+- HANARO CAPEX설비투자iSelet
+- TIGER 증권
+- KODEX 증권
+- TIGER 반도체TOP10
+- RISE 글로벌원자력
+
+
+
+TIGRT S&P500 (20%)
+TIGRT 나스닥100 (20%)
+ACE 글로벌반도체TOP4 PLUS (20%)
