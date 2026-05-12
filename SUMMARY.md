@@ -5,8 +5,9 @@
 
 ## Lecture
 
-* [LangGraph](lecture/langGraph.md)
-* [LangChain](lecture/langChain.md)
+* [LangGraph](lecture/langGraph/README.md)
+  * [LLM Workflow](lecture/langGraph/llm-workflow.md)
+* [LangChain](lecture/langChain/README.md)
   * [LangChain Basics](lecture/langChain/basic.md)
   * [RAG & Vector](lecture/langChain/rag-vector.md)
   * [ChatBot](lecture/langChain/chat-bot.md)
