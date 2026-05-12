@@ -5,6 +5,7 @@
 
 ## Lecture
 
+* [LangGraph](lecture/langGraph.md)
 * [LangChain](lecture/langChain.md)
   * [LangChain Basics](lecture/langChain/basic.md)
   * [RAG & Vector](lecture/langChain/rag-vector.md)
