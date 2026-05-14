@@ -90,43 +90,11 @@ $ pip install langgraph langchain-openai
 |특징|순차적인 워크플로우로 구성|Conditional Edge를 활용하여 효율적인 워크플로우 구성|
 |예시|항상 Rewrite를 호출하여 질문을 수정|필요할 때만 Rewrite를 호출하여 LLM 호출 횟수를 줄임|
 
-**LangGraph의 주요 개념**
-
-|개념|정의|예시|
-|---|---|---|
-|State|현재 에이전트의 상태를 관리|메시지, 검색된 문서, 사용자 질문 등|
-|Node|에이전트가 수행하는 작업|Retrieve, Generate, Rewrite 등|
-|Edge|노드 간의 연결을 나타냄|항상 다음 노드로 이동|
-|Conditional Edge|조건에 따라 다음 노드를 선택|검색 결과가 적절하면 Generate로 이동, 그렇지 않으면 Rewrite로 이동|
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## LangChain
+### LangChain
 
 [LangChain](https://python.langchain.com/)은 LLM 기반 애플리케이션 개발을 위한 프레임워크로, LangGraph와 함께 LLM 호출, 프롬프트 관리, 체인 구성 등을 담당한다.
 
-### 패키지 설치
+✅ 패키지 설치
 
 ```shell
 $ pip install python-dotenv langchain-google-genai
@@ -138,7 +106,7 @@ uv를 사용하는 경우:
 $ uv add python-dotenv langchain-google-genai
 ```
 
-### 환경 변수 설정
+✅ 환경 변수 설정
 
 `.env` 파일에 Google API 키를 설정한다.
 
@@ -148,7 +116,7 @@ GOOGLE_API_KEY=your-google-api-key
 
 > Google AI Studio([aistudio.google.com](https://aistudio.google.com))에서 API 키를 발급받을 수 있다.
 
-### 기본 사용 예시
+✅ 기본 사용 예시
 
 ```python
 from dotenv import load_dotenv
