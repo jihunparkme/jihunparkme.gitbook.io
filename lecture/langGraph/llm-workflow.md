@@ -85,6 +85,8 @@ $ pip install langgraph langchain-openai
 
 # LangChain vs LangGraph
 
+> ℹ️ [Sample Code](https://github.com/jihunparkme/inflearn-langgraph-agent/blob/main/2.1%20LangChain%20vs%20LangGraph%20(feat.%20LangGraph%20%EA%B0%9C%EB%85%90%20%EC%84%A4%EB%AA%85).ipynb)
+
 ||LangChain|LangGraph|
 |---|---|---|
 |특징|순차적인 워크플로우로 구성|Conditional Edge를 활용하여 효율적인 워크플로우 구성|
