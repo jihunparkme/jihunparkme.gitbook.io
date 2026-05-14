@@ -84,3 +84,44 @@ $ pip install langgraph langchain-openai
 ```
 
 ## LangChain
+
+[LangChain](https://python.langchain.com/)은 LLM 기반 애플리케이션 개발을 위한 프레임워크로, LangGraph와 함께 LLM 호출, 프롬프트 관리, 체인 구성 등을 담당한다.
+
+### 패키지 설치
+
+```shell
+$ pip install python-dotenv langchain-google-genai
+```
+
+uv를 사용하는 경우:
+
+```shell
+$ uv add python-dotenv langchain-google-genai
+```
+
+### 환경 변수 설정
+
+`.env` 파일에 Google API 키를 설정한다.
+
+```
+GOOGLE_API_KEY=your-google-api-key
+```
+
+> Google AI Studio([aistudio.google.com](https://aistudio.google.com))에서 API 키를 발급받을 수 있다.
+
+### 기본 사용 예시
+
+```python
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+load_dotenv()  # .env 파일에서 환경 변수 로드
+
+query = '인프런에는 어떤 강의가 있나요?'
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+
+response = llm.invoke(query)
+print(response.content)  # AIMessage에서 텍스트 추출
+```
+
+`llm.invoke()`는 `AIMessage` 객체를 반환하며, `.content` 속성으로 응답 텍스트를 추출한다.
