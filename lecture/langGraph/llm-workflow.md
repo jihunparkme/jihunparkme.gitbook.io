@@ -1,8 +1,8 @@
 # LangGraph 응용 LLM Workflow
 
-## 가상환경 설정
+# 가상환경 설정
 
-### uv
+## uv
 
 [uv](https://github.com/astral-sh/uv)를 활용하는 방법
 
@@ -40,7 +40,7 @@ $ uv sync
 $ source .venv/bin/activate
 ```
 
-### pyenv
+## pyenv
 
 [pyenv](https://github.com/pyenv/pyenv)와 [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv) 플러그인을 활용하는 방법
 
@@ -83,30 +83,24 @@ $ pyenv local inflearn-langgraph-agent
 $ pip install langgraph langchain-openai
 ```
 
-## LangChain vs LangGraph
+# LangChain vs LangGraph
 
 ||LangChain|LangGraph|
 |---|---|---|
 |특징|순차적인 워크플로우로 구성|Conditional Edge를 활용하여 효율적인 워크플로우 구성|
 |예시|항상 Rewrite를 호출하여 질문을 수정|필요할 때만 Rewrite를 호출하여 LLM 호출 횟수를 줄임|
 
-### LangChain
+## LangChain
 
 [LangChain](https://python.langchain.com/)은 LLM 기반 애플리케이션 개발을 위한 프레임워크로, LangGraph와 함께 LLM 호출, 프롬프트 관리, 체인 구성 등을 담당한다.
 
-✅ 패키지 설치
+✅ **패키지 설치**
 
 ```shell
 $ pip install python-dotenv langchain-google-genai
 ```
 
-uv를 사용하는 경우:
-
-```shell
-$ uv add python-dotenv langchain-google-genai
-```
-
-✅ 환경 변수 설정
+✅ **환경 변수 설정**
 
 `.env` 파일에 Google API 키를 설정한다.
 
@@ -116,7 +110,7 @@ GOOGLE_API_KEY=your-google-api-key
 
 > Google AI Studio([aistudio.google.com](https://aistudio.google.com))에서 API 키를 발급받을 수 있다.
 
-✅ 기본 사용 예시
+✅ **기본 사용 예시**
 
 ```python
 from dotenv import load_dotenv
@@ -132,3 +126,100 @@ print(response.content)  # AIMessage에서 텍스트 추출
 ```
 
 `llm.invoke()`는 `AIMessage` 객체를 반환하며, `.content` 속성으로 응답 텍스트를 추출한다.
+
+## LangGraph
+
+**LangGraph의 주요 개념**
+
+|개념|정의|예시|
+|---|---|---|
+|State|현재 에이전트의 상태를 관리|메시지, 검색된 문서, 사용자 질문 등|
+|Node|에이전트가 수행하는 작업|Retrieve, Generate, Rewrite 등|
+|Edge|노드 간의 연결을 나타냄|항상 다음 노드로 이동|
+|Conditional Edge|조건에 따라 다음 노드를 선택|검색 결과가 적절하면 Generate로 이동, 그렇지 않으면 Rewrite로 이동|
+
+✅ **패키지 설치**
+
+```shell
+pip install -q langgraph
+```
+
+### LangGraph 에이전트 생성 과정
+
+1️⃣ **State 선언**
+
+  * `TypedDict`를 사용하여 메시지와 상태를 관리.
+  * OpenAI의 메시지 형식(SystemMessage, HumanMessage, AIMessage)을 포함.
+
+    ```python
+    from typing import Annotated
+    from typing_extensions import TypedDict
+
+    from langgraph.graph.message import add_messages
+    from langchain_core.messages import AnyMessage
+
+    class AgentState(TypedDict):
+        messages: list[Annotated[AnyMessage, add_messages]]
+    ```
+
+2️⃣ **GraphBuilder 생성**
+  * 노드와 엣지를 추가하여 그래프를 구성.
+
+    ```python
+    from langgraph.graph import StateGraph
+
+    graph_builder = StateGraph(AgentState)
+    ```
+
+3️⃣ **Node 생성**
+  * 예: Generate 노드 생성.
+  * LLM 호출을 통해 사용자 질문에 대한 답변 생성.
+
+    ```python
+    def generate(state: AgentState) -> AgentState:
+        """
+        `generate` 노드는 사용자의 질문을 받아서 응답을 생성하는 노드입니다.
+        """
+        messages = state['messages']
+        ai_message = llm.invoke(messages)
+        return {'messages': [ai_message]}
+
+    graph_builder.add_node('generate', generate)
+    ```
+
+4️⃣ **Edge 추가**
+  * Start와 End 엣지를 추가하여 워크플로우 시작과 종료를 정의.
+
+    ```python
+    from langgraph.graph import START, END
+
+    graph_builder.add_edge(START, 'generate')
+    graph_builder.add_edge('generate', END)
+
+    graph = graph_builder.compile()
+    ```
+
+5️⃣ **그래프 컴파일 및 시각화**
+  * Mermaid를 사용하여 그래프 구조를 시각적으로 확인.
+
+    ```python
+    from IPython.display import display, Image
+    from langchain_core.messages import HumanMessage
+
+    display(Image(graph.get_graph().draw_mermaid_png()))
+
+    # 사용자의 질문을 `state`에 담아서 `invoke` 메서드를 호출하면, 그래프가 실행
+    initial_state = {'messages': [HumanMessage(query)]}
+    graph.invoke(initial_state)
+    ```
+
+**LangGraph의 장점**
+  * 조건부 엣지를 활용하여 효율적인 워크플로우 구현
+  * 복잡한 멀티 에이전트 시스템 구축 가능
+  * 필요할 때만 LLM 호출로 비용 절감
+
+> ⚠️
+> 
+> 간단한 LLM 호출만 필요한 경우 LangGraph는 Over-engineering이 될 수 있으므로,
+>
+> 복잡한 워크플로우나 확장 가능한 시스템이 필요한 경우 LangGraph 사용 권장
