@@ -131,97 +131,109 @@ print(response.content)  # AIMessage에서 텍스트 추출
 
 ## LangGraph
 
+[LangGraph](https://docs.langchain.com/oss/python/langgraph/overview)는 상태를 중심으로 LLM 워크플로우를 그래프로 표현하는 프레임워크다. 단순한 체인보다 분기, 반복, 조건부 흐름, 멀티 에이전트 구성이 필요할 때 강점을 가진다.
+
 **LangGraph의 주요 개념**
 
 |개념|정의|예시|
 |---|---|---|
-|State|현재 에이전트의 상태를 관리|메시지, 검색된 문서, 사용자 질문 등|
-|Node|에이전트가 수행하는 작업|Retrieve, Generate, Rewrite 등|
-|Edge|노드 간의 연결을 나타냄|항상 다음 노드로 이동|
-|Conditional Edge|조건에 따라 다음 노드를 선택|검색 결과가 적절하면 Generate로 이동, 그렇지 않으면 Rewrite로 이동|
+|State|그래프 실행 중 공유되는 상태|메시지, 검색 문서, 사용자 질문, 중간 판단 결과|
+|Node|상태를 입력받아 상태를 갱신하는 작업 단위|Retrieve, Generate, Rewrite 등|
+|Edge|항상 다음 노드로 이동하는 연결|START -> generate|
+|Conditional Edge|조건에 따라 다음 노드를 선택하는 연결|검색 결과가 충분하면 Generate, 아니면 Rewrite|
 
 ✅ **패키지 설치**
 
 ```shell
-pip install -q langgraph
+$ pip install langgraph langchain-core
 ```
 
 ### LangGraph 에이전트 생성 과정
 
-1️⃣ **State 선언**
+1️⃣. **State 선언**
 
-  * `TypedDict`를 사용하여 메시지와 상태를 관리.
-  * OpenAI의 메시지 형식(SystemMessage, HumanMessage, AIMessage)을 포함.
+`TypedDict`와 `Annotated`를 사용해 그래프 전체에서 공유할 상태를 정의한다. 메시지 목록은 `add_messages`를 통해 기존 상태에 누적된다.
 
-    ```python
-    from typing import Annotated
-    from typing_extensions import TypedDict
+```python
+from typing import Annotated
+from typing_extensions import TypedDict
 
-    from langgraph.graph.message import add_messages
-    from langchain_core.messages import AnyMessage
+from langgraph.graph.message import add_messages
+from langchain_core.messages import AnyMessage
 
-    class AgentState(TypedDict):
-        messages: list[Annotated[AnyMessage, add_messages]]
-    ```
+class AgentState(TypedDict):
+    messages: list[Annotated[AnyMessage, add_messages]]
+```
 
-2️⃣ **GraphBuilder 생성**
-  * 노드와 엣지를 추가하여 그래프를 구성.
+2️⃣. **GraphBuilder 생성**
 
-    ```python
-    from langgraph.graph import StateGraph
+노드와 엣지를 추가하여 그래프를 구성.
 
-    graph_builder = StateGraph(AgentState)
-    ```
+```python
+from langgraph.graph import StateGraph
 
-3️⃣ **Node 생성**
-  * 예: Generate 노드 생성.
-  * LLM 호출을 통해 사용자 질문에 대한 답변 생성.
+graph_builder = StateGraph(AgentState)
+```
 
-    ```python
-    def generate(state: AgentState) -> AgentState:
-        """
-        `generate` 노드는 사용자의 질문을 받아서 응답을 생성하는 노드입니다.
-        """
-        messages = state['messages']
-        ai_message = llm.invoke(messages)
-        return {'messages': [ai_message]}
+3️⃣. **Node 생성**
 
-    graph_builder.add_node('generate', generate)
-    ```
+각 노드는 현재 상태를 입력받아 새로운 상태 일부를 반환한다. 아래 예시는 메시지를 받아 LLM 응답을 추가하는 가장 단순한 `generate` 노드다.
 
-4️⃣ **Edge 추가**
-  * Start와 End 엣지를 추가하여 워크플로우 시작과 종료를 정의.
+```python
+def generate(state: AgentState) -> AgentState:
+    messages = state['messages']
+    ai_message = llm.invoke(messages)
+    return {'messages': [ai_message]}
 
-    ```python
-    from langgraph.graph import START, END
+graph_builder.add_node('generate', generate)
+```
 
-    graph_builder.add_edge(START, 'generate')
-    graph_builder.add_edge('generate', END)
+4️⃣. **Edge 추가 및 그래프 컴파일**
 
-    graph = graph_builder.compile()
-    ```
+`START`와 `END`를 연결해 가장 단순한 단일 노드 워크플로우를 만든다.
 
-5️⃣ **그래프 컴파일 및 시각화**
-  * Mermaid를 사용하여 그래프 구조를 시각적으로 확인.
+```python
+from langgraph.graph import START, END
 
-    ```python
-    from IPython.display import display, Image
-    from langchain_core.messages import HumanMessage
+graph_builder.add_edge(START, 'generate')
+graph_builder.add_edge('generate', END)
 
-    display(Image(graph.get_graph().draw_mermaid_png()))
+graph = graph_builder.compile()
+```
 
-    # 사용자의 질문을 `state`에 담아서 `invoke` 메서드를 호출하면, 그래프가 실행
-    initial_state = {'messages': [HumanMessage(query)]}
-    graph.invoke(initial_state)
-    ```
+5️⃣. **그래프 시각화**
+
+Mermaid를 사용하여 그래프 구조를 시각적으로 확인.
+
+```python
+from IPython.display import display, Image
+
+display(Image(graph.get_graph().draw_mermaid_png()))
+```
+
+7️⃣. **그래프 실행**
+
+```python
+from langchain_core.messages import HumanMessage
+
+# 사용자의 질문을 `state`에 담아서 `invoke` 메서드를 호출하면, 그래프가 실행
+initial_state = {'messages': [HumanMessage(query)]}
+graph.invoke(initial_state)
+```
+
+`graph.invoke()`의 반환값은 최종 `state`이며, 여기서는 마지막 메시지가 모델의 응답이다.
+
+이 방식으로 불필요한 LLM 호출을 줄이고, 검색 품질 평가나 도구 호출 결과에 따라 워크플로우를 유연하게 제어할 수 있다.
 
 **LangGraph의 장점**
-  * 조건부 엣지를 활용하여 효율적인 워크플로우 구현
-  * 복잡한 멀티 에이전트 시스템 구축 가능
-  * 필요할 때만 LLM 호출로 비용 절감
+
+* 조건부 분기와 반복 로직을 명시적으로 표현할 수 있음
+* 상태 기반으로 복잡한 멀티 스텝 워크플로우를 안정적으로 구성할 수 있음
+* 멀티 에이전트, RAG, 검증-재시도 패턴에 적합함
+* 필요할 때만 다음 노드를 실행해 비용과 지연 시간을 줄일 수 있음
 
 > ⚠️
-> 
-> 간단한 LLM 호출만 필요한 경우 LangGraph는 Over-engineering이 될 수 있으므로,
 >
-> 복잡한 워크플로우나 확장 가능한 시스템이 필요한 경우 LangGraph 사용 권장
+> 단순히 한두 번의 LLM 호출만 필요한 경우에는 LangChain만으로도 충분한 경우가 많다.
+>
+> 분기, 재시도, 상태 관리, 사람 승인 단계처럼 워크플로우 제어가 중요할 때 LangGraph를 선택하는 편이 적절하다.
