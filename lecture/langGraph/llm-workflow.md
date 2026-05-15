@@ -237,3 +237,5 @@ graph.invoke(initial_state)
 > 단순히 한두 번의 LLM 호출만 필요한 경우에는 LangChain만으로도 충분한 경우가 많다.
 >
 > 분기, 재시도, 상태 관리, 사람 승인 단계처럼 워크플로우 제어가 중요할 때 LangGraph를 선택하는 편이 적절하다.
+
+## Simple Retrieval Agent
