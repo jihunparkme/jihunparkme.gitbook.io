@@ -247,15 +247,16 @@ graph.invoke(initial_state)
 **문서 처리 및 RAG 생성**
 
 1. **문서 로드 및 분할**
-     * PDF 문서를 로드하고 페이지 단위로 분할.
-     * PDF의 이미지 데이터(예: 표)는 기본 `PyPDFLoader`로 처리 불가.
-     * OCR 도구(`py-zerox`)를 사용하여 이미지 데이터를 텍스트로 변환.
+     * PDF 문서를 로드하고 페이지 단위로 분할
+     * PDF의 이미지 데이터(예: 표)는 기본 `PyPDFLoader`로 처리 불가
+     * OCR 도구(`py-zerox`)를 사용하여 이미지 데이터를 텍스트로 변환
 2. **Markdown 및 Text 변환**
-     * OCR로 변환된 데이터를 Markdown 형식으로 저장.
-     * Markdown 데이터를 텍스트로 변환하여 정확한 문맥 전달.
+     * OCR로 변환된 데이터를 Markdown 형식으로 저장
+     * Markdown 데이터를 텍스트로 변환하여 정확한 문맥 전달
+     * [markdown-loader](https://github.com/peerigon/markdown-loader)
 3. **벡터 스토어 생성**
-     * `Chroma`를 사용하여 문서를 벡터화하고 로컬에 저장.
-     * `Retriever`를 통해 벡터화된 문서를 검색 가능.
+     * `Chroma`를 사용하여 문서를 벡터화하고 로컬에 저장
+     * `Retriever`를 통해 벡터화된 문서를 검색 가능
 
 **LangGraph 에이전트 구조**
 
@@ -263,7 +264,7 @@ graph.invoke(initial_state)
    * 사용자 질문, 검색된 문서(context), 생성된 답변(answer) 포함
 2. **Retriever 노드 생성**
    * 사용자의 질문을 기반으로 벡터 스토어에서 관련 문서 검색
-   * 검색된 문서를 `context`에 저장.
+   * 검색된 문서를 `context`에 저장
 3. **Generator 노드 생성**
    * 검색된 문서를 기반으로 LLM이 답변 생성
    * LangSmith에서 제공하는 프롬프트를 활용하여 효율적인 답변 생성
@@ -271,6 +272,14 @@ graph.invoke(initial_state)
      * [teddynote/rag-prompt-korean](https://smith.langchain.com/hub/teddynote/rag-prompt-korean)
    * LLM 호출 시 사용자 질문과 검색된 문서를 함께 전달
 4. **그래프 빌더 생성 및 연결**
-   * 노드: Start → Retrieve → Generate → End.
-   * 엣지: 노드 간의 순차적 연결.
-   * 시각화를 통해 그래프 구조 확인.
+   * Node: `Start` → `Retrieve` → `Generate` → `End`
+   * Edge: 노드 간의 순차적 연결
+
+**LangGraph 에이전트 시나리오**
+
+1. **질문**: "연봉 5천만 원의 소득세는 얼마인가?"
+     * **Retrieve**: 관련 문서(소득세율표 등) 검색
+     * **Generate**: 검색된 문서를 기반으로 답변 생성
+2. **문서 검색 실패 시**
+      * 검색된 문서가 부족하거나 부정확한 경우, 질문을 재작성하여 다시 검색
+      * `Conditional Edge`를 활용하여 효율적인 워크플로우 구현
