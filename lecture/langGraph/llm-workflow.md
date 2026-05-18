@@ -258,20 +258,34 @@ graph.invoke(initial_state)
      * `Chroma`를 사용하여 문서를 벡터화하고 로컬에 저장
      * `Retriever`를 통해 벡터화된 문서를 검색 가능
 
-**LangGraph 에이전트 구조**
+### LangGraph 에이전트 구조**
+
+**워크플로우 개요**
+
+* `retrieve`: 사용자의 질문을 받아 문서를 검색
+* `check_doc_relevance`: 검색된 문서가 질문과 관련이 있는지 검증
+* `generate`: 문서가 관련이 있으면 답변을 생성
+* `rewrite`: 문서가 관련이 없으면 질문을 수정(rewrite)하고 다시 검색
+
+**노드(Node) 설계**
 
 1. **State 정의**
-   * 사용자 질문, 검색된 문서(context), 생성된 답변(answer) 포함
-2. **Retriever 노드 생성**
-   * 사용자의 질문을 기반으로 벡터 스토어에서 관련 문서 검색
-   * 검색된 문서를 `context`에 저장
-3. **Generator 노드 생성**
-   * 검색된 문서를 기반으로 LLM이 답변 생성
+     * 사용자 질문, 검색된 문서(context), 생성된 답변(answer) 포함
+2. **Retriever 노드**
+     * 사용자의 질문을 기반으로 벡터 스토어에서 관련 문서 검색
+     * 검색된 문서를 `context`에 저장
+3. **CheckDocRelevance 노드**: 검색된 문서와 질문의 관련성을 검증
+     * 관련성이 있으면 `Generate`로 이동
+     * 관련성이 없으면 `Rewrite`로 이동
+4. **Generator 노드**
+   * 검색된 문서를 기반으로 LLM이 질문에 대한 답변 생성
    * LangSmith에서 제공하는 프롬프트를 활용하여 효율적인 답변 생성
      * [rlm/rag-prompt](https://smith.langchain.com/hub/rlm/rag-prompt)
      * [teddynote/rag-prompt-korean](https://smith.langchain.com/hub/teddynote/rag-prompt-korean)
    * LLM 호출 시 사용자 질문과 검색된 문서를 함께 전달
-4. **그래프 빌더 생성 및 연결**
+5. **Rewrite 노드**
+    * 질문을 수정하여 검색 결과를 개선
+6. **그래프 빌더 생성 및 연결**
    * Node: `Start` → `Retrieve` → `Generate` → `End`
    * Edge: 노드 간의 순차적 연결
 
@@ -283,3 +297,5 @@ graph.invoke(initial_state)
 2. **문서 검색 실패 시**
       * 검색된 문서가 부족하거나 부정확한 경우, 질문을 재작성하여 다시 검색
       * `Conditional Edge`를 활용하여 효율적인 워크플로우 구현
+
+
