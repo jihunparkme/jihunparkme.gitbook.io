@@ -301,3 +301,10 @@ graph.invoke(initial_state)
 2. **문서 검색 실패 시**
       * 검색된 문서가 부족하거나 부정확한 경우, 질문을 재작성하여 다시 검색
       * `Conditional Edge`를 활용하여 효율적인 워크플로우 구현
+
+## Self Rag
+
+> [Self-Reflective RAG with LangGraph](https://www.langchain.com/blog/agentic-rag-with-langgraph)
+> - [examples/rag/langgraph_self_rag.ipynb](https://github.com/langchain-ai/langgraph/blob/main/examples/rag/langgraph_self_rag.ipynb?ref=blog.langchain.com)
+
+
