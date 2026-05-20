@@ -307,4 +307,11 @@ graph.invoke(initial_state)
 > [Self-Reflective RAG with LangGraph](https://www.langchain.com/blog/agentic-rag-with-langgraph)
 > - [examples/rag/langgraph_self_rag.ipynb](https://github.com/langchain-ai/langgraph/blob/main/examples/rag/langgraph_self_rag.ipynb?ref=blog.langchain.com)
 
+**Self-RAG**
+
+* 에이전트가 스스로를 검증하며 답변의 품질을 향상
+* 문서를 검색하고, 문서와 질문의 관련성을 확인
+* 생성된 답변이 문서에 기반했는지 검증
+* 답변이 질문과 관련이 없거나 환각(Hallucination)이 발생하면 답변을 재생성
+
 
