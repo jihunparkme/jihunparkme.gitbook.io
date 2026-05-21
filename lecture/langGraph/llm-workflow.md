@@ -309,6 +309,8 @@ graph.invoke(initial_state)
 >
 > - [SELF-RAG: LEARNING TO RETRIEVE, GENERATE, AND CRITIQUE THROUGH SELF-REFLECTION](https://arxiv.org/pdf/2310.11511)
 
+<figure><img src="../../.gitbook/assets/langGraph/self-rag-2.png" alt=""><figcaption></figcaption></figure>
+
 **Self-RAG**
 
 * 에이전트가 스스로를 검증하며 답변의 품질을 향상
@@ -346,8 +348,29 @@ graph.invoke(initial_state)
 > 
 > - [Corrective Retrieval Augmented Generation](https://arxiv.org/pdf/2401.15884)
 
+<figure><img src="../../.gitbook/assets/langGraph/corrective-rag.png" alt=""><figcaption></figcaption></figure>
+
 **워크플로우**
 
 * 문서 검색 후 관련성 평가
 * 관련성이 있으면 답변 생성, 없으면 질문 재작성 및 웹 검색 수행
+  * 기존 재작성은 문서 검색에 초점이었지만, 새로운 재작성은 웹 검색에 초점. 
 
+
+
+
+
+---
+
+
+  
+* 구현 과정:
+  * [Tavily](https://www.tavily.com/) API 키 설정 및 환경 변수로 관리.
+  * Retrieve, Generate, Relevance 노드 구성 및 Conditional Edge 추가.
+  * 웹 검색 결과를 활용하여 답변 생성.
+* 최적화 및 성능 개선:
+  * 재작성 단계를 생략하면 속도와 비용 절감 가능.
+  * OpenAI API의 캐시 기능을 활용하여 유사 질문에 대한 빠른 응답 제공.
+* 실용성 검토:
+  * 재작성 단계가 정말 필요한지 검토.
+  * 서비스 관점에서 불필요한 재작성 단계 제거로 효율성 증대.
