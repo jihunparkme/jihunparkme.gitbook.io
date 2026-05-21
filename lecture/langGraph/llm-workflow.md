@@ -306,6 +306,8 @@ graph.invoke(initial_state)
 
 > [Self-Reflective RAG with LangGraph](https://www.langchain.com/blog/agentic-rag-with-langgraph)
 > - [examples/rag/langgraph_self_rag.ipynb](https://github.com/langchain-ai/langgraph/blob/main/examples/rag/langgraph_self_rag.ipynb?ref=blog.langchain.com)
+>
+> - [SELF-RAG: LEARNING TO RETRIEVE, GENERATE, AND CRITIQUE THROUGH SELF-REFLECTION](https://arxiv.org/pdf/2310.11511)
 
 **Self-RAG**
 
@@ -336,3 +338,16 @@ graph.invoke(initial_state)
 * `Rewrite`: 문서를 다시 검색하고 답변 재생성
 
 <figure><img src="../../.gitbook/assets/langGraph/self-rag.png" alt=""><figcaption></figcaption></figure>
+
+## Corrective RAG
+
+> [Self-Reflective RAG with LangGraph](https://www.langchain.com/blog/agentic-rag-with-langgraph)
+> - [examples/rag/langgraph_crag.ipynb](https://github.com/langchain-ai/langgraph/blob/main/examples/rag/langgraph_crag.ipynb?ref=blog.langchain.com)
+> 
+> - [Corrective Retrieval Augmented Generation](https://arxiv.org/pdf/2401.15884)
+
+**워크플로우**
+
+* 문서 검색 후 관련성 평가
+* 관련성이 있으면 답변 생성, 없으면 질문 재작성 및 웹 검색 수행
+
