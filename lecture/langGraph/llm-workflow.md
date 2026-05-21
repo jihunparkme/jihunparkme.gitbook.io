@@ -322,13 +322,17 @@ graph.invoke(initial_state)
   * 환각이 발생하면 답변 재생성, 환각이 없으면 질문과 답변의 관련성 확인
 * 질문과 답변이 관련이 없으면 문서를 다시 검색하고 반복.
 
-**노드(Node) 설계**
+**노드 설계**
 * `Retrieve`: 문서 검색
 * `Generate`: 질문에 대한 답변 생성
-* `Check Relevance`: 문서와 질문의 관련성 확인
-* `Check Hallucination`: 생성된 답변의 환각 여부 확인
+* `Check Relevance`: 문서와 질문의 관련성 확인 (Conditional Edge)
+  * 관련성이 없으면 종료, 관련성이 있으면 Generate로 이동
+* `Check Hallucination`: 생성된 답변의 환각 여부 확인 (Conditional Edge)
+  * 환각이 있으면 Generate로 다시 이동, 환각이 없으면 Check Helpfulness로 이동
   * [rag-answer-hallucination](https://smith.langchain.com/hub/langchain-ai/rag-answer-hallucination)
 * `Check Helpfulness`: 질문과 답변의 관련성 확인
+  * 관련이 없으면 Rewrite로 이동, 관련이 있으면 종료
   * [rag-answer-helpfulness](https://smith.langchain.com/hub/langchain-ai/rag-answer-helpfulness)
 * `Rewrite`: 문서를 다시 검색하고 답변 재생성
 
+<figure><img src="../../.gitbook/assets/langGraph/self-rag.png" alt=""><figcaption></figcaption></figure>
