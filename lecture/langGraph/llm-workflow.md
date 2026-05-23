@@ -240,6 +240,8 @@ graph.invoke(initial_state)
 
 ## Simple Retrieval Agent
 
+> ℹ️ [Sample Code](https://github.com/jihunparkme/inflearn-langgraph-agent/blob/main/2.2%20%EA%B0%84%EB%8B%A8%ED%95%9C%20Retrieval%20%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%20(feat.%20PDF%20%EC%A0%84%EC%B2%98%EB%A6%AC%20%EA%BF%80%ED%8C%81).ipynb)
+
 **문서를 기반으로 답변을 생성하는 LangGraph 에이전트**
 - 사용자가 질문을 하면 관련 문서를 검색하고, 해당 문서를 기반으로 LLM이 답변을 생성
 - 문서 처리를 통해 더 정확하고 맥락에 맞는 답변 제공
@@ -308,6 +310,8 @@ graph.invoke(initial_state)
 > - [examples/rag/langgraph_self_rag.ipynb](https://github.com/langchain-ai/langgraph/blob/main/examples/rag/langgraph_self_rag.ipynb?ref=blog.langchain.com)
 >
 > - [SELF-RAG: LEARNING TO RETRIEVE, GENERATE, AND CRITIQUE THROUGH SELF-REFLECTION](https://arxiv.org/pdf/2310.11511)
+>
+> ℹ️ [Sample Code](https://github.com/jihunparkme/inflearn-langgraph-agent/blob/main/2.4%20%EC%83%9D%EC%84%B1%EB%90%9C%20%EB%8B%B5%EB%B3%80%EC%9D%84%20%EC%97%AC%EB%9F%AC%EB%B2%88%20%EA%B2%80%EC%A6%9D%ED%95%98%EB%8A%94%20Self-RAG.ipynb)
 
 <figure><img src="../../.gitbook/assets/langGraph/self-rag-2.png" alt=""><figcaption></figcaption></figure>
 
@@ -342,6 +346,8 @@ graph.invoke(initial_state)
 <figure><img src="../../.gitbook/assets/langGraph/self-rag.png" alt=""><figcaption></figcaption></figure>
 
 ## Corrective RAG
+
+> ℹ️ [Sample Code](https://github.com/jihunparkme/inflearn-langgraph-agent/blob/main/2.5%20%EC%9B%B9%20%EA%B2%80%EC%83%89%EC%9D%84%20%EC%A7%80%EC%9B%90%ED%95%98%EB%8A%94%20Corrective%20RAG.ipynb)
 
 > [Self-Reflective RAG with LangGraph](https://www.langchain.com/blog/agentic-rag-with-langgraph)
 > - [examples/rag/langgraph_crag.ipynb](https://github.com/langchain-ai/langgraph/blob/main/examples/rag/langgraph_crag.ipynb?ref=blog.langchain.com)
