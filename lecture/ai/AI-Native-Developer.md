@@ -39,3 +39,42 @@ AI의 최우선 목표는 '사실'을 말하는 것이 아니라, '가장 그럴
 1. **AI는 동료일 뿐, 책임은 나에게:** AI가 짜준 코드는 내가 직접 작성한 코드보다 더 꼼꼼하게 리뷰하고 테스트 하자.
 2. **공식 문서와 교차 검증:** 외부 라이브러리나 프레임워크 API를 사용할 때는, 반드시 공식 문서를 옆에 띄워놓고 메서드 이름, 파라미터 등이 실제로 존재하는지 확인하는 습관을 들이자.
 3. **'Grounding'으로 거짓말할 공간 없애기:** 프롬프트에 공식 문서의 링크나 정확한 에러 로그 메시지를 함께 제공하면, AI가 기댈 수 있는 '사실'의 땅(Ground)이 생겨 거짓말할 확률이 줄어든다.
+
+## 코더를 넘어, '전략가'이자 '오케스트레이터'로
+
+우리의 진짜 가치,
+- **얼마나 통찰력 있는 시스템을 설계하는가 (전략가)**
+- **얼마나 효율적인 개발 프로세스를 자동화하는가 (설계자)**
+- **AI라는 강력한 자원을 어떻게 조율하여 최고의 결과물을 만들어내는가 (오케스트레이터)**
+
+## Claude
+
+Node.js (버전 18 이상)
+
+```bash
+node -v
+```
+
+claude-code 설치
+
+```bash
+npm install -g @anthropic-ai/claude-code
+
+claude --version
+```
+
+기본 명령어
+
+```bash
+# '!' for bash mode
+
+# '/' for commands: Claude가 수행할 수 있는 다양한 '액션' 명령어 목록
+
+# '@' for file paths
+
+# '#' to memorize
+```
+
+`/` [Commands](https://code.claude.com/docs/en/commands)
+
+- `/init`: Initialize project with a CLAUDE.md guide. 
