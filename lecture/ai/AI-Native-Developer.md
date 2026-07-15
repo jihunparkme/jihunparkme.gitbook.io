@@ -229,6 +229,10 @@ claude --version
   - Claude가 파일을 읽거나, 코드를 수정하거나 등 어떤 도구를 사용하기 **'직전'** 에 실행
   - AI의 행동을 미리 검사하고, 위험하다면 **실행 자체를 '차단'** 할 수 있는 훅
   - 스크립트 생성 ([Hooks reference](https://code.claude.com/docs/en/hooks#pretooluse-input))
+
+    <details>
+    <summary>.claude/hooks/security-check.sh</summary>
+
     ```sh
     #!/bin/bash
     # .claude/hooks/security-check.sh
@@ -273,10 +277,14 @@ claude --version
 
     exit 0 # 문제가 없으면 0번 코드로 통과
     ```
-  - `settings.json` 파일 "PreToolUse" 영역에 아래 코드 추가
+
+    `settings.json` 파일 "PreToolUse" 영역에 아래 코드 추가
+
     ```json
     "PreToolUse": [ { "matcher": "Edit|Write|Create", "hooks": [ { "type": "command", "command": "bash .claude/hooks/security-check.sh" } ] } ],
     ```
+
+    </details>
 
 - **`PostToolUse` (사후 실행 훅 / 리뷰어):** 
   - Claude가 파일 수정 같은 작업을 **마친 '직후'** 에 실행
@@ -286,6 +294,10 @@ claude --version
 - **`SessionStart`:** 
   - Claude 세션이 시작될 때마다 실행
   - `npm install`을 실행하거나, 환경 변수를 로드하는 등 개발 환경을 초기화할 때 유용
+
+    <details>
+    <summary>.claude/settings.json</summary>
+
     ```json
     {
         "hooks": {
@@ -304,6 +316,8 @@ claude --version
         }
     }
     ```
+
+    </details>
 
 - **`UserPromptSubmit`:** 
   - 우리가 프롬프트를 입력하고 엔터를 누르는 순간 실행
