@@ -211,18 +211,100 @@ claude --version
 
 > Hooks는 AI의 모든 행동을 감시하고, 우리가 정한 규칙을 위반할 경우 그 행동을 막거나 수정하도록 피드백을 주는 '자동화된 내부 감사관'이자 '보안 게이트'
 
+📝 `.claude/settings.json`
+
+```json
+{
+  "version": "1.0",
+  "hooks": {
+    "SessionStart": {},
+    "PreToolUse": {},
+    "PostToolUse": {}
+  }
+}
+```
+
 **도구 관련 Hooks**
 - **`PreToolUse` (사전 실행 훅 / 게이트키퍼):** 
-  - Claude가 파일을 읽거나, 코드를 수정하거나 등 어떤 도구를 사용하기 **'직전'**에 실행
-  - AI의 행동을 미리 검사하고, 위험하다면 **실행 자체를 '차단'**할 수 있는 훅
+  - Claude가 파일을 읽거나, 코드를 수정하거나 등 어떤 도구를 사용하기 **'직전'** 에 실행
+  - AI의 행동을 미리 검사하고, 위험하다면 **실행 자체를 '차단'** 할 수 있는 훅
+  - 스크립트 생성 ([Hooks reference](https://code.claude.com/docs/en/hooks#pretooluse-input))
+    ```sh
+    #!/bin/bash
+    # .claude/hooks/security-check.sh
+
+    # Claude로부터 받은 JSON 입력 파싱
+    # stdin으로부터 입력을 읽어 파일 경로를 찾습니다.
+    INPUT=$(cat)
+
+    # 파일 경로 추출 (tool_input에서 file_path 찾기)
+    FILE_PATH=$(echo "$INPUT" | grep -o '"file_path":"[^"]*' | sed 's/"file_path":"//')
+
+    # FILE_PATH가 없으면 환경변수에서 가져오기
+    if [ -z "$FILE_PATH" ]; then
+        FILE_PATH="$CLAUDE_FILE_PATHS"
+    fi
+
+    # 파일 경로가 없으면 통과
+    if [ -z "$FILE_PATH" ]; then
+        exit 0
+    fi
+
+    PATTERNS=(
+        "password"
+        "api_key" 
+        "secret"
+        "AWS[A-Z0-9]{16}"
+    )
+
+    for pattern in "${PATTERNS[@]}"; do
+        # 파일 내용($CLAUDE_TOOL_INPUT)에서 패턴 검사
+        if echo "$CLAUDE_TOOL_INPUT" | grep -i -E -q "$pattern"; then
+            echo "⚠️ 보안 경고: 민감 정보($pattern)가 코드에 포함되려 합니다! 작업을 차단합니다." >&2
+            exit 2 # 2번 코드로 종료하여 Claude 작업을 차단
+        fi
+        
+        # CLAUDE_TOOL_INPUT이 비어있으면 INPUT에서도 검사
+        if echo "$INPUT" | grep -i -E -q "$pattern"; then
+            echo "⚠️ 보안 경고: 민감 정보($pattern)가 코드에 포함되려 합니다! 작업을 차단합니다." >&2
+            exit 2
+        fi
+    done
+
+    exit 0 # 문제가 없으면 0번 코드로 통과
+    ```
+  - `settings.json` 파일 "PreToolUse" 영역에 아래 코드 추가
+    ```json
+    "PreToolUse": [ { "matcher": "Edit|Write|Create", "hooks": [ { "type": "command", "command": "bash .claude/hooks/security-check.sh" } ] } ],
+    ```
+
 - **`PostToolUse` (사후 실행 훅 / 리뷰어):** 
-  - Claude가 파일 수정 같은 작업을 **마친 '직후'**에 실행
-  - AI가 완료한 작업의 결과물을 검토하고, "코드는 잘 수정했는데, 타입 에러가 발생했어. 이것도 마저 수정해줘." 와 같이 **추가적인 '피드백'**을 AI에게 다시 전송
+  - Claude가 파일 수정 같은 작업을 **마친 '직후'** 에 실행
+  - AI가 완료한 작업의 결과물을 검토하고, "코드는 잘 수정했는데, 타입 에러가 발생했어. 이것도 마저 수정해줘." 와 같이 **추가적인 '피드백'** 을 AI에게 다시 전송
 
 **세션 및 상호작용 Hooks**
 - **`SessionStart`:** 
   - Claude 세션이 시작될 때마다 실행
   - `npm install`을 실행하거나, 환경 변수를 로드하는 등 개발 환경을 초기화할 때 유용
+    ```json
+    {
+        "hooks": {
+            "SessionStart": [
+            {
+                "hooks": [
+                {
+                    "type": "command", 
+                    "command": "npm install && echo '✅ 의존성 설치 완료'",
+                    "timeout": 300
+                }
+                ]
+            }
+            ],
+            "PostToolUse": []
+        }
+    }
+    ```
+
 - **`UserPromptSubmit`:** 
   - 우리가 프롬프트를 입력하고 엔터를 누르는 순간 실행
   - 사용자의 입력에 오타가 있거나, 금지된 단어가 포함되어 있는지 검사
