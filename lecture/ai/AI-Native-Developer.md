@@ -1,8 +1,8 @@
 # AI를 '코딩 비서'에서 '개발 파트너'로
 
-## LLM 공략집
+# LLM 공략집
 
-### **1️⃣. AI는 '생각'하지 않는다, '계산'할 뿐 (확률적 앵무새)**
+**1️⃣. AI는 '생각'하지 않는다, '계산'할 뿐 (확률적 앵무새)**
 
 LLM의 본질은 **세상에서 가장 정교한 '다음 단어 예측기'**
 
@@ -18,7 +18,9 @@ LLM의 본질은 **세상에서 가장 정교한 '다음 단어 예측기'**
 
 원하는 목표, 제약 조건, 해결 방식까지 **유치할 정도로 구체적이고 명확하게** 지시해야 AI는 가장 정확한 계산 결과를 내놓을 수 있다.
 
-### **2️⃣. AI는 '금붕어 기억력'을 가졌다 (Stateless)**
+.
+
+**2️⃣. AI는 '금붕어 기억력'을 가졌다 (Stateless)**
 
 AI가 이전 대화를 모두 기억하는 것처럼 느껴지는 것은 정교하게 구현된 '눈속임'
 
@@ -30,7 +32,9 @@ LLM의 근본적인 아키텍처는 Stateless(무상태). **HTTP 요청**이나 
 
 매 요청은 그 자체로 완벽한 '작업 지시서(Context)'여야 한다. 필요한 모든 배경 정보, 코드 조각, 설계 의도를 빠짐없이 담아서 전달해야 한다. 이것이 바로 컨텍스트가 전부인 두 번째 이유.
 
-### **3️⃣. AI는 '그럴듯한 거짓말'의 대가 (Hallucination)**
+.
+
+**3️⃣. AI는 '그럴듯한 거짓말'의 대가 (Hallucination)**
 
 AI의 최우선 목표는 '사실'을 말하는 것이 아니라, '가장 그럴듯한 문장'을 만드는 것. 그래서 자신이 모르는 내용에 대해 "모르겠습니다"라고 말하기보다는, 아주 자신감 있는 태도로 그럴듯한 거짓 정보(환각, Hallucination)를 만들어낸다.
 
@@ -40,7 +44,7 @@ AI의 최우선 목표는 '사실'을 말하는 것이 아니라, '가장 그럴
 2. **공식 문서와 교차 검증:** 외부 라이브러리나 프레임워크 API를 사용할 때는, 반드시 공식 문서를 옆에 띄워놓고 메서드 이름, 파라미터 등이 실제로 존재하는지 확인하는 습관을 들이자.
 3. **'Grounding'으로 거짓말할 공간 없애기:** 프롬프트에 공식 문서의 링크나 정확한 에러 로그 메시지를 함께 제공하면, AI가 기댈 수 있는 '사실'의 땅(Ground)이 생겨 거짓말할 확률이 줄어든다.
 
-## 코더를 넘어, '전략가'이자 '오케스트레이터'로
+# 코더를 넘어, '전략가'이자 '오케스트레이터'로
 
 우리의 진짜 가치,
 - **얼마나 통찰력 있는 시스템을 설계하는가 (전략가)**
@@ -79,7 +83,7 @@ claude --version
 
 - `/init`: Initialize project with a CLAUDE.md guide. 
 
-## 컨텍스트 관리
+## 🧠 컨텍스트 관리
 
 > [The New Skill in AI is Not Prompting, It's Context Engineering](https://www.philschmid.de/context-engineering)
 
@@ -108,7 +112,7 @@ claude --version
 2. 바늘에 GPS 달기 - `claude.md`와 메모리로 핵심 정보 고정하기
 3. 새 건초더미에서 시작하기 - 과감한 리셋의 기술 (`/clear`)
 
-## 프롬프트 엔지니어링
+## 🪄 프롬프트 엔지니어링
 
 ✅ **완벽한 프롬프트의 4요소**
 
@@ -121,7 +125,7 @@ claude --version
 4. 제약조건 (Constraints): 무엇을 '하지 말아야' 하는가?
       - 때로는 '무엇을 하지 말라'는 제약조건이 AI를 올바른 길로 인도하는 데 더 효과적
 
-## 프롬프트 디자인 패턴
+### 프롬프트 디자인 패턴
 
 1️⃣. 템플릿 제공' 패턴 (Few-shot Prompting)
 - 우리가 원하는 결과물의 형식과 스타일을 보여주는 2~3개의 '모범 예시(Template)'를 먼저 제공하는 기술
@@ -151,7 +155,7 @@ claude --version
 "이 함수는 배열에서 중복된 숫자를 찾아야 하는데, ... 아래 코드를 보고, 단계별로 차근차근 생각해서 문제의 원인을 진단하고 해결책을 제시해줘. (코드...)"
 ```
 
-## claude.md & Commands
+# 📜 claude.md & Commands
 
 > `claude.md`: 우리 프로젝트의 '헌법'이자 모든 팀원이 따라야 할 규칙을 담은 문서
 >
@@ -207,7 +211,7 @@ claude --version
     4.  파일의 본문에는 "여기에 프로젝트 상세 설명을 작성하세요." 라는 플레이스홀더 텍스트를 넣어줘.
     ```
 
-## Claude Hooks
+# 🛡️ Claude Hooks
 
 > Hooks는 AI의 모든 행동을 감시하고, 우리가 정한 규칙을 위반할 경우 그 행동을 막거나 수정하도록 피드백을 주는 '자동화된 내부 감사관'이자 '보안 게이트'
 
@@ -464,7 +468,7 @@ claude --version
 
     </details>
 
-### Dispatcher hook pattern
+## Dispatcher hook pattern
 
 `settings.json`에 마스터 훅 등록하기
 
@@ -548,6 +552,66 @@ try {
     console.error(`❌ 디스패처 오류: ${error.message}`);
     console.error(`📄 받은 데이터: ${input}`);
     process.exit(0); // 오류가 있어도 작업은 계속 진행
+}
+```
+
+</details>
+
+# 🦉 '지능형 컨텍스트 주입' Hook
+
+<details>
+<summary>기존 Dispatcher에 멘토 규칙 추가</summary>
+
+```json
+const fs = require('fs');
+
+// 훅 실행 로깅 (항상 출력)
+console.error('🚀 디스패처 실행됨!');
+
+try {
+    // Claude가 stdin을 통해 전달한 JSON 데이터를 읽습니다.
+    const input = fs.readFileSync(0, 'utf8');
+    const data = JSON.parse(input);
+
+    const toolName = data.tool_name;
+    // 파일 경로는 tool_input 객체 안에 다양한 형태로 존재할 수 있어, 순차적으로 확인합니다.
+    const filePath = data.tool_input.path || data.tool_input.file_path || (data.tool_input.args && data.tool_input.args[0]) || '';
+
+    console.error(`🔧 Tool: ${toolName}, 📁 File: ${filePath}`);
+
+    // ...
+
+    // ===== 새로운 아키텍트 멘토 규칙들 =====
+    
+    // 멘토 규칙 1: 라우터 파일 수정 시 멘토링
+    if (filePath.includes('/routes/') && (toolName === 'Edit' || toolName === 'Create' || toolName === 'Write')) {
+        const fileName = filePath.split('/').pop() || '';
+        const entityName = fileName.replace(/Routes?\.(js|ts)$/i, '');
+        
+        console.error(`🎯 [라우터 수정 감지] ${entityName} API 라우터를 수정하려고 합니다.`);
+        console.error(`📚 아키텍트 멘토의 조언: 라우터 수정 전에 다음을 확인하세요:`);
+        console.error(`   - src/models/${entityName}.js (데이터 모델)`);
+        console.error(`   - src/services/${entityName}Service.js (비즈니스 로직)`);
+        console.error(`   - 기존 API 패턴과의 일관성`);
+        console.error(`먼저 관련 파일들을 읽고 계획을 세워주세요!`);
+        process.exit(0);
+    }
+
+    // 멘토 규칙 2: 모델 파일 수정 시 영향도 경고
+    if (filePath.includes('/models/') && (toolName === 'Edit' || toolName === 'Write')) {
+        console.error(`🗃️ [모델 수정 경고] 데이터 모델 변경은 신중해야 합니다!`);
+        console.error(`📋 체크리스트: □ 기존 데이터 호환성 □ API 응답 변경 □ 마이그레이션 필요성`);
+        console.error(`영향도를 분석한 후 계획을 세워주세요.`);
+        process.exit(0);
+    }
+
+    // 위의 모든 규칙에 해당하지 않으면 작업을 허용합니다.
+    console.error("✅ 모든 규칙 통과");
+    process.exit(0);
+
+} catch (error) {
+    console.error(`❌ 디스패처 오류: ${error.message}`);
+    process.exit(0);
 }
 ```
 
