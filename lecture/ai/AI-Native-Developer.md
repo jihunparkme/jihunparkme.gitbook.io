@@ -81,7 +81,18 @@ claude --version
 
 `/` [Commands](https://code.claude.com/docs/en/commands)
 
-- `/init`: Initialize project with a CLAUDE.md guide. 
+- `/init`: Initialize project with a CLAUDE.md guide.
+
+.
+
+✅ **Claude Code 2.0**
+
+1. **Plugins** — 마켓플레이스에서 필요한 기능을 자유롭게 추가
+2. **LSP** — IDE와 동일한 코드 문맥 이해 (함수 정의 이동, 타입 추론 등)
+3. **Memory** — `CLAUDE.md`로 프로젝트 규칙을 영구적으로 기억
+4. **AskUserQuestion** — 불확실하면 임의로 진행하지 않고 질문
+5. **Skills** — 자주 쓰는 작업 패턴을 미리 정의해서 자동 수행
+6. **Rewind** — 원하는 시점으로 대화와 코드를 즉시 되돌림
 
 ## 🧠 컨텍스트 관리
 
