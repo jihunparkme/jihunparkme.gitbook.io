@@ -651,3 +651,8 @@ try {
 
 - [공식 저장소](github.com/anthropics/skills)
 - [커뮤니티 마켓플레이스](skillsmp.com)
+
+# 👨🏼 자동 검증 루프 만들기
+
+> [Ralph Loop](https://github.com/snarktank/ralph)
+
