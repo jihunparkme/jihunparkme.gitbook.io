@@ -7,6 +7,7 @@
 
 * [AI](lecture/ai/README.md)
   * [AI-Native Developer](lecture/ai/AI-Native-Developer.md)
+  * [MCP](lecture/ai/mcp.md)
 * [LangGraph](lecture/langGraph/README.md)
   * [LLM Workflow](lecture/langGraph/llm-workflow.md)
 * [LangChain](lecture/langChain/README.md)
