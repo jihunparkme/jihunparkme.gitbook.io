@@ -402,3 +402,39 @@ tests/blog-navigation.spec.ts 파일로 저장해줘."
 테스트 결과를 나에게 보고해줘. 만약 테스트가 실패한다면, 실패한 지점의 스크린샷과 함께 에러 메시지를 알려줘."
 ```
 </details>
+
+# 🕸️ Puppeteer 데이터 수집 자동화
+
+> [Puppeteer](https://pptr.dev/)
+>
+> 스크레이핑 전문 에이전트
+
+```bash
+claude mcp add puppeteer npx @modelcontextprotocol/server-puppeteer
+```
+
+## Browser MCP
+
+> [browsermcp](https://browsermcp.io/)
+> 
+> AI가 사용자의 실제 웹 브라우저 탭을 직접 제어할 수 있게 해주는 도구
+> - Chrome 확장 프로그램을 통해 보고 있는 브라우저 탭에 연결
+> - 기존에 로그인된 세션이나 쿠키를 그대로 활용할 수 있어, 로그인이나 복잡한 인증 절차가 필요한 작업에 유용
+
+```
+claude mcp add browsermcp -- npx @browsermcp/mcp@latest
+```
+
+**크롬 확장 프로그램 설치**
+
+- [Browser MCP](https://chromewebstore.google.com/detail/browser-mcp-automate-your/bjfgambnhccakkhmkepdoekmckoijdlc?pli=1&authuser=0)
+
+| 특징                | Browser MCP                 | Puppeteer MCP            |
+| :------------------ | :-------------------------- | :----------------------- |
+| **연결 방식**       | 브라우저 확장 프로그램 필요 | 자동 브라우저 실행       |
+| **스크린샷**        | 성공 ✅                      | 성공 ✅                   |
+| **DOM 접근**        | 제한적 (페이지 크기 문제)   | 자유로운 JavaScript 실행 |
+| **사용 편의성**     | 수동 연결 필요              | 자동화 우수              |
+| **로그인 상태**     | 유지 가능                   | 별도의 로그인 로직 필요  |
+| **주요 활용**       | 개인 작업, 디버깅           | 대량 자동화, E2E 테스트  |
+| **백그라운드 실행** | ❌                           | ✅                        |
