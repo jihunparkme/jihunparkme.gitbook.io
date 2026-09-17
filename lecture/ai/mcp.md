@@ -465,3 +465,9 @@ pipx install SuperClaude
 # Run the installer
 SuperClaude install
 ```
+
+## Claude Code Templates
+
+> [Claude Code Templates](https://www.aitmpl.com/)
+>
+> `SuperClaude`가 AI에게 '훌륭한 사고방식'을 가르쳐주는 프레임워크라면, `Claude Code Templates`는 전 세계 개발자들이 만들어 놓은 수백 개의 검증된 'AI 에이전트', '커스텀 명령어', 'Hooks', 'MCP 설정' 등을 쇼핑하고, 클릭 한 번으로 내 Claude Code에 설치할 수 있는 '마켓플레이스'
