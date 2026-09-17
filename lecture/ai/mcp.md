@@ -438,3 +438,30 @@ claude mcp add browsermcp -- npx @browsermcp/mcp@latest
 | **로그인 상태**     | 유지 가능                   | 별도의 로그인 로직 필요  |
 | **주요 활용**       | 개인 작업, 디버깅           | 대량 자동화, E2E 테스트  |
 | **백그라운드 실행** | ❌                           | ✅                        |
+
+# 🚀 AI '드림팀': SuperClaude
+
+> [SuperClaude](https://github.com/SuperClaude-Org/SuperClaude_Framework)
+>
+> Claude Code 위에 설치되어, AI의 '행동 방식' 자체를 더 똑똑하고 체계적으로 만들어주는 '메타-프로그래밍 설정 프레임워크'
+
+**`SuperClaude`가 제공하는 4가지 핵심 요소:**
+
+1. **Commands (`/sc:*`):** `/sc:brainstorm`, `/sc:implement` 등, 개발의 전체 라이프사이클을 커버하는 **22개의 체계적인 명령어**를 제공합니다.
+2. **Agents (`@agent-*`):** `@agent-security`, `@agent-frontend` 등, 특정 전문 지식을 가진 **14명의 AI 전문가 에이전트**를 즉시 호출할 수 있습니다.
+3. **Modes (행동 모드):** AI가 처한 상황에 맞게 **'행동 방식' 자체를 전환**시킵니다. 예를 들어, `Brainstorming` 모드에서는 질문을 유도하고, `Token-Efficiency` 모드에서는 컨텍스트를 아껴 쓰는 방식으로 작동합니다.
+4. **MCP Servers:** `Context7`(최신 문서 검색), `Playwright`(브라우저 테스트) 등, 사전 구성된 **6개의 강력한 MCP 서버**를 통합하여 제공합니다.
+
+Install
+
+```bash
+# Install pipx if not present
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+
+# Install SuperClaude
+pipx install SuperClaude
+
+# Run the installer
+SuperClaude install
+```
