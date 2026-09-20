@@ -471,3 +471,25 @@ SuperClaude install
 > [Claude Code Templates](https://www.aitmpl.com/)
 >
 > `SuperClaude`가 AI에게 '훌륭한 사고방식'을 가르쳐주는 프레임워크라면, `Claude Code Templates`는 전 세계 개발자들이 만들어 놓은 수백 개의 검증된 'AI 에이전트', '커스텀 명령어', 'Hooks', 'MCP 설정' 등을 쇼핑하고, 클릭 한 번으로 내 Claude Code에 설치할 수 있는 '마켓플레이스'
+
+# 🧬 Agent Teams
+
+> [Agent Teams](https://code.claude.com/docs/ko/agent-teams)
+>
+> 공유 작업, 에이전트 간 메시징, 중앙 집중식 관리를 통해 함께 작동하는 여러 Claude Code 인스턴스를 조율
+
+**작동 방식:**
+1. 하나의 Claude 세션이 **팀 리더** 역할
+2. 팀 리더가 작업을 분석하고 **팀원 에이전트를 생성**
+3. 팀원들은 **공유 태스크 리스트**와 **메일박스 시스템**으로 소통
+4. 각 팀원은 독립적으로 작업하되, 필요하면 **동료에게 직접 메시지**를 전송
+
+settings.json
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}
+```
