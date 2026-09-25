@@ -493,3 +493,16 @@ settings.json
   }
 }
 ```
+
+## Routines, /loop, Channels
+
+**🕖 Routines:** 
+- Anthropic 클라우드 서버에서 실행되어 노트북을 덮어도 AI가 계속 일을 수행
+
+**🔁 /loop:** 
+- 터미널 안에서 반복 실행
+- `Routines`가 "클라우드 크론잡"이라면, `/loop`은 "로컬 세션 안의 반복 실행기"
+
+**📱 Channels:** 
+- 폰으로 Claude 원격 조종
+- [채널을 사용하여 실행 중인 세션으로 이벤트 푸시하기](https://code.claude.com/docs/ko/channels#discord)
