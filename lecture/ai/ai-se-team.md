@@ -58,3 +58,15 @@ language: korean
 
    $ aws ec2 describe-instances # ec2 인스턴스를 모두 출력
    ```
+
+# 👁️ AI에게 '시스템의 눈'을 달아주기: 인프라 모니터링 MCP 연동
+
+> [Sentry](https://sentry.io/welcome/)
+>
+> 에러 트래킹'과 ‘성능 모니터링'에 특화된 도구
+
+Sentry MCP
+
+```bash
+claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
+```
