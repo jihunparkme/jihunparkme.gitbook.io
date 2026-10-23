@@ -59,7 +59,7 @@ language: korean
    $ aws ec2 describe-instances # ec2 인스턴스를 모두 출력
    ```
 
-# 👁️ AI에게 '시스템의 눈'을 달아주기: 인프라 모니터링 MCP 연동
+# 👁️ '시스템의 눈': Sentry MCP 연동
 
 > [Sentry](https://sentry.io/welcome/)
 >
@@ -70,3 +70,21 @@ Sentry MCP
 ```bash
 claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
 ```
+
+# 🧠 AI '두뇌'를 들여다보기: Langfuse 활용 LLM 성능 및 품질 모니터링
+
+> [Langfuse](https://langfuse.com/)
+>
+>  사용자의 첫 질문부터 AI의 최종 답변까지 이어지는 모든 작업의 흐름을 하나로 묶어 기록하는 도구
+
+**Trace가 기록하는 것:**
+
+- 사용자가 입력한 원본 프롬프트
+- 우리가 코드에서 가공한 최종 프롬프트 템플릿
+- LLM을 호출하는 데 걸린 시간 (Latency)
+- 사용된 입/출력 토큰의 양
+- **API 호출에 들어간 정확한 비용 ($)**
+- 최종적으로 생성된 답변
+- 사용자의 피드백 점수 (좋아요/싫어요)
+
+우리가 AI의 모든 행동을 속속들이 분석하고 최적화할 수 있도록 지원
