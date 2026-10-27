@@ -9,6 +9,7 @@
   * [AI-Native Developer](lecture/ai/AI-Native-Developer.md)
   * [MCP](lecture/ai/mcp.md)
   * [AI SE Team](lecture/ai/ai-se-team.md)
+  * [AI Native Product](lecture/ai/ai-native-product.md)
 * [LangGraph](lecture/langGraph/README.md)
   * [LLM Workflow](lecture/langGraph/llm-workflow.md)
 * [LangChain](lecture/langChain/README.md)
