@@ -795,3 +795,24 @@
 
 </details>
 
+## PRD를 Jira 티켓으로 자동 변환하기
+
+MCP 추가
+
+```bash
+claude mcp add --transport http atlassian https://mcp.atlassian.com/v2/mcp 
+```
+
+<details> 
+<summary>Master Prompt</summary>  
+
+"너는 애자일 방법론과 Jira 자동화에 능숙한 **시니어 애자일 코치**야. 내가 전달한 **'정책 알리미 PRD'** 전체 내용을 분석해서, 개발팀이 바로 작업을 시작할 수 있도록 Jira 티켓을 생성해줘.
+
+**[요구사항]**
+
+1. 가장 먼저, `'[MVP] 정책 알림 기능 V1'` 이라는 이름의 **Epic**을 하나 생성해.
+2. PRD의 'MVP 기능 명세' 섹션에 있는 **각 User Story를 개별 Jira Story 티켓으로 생성**하고, 모두 위 Epic에 연결해줘.
+3. 각 Story 티켓의 **'설명(Description)' 필드**에는, PRD에 명시된 '인수 조건'들을 마크다운 형식의 '체크리스트'로 반드시 포함시켜줘. (예: `- [ ] Given: ...`)
+4. 각 Story를 구현하기 위해 필요한 **기술적인 Sub-task들을 프론트엔드([FE])와 백엔드([BE])로 나누어 생성**하고, 각 Story에 연결해줘. 예를 들어, '코스 결과 화면' Story에는 '[FE] 타임라인 UI 컴포넌트 개발'과 '[BE] 코스 결과 조회 API 구현' Sub-task가 필요할 거야.
+5. 모든 명령어는 `mcp-atlassian`을 사용하도록 해.
+</details>
