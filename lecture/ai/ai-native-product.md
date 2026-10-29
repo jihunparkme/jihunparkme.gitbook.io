@@ -816,3 +816,77 @@ claude mcp add --transport http atlassian https://mcp.atlassian.com/v2/mcp
 4. 각 Story를 구현하기 위해 필요한 **기술적인 Sub-task들을 프론트엔드([FE])와 백엔드([BE])로 나누어 생성**하고, 각 Story에 연결해줘. 예를 들어, '코스 결과 화면' Story에는 '[FE] 타임라인 UI 컴포넌트 개발'과 '[BE] 코스 결과 조회 API 구현' Sub-task가 필요할 거야.
 5. 모든 명령어는 `mcp-atlassian`을 사용하도록 해.
 </details>
+
+# 🏗️ 프로젝트 환경 구축
+
+## '기반 공사' 작전 계획
+
+<details> 
+<summary>Master Prompt</summary>  
+
+"너는 우리 팀의 **애자일 코치**야. '데이트 딸깍' 프로젝트 개발을 시작하기 전에, **초기 개발 환경을 구축**해야 해. 해당 코드들을 우리는 하나의 리포지토리로 관리할거야. 그래서 잘 구역을 나눠서 넣어줘.
+
+특정 Epic **'[MVP] 데이트 코스 추천 기능 V1'** 아래에, **'초기 프로젝트 설정 및 로컬 개발 환경 구축'** 이라는 새로운 **Story 티켓**을 생성하는 Jira MCP 명령어를 만들어줘.
+
+그리고 이 Story를 완수하기 위해 필요한 **기술적인 Sub-task 3개**를 생성하고, `DT-3`에 연결해줘. 각 Sub-task의 제목은 다음과 같아.
+
+1. `[Setup] Next.js 프론트엔드 프로젝트 초기화`
+2. `[Setup] Spring Boot 백엔드 프로젝트 초기화`
+3. `[Setup] Docker Compose를 이용한 로컬 개발 환경 컨테이너화`"
+
+--
+
+terraform 을 이용해서 aws 배포를 할거기 떄문에, 이 세팅에 대한 초기 설정도 필요해. 이를 고려해서 만들어줘. 또한, 우리는 github actions 을
+이용해서 도커 빌드한 이미지를 ECR 이라는 곳에다가 푸쉬하고 ECS 를 업데이트하는 방식으로 구축할거야. 이를 위한 추가 티켓도 구현해줘.
+</details>
+
+이후 필요한 커맨드
+
+```bash
+필요한 Commands (3개만)
+
+.claude/commands/
+├── jira-start.md      # 티켓 시작 (단계 1-2)
+├── jira-test.md       # 통합 테스트 (단계 4-5)
+├── jira-commit.md     # 커밋 및 진행 업데이트 (단계 6-7)
+└── jira-complete.md   # 최종 검증 및 완료 (단계 8-9)
+
+실제 사용 흐름
+
+# 1. 시작
+/jira-start SCRUM-42 "region-selection-map"
+
+# 2. 개발 작업 (수동)
+
+# 3. 테스트
+/jira-test frontend
+
+# 4. 커밋
+/jira-commit SCRUM-42 "feat: 지역 선택 맵 UI 구현"
+
+# 5. 완료
+/jira-complete SCRUM-42 123
+```
+
+**프론트엔드 & 백엔드 프로젝트 초기화**
+
+<details> 
+<summary>Master Prompt</summary>  
+
+"좋아, **AI DevOps 엔지니어**로서 Jira 티켓 `[Setup] Next.js 프론트엔드 프로젝트 초기화`와 `[Setup] Spring Boot 백엔드 프로젝트 초기화` 작업을 진행해줘.
+
+1. **프론트엔드:** 현재 디렉토리에 `frontend`라는 이름으로, TypeScript와 Tailwind CSS가 적용된 최신 **Next.js 프로젝트를 생성하는 CLI 명령어**를 사용해
+2. **백엔드:** 현재 디렉토리에 `backend`라는 이름으로, Java 17, Gradle 기반의 **Spring Boot 4.x 프로젝트를 생성해.**. `Spring Web`, `Lombok`, `Spring Data JPA`, `MySQL Driver` 의존성을 반드시 포함해야 해."
+</details>
+
+**로컬 개발 환경 컨테이너화**
+
+<details> 
+<summary>Master Prompt</summary>  
+
+"이제 Jira 티켓 `[Setup] Docker Compose를 이용한 로컬 개발 환경 컨테이너화` 작업을 진행할게.
+
+1. `frontend` 폴더 안에, 개발용 서버를 실행하고 코드 변경 시 **핫 리로딩(Hot-reloading)이 가능하도록** 최적화된 **`Dockerfile`**을 작성해줘.
+2. `backend` 폴더 안에, **멀티-스테이지 빌드**를 사용하여 최종 이미지를 최적화하는 Spring Boot 애플리케이션용 **`Dockerfile`**을 작성해줘.
+3. 프로젝트 최상위 루트에, `docker-compose up` 명령어 하나로 `frontend`와 `backend` 두 서비스를 동시에 실행하고, 포트를 올바르게 매핑하며, **코드 변경이 즉시 컨테이너에 반영되도록 볼륨(volume)을 설정**하는 **`docker-compose.yml`** 파일을 작성해줘."
+</details>
