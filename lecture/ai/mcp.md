@@ -317,6 +317,38 @@ MCP(Model Context Protocol)는 앤트로픽이 개발한 오픈소스 AI 프로
 > - tmux (터미널 세션 관리자)
 > - git worktree (Git 작업 공간 관리자)
 
+**설치**
+
+```bash
+*# Homebrew를 통한 설치 (권장)*
+brew install claude-squad
+
+*# 심볼릭 링크 생성 (선택)*
+ln -s "$(brew --prefix)/bin/claude-squad" "$(brew --prefix)/bin/cs"`
+```
+
+또는
+
+```bash
+*# curl을 통한 설치*
+curl -fsSL https://raw.githubusercontent.com/smtg-ai/claude-squad/main/install.sh | bash`
+```
+
+**설치 확인:**
+
+```bash
+cs version
+*# 또는*
+claude-squad version`
+```
+
+**시작**
+
+```bash
+cd date-dalkkak
+cs
+```
+
 **claude-squad의 작동 원리**
 
 ✅ **[Tmux](https://github.com/tmux/tmux/wiki)**
