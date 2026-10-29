@@ -890,3 +890,20 @@ terraform 을 이용해서 aws 배포를 할거기 떄문에, 이 세팅에 대�
 2. `backend` 폴더 안에, **멀티-스테이지 빌드**를 사용하여 최종 이미지를 최적화하는 Spring Boot 애플리케이션용 **`Dockerfile`**을 작성해줘.
 3. 프로젝트 최상위 루트에, `docker-compose up` 명령어 하나로 `frontend`와 `backend` 두 서비스를 동시에 실행하고, 포트를 올바르게 매핑하며, **코드 변경이 즉시 컨테이너에 반영되도록 볼륨(volume)을 설정**하는 **`docker-compose.yml`** 파일을 작성해줘."
 </details>
+
+# 🏁 프로젝트 회고와 살아있는 문서 자동화
+
+<details> 
+<summary>Master Prompt</summary>  
+
+너는 Swagger(OpenAPI 3.0) 명세서 작성에 능숙한 시니어 백엔드 개발자다.
+
+우리 `backend` 프로젝트의 `CourseController.java` 소스 코드를 전체 분석해라. 그리고 이 컨트롤러가 제공하는 모든 API 엔드포인트에 대한 완벽한 **Swagger/OpenAPI 3.0 명세서**를 **YAML 형식**으로 작성해라.
+
+**요구사항:**
+
+1. `@PostMapping` 어노테이션을 분석하여 정확한 경로와 HTTP 메서드를 명시해야 한다.
+2. `@RequestBody`와 반환 타입으로 사용된 `DateCourseRequestDto`, `DateCourseResponseDto` 클래스의 필드를 분석하여, 요청 및 응답 스키마(Schema)를 상세하게 정의해야 한다.
+3. 각 필드에는 JavaDoc 주석을 참고하여 상세한 설명(description)과 예시(example)를 포함해야 한다.
+4. "사용자의 조건에 맞는 데이트 코스를 AI를 통해 생성합니다." 와 같이, 각 API의 목적을 명확히 설명하는 요약(summary)을 추가해야 한다.
+</details>
