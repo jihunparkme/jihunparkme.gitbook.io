@@ -5,7 +5,7 @@
 
 ## Lecture
 
-* [AI](lecture/ai/README.md)
+* [AI-Native Developer](lecture/ai/README.md)
   * [AI-Native Developer](lecture/ai/AI-Native-Developer.md)
   * [MCP](lecture/ai/mcp.md)
   * [AI SE Team](lecture/ai/ai-se-team.md)
